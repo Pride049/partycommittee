@@ -1,0 +1,36 @@
+package com.partycommittee.proxy
+{
+	import com.adobe.cairngorm.business.ServiceLocator;
+	import com.partycommittee.vo.PcAgencyVo;
+	import com.partycommittee.vo.PcMemberVo;
+	
+	import mx.collections.ArrayCollection;
+	import mx.rpc.IResponder;
+	import mx.rpc.remoting.RemoteObject;
+	
+	public class PcMemberProxy extends BaseProxy {
+		public static const SERVICE_NAME:String = "pcMember";
+		
+		public function PcMemberProxy(responder:IResponder) {
+			service = ServiceLocator.getInstance().getRemoteObject(SERVICE_NAME);
+			this.responder = responder;
+		}
+		
+		public function getMemberListByAgencyId(agencyId:Number):void {
+			service.getMemberListByAgencyId(agencyId);
+		}
+		
+		public function createMember(member:PcMemberVo):void {
+			service.createMember(member);
+		}
+		
+		public function deleteMembers(memberList:ArrayCollection):void {
+			service.deleteMembers(memberList);
+		}
+		
+		public function updateMember(member:PcMemberVo):void {
+			service.updateMember(member);
+		}
+		
+	}
+}

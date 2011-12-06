@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<control:EscapeWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					  xmlns:s="library://ns.adobe.com/flex/spark" 
+					  xmlns:mx="library://ns.adobe.com/flex/mx" 
+					  xmlns:control="com.partycommittee.control.*"
+					  horizontalAlign="center" verticalAlign="middle"
+					  showCloseButton="true" 
+					  title="建立账号" titleStyleName="panelTitle"
+					  close="PopUpManager.removePopUp(this)" 
+					  xmlns:button="com.partycommittee.control.button.*"
+					  horizontalScrollPolicy="off" verticalScrollPolicy="off"
+					  creationComplete="onCreationCompleted()">
+	<fx:Script>
+		<![CDATA[
+			import com.partycommittee.events.PcUserEvent;
+			import com.partycommittee.util.CRUDEventType;
+			import com.partycommittee.vo.PcUserVo;
+			
+			import mx.controls.Alert;
+			import mx.managers.PopUpManager;
+			import mx.validators.EmailValidator;
+			
+			[Bindable]
+			public var type:String = CRUDEventType.CREATE;
+			
+			public var parentView:AccountManageView;
+			
+			private var _userVo:PcUserVo;
+			[Bindable]
+			public function get userVo():PcUserVo {
+				return this._userVo;
+			}
+			public function set userVo(value:PcUserVo):void {
+				this._userVo = value;
+			}
+			
+			private function onCreationCompleted():void {
+				updateData();
+			}
+			
+			private function updateData():void {
+				if (!this._userVo) {
+					return;
+				}
+				statucCk.selected = (this._userVo.status == 1);
+				usernameTxt.text = this._userVo.username;
+				emailTxt.text = this._userVo.email;
+				telTxt.text = this._userVo.phone;
+				commentTxt.text = this._userVo.comment;
+			}
+			
+			private function save():void {
+				if (passwordTxt.text != confirmPwTxt.text) {
+					Alert("两次密码输入不一致！");
+					return;
+				}
+				if (type == CRUDEventType.CREATE) {
+					doCreate();
+				} else {
+					doUpdate();
+				}
+			}
+			
+			private function doCreate():void {
+				var newUser:PcUserVo = getNewUser();
+				var userEvt:PcUserEvent = new PcUserEvent(CRUDEventType.CREATE, newUser);
+				userEvt.successCallback = onSuccessCallback;
+				userEvt.failureCallback = onFailureCallback;
+				this.enabled = false;
+				userEvt.dispatch();
+			}
+			
+			private function doUpdate():void {
+				var updateUser:PcUserVo = getUpdateUser();
+				var userEvt:PcUserEvent = new PcUserEvent(CRUDEventType.UPDATE, updateUser);
+				userEvt.successCallback = onSuccessCallback;
+				userEvt.failureCallback = onFailureCallback;
+				this.enabled = false;
+				userEvt.dispatch();
+			}
+			
+			private function getNewUser():PcUserVo {
+				var newUser:PcUserVo = new PcUserVo();
+				newUser.status = statucCk.selected ? 1 : 0;
+				newUser.email = emailTxt.text;
+				newUser.phone = telTxt.text;
+				newUser.username = usernameTxt.text;
+				newUser.password = passwordTxt.text;
+				newUser.comment = commentTxt.text;
+				return newUser;
+			}
+			
+			private function getUpdateUser():PcUserVo {
+				var updateUser:PcUserVo = getNewUser();
+				updateUser.id = userVo.id;
+				return updateUser;
+			}
+			
+			private function onSuccessCallback(data:Object, evt:PcUserEvent):void {
+				this.enabled = true;
+				parentView.refreshData();
+				this.close();
+			}
+			
+			private function onFailureCallback(info:Object, evt:PcUserEvent):void {
+				this.enabled = true;
+				Alert.show(info.toString());
+			}
+			
+			private function choose():void {
+			}
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<mx:VBox height="100%" width="100%"
+			 horizontalAlign="center" verticalAlign="middle"
+			 horizontalScrollPolicy="off" verticalScrollPolicy="off">
+		<mx:Form width="450" height="100%"
+				 minWidth="200">
+			<mx:FormItem label="启用:" required="true" width="100%">
+				<mx:CheckBox id="statucCk" selected="true"/>
+			</mx:FormItem>
+			<mx:FormItem label="用户名:" width="100%">
+				<mx:TextInput id="usernameTxt" width="100%"/>
+			</mx:FormItem>
+			<mx:FormItem label="密码:" required="true" width="100%">
+				<mx:TextInput id="passwordTxt" width="100%" displayAsPassword="true"/>
+			</mx:FormItem>
+			<mx:FormItem label="确认密码:" required="true" width="100%">
+				<mx:TextInput id="confirmPwTxt" width="100%" displayAsPassword="true"/>
+			</mx:FormItem>
+			<mx:FormItem label="管理范围:" width="100%">
+				<button:PcButton label="选择..." click="choose()"/>
+			</mx:FormItem>
+			<mx:FormItem label="Email:" width="100%">
+				<mx:TextInput id="emailTxt" width="100%"/>
+			</mx:FormItem>
+			<mx:FormItem label="电话:" width="100%">
+				<mx:TextInput id="telTxt" width="100%" restrict="0-9\-"/>
+			</mx:FormItem>
+			<mx:FormItem label="备注:" width="100%">
+				<mx:TextArea id="commentTxt" width="100%" height="60"/>
+			</mx:FormItem>
+		</mx:Form>
+		<mx:ControlBar width="100%" horizontalAlign="center">
+			<button:PcButton label="保存" click="save()"/>
+			<button:PcButton label="取消" click="close()"/>
+		</mx:ControlBar>
+	</mx:VBox>
+</control:EscapeWindow>

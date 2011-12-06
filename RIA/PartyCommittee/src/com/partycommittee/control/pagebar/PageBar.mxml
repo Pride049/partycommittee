@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" 
+		 width="100%" xmlns:pagebar="com.partycommittee.control.pagebar.*">
+	
+	<fx:Script>
+		<![CDATA[
+			
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<mx:Button id="firstPageBtn" styleName="pageBtn"/>
+	<mx:Button id="prePageBtn" styleName="pageBtn"/>
+	<pagebar:LinkTextBar id="linkTextBar"/>
+	<mx:Button id="nxtPageBtn" styleName="pageBtn"/>
+	<mx:Button id="lastPageBtn" styleName="pageBtn"/>
+	
+	
+</mx:HBox>
