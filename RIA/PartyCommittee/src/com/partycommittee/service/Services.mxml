@@ -6,7 +6,6 @@
 		<![CDATA[
 			import com.partycommittee.model.ModelLocator;
 			
-			import mx.controls.Alert;
 			import mx.core.FlexGlobals;
 			import mx.messaging.Channel;
 			import mx.messaging.ChannelSet;
@@ -29,8 +28,7 @@
 			
 			public function init():void {
 				var url:String = FlexGlobals.topLevelApplication.url;
-				Alert.show(url);
-//				url = "http://localhost:8080/PartyCommittee/index.jsp";
+				url = "http://localhost:8080/PartyCommittee/index.jsp";
 				
 				// Init service locater
 				var scheme:String = URLUtil.getProtocol(url);
