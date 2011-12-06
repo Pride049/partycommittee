@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation:NavigationView xmlns:fx="http://ns.adobe.com/mxml/2009" 
+						   xmlns:s="library://ns.adobe.com/flex/spark" 
+						   xmlns:mx="library://ns.adobe.com/flex/mx"
+						   styleName="mainCanvas"
+						   width="100%" height="100%" 
+						   xmlns:button="com.partycommittee.control.button.*" 
+						   xmlns:datagrid="com.partycommittee.control.datagrid.*"
+						   xmlns:navigation="com.partycommittee.manager.navigation.*" 
+						   xmlns:component="com.partycommittee.views.agencymgmt.component.*"
+						   creationComplete="onCreationCompleted()">
+	
+	<fx:Script>
+		<![CDATA[
+			import com.partycommittee.control.tree.classes.TreeOperationEvent;
+			import com.partycommittee.events.PcAgencyEvent;
+			import com.partycommittee.model.ModelLocator;
+			import com.partycommittee.util.AgencyCodeUtil;
+			import com.partycommittee.util.CRUDEventType;
+			import com.partycommittee.vo.PcAgencyVo;
+			
+			import mx.controls.Alert;
+			import mx.core.FlexGlobals;
+			import mx.events.PropertyChangeEvent;
+			import mx.managers.PopUpManager;
+			
+			[Bindable]
+			private var agencyCodeDes:String;
+			
+			private var _agency:PcAgencyVo;
+			[Bindable]
+			public function get agency():PcAgencyVo {
+				return this._agency;
+			}
+			public function set agency(value:PcAgencyVo):void {
+				this._agency = value;
+			}
+			
+			[Bindable]
+			private var model:ModelLocator = ModelLocator.getInstance();
+			
+			private function onCreationCompleted():void {
+				onNavigateIn();
+			}
+			
+			override protected function onNavigateIn():void {
+				if (agency != model.focusAgencyVo) {
+					agency = model.focusAgencyVo;
+					updateData();
+				}
+				model.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, onModelChanged);
+			}
+			
+			override protected function onNavigateOut():void {
+				model.removeEventListener(PropertyChangeEvent.PROPERTY_CHANGE, onModelChanged);
+			}
+			
+			private function onModelChanged(event:PropertyChangeEvent):void {
+				if (event.property == "focusAgencyVo") {
+					agency = model.focusAgencyVo;
+					updateData();
+				}
+			}
+			
+			private function updateData():void {
+				if (!this._agency) {
+					return;
+				}
+				
+				agencyCodeDes = AgencyCodeUtil.getAgencyCodeDes(agency.codeId);
+				orgNameTxt.text = agency.name;
+				personChooseBox.member = agency.member;
+				telTxt.text = agency.tel;
+				descriptionTxt.text = agency.comment;
+			}
+			
+			private function getUpdateAgency():PcAgencyVo {
+				var agencyVo:PcAgencyVo = new PcAgencyVo();
+				agencyVo.parentId = agency.parentId;
+				agencyVo.id = agency.id;
+				agencyVo.codeId = agency.codeId;
+				agencyVo.name = orgNameTxt.text;
+				if (personChooseBox.member) {
+					agencyVo.memberId = personChooseBox.member.id;
+				}
+				agencyVo.setupDatetime = agency.setupDatetime;
+				agencyVo.tel = telTxt.text;
+				agencyVo.comment = descriptionTxt.text;
+				return agencyVo;
+			}
+			
+			private function save():void {
+				if (!agency) {
+					return;
+				}
+				var updateAgency:PcAgencyVo = getUpdateAgency();
+				if (updateAgency) {
+					var evt:PcAgencyEvent = new PcAgencyEvent(CRUDEventType.UPDATE, updateAgency);
+					evt.successCallback = onCallbackSuccessed;
+					evt.failureCallback = onCallbackFailure;
+					evt.dispatch();
+				}
+				this.enabled = false;
+			}
+			
+			private function reset():void {
+				orgNameTxt.text = agency.name;
+				personChooseBox.member = agency.member;
+				telTxt.text = agency.tel;
+				descriptionTxt.text = agency.comment;
+			}
+			
+			private function onCallbackSuccessed(data:Object, evt:PcAgencyEvent):void {
+				this.enabled = true;
+				this.agency = evt.agency;
+				// Dispatch event to update tree.
+				model.tree.dispatchEvent(new TreeOperationEvent(
+					TreeOperationEvent.NODE_CHANGED));
+			}
+			
+			private function onCallbackFailure(info:Object, evt:PcAgencyEvent):void {
+				this.enabled = true;
+				Alert.show(info.toString());
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<navigation:constraintRows>
+		<s:ConstraintRow id="headerRow" height="80"/>
+		<s:ConstraintRow id="mainRow" height="100%"/>
+	</navigation:constraintRows>
+	
+	<mx:Canvas top="headerRow:0" bottom="headerRow:0"
+			   width="100%">
+		<mx:Label fontSize="20" fontWeight="bold"
+				  horizontalCenter="0" verticalCenter="0"
+				  text="组织基本情况"/>
+	</mx:Canvas>
+	
+	<mx:VBox top="mainRow:0" bottom="mainRow:0"
+			 horizontalCenter="0"
+			 width="100%" maxWidth="500"
+			 horizontalAlign="center" verticalAlign="middle"
+			 horizontalScrollPolicy="off" verticalScrollPolicy="off">
+		<mx:Form width="100%" top="mainRow:0" bottom="mainRow:0">
+			<mx:FormItem label="组织性质" width="100%">
+				<mx:Label id="orgTypeLbl" text="{agencyCodeDes}" width="100%"/>
+			</mx:FormItem>
+			<mx:FormItem label="组织名称" required="true" width="100%">
+				<mx:TextInput id="orgNameTxt" width="100%"/>
+			</mx:FormItem>
+			<mx:FormItem label="组织负责人" width="100%">
+				<component:PersonChooseBox id="personChooseBox" width="100%"
+										   agency="{agency}"/>
+			</mx:FormItem>
+			<mx:FormItem label="电话号码" width="100%">
+				<mx:TextInput id="telTxt" width="100%" restrict="0-9\-"/>
+			</mx:FormItem>
+			<mx:FormItem label="描述" width="100%">
+				<mx:TextArea id="descriptionTxt" width="100%" height="100%"/>
+			</mx:FormItem>
+		</mx:Form>
+		<mx:ControlBar width="100%" horizontalAlign="center">
+			<button:PcButton label="保存" click="save()"/>
+			<button:PcButton label="重置" click="reset()"/>
+		</mx:ControlBar>
+	</mx:VBox>
+	
+</navigation:NavigationView>

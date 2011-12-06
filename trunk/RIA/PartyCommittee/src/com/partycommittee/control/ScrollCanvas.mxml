@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		   xmlns:s="library://ns.adobe.com/flex/spark" 
+		   xmlns:mx="library://ns.adobe.com/flex/mx" 
+		   width="100%"
+		   creationComplete="onCreationCompleted()">
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.controls.Text;
+			import mx.effects.Move;
+			import mx.events.EffectEvent;
+			import mx.events.FlexEvent;
+			
+			private var bitmapData:BitmapData;
+			
+			[Bindable]
+			public var mHeight:Number = 26;
+			[Bindable]
+			public var nHeight:Number = 120;
+			
+			[Bindable]
+			private var scrollBarHeight:Number = 0;
+			
+			[Bindable]
+			private var totalHeight:Number;
+			
+			private var stopTimer:Timer;
+			
+			private function onCreationCompleted():void {
+				var startTimer:Timer = new Timer(10000, 1);
+				startTimer.addEventListener(TimerEvent.TIMER_COMPLETE, onStartTimerCompleted);
+				startTimer.start();
+				
+				this._txt = new Text();
+				this._txt.setStyle("color", 0xffffff);
+				this.moveLblCav.addChild(this._txt);
+				this._txt.addEventListener(TextEvent.LINK, onTxtLink);
+				this._txt.addEventListener(MouseEvent.MOUSE_OVER, onTxtMouseOver);
+				this._txt.addEventListener(MouseEvent.MOUSE_OUT, onTxtMouseOut);
+				
+				this._moveIn = new Move();
+				this._moveIn.duration = 1500;
+				this._moveIn.target = this._txt;
+				this._moveIn.xFrom = this.width;
+				this._moveIn.xTo = 10;
+				this._moveIn.addEventListener(EffectEvent.EFFECT_END, onMoveInEffectEnd);
+				this._moveOut = new Move();
+				this._moveOut.duration = 1500;
+				this._moveOut.target = this._txt;
+				this._moveOut.xFrom = 10;
+				this._moveOut.xTo = 0 - this.width;
+				this._moveOut.addEventListener(EffectEvent.EFFECT_END, onMoveOutEffectEnd);
+			}
+			
+			private function onStartTimerCompleted(event:TimerEvent):void {
+				this.includeInLayout = true;
+				startScroll();
+			}
+			
+			private var isTxtMouseOver:Boolean;
+			
+			private function onTxtMouseOver(event:MouseEvent):void {
+				isTxtMouseOver = true;
+			}
+			
+			private function onTxtMouseOut(event:MouseEvent):void {
+				isTxtMouseOver = false;
+			}
+			
+			private var _txt:Text;
+			
+			public function startScroll():void {
+				this._txt.htmlText = getContent();
+				if (!this._txt.htmlText || this._txt.htmlText == "") {
+					return;
+				}
+				this._moveIn.play();
+			}
+			
+			private function onTimer(event:TimerEvent):void {
+				if (isTxtMouseOver) {
+					return;
+				}
+				this._moveOut.play();
+				stopTimer.stop();
+			}
+			
+			public function onMoveInEffectEnd(event:EffectEvent):void {
+				if (!stopTimer) {
+					stopTimer = new Timer(2000);
+					stopTimer.addEventListener(TimerEvent.TIMER, onTimer);
+				}
+				stopTimer.start();
+			}
+			
+			public function onMoveOutEffectEnd(event:EffectEvent):void {
+				this._txt.x = this.width;
+				startScroll();
+			}
+			
+			private var currentItemIndex:Number;
+			private function getContent():String {
+				if (!infoList || infoList.length == 0) {
+					return "";
+				}
+				if (!currentItemIndex || currentItemIndex == infoList.length) {
+					currentItemIndex = 0;
+				}
+				var message:String = infoList[currentItemIndex++].message as String;
+				return '<a href="event:' + currentItemIndex + '">' + message + '</a>';
+			}
+			
+			private var _moveIn:Move;
+			public function get moveIn():Move {
+				return this._moveIn;
+			}
+			public function set moveIn(value:Move):void {
+				this._moveIn = value;
+			}
+			
+			private var _moveOut:Move;
+			public function get moveOut():Move {
+				return this._moveOut;
+			}
+			public function set moveOut(value:Move):void {
+				this._moveOut = value;
+			}
+			
+			private function onTxtLink(event:TextEvent):void {
+			}
+			
+			private var infoList:ArrayCollection = new ArrayCollection([
+				{id:1, message:"2011年-年度计划未填写！"},
+				{id:2, message:"2011年-第一季度度计划未填写！"},
+			]);
+			
+			override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void {
+				super.updateDisplayList(unscaledWidth, unscaledHeight);
+			}
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<mx:Canvas width="100%" height="{totalHeight}" bottom="{scrollBarHeight}">
+		<mx:Canvas width="100%" height="{mHeight}">
+			<mx:HBox width="100%" height="100%" borderStyle="solid" backgroundColor="0xdc6801"
+					 horizontalAlign="center" verticalAlign="middle"
+					 horizontalScrollPolicy="off" verticalScrollPolicy="off">
+				<mx:Canvas width="180" buttonMode="true" useHandCursor="true"
+						   horizontalScrollPolicy="off" verticalScrollPolicy="off">
+					<mx:Label id="globalInfoLbl" horizontalCenter="0" width="100%" textAlign="center" 
+							  mouseChildren="false" color="0xffffff"
+							  text="当前位置  > 党员管理"/>
+				</mx:Canvas>
+				<mx:VRule height="80%"/>
+				<mx:Canvas id="moveLblCav" width="100%" height="100%" borderStyle="none"
+						   borderVisible="false" horizontalScrollPolicy="off"
+						   verticalScrollPolicy="off"/>
+				<!--<mx:Button width="30" height="10" click="showAll();"/>-->
+			</mx:HBox>
+		</mx:Canvas>
+		<mx:Canvas id="allCanvas" top="{mHeight+2}" width="100%" height="{nHeight}" includeInLayout="false" visible="false"
+				   backgroundColor="0xefefef" borderStyle="solid" horizontalScrollPolicy="off">
+			<mx:VBox id="allHolder" width="100%" height="100%" paddingLeft="{130}">
+				
+			</mx:VBox>
+		</mx:Canvas>
+	</mx:Canvas>
+</mx:Canvas>
