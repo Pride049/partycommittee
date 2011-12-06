@@ -3,7 +3,7 @@
            xmlns:s="library://ns.adobe.com/flex/spark"
            xmlns:mx="library://ns.adobe.com/flex/mx" 
            xmlns:controls="com.hp.client.controls.*"
-		   maxWidth="1004"
+		   maxWidth="960"
 		   horizontalCenter="0" verticalCenter="0"
            creationComplete="onCreationCompleted()" 
 		   xmlns:control="com.partycommittee.control.*" 
@@ -38,7 +38,7 @@
     </fx:Script>
 	
 	<mx:constraintRows>
-		<s:ConstraintRow id="headerRow" height="124"/>
+		<s:ConstraintRow id="headerRow" height="180"/>
 		<s:ConstraintRow id="mainRow" height="100%"/>
 		<s:ConstraintRow id="bottomGap" height="2"/>
 		<s:ConstraintRow id="bottomRow" height="30"/>
@@ -46,7 +46,6 @@
 	
 	<mx:HBox top="headerRow:0" bottom="headerRow:0"
 			 width="100%" horizontalGap="0">
-		<mx:Image source="{EmbedResources.logoImg}"/>
 		<s:SWFLoader source="{EmbedResources.topBannerSWF}"/>
 	</mx:HBox>
 	
