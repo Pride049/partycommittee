@@ -2,11 +2,16 @@
 <mx:HBox xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
 		 xmlns:mx="library://ns.adobe.com/flex/mx" 
-		 width="100%" xmlns:pagebar="com.partycommittee.control.pagebar.*">
+		 width="100%" 
+		 xmlns:pagebar="com.partycommittee.control.pagebar.*">
 	
 	<fx:Script>
 		<![CDATA[
 			
+			private function onPageGoto():void {
+				var pageIndex:Number = this.gotoBox.pageIndex;
+				
+			}
 		]]>
 	</fx:Script>
 	
@@ -14,11 +19,12 @@
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
 	
-	<mx:Button id="firstPageBtn" styleName="pageBtn"/>
-	<mx:Button id="prePageBtn" styleName="pageBtn"/>
+	<mx:Button id="firstPageBtn" styleName="pageBtn" enabled="false"/>
+	<mx:Button id="prePageBtn" styleName="pageBtn" enabled="false"/>
 	<pagebar:LinkTextBar id="linkTextBar"/>
-	<mx:Button id="nxtPageBtn" styleName="pageBtn"/>
-	<mx:Button id="lastPageBtn" styleName="pageBtn"/>
-	
+	<mx:Button id="nxtPageBtn" styleName="pageBtn" enabled="false"/>
+	<mx:Button id="lastPageBtn" styleName="pageBtn" enabled="false"/>
+	<mx:HRule height="90%"/>
+	<pagebar:GotoBox id="gotoBox" pageGoto="onPageGoto()"/>
 	
 </mx:HBox>
