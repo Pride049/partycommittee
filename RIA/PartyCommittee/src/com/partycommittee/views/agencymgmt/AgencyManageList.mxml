@@ -3,6 +3,7 @@
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
 		 xmlns:mx="library://ns.adobe.com/flex/mx" 
 		 label="组织管理"
+		 
 		 width="100%" height="100%">
 	<fx:Script>
 		<![CDATA[
@@ -11,8 +12,8 @@
 			import mx.collections.ArrayCollection;
 			[Bindable]
 			private var listDp:ArrayCollection = new ArrayCollection([
-				{id:"orgManage", label:"组织管理", navView:"orgView"},
-				{id:"partyMemberManage", label:"党员管理", navView:"partyMemberView"}
+				{id:"orgManage", label:"组织管理", navView:"orgView"}
+				//{id:"partyMemberManage", label:"党员管理", navView:"partyMemberView"}
 			]);
 			
 			private function onItemClick():void {

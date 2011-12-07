@@ -30,7 +30,7 @@
 			public var phoneValid:Boolean = true;
 			
 			[Bindable]
-			public var loginTitleString:String = "Login";
+			public var loginTitleString:String = "";
 			[Bindable]
 			public var validateFailureString:String;
 			
@@ -108,7 +108,7 @@
 	
 	<mx:Panel id="loginAndRegView"
 			  horizontalScrollPolicy="off" verticalScrollPolicy="off"
-			  height="350" width="400"
+			  height="400" width="960"
 			  title="{loginTitleString}"
 			  backgroundAlpha="0.5">
 		<mx:HBox width="100%" height="100%"
@@ -117,8 +117,11 @@
 				 includeInLayout.loginView="true"
 				 visible.operatingView="false"
 				 includeInLayout.operatingView="false">
-			<mx:Image id="logoImg" top="60" left="40" width="48" height="48" scaleContent="true"/>
-			<mx:Label id="companyNameLbl" text="Company Name" fontSize="20"/>
+			<mx:HBox top="headerRow:0" bottom="headerRow:0"
+					 width="100%" horizontalGap="0">
+				<s:SWFLoader source="{EmbedResources.topBannerSWF}"/>
+			</mx:HBox>
+			<mx:Label id="companyNameLbl" text="北京市公安局基层党支部组织生活会" fontSize="20"/>
 		</mx:HBox>
 		
 		<!-- Login Form -->
@@ -129,22 +132,22 @@
 				 visible.operatingView="false"
 				 includeInLayout.operatingView="false">
 			<mx:Form width="100%" height="100%">
-				<mx:FormItem required="true" label="User Name:" width="100%">
+				<mx:FormItem required="true" label="用户名:" width="100%">
 					<mx:TextInput id="loginUsernameTextInput" maxChars="32"
 								  borderStyle="solid" borderColor="#C3C3C3" width="180"/>
 				</mx:FormItem>
-				<mx:FormItem required="true" label="Password:" width="100%">
+				<mx:FormItem required="true" label="密码:" width="100%">
 					<mx:TextInput id="passwordTextInput" displayAsPassword="true" maxChars="32"
 								  borderStyle="solid" borderColor="#C3C3C3" width="180"/>
 				</mx:FormItem>
 				<mx:FormItem width="100%">
 					<mx:CheckBox id="rememberMeCheckBox" 
-								 label="Remember Me"
+								 label="记住密码"
 								 selected="false"/>
 				</mx:FormItem>
 			</mx:Form>
-			<mx:ControlBar width="100%" horizontalAlign="right">
-				<mx:Button id="loginButton" label="Login"
+			<mx:ControlBar width="100%" horizontalAlign="left">
+				<mx:Button id="loginButton" label="登录"
 						   click="loginBtnClick()"
 						   enabled="{loginUsernameValid &amp;&amp; passwordTextInput.text != ''}"/>
 			</mx:ControlBar>
@@ -157,7 +160,7 @@
 				 visible.loginView="false"
 				 includeInLayout.operatingView="true"
 				 visible.operatingView="true">
-			<mx:Label text="Login..." fontWeight="bold" fontSize="18"/>
+			<mx:Label text="登录中...请稍候" fontWeight="bold" fontSize="18"/>
 			<mx:ProgressBar width="70%" height="20" label="" labelPlacement="center"
 							horizontalCenter="0" verticalCenter="0" indeterminate="true"/>
 		</mx:VBox>

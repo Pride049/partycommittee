@@ -30,9 +30,9 @@
 			private var stopTimer:Timer;
 			
 			private function onCreationCompleted():void {
-				var startTimer:Timer = new Timer(10000, 1);
-				startTimer.addEventListener(TimerEvent.TIMER_COMPLETE, onStartTimerCompleted);
-				startTimer.start();
+//				var startTimer:Timer = new Timer(10000, 1);
+//				startTimer.addEventListener(TimerEvent.TIMER_COMPLETE, onStartTimerCompleted);
+//				startTimer.start();
 				
 				this._txt = new Text();
 				this._txt.setStyle("color", 0xffffff);
@@ -149,14 +149,14 @@
 	
 	<mx:Canvas width="100%" height="{totalHeight}" bottom="{scrollBarHeight}">
 		<mx:Canvas width="100%" height="{mHeight}">
-			<mx:HBox width="100%" height="100%" borderStyle="solid" backgroundColor="0xdc6801"
+			<mx:HBox width="100%" height="100%" borderStyle="solid"  
 					 horizontalAlign="center" verticalAlign="middle"
 					 horizontalScrollPolicy="off" verticalScrollPolicy="off">
 				<mx:Canvas width="180" buttonMode="true" useHandCursor="true"
 						   horizontalScrollPolicy="off" verticalScrollPolicy="off">
 					<mx:Label id="globalInfoLbl" horizontalCenter="0" width="100%" textAlign="center" 
-							  mouseChildren="false" color="0xffffff"
-							  text="当前位置  > 党员管理"/>
+							  mouseChildren="false" 
+							  text="当前位置  > 组织管理"/>
 				</mx:Canvas>
 				<mx:VRule height="80%"/>
 				<mx:Canvas id="moveLblCav" width="100%" height="100%" borderStyle="none"

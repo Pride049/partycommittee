@@ -13,9 +13,12 @@ Application
 	backgroundColor: #ffffff;
 }
 
-Accordion
-{
+Accordion {
 	headerHeight: 28;
+	backgroundAlpha: 0.8;
+	highlightAlphas: 0.4, 0;
+	textRollOverColor: #ff6600;
+	textSelectedColor: #3366ff;
 }
 
 .mainCanvas
@@ -25,11 +28,11 @@ Accordion
 
 .accrodionHeader
 {
-	chromeColor: #b23500;
+	chromeColor: #ffffff;
 	color: #ffffff;
-	borderColor: #b23500;
-	textRollOverColor: #ffffff;
-	textSelectedColor: #ffffff;
+	borderColor: #000000;
+	textRollOverColor: #000000;
+	textSelectedColor: #000000;
 }
 
 .pcButton
