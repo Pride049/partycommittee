@@ -9,6 +9,15 @@ package com.partycommittee.control.pagebar
 			super();
 		}
 		
+		private var _maxNum:Number;
+		[Bindable]
+		public function get maxNum():Number {
+			return this._maxNum;
+		}
+		public function set maxNum(value:Number):void {
+			this._maxNum = value;
+		}
+		
 		private var _pageHelper:PageHelperVo;
 		[Bindable]
 		public function get pageHelper():PageHelperVo {

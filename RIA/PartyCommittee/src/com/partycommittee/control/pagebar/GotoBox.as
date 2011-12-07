@@ -3,6 +3,7 @@ package com.partycommittee.control.pagebar
 	import com.partycommittee.control.button.PcButton;
 	import com.partycommittee.vo.PageHelperVo;
 	
+	import flash.events.Event;
 	import flash.events.MouseEvent;
 	
 	import mx.containers.HBox;
@@ -41,6 +42,10 @@ package com.partycommittee.control.pagebar
 			updateControl();
 		}
 		
+		public function get pageIndex():Number {
+			return _numStepper.value;
+		}
+		
 		private function updateControl():void {
 			if (!this._pageHelper) {
 				this._btn.enabled = false;
@@ -50,7 +55,7 @@ package com.partycommittee.control.pagebar
 		}
 		
 		private function onBtnClick(event:MouseEvent):void {
-			
+			dispatchEvent(new Event("pageGoto"));
 		}
 	}
 }
