@@ -7,8 +7,8 @@ package com.partycommittee.control.renderer
 
 	public class AccrodionHeaderRenderer extends Button {
 		
-		public static const selectedFilter:GlowFilter = new GlowFilter(0x00ff00, 0.6, 5, 5, 10, 1, false);
-		public static const mouseOverFilter:GlowFilter = new GlowFilter(0xffcc00, 0.6, 5, 5, 10, 1, false);
+		public static const selectedFilter:GlowFilter = new GlowFilter(0xFFFFFF, 0.1, 5, 5, 10, 1, false);
+		public static const mouseOverFilter:GlowFilter = new GlowFilter(0xFFFFFF, 0.1, 5, 5, 10, 1, false);
 		
 		public function AccrodionHeaderRenderer() {
 			super();

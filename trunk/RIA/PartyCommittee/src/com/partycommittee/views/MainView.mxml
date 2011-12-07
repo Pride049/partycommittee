@@ -10,7 +10,10 @@
 		   xmlns:views="com.partycommittee.views.*" 
 		   xmlns:agencymgmt="com.partycommittee.views.agencymgmt.*" 
 		   xmlns:stats="com.partycommittee.views.stats.*" 
-		   xmlns:sysmgmt="com.partycommittee.views.sysmgmt.*">
+		   xmlns:sysmgmt="com.partycommittee.views.sysmgmt.*"
+		   horizontalScrollPolicy="auto"
+		   verticalScrollPolicy="auto"
+		   >
     
 	<fx:Script>
 		<![CDATA[
@@ -52,8 +55,7 @@
 	<mx:HDividedBox top="mainRow:0" bottom="mainRow:0"
 			width="100%"
 			horizontalGap="3">
-		<mx:Accordion height="100%" width="180" headerHeight="30" 
-					  headerRenderer="com.partycommittee.control.renderer.AccrodionHeaderRenderer">
+		<mx:Accordion height="100%" width="180" headerHeight="30" >
 			<agencymgmt:AgencyManageList width="100%" height="100%"/>
 			<agencymgmt:AgencyActivityList width="100%" height="100%"/>
 			<stats:StatsList width="100%" height="100%"/>
@@ -62,16 +64,16 @@
 		<mx:VBox width="100%" height="100%">
 			<control:ScrollCanvas width="100%"/>
 			<views:MainContainer width="100%" height="100%"
-								 borderColor="#f6db8a" borderStyle="solid"
+								 borderColor="#000000" borderStyle="solid"
 								 borderVisible="true"/>
 		</mx:VBox>
 	</mx:HDividedBox>
 	
-	<mx:Canvas width="100%" backgroundColor="0xb50100"
+	<mx:Canvas width="100%"
 			   top="bottomRow:0" bottom="bottomRow:0">
 		<mx:Label text="Copyright @ 2011 www.bjgaj.gov.cn All Rights Reserved"
 				  horizontalCenter="0" verticalCenter="0"
-				  color="0xffffff"/>
+				  />
 	</mx:Canvas>
    
 </mx:Canvas>
