@@ -69,7 +69,7 @@
 				}
 			}
 			
-			private function onLoginFailure(info:Object):void {
+			private function onLoginFailure(info:Object, evt:PcUserEvent):void {
 				if (info) {
 					Alert.show("Login failure!" + info.toString());
 				} else {
