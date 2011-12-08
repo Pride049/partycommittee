@@ -104,7 +104,7 @@
 			private var deleteMemberList:ArrayCollection = new ArrayCollection();
 			private function deleteMember():void {
 				deleteMemberList = new ArrayCollection(datagrid.selectedItems);
-				Alert.show("确定要删除党员【" + getSelectedNames().join(", ") + "】？", "提示", 
+				Alert.show("确定删除【" + getSelectedNames().join(", ") + "】？", "提示", 
 					Alert.YES | Alert.NO, FlexGlobals.topLevelApplication.root, onDeleteAlertClose);
 			}
 			
@@ -160,7 +160,7 @@
 	
 	<mx:VBox width="100%" top="mainRow:0" bottom="mainRow:0">
 		<mx:ControlBar width="100%" horizontalAlign="right">
-			<button:PcButton label="建立" click="addMember()"/>
+			<button:PcButton label="增加" click="addMember()"/>
 			<button:PcButton label="修改" click="updateMember()" enabled="{datagrid.selectedItem}"/>
 			<button:PcButton label="删除" click="deleteMember()" enabled="{datagrid.selectedItem}"/>
 		</mx:ControlBar>
