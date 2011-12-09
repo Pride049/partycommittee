@@ -91,7 +91,7 @@
 			
 			private function onSuccessCallback(data:Object, evt:PcMemberEvent):void {
 				this.enabled = true;
-				parentView.refreshData();
+				parentView.updateData();
 				this.close();
 			}
 			
@@ -104,7 +104,7 @@
 				var newMember:PcMemberVo = new PcMemberVo();
 				newMember.active = 1;
 				newMember.address = addressTxt.text;
-				newMember.agencyId = parentView.agencyVo.id;
+				newMember.agencyId = parentView.agency.id;
 				newMember.birthday = birthdayDateField.selectedDate;
 				newMember.birthPlace = birthplaceTxt.text;
 				newMember.dutyId = dutyCmb.selectedItem as Number;

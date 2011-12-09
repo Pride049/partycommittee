@@ -1,5 +1,6 @@
 package com.partycommittee.util
 {
+	import com.partycommittee.vo.PcAgencyVo;
 	import com.partycommittee.vo.PcMemberVo;
 	import com.partycommittee.vo.PcUserVo;
 	
@@ -13,6 +14,13 @@ package com.partycommittee.util
 			var date:Date = item[col.dataField] as Date;
 			if (date) {
 				return DateUtil.toISOString(date);
+			}
+			return "";
+		}
+		
+		public static function agencyCodeLblFunc(item:Object, col:*):String {
+			if (item as PcAgencyVo) {
+				return AgencyCodeUtil.getAgencyCodeDes((item as PcAgencyVo).codeId);
 			}
 			return "";
 		}

@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<navigation:NavigationView xmlns:fx="http://ns.adobe.com/mxml/2009" 
-						   xmlns:s="library://ns.adobe.com/flex/spark" 
-						   xmlns:mx="library://ns.adobe.com/flex/mx"
-						   styleName="mainCanvas"
-						   width="100%" height="100%" 
-						   xmlns:button="com.partycommittee.control.button.*" 
-						   xmlns:datagrid="com.partycommittee.control.datagrid.*"
-						   xmlns:navigation="com.partycommittee.manager.navigation.*" 
-						   xmlns:component="com.partycommittee.views.agencymgmt.component.*"
-						   creationComplete="onCreationCompleted()">
+<mx:Canvas xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		   xmlns:s="library://ns.adobe.com/flex/spark" 
+		   xmlns:mx="library://ns.adobe.com/flex/mx"
+		   styleName="mainCanvas"
+		   width="100%" height="100%" 
+		   xmlns:button="com.partycommittee.control.button.*" 
+		   xmlns:datagrid="com.partycommittee.control.datagrid.*"
+		   xmlns:navigation="com.partycommittee.manager.navigation.*" 
+		   xmlns:component="com.partycommittee.views.agencymgmt.component.*">
 	
 	<fx:Script>
 		<![CDATA[
@@ -39,30 +38,7 @@
 			[Bindable]
 			private var model:ModelLocator = ModelLocator.getInstance();
 			
-			private function onCreationCompleted():void {
-				onNavigateIn();
-			}
-			
-			override protected function onNavigateIn():void {
-				if (agency != model.focusAgencyVo) {
-					agency = model.focusAgencyVo;
-					updateData();
-				}
-				model.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, onModelChanged);
-			}
-			
-			override protected function onNavigateOut():void {
-				model.removeEventListener(PropertyChangeEvent.PROPERTY_CHANGE, onModelChanged);
-			}
-			
-			private function onModelChanged(event:PropertyChangeEvent):void {
-				if (event.property == "focusAgencyVo") {
-					agency = model.focusAgencyVo;
-					updateData();
-				}
-			}
-			
-			private function updateData():void {
+			public function updateData():void {
 				if (!this._agency) {
 					return;
 				}
@@ -129,21 +105,8 @@
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
-	<navigation:constraintRows>
-		<s:ConstraintRow id="headerRow" height="80"/>
-		<s:ConstraintRow id="mainRow" height="100%"/>
-	</navigation:constraintRows>
 	
-	<mx:Canvas top="headerRow:0" bottom="headerRow:0"
-			   width="100%">
-		<mx:Label fontSize="20" fontWeight="bold"
-				  horizontalCenter="0" verticalCenter="0"
-				  text="组织基本情况"/>
-	</mx:Canvas>
-	
-	<mx:VBox top="mainRow:0" bottom="mainRow:0"
-			 horizontalCenter="0"
-			 width="100%" maxWidth="500"
+	<mx:VBox width="100%" maxWidth="500"
 			 horizontalAlign="center" verticalAlign="middle"
 			 horizontalScrollPolicy="off" verticalScrollPolicy="off">
 		<mx:Form width="100%" top="mainRow:0" bottom="mainRow:0">
@@ -170,4 +133,4 @@
 		</mx:ControlBar>
 	</mx:VBox>
 	
-</navigation:NavigationView>
+</mx:Canvas>
