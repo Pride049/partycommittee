@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 width="100%" 
+		 xmlns:button="com.partycommittee.control.button.*"
+		 creationComplete="onCreationCompleted()">
+	<fx:Script>
+		<![CDATA[
+			import com.partycommittee.manager.tree.TreeContextMenuMgr;
+			import com.partycommittee.model.ModelLocator;
+			import com.partycommittee.vo.PcAgencyVo;
+			
+			import mx.events.PropertyChangeEvent;
+			
+			[Bindable]
+			public var model:ModelLocator = ModelLocator.getInstance();
+			
+			private function onCreationCompleted():void {
+				model.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, onPropertyChanged);
+			}
+			
+			private var _agency:PcAgencyVo;
+			[Bindable]
+			public function get agency():PcAgencyVo {
+				return this._agency;
+			}
+			public function set agency(value:PcAgencyVo):void {
+				this._agency = value;
+				updateDisplay();
+			}
+			
+			private function updateDisplay():void {
+				if (!agency) {
+					updateBtn.enabled = false;
+					deleteBtn.enabled = false;
+					return;
+				}
+				updateBtn.enabled = true;
+				deleteBtn.enabled = true;
+			}
+			
+			private function onPropertyChanged(event:PropertyChangeEvent):void {
+				if (event.property == "focusAgencyVo") {
+					agency = model.focusAgencyVo;
+				}
+			}
+			
+			private function onUpdateBtnClick():void {
+				TreeContextMenuMgr.getInstance().onUpdate(null);
+			}
+			
+			private function onDeleteBtnClick():void {
+				TreeContextMenuMgr.getInstance().onDelete(null);
+			}
+			
+			private function onRevacationBtnClick():void {
+			}
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<button:PcButton id="updateBtn" label="修改" enabled="false" click="onUpdateBtnClick()"/>
+	<button:PcButton id="deleteBtn" label="删除" enabled="false" click="onDeleteBtnClick()"/>
+	<button:PcButton id="revacationBtn" label="撤销" enabled="false" click="onRevacationBtnClick()"/>
+</mx:HBox>

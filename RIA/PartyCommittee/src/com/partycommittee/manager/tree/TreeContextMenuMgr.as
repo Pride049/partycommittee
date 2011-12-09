@@ -175,7 +175,7 @@ package com.partycommittee.manager.tree
 			}
 		}
 		
-		private function onUpdate(event:ContextMenuEvent):void {
+		public function onUpdate(event:ContextMenuEvent):void {
 			var node:Node = tree.selectedItem as Node;
 			if (!node || !node.entity) {
 				return;
@@ -192,7 +192,7 @@ package com.partycommittee.manager.tree
 			}
 		}
 		
-		private function onDelete(event:ContextMenuEvent):void {
+		public function onDelete(event:ContextMenuEvent):void {
 			var node:Node = tree.selectedItem as Node;
 			if (!node) {
 				return;

@@ -10,7 +10,8 @@
 		   xmlns:agencyviews="com.partycommittee.views.agencymgmt.agencyviews.*" 
 		   xmlns:systemviews="com.partycommittee.views.sysmgmt.systemviews.*"
 		   creationComplete="onCreationCompleted()" 
-		   xmlns:agencyactivity="com.partycommittee.views.agencymgmt.agencyactivity.*">
+		   xmlns:agencyactivity="com.partycommittee.views.agencymgmt.agencyactivity.*" 
+		   xmlns:agencymgmt="com.partycommittee.views.agencymgmt.*">
 	
 	<fx:Script>
 		<![CDATA[
@@ -23,6 +24,7 @@
 			
 			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
+			import mx.events.DividerEvent;
 			
 			[Bindable]
 			private var model:ModelLocator = ModelLocator.getInstance();
@@ -35,6 +37,31 @@
 				agencyEvent.dispatch();
 				
 				model.tree = this.tree;
+				
+				hDivBox.liveDragging = true;
+				hDivBox.doubleClickEnabled = true;
+				hDivBox.getDividerAt(0).addEventListener(MouseEvent.DOUBLE_CLICK, onDividerDoubleClick);
+			}
+			
+			private var _isTreeMinSize:Boolean = false;
+			private var _treeNormalSize:Number = 228;
+			private function onDividerDoubleClick(event:MouseEvent):void {
+				if (this._isTreeMinSize) {
+					expandTree();
+				} else {
+					unExpandTree();
+				}
+			}
+			
+			private function expandTree():void {
+				treeBox.width = this._treeNormalSize;
+				this._isTreeMinSize = false;
+			}
+			
+			private function unExpandTree():void {
+				this._treeNormalSize = treeBox.width;
+				treeBox.width = 0;
+				this._isTreeMinSize = true;
 			}
 			
 			private function noAgencyHandler(info:Object, evt:PcAgencyEvent):void {
@@ -53,19 +80,21 @@
 	</fx:Script>
 	
 	<mx:Canvas id="container" width="100%" height="100%">
-		<mx:ViewStack id="mainViewStack" width="100%" height="100%" creationPolicy="all"
-					  left="16" right="6" top="6" bottom="6">
-			<agencyviews:AgencyView id="orgView" width="100%" height="100%" viewStack="{mainViewStack}"/>
-			<partymember:PartyMemberView id="partyMemberView" width="100%" height="100%" viewStack="{mainViewStack}"/>
-			<agencyactivity:AgencyActivityView id="agencyActivityView" width="100%" height="100%" viewStack="{mainViewStack}"/>
-			<systemviews:AccountManageView id="accountView" width="100%" height="100%" viewStack="{mainViewStack}"/>
-		</mx:ViewStack>
-		
-		<closebox:CloseBox width="180" height="100%">
-			<tree:LoadingTree id="tree" width="180" height="{container.height}" 
-							  dataProvider="{model.treeCollection}"
-							  itemClick="onItemClick()"/>
-		</closebox:CloseBox>
+		<mx:HDividedBox id="hDivBox" width="100%" height="100%">
+			<mx:VBox id="treeBox" width="228" height="100%"
+					 horizontalScrollPolicy="off" verticalScrollPolicy="off">
+				<tree:LoadingTree id="tree" width="100%" height="100%" 
+								  dataProvider="{model.treeCollection}"
+								  itemClick="onItemClick()"/>
+				<tree:TreeControlBar width="100%"/>
+			</mx:VBox>
+			<mx:ViewStack id="mainViewStack" width="100%" height="100%" creationPolicy="all"
+						  left="6" right="6" top="6" bottom="6">
+				<agencymgmt:OrgView id="orgView" width="100%" height="100%" viewStack="{mainViewStack}"/>
+				<agencyactivity:AgencyActivityView id="agencyActivityView" width="100%" height="100%" viewStack="{mainViewStack}"/>
+				<systemviews:AccountManageView id="accountView" width="100%" height="100%" viewStack="{mainViewStack}"/>
+			</mx:ViewStack>
+		</mx:HDividedBox>
 	</mx:Canvas>
 	
 </mx:Canvas>

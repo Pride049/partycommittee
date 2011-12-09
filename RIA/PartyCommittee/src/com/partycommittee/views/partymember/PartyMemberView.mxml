@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<navigation:NavigationView xmlns:fx="http://ns.adobe.com/mxml/2009" 
-						   xmlns:s="library://ns.adobe.com/flex/spark" 
-						   xmlns:mx="library://ns.adobe.com/flex/mx"
-						   styleName="mainCanvas"
-						   width="100%" height="100%" 
-						   xmlns:button="com.partycommittee.control.button.*" 
-						   xmlns:datagrid="com.partycommittee.control.datagrid.*"
-						   xmlns:navigation="com.partycommittee.manager.navigation.*"
-						   creationComplete="onCreationCompleted()">
+<mx:Canvas xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		   xmlns:s="library://ns.adobe.com/flex/spark" 
+		   xmlns:mx="library://ns.adobe.com/flex/mx"
+		   styleName="mainCanvas"
+		   width="100%" height="100%" 
+		   xmlns:button="com.partycommittee.control.button.*" 
+		   xmlns:datagrid="com.partycommittee.control.datagrid.*"
+		   xmlns:navigation="com.partycommittee.manager.navigation.*">
 	
 	<fx:Script>
 		<![CDATA[
@@ -33,48 +32,23 @@
 			[Bindable]
 			private var dp:ArrayCollection = new ArrayCollection();
 			
-			private function onCreationCompleted():void {
-			}
-			
-			override protected function onNavigateIn():void {
-				model.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, onPropertyChanged);
-				if (model.focusAgencyVo == agencyVo) {
-					return;
-				}
-				agencyVo = model.focusAgencyVo;
-				refreshData();
-			}
-			
-			override protected function onNavigateOut():void {
-				if (model.hasEventListener(PropertyChangeEvent.PROPERTY_CHANGE)) {
-					model.removeEventListener(PropertyChangeEvent.PROPERTY_CHANGE, onPropertyChanged);
-				}
-			}
-			
-			private function onPropertyChanged(event:PropertyChangeEvent):void {
-				if (event.property == "focusAgencyVo") {
-					agencyVo = model.focusAgencyVo;
-					refreshData();
-				}
-			}
-			
-			private var _agencyVo:PcAgencyVo;
-			public function set agencyVo(value:PcAgencyVo):void {
-				this._agencyVo = value;
+			private var _agency:PcAgencyVo;
+			public function set agency(value:PcAgencyVo):void {
+				this._agency = value;
 			}
 			[Bindable]
-			public function get agencyVo():PcAgencyVo {
-				return this._agencyVo;
+			public function get agency():PcAgencyVo {
+				return this._agency;
 			}
 			
-			public function refreshData():void {
-				if (!agencyVo || (agencyVo.codeId != 10 && agencyVo.codeId != 13)) {
+			public function updateData():void {
+				if (!agency || (agency.codeId != 10 && agency.codeId != 13)) {
 					this.enabled = false;
 					return;
 				}
 				this.enabled = true;
 				var memberEvent:PcMemberEvent = new PcMemberEvent(PcMemberEvent.GET_MEMBERS_BY_AGENCYID, 
-					null, agencyVo.id);
+					null, agency.id);
 				memberEvent.successCallback = onRefreshMembers;
 				memberEvent.dispatch();
 			}
@@ -84,7 +58,7 @@
 			}
 			
 			private function addMember():void {
-				if (!agencyVo) {
+				if (!agency) {
 					return;
 				}
 				var window:PartyMemberWindow = new PartyMemberWindow();
@@ -132,7 +106,7 @@
 			
 			private function onDeleteMemberSuccess(data:Object, evt:PcMemberEvent):void {
 				this.enabled = true;
-				refreshData();
+				updateData();
 			}
 			
 			private function onDeleteMemberFailure(info:Object, evt:PcMemberEvent):void {
@@ -146,19 +120,8 @@
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
 	
-	<navigation:constraintRows>
-		<s:ConstraintRow id="headerRow" height="30"/>
-		<s:ConstraintRow id="mainRow" height="100%"/>
-	</navigation:constraintRows>
-	
-	<mx:Canvas top="headerRow:0" bottom="headerRow:0"
-			   width="100%">
-		<mx:Label fontSize="20" fontWeight="bold"
-				  horizontalCenter="0" verticalCenter="0"
-				  text="党员管理"/>
-	</mx:Canvas>
-	
-	<mx:VBox width="100%" top="mainRow:0" bottom="mainRow:0">
+	<mx:VBox width="100%" height="100%"
+			 horizontalScrollPolicy="off" verticalScrollPolicy="off">
 		<mx:ControlBar width="100%" horizontalAlign="right">
 			<button:PcButton label="增加" click="addMember()"/>
 			<button:PcButton label="修改" click="updateMember()" enabled="{datagrid.selectedItem}"/>
@@ -191,4 +154,4 @@
 		</mx:ControlBar>
 	</mx:VBox>
 	
-</navigation:NavigationView>
+</mx:Canvas>

@@ -69,11 +69,10 @@
 		</mx:VBox>
 	</mx:HDividedBox>
 	
-	<mx:Canvas width="100%"
+	<mx:Canvas width="100%" backgroundColor="0xefefef"
 			   top="bottomRow:0" bottom="bottomRow:0">
 		<mx:Label text="Copyright @ 2011 www.bjgaj.gov.cn All Rights Reserved"
-				  horizontalCenter="0" verticalCenter="0"
-				  />
+				  horizontalCenter="0" verticalCenter="0"/>
 	</mx:Canvas>
    
 </mx:Canvas>

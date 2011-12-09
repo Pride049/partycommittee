@@ -33,6 +33,11 @@ package com.partycommittee.manager.tree
 			model.treeCollection.removeAll();
 			var rootItem:Node = createItem(root);
 			model.treeCollection.addItem(rootItem);
+			
+			// Load children under root node.
+			model.tree.selectedItem = rootItem;
+			model.focusAgencyVo = rootItem.entity as PcAgencyVo;
+			model.tree.fetchChildrenData(rootItem);
 		}
 		
 		public function createItem(agencyVo:PcAgencyVo):Node {
