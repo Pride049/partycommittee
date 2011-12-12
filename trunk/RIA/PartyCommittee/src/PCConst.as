@@ -93,5 +93,22 @@ package
 		public static const EDU_PRIMARY_SCHOOL_NORMAL:int = 25;
 		public static const EDU_OTHER:int = 26;
 
+		// WorkPlan type define.
+		public static const WORKPLAN_TYPE_YEARLY:int = 1;
+		public static const WORKPLAN_TYPE_QUARTER:int = 2;
+		public static const WORKPLAN_TYPE_QUARTER_SUMMARY:int = 3;
+		public static const WORKPLAN_TYPE_YEARLY_SUMMARY:int = 4;
+		public static const WORKPLAN_TYPE_CLASS:int = 5;
+		public static const WORKPLAN_TYPE_MEETING_BRANCH_MEMBER:int = 6;
+		public static const WORKPLAN_TYPE_MEETING_BRANCH_LIFE:int = 7;
+		public static const WORKPLAN_TYPE_MEETING_BRANCH_COMMITTEE:int = 8;
+		public static const WORKPLAN_TYPE_MEETING_OTHER:int = 9;
+		public static const WORKPLAN_TYPE_MEETING_TEAM:int = 10;
+		
+		// Workflow type defien.
+		public static const WORKFLOW_TYPE_REPORT:int = 1;
+		public static const WORKFLOW_TYPE_APPROVAL:int = 2;
+		public static const WORKFLOW_TYPE_EVALUATE:int = 3;
+		
 	}
 }

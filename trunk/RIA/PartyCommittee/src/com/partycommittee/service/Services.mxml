@@ -28,7 +28,7 @@
 			
 			public function init():void {
 				var url:String = FlexGlobals.topLevelApplication.url;
-				url = "http://localhost:8080/PartyCommittee/index.jsp";
+//				url = "http://localhost:8080/PartyCommittee/index.jsp";
 				
 				// Init service locater
 				var scheme:String = URLUtil.getProtocol(url);
@@ -74,6 +74,9 @@
 					 channelSet="{channelSet}"/>
 	<mx:RemoteObject id="pcAgency"
 					 destination="PcAgencyRo"
+					 channelSet="{channelSet}"/>
+	<mx:RemoteObject id="pcWorkPlan"
+					 destination="PcWorkPlan"
 					 channelSet="{channelSet}"/>
 	
     <!-- HTTPService example

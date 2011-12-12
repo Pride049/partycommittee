@@ -58,8 +58,6 @@ package com.partycommittee.control.tree {
       // For display the progress when loading configuration files and add node manually.
       private var loadingBar:ProgressBar;
 
-      private var _treeMenu:ContextMenu;
-	  
       /**
       * Constructor
       */
@@ -73,8 +71,6 @@ package com.partycommittee.control.tree {
 		 labelFunction = loadingTreeLabelFunction;
 
          //_menu = createContextMenu();
-         _treeMenu = new ContextMenu();
-		 TreeContextMenuMgr.getInstance().registeContextMenu(this, this._treeMenu);
 
          // Event listener:
          addEventListener(ListEvent.ITEM_DOUBLE_CLICK, onItemDoubleClick);
@@ -432,6 +428,8 @@ package com.partycommittee.control.tree {
 		  parentNode.initialized = true;
 		  expandItem(parentNode, false);
 		  expandItem(parentNode, true);
+		  
+		  (dataProvider as ArrayCollection).dispatchEvent(new CollectionEvent(CollectionEvent.COLLECTION_CHANGE));
 	  }
 	  
       /**
@@ -447,6 +445,9 @@ package com.partycommittee.control.tree {
 		 }
 		 if (node) {
 			 parentNode.children.addItem(node);
+			 if (parentNode.entity is PcAgencyVo) {
+				 (parentNode.entity as PcAgencyVo).children.addItem(agencyVo);
+			 }
 		 }
       }
 

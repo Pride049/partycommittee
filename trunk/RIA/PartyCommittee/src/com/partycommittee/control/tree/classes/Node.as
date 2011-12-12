@@ -12,6 +12,15 @@ package com.partycommittee.control.tree.classes
    [Bindable]
    public class Node extends EventDispatcher
    {
+	   // check box selected
+	   private var _ckSelected:Boolean;
+	   public function set ckSelected(value:Boolean):void {
+	       this._ckSelected = value;
+	   }
+	   public function get ckSelected():Boolean {
+	   	   return this._ckSelected;
+	   }
+	   
       // Node type.
       private var _type:String;
 

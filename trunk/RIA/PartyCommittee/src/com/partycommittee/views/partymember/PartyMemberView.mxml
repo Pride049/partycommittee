@@ -6,7 +6,8 @@
 		   width="100%" height="100%" 
 		   xmlns:button="com.partycommittee.control.button.*" 
 		   xmlns:datagrid="com.partycommittee.control.datagrid.*"
-		   xmlns:navigation="com.partycommittee.manager.navigation.*">
+		   xmlns:navigation="com.partycommittee.manager.navigation.*" 
+		   xmlns:pagebar="com.partycommittee.control.pagebar.*">
 	
 	<fx:Script>
 		<![CDATA[
@@ -17,6 +18,8 @@
 			import com.partycommittee.util.LblFunctionHelper;
 			import com.partycommittee.vo.PcAgencyVo;
 			import com.partycommittee.vo.PcMemberVo;
+			import com.partycommittee.vo.page.PageHelperVo;
+			import com.partycommittee.vo.page.PageResultVo;
 			
 			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
@@ -41,20 +44,43 @@
 				return this._agency;
 			}
 			
+			private var _page:PageHelperVo;
+			[Bindable]
+			public function get page():PageHelperVo {
+				if (!this._page) {
+					this._page = new PageHelperVo();
+				}
+				return this._page;
+			}
+			public function set page(value:PageHelperVo):void {
+				this._page = value;
+			}
+			
 			public function updateData():void {
 				if (!agency || (agency.codeId != 10 && agency.codeId != 13)) {
 					this.enabled = false;
 					return;
 				}
 				this.enabled = true;
+				refreshData();
+			}
+			
+			private function refreshData():void {
 				var memberEvent:PcMemberEvent = new PcMemberEvent(PcMemberEvent.GET_MEMBERS_BY_AGENCYID, 
 					null, agency.id);
+				memberEvent.page = page;
 				memberEvent.successCallback = onRefreshMembers;
 				memberEvent.dispatch();
 			}
 			
 			private function onRefreshMembers(data:Object, event:PcMemberEvent):void {
 				dp = data as ArrayCollection;
+//				var pageResult:PageResultVo = data as PageResultVo;
+//				if (!pageResult) {
+//					return;
+//				}
+//				page = pageResult.page;
+//				dp = pageResult.list;
 			}
 			
 			private function addMember():void {
@@ -148,6 +174,7 @@
 			</mx:columns>
 		</mx:AdvancedDataGrid>
 		<mx:ControlBar width="100%" horizontalAlign="right">
+			<pagebar:PageBar page="{page}" width="100%"/>
 			<button:PcButton label="下载Excel模板"/>
 			<button:PcButton label="上传党员Excel"/>
 			<button:PcButton label="生成Excel"/>

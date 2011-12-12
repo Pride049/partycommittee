@@ -41,7 +41,7 @@
     </fx:Script>
 	
 	<mx:constraintRows>
-		<s:ConstraintRow id="headerRow" height="180"/>
+		<s:ConstraintRow id="headerRow" height="125"/>
 		<s:ConstraintRow id="mainRow" height="100%"/>
 		<s:ConstraintRow id="bottomGap" height="2"/>
 		<s:ConstraintRow id="bottomRow" height="30"/>

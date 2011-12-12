@@ -43,8 +43,7 @@ package com.partycommittee.model
 			this._tree = value;
 		}
 	 	
-		public var pcUserCollection:ArrayCollection = new ArrayCollection();
-		
+		public var loginUser:PcUserVo;
 		public var focusAgencyVo:PcAgencyVo;
 		
 		public var LOGIN_PAGE:String;

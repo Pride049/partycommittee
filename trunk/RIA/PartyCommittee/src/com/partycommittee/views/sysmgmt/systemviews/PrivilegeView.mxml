@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		   xmlns:s="library://ns.adobe.com/flex/spark" 
+		   xmlns:mx="library://ns.adobe.com/flex/mx" 
+		   width="100%" height="100%" 
+		   xmlns:tree="com.partycommittee.control.tree.*"
+		   creationComplete="creationCompleted()">
+	<fx:Script>
+		<![CDATA[
+			import com.partycommittee.control.tree.classes.Node;
+			import com.partycommittee.model.ModelLocator;
+			import com.partycommittee.vo.PcAgencyVo;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.events.CollectionEvent;
+			
+			[Bindable]
+			private var model:ModelLocator = ModelLocator.getInstance();
+			
+			[Bindable]
+			private var dp:ArrayCollection;
+			
+			private var _agencyIdArry:Array;
+			[Bindable]
+			public function get agencyIdArry():Array {
+				this._agencyIdArry = new Array();
+				getSelection(dp);
+				return this._agencyIdArry;
+			}
+			public function set agencyIdArry(value:Array):void {
+				this._agencyIdArry = value;
+				updateData();
+			}
+			
+			private function creationCompleted():void {
+				dp = model.treeCollection;
+				dp.addEventListener(CollectionEvent.COLLECTION_CHANGE, onCollectionChanged);
+				dpHandler(dp);
+			}
+			
+			private function onCollectionChanged(event:CollectionEvent):void {
+				updateData();
+			}
+			
+			private function dpHandler(nodes:ArrayCollection):void {
+				for each (var node:Node in nodes) {
+					node.ckSelected = false;
+					if (node.children && node.children.length) {
+						dpHandler(node.children);
+					}
+				}
+			}
+			
+			private function updateData():void {
+				if (!this._agencyIdArry || !this._agencyIdArry.length) {
+					return;
+				}
+				
+				updateSelection(dp);
+			}
+			
+			private function updateSelection(nodes:ArrayCollection):void {
+				for each (var node:Node in nodes) {
+					if (node.children && node.children.length) {
+						updateSelection(node.children);
+					}
+					var agency:PcAgencyVo = node.entity as PcAgencyVo;
+					for each (var id:Number in this._agencyIdArry) {
+						if (id == agency.id) {
+							node.ckSelected = true;
+						}
+					}
+				}
+			}
+			
+			private function getSelection(nodes:ArrayCollection):void {
+				for each (var node:Node in nodes) {
+					if (node.children && node.children.length) {
+						getSelection(node.children);
+					}
+					if (node.ckSelected) {
+						var agency:PcAgencyVo = node.entity as PcAgencyVo;
+						this._agencyIdArry.push(agency.id);
+					}
+				}
+			}
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<tree:LoadingTree id="privilegeTree" width="100%" height="100%" dataProvider="{dp}"
+					  itemRenderer="com.partycommittee.control.tree.TreeCheckBoxRenderer"/>
+</mx:Canvas>

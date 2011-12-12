@@ -3,6 +3,7 @@ package com.partycommittee.events
 	import com.adobe.cairngorm.control.CairngormEvent;
 	import com.partycommittee.util.CRUDEventType;
 	import com.partycommittee.vo.PcUserVo;
+	import com.partycommittee.vo.page.PageHelperVo;
 	
 	import mx.collections.ArrayCollection;
 	
@@ -10,6 +11,7 @@ package com.partycommittee.events
 		public static const PCUSEREVENT:String = "com.partycommittee.events.PCUserEvent";
 		
 		public static const LOGIN:String = "login";
+		public static const GET_SESSION:String = "getSession";
 		
 		private var _user:PcUserVo;
 		public function set user(value:PcUserVo):void {
@@ -33,6 +35,14 @@ package com.partycommittee.events
 		}
 		public function get userList():ArrayCollection {
 			return this._userList;
+		}
+		
+		private var _page:PageHelperVo;
+		public function set page(value:PageHelperVo):void {
+			this._page = value;
+		}
+		public function get page():PageHelperVo {
+			return this._page;
 		}
 		
 		public function PcUserEvent(kind:String = "READ", user:PcUserVo = null, userList:ArrayCollection = null) {

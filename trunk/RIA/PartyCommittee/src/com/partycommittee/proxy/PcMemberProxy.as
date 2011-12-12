@@ -3,6 +3,7 @@ package com.partycommittee.proxy
 	import com.adobe.cairngorm.business.ServiceLocator;
 	import com.partycommittee.vo.PcAgencyVo;
 	import com.partycommittee.vo.PcMemberVo;
+	import com.partycommittee.vo.page.PageHelperVo;
 	
 	import mx.collections.ArrayCollection;
 	import mx.rpc.IResponder;
@@ -18,6 +19,10 @@ package com.partycommittee.proxy
 		
 		public function getMemberListByAgencyId(agencyId:Number):void {
 			service.getMemberListByAgencyId(agencyId);
+		}
+		
+		public function getMemberListPageByAgencyId(agencyId:Number, page:PageHelperVo):void {
+			service.getMemberListPageByAgencyId(agencyId, page);
 		}
 		
 		public function createMember(member:PcMemberVo):void {

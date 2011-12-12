@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		   xmlns:s="library://ns.adobe.com/flex/spark" 
+		   xmlns:mx="library://ns.adobe.com/flex/mx"
+		   styleName="mainCanvas"
+		   width="100%" height="100%" 
+		   label="年度计划"
+		   creationComplete="onCreationCompleted()"
+		   xmlns:button="com.partycommittee.control.button.*" 
+		   xmlns:richtexttoolbar="com.partycommittee.control.richtexttoolbar.*">
+	<fx:Script>
+		<![CDATA[
+			import com.partycommittee.events.PcWorkPlanEvent;
+			import com.partycommittee.util.CRUDEventType;
+			import com.partycommittee.util.WorkPlanCodeUtil;
+			import com.partycommittee.vo.PcAgencyVo;
+			import com.partycommittee.vo.PcWorkPlanContentVo;
+			import com.partycommittee.vo.PcWorkPlanVo;
+			
+			import mx.controls.Alert;
+			
+			[Bindable]
+			private var titleStr:String;
+			
+			private var year:Number;
+			private var _workPlan:PcWorkPlanVo;
+			[Bindable]
+			public function get workPlan():PcWorkPlanVo {
+				return this._workPlan;
+			}
+			public function set workPlan(value:PcWorkPlanVo):void {
+				this._workPlan = value;
+			}
+			
+			private var _agency:PcAgencyVo;
+			[Bindable]
+			public function get agency():PcAgencyVo {
+				return this._agency;
+			}
+			public function set agency(value:PcAgencyVo):void {
+				this._agency = value;
+			}
+			
+			private function onCreationCompleted():void {
+				updateData();
+			}
+			
+			private function updateData():void {
+				year = new Date().fullYear;
+				titleStr = year + "年度工作计划";
+				
+				if (!agency) {
+					return;
+				}
+				var workPlanEvt:PcWorkPlanEvent = new PcWorkPlanEvent(PcWorkPlanEvent.GET_WORKPLAN_YEARLY, agency);
+				workPlanEvt.year = year;
+				workPlanEvt.successCallback = onGetWorkPlanSuccess;
+				workPlanEvt.dispatch();
+			}
+			
+			private function onGetWorkPlanSuccess(data:Object, workPlanEvt:PcWorkPlanEvent):void {
+				if (!data) {
+					return;
+				}
+				workPlan = data as PcWorkPlanVo;
+				personTxt.text = workPlan.workPlanContent.memberName;
+				textArea.htmlText = workPlan.workPlanContent.content;
+			}
+			
+			private function onSaveAndCommit():void {
+				if (workPlan) {
+					doUpdate(true);
+				} else {
+					doCreate(true);
+				}
+			}
+			
+			private function onSaveWithoutSubmit():void {
+				if (workPlan) {
+					doUpdate();
+				} else {
+					doCreate();
+				}
+			}
+			
+			private function doUpdate(isCommit:Boolean = false):void {
+				var workPlanEvt:PcWorkPlanEvent = new PcWorkPlanEvent(CRUDEventType.UPDATE);
+				workPlanEvt.workPlan = getUpdateWorkPlan();
+				workPlanEvt.failureCallback = onWorkPlanSave;
+				workPlanEvt.dispatch();
+			}
+			
+			private function doCreate(isCommit:Boolean = false):void {
+				var workPlanEvt:PcWorkPlanEvent = new PcWorkPlanEvent(CRUDEventType.CREATE);
+				workPlanEvt.workPlan = getNewWorkPlan();
+				workPlanEvt.failureCallback = onWorkPlanSave;
+				workPlanEvt.dispatch();
+			}
+			
+			private function onWorkPlanSave(info:Object, workPlanEvt:PcWorkPlanEvent):void {
+				Alert.show("保存年度工作计划失败！");
+			}
+			
+			private function onWorkPlanSaveAndCommit(info:Object, workPlanEvt:PcWorkPlanEvent):void {
+				Alert.show("保存且上报年度工作计划失败！");
+			}
+			
+			private function getNewWorkPlan():PcWorkPlanVo {
+				var workPlan:PcWorkPlanVo = new PcWorkPlanVo();
+				workPlan.typeId = PCConst.WORKPLAN_TYPE_YEARLY;
+				workPlan.year = new Date().fullYear;
+				workPlan.agencyId = agency.id;
+				workPlan.workPlanContent = getWorkPlanContent();
+				return workPlan;
+			}
+			
+			private function getUpdateWorkPlan():PcWorkPlanVo {
+				workPlan.workPlanContent.memberName = personTxt.text;
+				workPlan.workPlanContent.content = textArea.htmlText;
+				return workPlan;
+			}
+			
+			private function getWorkPlanContent():PcWorkPlanContentVo {
+				var workPlanContent:PcWorkPlanContentVo = new PcWorkPlanContentVo();
+				workPlanContent.content = textArea.htmlText;
+				workPlanContent.memberName = personTxt.text;
+				workPlanContent.type = PCConst.WORKFLOW_TYPE_REPORT;
+				return workPlanContent;
+			}
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<mx:VBox width="100%" height="100%">
+		<mx:Label fontSize="20" fontWeight="bold" text="{titleStr}"/>
+		<mx:HBox width="100%">
+			<mx:Label text="填写人："/>
+			<mx:TextInput id="personTxt" width="200"/>
+		</mx:HBox>
+		<richtexttoolbar:PopupRichTextToolBar width="100%" target="{textArea}"/>
+		<mx:TextArea id="textArea" width="100%" height="100%"/>
+		<mx:ControlBar width="100%" horizontalAlign="center" verticalAlign="middle">
+			<button:PcButton label="保存及上报" click="onSaveAndCommit()"/>
+			<button:PcButton label="保存暂不上报" click="onSaveWithoutSubmit()"/>
+		</mx:ControlBar>
+	</mx:VBox>
+	
+</mx:Canvas>

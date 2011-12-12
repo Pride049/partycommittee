@@ -36,10 +36,14 @@ package com.partycommittee.commands
 					pcUserProxy.updatePcUser(pcUserEvent.user);
 					break;
 				case CRUDEventType.READ:
-					pcUserProxy.getPcUserList();
+//					pcUserProxy.getPcUserList();
+					pcUserProxy.getPcUserListByPage(pcUserEvent.page);
 					break;
-				case 'login':
+				case PcUserEvent.LOGIN:
 					pcUserProxy.login(pcUserEvent.user.username, pcUserEvent.user.password);
+					break;
+				case PcUserEvent.GET_SESSION:
+					pcUserProxy.getLoginUser();
 					break;
 				default :
 					break;
@@ -57,14 +61,15 @@ package com.partycommittee.commands
 				case CRUDEventType.UPDATE:
 					break;
 				case CRUDEventType.READ:
-					model.pcUserCollection = data as ArrayCollection;
 					break;
-				case 'login':
+				case PcUserEvent.LOGIN:
 					if (data) {
 						navigateToURL(new URLRequest(model.INDEX_PAGE),"_top");
 					} else {
 						onFailure();
 					}
+					break;
+				case PcUserEvent.GET_SESSION:
 					break;
 				default:
 					break;

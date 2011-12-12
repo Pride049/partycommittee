@@ -2,6 +2,7 @@ package com.partycommittee.proxy
 {
 	import com.adobe.cairngorm.business.ServiceLocator;
 	import com.partycommittee.vo.PcUserVo;
+	import com.partycommittee.vo.page.PageHelperVo;
 	
 	import mx.collections.ArrayCollection;
 	import mx.controls.Alert;
@@ -32,8 +33,16 @@ package com.partycommittee.proxy
 			service.getPcUserList();
 		}
 		
+		public function getPcUserListByPage(page:PageHelperVo):void {
+			service.getPcUserListByPage(page);
+		}
+		
 		public function login(username:String, password:String):void {
 			service.login(username, password);
+		}
+		
+		public function getLoginUser():void {
+			service.getLoginUser();
 		}
 		
 	}

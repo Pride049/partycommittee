@@ -50,11 +50,11 @@ package com.partycommittee.manager.tree
 			return this._menu;
 		}
 		
-		public function registeContextMenu(loadingTree:LoadingTree, loadingTreeMenu:ContextMenu):void {
-			loadingTreeMenu.hideBuiltInItems();
-			loadingTree.contextMenu = loadingTreeMenu;
+		public function registeContextMenu(loadingTree:LoadingTree):void {
 			tree = loadingTree;
-			menu = loadingTreeMenu;
+			menu = new ContextMenu();
+			menu.hideBuiltInItems();
+			loadingTree.contextMenu = menu;
 			menu.addEventListener(ContextMenuEvent.MENU_SELECT, onMenuSelected);
 			initMenuItems();
 		}

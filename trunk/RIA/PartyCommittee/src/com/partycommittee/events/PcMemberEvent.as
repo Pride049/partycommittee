@@ -4,6 +4,7 @@ package com.partycommittee.events
 	import com.partycommittee.util.CRUDEventType;
 	import com.partycommittee.vo.PcMemberVo;
 	import com.partycommittee.vo.PcUserVo;
+	import com.partycommittee.vo.page.PageHelperVo;
 	
 	import mx.collections.ArrayCollection;
 	
@@ -34,6 +35,14 @@ package com.partycommittee.events
 		}
 		public function get agencyId():Number {
 			return this._agencyId;
+		}
+		
+		private var _page:PageHelperVo;
+		public function get page():PageHelperVo {
+			return this._page;
+		}
+		public function set page(value:PageHelperVo):void {
+			this._page = value;
 		}
 		
 		private var _kind:String;
