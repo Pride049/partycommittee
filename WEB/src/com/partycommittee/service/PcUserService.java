@@ -11,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.partycommittee.persistence.daoimpl.PcUserDaoImpl;
 import com.partycommittee.persistence.po.PcUser;
 import com.partycommittee.remote.vo.PcUserVo;
+import com.partycommittee.remote.vo.helper.PageHelperVo;
+import com.partycommittee.remote.vo.helper.PageResultVo;
 
 @Transactional
 @Service("PCUserService")
@@ -24,7 +26,7 @@ public class PcUserService {
 	
 	public PcUserVo login(String username, String password) {
 		PcUser user = pcUserDaoImpl.login(username, password);
-		if (user == null) {
+		if (user == null || user.getStatus() != 1) {
 			return null;
 		}
 		PcUserVo userVo = PcUserVo.fromPCUser(user);
@@ -40,6 +42,23 @@ public class PcUserService {
 			}
 		}
 		return list;
+	}
+	
+	public PageResultVo<PcUserVo> getUserListByPage(PageHelperVo page) {
+		PageResultVo<PcUserVo> result = new PageResultVo<PcUserVo>();
+		List<PcUserVo> list = new ArrayList<PcUserVo>();
+		PageResultVo<PcUser> pageResult = pcUserDaoImpl.getUserListByPage(page);
+		if (pageResult == null) {
+			return null;
+		}
+		result.setPageHelper(pageResult.getPageHelper());
+		if (pageResult.getList() != null && pageResult.getList().size() > 0) {
+			for (PcUser user : pageResult.getList()) {
+				list.add(PcUserVo.fromPCUser(user));
+			}
+		}
+		result.setList(list);
+		return result;
 	}
 	
 	public void createUser(PcUserVo userVo) {

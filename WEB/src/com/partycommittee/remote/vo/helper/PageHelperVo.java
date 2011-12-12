@@ -1,6 +1,6 @@
 package com.partycommittee.remote.vo.helper;
 
-public class PageHelper {
+public class PageHelperVo {
 
 	private int recordCount;
 	private int pageCount;

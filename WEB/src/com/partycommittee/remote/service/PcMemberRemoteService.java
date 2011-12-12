@@ -9,6 +9,8 @@ import org.springframework.flex.remoting.RemotingInclude;
 import org.springframework.stereotype.Service;
 
 import com.partycommittee.remote.vo.PcMemberVo;
+import com.partycommittee.remote.vo.helper.PageHelperVo;
+import com.partycommittee.remote.vo.helper.PageResultVo;
 import com.partycommittee.service.PcMemberService;
 
 @Service("PcMemberRo")
@@ -24,6 +26,11 @@ public class PcMemberRemoteService {
 	@RemotingInclude
 	public List<PcMemberVo> getMemberListByAgencyId(int agencyId) {
 		return pcMemberService.getMemberListByAgencyId(agencyId);
+	}
+	
+	@RemotingInclude
+	public PageResultVo<PcMemberVo> getMemberListPageByAgencyId(int agencyId, PageHelperVo page) {
+		return pcMemberService.getMemberListPageByAgencyId(agencyId, page);
 	}
 	
 	@RemotingInclude

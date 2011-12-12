@@ -28,6 +28,7 @@ public class PcUser implements java.io.Serializable {
 	private Integer status;
 	private String comment;
 	private Date lastlogintime;
+	private String privilege;
 	
 	@Id
 	@Column(name = "id", unique = true, nullable = false)
@@ -94,6 +95,14 @@ public class PcUser implements java.io.Serializable {
 	}
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+	
+	@Column(name = "privilege")
+	public String getPrivilege() {
+		return this.privilege;
+	}
+	public void setPrivilege(String privilege) {
+		this.privilege = privilege;
 	}
 
 }

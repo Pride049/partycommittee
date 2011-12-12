@@ -2,11 +2,15 @@ package com.partycommittee.persistence.daoimpl;
 
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+
 import org.springframework.stereotype.Repository;
 
 import com.partycommittee.persistence.dao.PcUserDao;
 import com.partycommittee.persistence.po.PcUser;
-import com.partycommittee.remote.vo.helper.PageHelper;
+import com.partycommittee.remote.vo.helper.PageHelperVo;
+import com.partycommittee.remote.vo.helper.PageResultVo;
 
 @Repository("PCUserDaoImpl")
 public class PcUserDaoImpl extends JpaDaoBase implements PcUserDao {
@@ -21,10 +25,34 @@ public class PcUserDaoImpl extends JpaDaoBase implements PcUserDao {
 		}
 		return null;
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public PageResultVo<PcUser> getUserListByPage(PageHelperVo page) {
+		try {
+			PageResultVo<PcUser> pageResult = new PageResultVo<PcUser>();
+			String sql = "from PcUser";
+			String totalSql = "select count (*) from PcUser";
+			List<Long> totalList = super.find(totalSql);
+			if (totalList != null) {
+				page.setRecordCount(totalList.get(0).intValue());
+			}
+			EntityManager em = super.getEntityManager();
+			Query q = em.createQuery(sql);
+			q.setFirstResult(page.getPageSize() * (page.getPageIndex() - 1));
+			q.setMaxResults(page.getPageSize());
+			pageResult.setList((List<PcUser>)q.getResultList());
+			pageResult.setPageHelper(page);
+			return pageResult;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return null;
+	}
 
 	@Override
 	public List<PcUser> getUserListByConditions(PcUser user,
-			PageHelper pageHelper) {
+			PageHelperVo pageHelper) {
 		return null;
 	}
 
