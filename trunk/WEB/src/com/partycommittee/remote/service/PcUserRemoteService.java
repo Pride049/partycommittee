@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import com.partycommittee.constants.SessionConstant;
 import com.partycommittee.remote.vo.PcUserVo;
+import com.partycommittee.remote.vo.helper.PageHelperVo;
+import com.partycommittee.remote.vo.helper.PageResultVo;
 import com.partycommittee.service.PcUserService;
 
 import flex.messaging.FlexContext;
@@ -36,8 +38,21 @@ public class PcUserRemoteService {
 	}
 	
 	@RemotingInclude
+	public PcUserVo getLoginUser() {
+		HttpServletRequest request = FlexContext.getHttpRequest();
+		HttpSession session = request.getSession();
+		PcUserVo user = (PcUserVo)session.getAttribute(SessionConstant.SESSON_USER);
+		return user;
+	}
+	
+	@RemotingInclude
 	public List<PcUserVo> getPcUserList() {
 		return pCUserService.getUserList();
+	}
+	
+	@RemotingInclude
+	public PageResultVo<PcUserVo> getPcUserListByPage(PageHelperVo page) {
+		return pCUserService.getUserListByPage(page);
 	}
 	
 	@RemotingInclude

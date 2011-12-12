@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.partycommittee.constants.SessionConstant;
-import com.partycommittee.persistence.po.PcUser;
 import com.partycommittee.remote.vo.PcUserVo;
 
 public class LoginVerifyFilter implements Filter {

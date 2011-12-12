@@ -16,6 +16,7 @@ public class PcUserVo implements Serializable {
 	private Integer status;
 	private String comment;
 	private Date lastlogintime;
+	private String privilege;
 	
 	public Long getId() {
 		return id;
@@ -80,6 +81,14 @@ public class PcUserVo implements Serializable {
 	public void setLastlogintime(Date lastlogintime) {
 		this.lastlogintime = lastlogintime;
 	}
+	
+	public String getPrivilege() {
+		return this.privilege;
+	}
+	
+	public void setPrivilege(String privilege) {
+		this.privilege = privilege;
+	}
 
 	public static PcUserVo fromPCUser(PcUser user) {
 		PcUserVo pcUserVo = new PcUserVo();
@@ -91,6 +100,7 @@ public class PcUserVo implements Serializable {
 		pcUserVo.setStatus(user.getStatus());
 		pcUserVo.setComment(user.getComment());
 		pcUserVo.setLastlogintime(user.getLastlogintime());
+		pcUserVo.setPrivilege(user.getPrivilege());
 		return pcUserVo;
 	}
 	
@@ -102,7 +112,9 @@ public class PcUserVo implements Serializable {
 		pcUser.setEmail(pcUserVo.getEmail());
 		pcUser.setPhone(pcUserVo.getPhone());
 		pcUser.setStatus(pcUserVo.getStatus());
+		pcUser.setComment(pcUserVo.getComment());
 		pcUser.setLastlogintime(pcUserVo.getLastlogintime());
+		pcUser.setPrivilege(pcUserVo.getPrivilege());
 		return pcUser;
 	}
 
