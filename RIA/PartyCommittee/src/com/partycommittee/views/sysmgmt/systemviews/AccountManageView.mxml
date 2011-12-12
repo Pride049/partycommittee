@@ -6,9 +6,10 @@
 						   width="100%" height="100%" 
 						   xmlns:button="com.partycommittee.control.button.*" 
 						   xmlns:datagrid="com.partycommittee.control.datagrid.*"
-						   creationComplete="onCreationCompleted()" 
 						   xmlns:filter="com.partycommittee.control.filter.*"
-						   xmlns:navigation="com.partycommittee.manager.navigation.*">
+						   xmlns:navigation="com.partycommittee.manager.navigation.*" 
+						   xmlns:pagebar="com.partycommittee.control.pagebar.*"
+						   creationComplete="onCreationCompleted()">
 	
 	<fx:Script>
 		<![CDATA[
@@ -18,6 +19,8 @@
 			import com.partycommittee.util.CRUDEventType;
 			import com.partycommittee.util.LblFunctionHelper;
 			import com.partycommittee.vo.PcUserVo;
+			import com.partycommittee.vo.page.PageHelperVo;
+			import com.partycommittee.vo.page.PageResultVo;
 			
 			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
@@ -28,14 +31,40 @@
 			[Bindable]
 			private var model:ModelLocator = ModelLocator.getInstance();
 			
+			[Bindable]
+			private var dp:ArrayCollection = new ArrayCollection();
+			
+			[Bindable]
+			private var page:PageHelperVo;
+			
 			private function onCreationCompleted():void {
+				if (!page) {
+					page = new PageHelperVo();
+					page.pageIndex = 1;
+				}
+				pageBar.addEventListener("pageChange", refreshData);
+			}
+			
+			override protected function onNavigateIn():void {
 				refreshData();
 			}
 			
-			public function refreshData():void {
+			public function refreshData(evt:* = null):void {
 				var userEvt:PcUserEvent = new PcUserEvent();
+				userEvt.page = page;
+				userEvt.successCallback = onGetUsersSuccess;
 				userEvt.failureCallback = onGetUsersFailure;
 				userEvt.dispatch();
+			}
+			
+			private function onGetUsersSuccess(data:Object, evt:PcUserEvent):void {
+//				dp = data as ArrayCollection;
+				var pageResult:PageResultVo = data as PageResultVo;
+				if (!pageResult) {
+					return;
+				}
+				page = pageResult.page;
+				dp = pageResult.list;
 			}
 			
 			private function onGetUsersFailure(info:Object, evt:PcUserEvent):void {
@@ -125,7 +154,7 @@
 		</mx:ControlBar>
 		<mx:AdvancedDataGrid id="datagrid" width="100%" height="100%" 
 										   headerStyleName="dataGridHeader"
-										   dataProvider="{model.pcUserCollection}">
+										   dataProvider="{dp}">
 			<mx:columns>
 				<mx:AdvancedDataGridColumn headerText="用户名" dataField="username"/>
 				<mx:AdvancedDataGridColumn headerText="Email" dataField="email"/>
@@ -135,6 +164,7 @@
 				<mx:AdvancedDataGridColumn headerText="最近登录时间" dataField="lastLoginTime"/>
 			</mx:columns>
 		</mx:AdvancedDataGrid>
+		<pagebar:PageBar id="pageBar" width="100%" page="{page}"/>
 	</mx:VBox>
 	
 </navigation:NavigationView>

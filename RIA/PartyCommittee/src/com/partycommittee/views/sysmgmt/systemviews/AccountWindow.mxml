@@ -9,7 +9,9 @@
 					  close="PopUpManager.removePopUp(this)" 
 					  xmlns:button="com.partycommittee.control.button.*"
 					  horizontalScrollPolicy="off" verticalScrollPolicy="off"
-					  creationComplete="onCreationCompleted()">
+					  creationComplete="onCreationCompleted()" 
+					  xmlns:tree="com.partycommittee.control.tree.*" 
+					  xmlns:systemviews="com.partycommittee.views.sysmgmt.systemviews.*">
 	<fx:Script>
 		<![CDATA[
 			import com.partycommittee.events.PcUserEvent;
@@ -46,7 +48,11 @@
 				usernameTxt.text = this._userVo.username;
 				emailTxt.text = this._userVo.email;
 				telTxt.text = this._userVo.phone;
-				commentTxt.text = this._userVo.comment;
+				commentTxt.text = this._userVo.description;
+				
+				if (this._userVo.privilege) {
+					privilegeView.agencyIdArry = this._userVo.privilege.split(",");
+				}
 			}
 			
 			private function save():void {
@@ -86,7 +92,8 @@
 				newUser.phone = telTxt.text;
 				newUser.username = usernameTxt.text;
 				newUser.password = passwordTxt.text;
-				newUser.comment = commentTxt.text;
+				newUser.description = commentTxt.text;
+				newUser.privilege = privilegeView.agencyIdArry.join(",");
 				return newUser;
 			}
 			
@@ -108,6 +115,7 @@
 			}
 			
 			private function choose():void {
+				this.currentState = "privilege";
 			}
 		]]>
 	</fx:Script>
@@ -115,39 +123,43 @@
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
 	
-	<mx:VBox height="100%" width="100%"
+	<mx:HBox id="mainContainer" width="100%" height="100%"
 			 horizontalAlign="center" verticalAlign="middle"
 			 horizontalScrollPolicy="off" verticalScrollPolicy="off">
-		<mx:Form width="450" height="100%"
-				 minWidth="200">
-			<mx:FormItem label="启用:" required="true" width="100%">
-				<mx:CheckBox id="statucCk" selected="true"/>
-			</mx:FormItem>
-			<mx:FormItem label="用户名:" width="100%">
-				<mx:TextInput id="usernameTxt" width="100%"/>
-			</mx:FormItem>
-			<mx:FormItem label="密码:" required="true" width="100%">
-				<mx:TextInput id="passwordTxt" width="100%" displayAsPassword="true"/>
-			</mx:FormItem>
-			<mx:FormItem label="确认密码:" required="true" width="100%">
-				<mx:TextInput id="confirmPwTxt" width="100%" displayAsPassword="true"/>
-			</mx:FormItem>
-			<mx:FormItem label="管理范围:" width="100%">
-				<button:PcButton label="选择..." click="choose()"/>
-			</mx:FormItem>
-			<mx:FormItem label="Email:" width="100%">
-				<mx:TextInput id="emailTxt" width="100%"/>
-			</mx:FormItem>
-			<mx:FormItem label="电话:" width="100%">
-				<mx:TextInput id="telTxt" width="100%" restrict="0-9\-"/>
-			</mx:FormItem>
-			<mx:FormItem label="备注:" width="100%">
-				<mx:TextArea id="commentTxt" width="100%" height="60"/>
-			</mx:FormItem>
-		</mx:Form>
-		<mx:ControlBar width="100%" horizontalAlign="center">
-			<button:PcButton label="保存" click="save()"/>
-			<button:PcButton label="取消" click="close()"/>
-		</mx:ControlBar>
-	</mx:VBox>
+		<mx:VBox height="100%" width="100%"
+				 horizontalAlign="center" verticalAlign="middle"
+				 horizontalScrollPolicy="off" verticalScrollPolicy="off">
+			<mx:Form width="450" height="100%"
+					 minWidth="200">
+				<mx:FormItem label="启用:" required="true" width="100%">
+					<mx:CheckBox id="statucCk" selected="true"/>
+				</mx:FormItem>
+				<mx:FormItem label="用户名:" width="100%">
+					<mx:TextInput id="usernameTxt" width="100%"/>
+				</mx:FormItem>
+				<mx:FormItem label="密码:" required="true" width="100%">
+					<mx:TextInput id="passwordTxt" width="100%" displayAsPassword="true"/>
+				</mx:FormItem>
+				<mx:FormItem label="确认密码:" required="true" width="100%">
+					<mx:TextInput id="confirmPwTxt" width="100%" displayAsPassword="true"/>
+				</mx:FormItem>
+				<mx:FormItem label="Email:" width="100%">
+					<mx:TextInput id="emailTxt" width="100%"/>
+				</mx:FormItem>
+				<mx:FormItem label="电话:" width="100%">
+					<mx:TextInput id="telTxt" width="100%" restrict="0-9\-"/>
+				</mx:FormItem>
+				<mx:FormItem label="备注:" width="100%">
+					<mx:TextArea id="commentTxt" width="100%" height="60"/>
+				</mx:FormItem>
+			</mx:Form>
+			<mx:ControlBar width="100%" horizontalAlign="center">
+				<button:PcButton label="保存" click="save()"/>
+				<button:PcButton label="取消" click="close()"/>
+			</mx:ControlBar>
+		</mx:VBox>
+		<mx:VRule height="90%"/>
+		<systemviews:PrivilegeView id="privilegeView" width="230" height="100%"/>
+	</mx:HBox>
+	
 </control:EscapeWindow>

@@ -14,6 +14,7 @@ package com.partycommittee.vo
         public var phone:String;
 		public var status:Number;
 		public var lastlogintime:Date;
-		public var comment:String;
+		public var description:String;
+		public var privilege:String;
 	}
 }

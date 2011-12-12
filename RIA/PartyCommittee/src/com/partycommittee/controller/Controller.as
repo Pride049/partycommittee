@@ -4,9 +4,11 @@ package com.partycommittee.controller
 	import com.partycommittee.commands.PcAgencyCommand;
 	import com.partycommittee.commands.PcMemberCommand;
 	import com.partycommittee.commands.PcUserCommand;
+	import com.partycommittee.commands.PcWorkPlanCommand;
 	import com.partycommittee.events.PcAgencyEvent;
 	import com.partycommittee.events.PcMemberEvent;
 	import com.partycommittee.events.PcUserEvent;
+	import com.partycommittee.events.PcWorkPlanEvent;
 
 	public class Controller extends FrontController {
 		public function Controller() {
@@ -17,6 +19,7 @@ package com.partycommittee.controller
 			addCommand(PcUserEvent.PCUSEREVENT, PcUserCommand);
 			addCommand(PcMemberEvent.PCMEMBER_EVENT, PcMemberCommand);
 			addCommand(PcAgencyEvent.PCAGENCY_EVENT, PcAgencyCommand);
+			addCommand(PcWorkPlanEvent.PCWORKPLAN_EVENT, PcWorkPlanCommand);
 		}
 	}
    

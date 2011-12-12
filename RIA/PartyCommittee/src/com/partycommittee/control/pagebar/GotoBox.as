@@ -9,6 +9,7 @@ package com.partycommittee.control.pagebar
 	import mx.containers.HBox;
 	import mx.controls.NumericStepper;
 	import mx.controls.TextInput;
+	import mx.events.FlexEvent;
 	
 	import spark.effects.interpolation.NumberInterpolator;
 
@@ -19,7 +20,7 @@ package com.partycommittee.control.pagebar
 			super();
 			
 			this._btn = new PcButton();
-			this._btn.label = "Go to";
+			this._btn.label = "跳转到";
 			this._btn.addEventListener(MouseEvent.CLICK, onBtnClick);
 			this.addChild(this._btn);
 			

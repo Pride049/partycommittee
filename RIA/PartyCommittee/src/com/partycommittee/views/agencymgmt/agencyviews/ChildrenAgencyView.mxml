@@ -61,11 +61,7 @@
 			
 			private function updateDp():void {
 				var selectedNode:Node = model.tree.selectedItem as Node;
-				dp = new ArrayCollection();
-				var children:ArrayCollection = selectedNode.children;
-				for (var i:int = 0; i < children.length; i++) {
-					dp.addItem(children.getItemAt(i).entity as PcAgencyVo);
-				}
+				dp = (selectedNode.entity as PcAgencyVo).children;
 			}
 			
 			private function printDg():void {

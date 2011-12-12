@@ -1,5 +1,7 @@
 package com.partycommittee.vo
 {
+	import mx.collections.ArrayCollection;
+
 	[RemoteClass(alias="com.partycommittee.remote.vo.PcAgencyVo")]
 	public class PcAgencyVo {
 		public function PcAgencyVo() {
@@ -15,6 +17,8 @@ package com.partycommittee.vo
 		public var tel:String;
 		public var comment:String;
 		public var setupDatetime:Date;
+		
+		public var children:ArrayCollection = new ArrayCollection();
 		
 		public var ext:String;
 	}

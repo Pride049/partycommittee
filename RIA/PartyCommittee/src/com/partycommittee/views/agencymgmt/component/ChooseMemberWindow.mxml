@@ -10,7 +10,8 @@
 					  title="选择组织负责人"
 					  creationComplete="onCreationCompleted()"
 					  xmlns:button="com.partycommittee.control.button.*"
-					  horizontalScrollPolicy="off" verticalScrollPolicy="off">
+					  horizontalScrollPolicy="off" verticalScrollPolicy="off" 
+					  xmlns:pagebar="com.partycommittee.control.pagebar.*">
 	<fx:Script>
 		<![CDATA[
 			import com.partycommittee.events.PcMemberEvent;
@@ -19,6 +20,8 @@
 			import com.partycommittee.util.LblFunctionHelper;
 			import com.partycommittee.vo.PcAgencyVo;
 			import com.partycommittee.vo.PcMemberVo;
+			import com.partycommittee.vo.page.PageHelperVo;
+			import com.partycommittee.vo.page.PageResultVo;
 			
 			import mx.collections.ArrayCollection;
 			import mx.managers.PopUpManager;
@@ -35,6 +38,18 @@
 				this._agency = value;
 			}
 			
+			private var _page:PageHelperVo;
+			[Bindable]
+			public function get page():PageHelperVo {
+				if (!this._page) {
+					this._page = new PageHelperVo();
+				}
+				return this._page;
+			}
+			public function set page(value:PageHelperVo):void {
+				this._page = value;
+			}
+			
 			private var _selectedMember:PcMemberVo;
 			public function get selectedMember():PcMemberVo {
 				return this._selectedMember;
@@ -49,12 +64,19 @@
 					return;
 				}
 				var evt:PcMemberEvent = new PcMemberEvent(PcMemberEvent.GET_MEMBERS_BY_AGENCYID, null, agency.id);
+				evt.page = page;
 				evt.successCallback = onLoadMembers;
 				evt.dispatch();
 			}
 			
 			private function onLoadMembers(data:Object, evt:PcMemberEvent):void {
-				dp = data as ArrayCollection;
+//				dp = data as ArrayCollection;
+				var pageResult:PageResultVo = data as PageResultVo;
+				if (!pageResult) {
+					return;
+				}
+				page = pageResult.page;
+				dp = pageResult.list;
 			}
 			
 			private function onOkBtnClick():void {
@@ -85,6 +107,7 @@
 										   labelFunction="{LblFunctionHelper.dateLblFunc}"/>
 			</mx:columns>
 		</mx:AdvancedDataGrid>
+		<pagebar:PageBar page="{page}" width="100%"/>
 		<mx:ControlBar width="100%" horizontalAlign="center">
 			<button:PcButton label="确定" click="onOkBtnClick()"
 							 enabled="{datagrid.selectedItem}"/>

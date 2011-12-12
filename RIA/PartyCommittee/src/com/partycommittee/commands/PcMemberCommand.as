@@ -29,6 +29,7 @@ package com.partycommittee.commands
 					break;
 				case PcMemberEvent.GET_MEMBERS_BY_AGENCYID:
 					pcMemberProxy.getMemberListByAgencyId(pcMemberEvent.agencyId);
+//					pcMemberProxy.getMemberListPageByAgencyId(pcMemberEvent.agencyId, pcMemberEvent.page);
 					break;
 				default :
 					break;

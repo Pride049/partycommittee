@@ -18,9 +18,12 @@
 			import com.partycommittee.control.tree.classes.Node;
 			import com.partycommittee.events.AccordionItemClickEvent;
 			import com.partycommittee.events.PcAgencyEvent;
+			import com.partycommittee.events.PcUserEvent;
 			import com.partycommittee.manager.navigation.NavigationMgr;
+			import com.partycommittee.manager.tree.TreeContextMenuMgr;
 			import com.partycommittee.model.ModelLocator;
 			import com.partycommittee.vo.PcAgencyVo;
+			import com.partycommittee.vo.PcUserVo;
 			
 			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
@@ -30,17 +33,38 @@
 			private var model:ModelLocator = ModelLocator.getInstance();
 			
 			private function onCreationCompleted():void {
-				// Load agency by 
-				var agencyEvent:PcAgencyEvent = new PcAgencyEvent(PcAgencyEvent.GET_ROOT_AGENCY_BY_USERID);
-				agencyEvent.userId = 1;
-				agencyEvent.failureCallback = noAgencyHandler;
-				agencyEvent.dispatch();
-				
 				model.tree = this.tree;
+				TreeContextMenuMgr.getInstance().registeContextMenu(tree);
 				
 				hDivBox.liveDragging = true;
 				hDivBox.doubleClickEnabled = true;
 				hDivBox.getDividerAt(0).addEventListener(MouseEvent.DOUBLE_CLICK, onDividerDoubleClick);
+				
+				initUserData();
+			}
+			
+			private function initUserData():void {
+				var userEvent:PcUserEvent = new PcUserEvent(PcUserEvent.GET_SESSION);
+				userEvent.successCallback = onGetSessionSuccess;
+				userEvent.dispatch();
+			}
+			
+			private function onGetSessionSuccess(data:Object, evt:PcUserEvent):void {
+				var user:PcUserVo = data as PcUserVo;
+				model.loginUser = user;
+				if (!user) {
+					var agencyEvent:PcAgencyEvent = new PcAgencyEvent(PcAgencyEvent.GET_ROOT_AGENCY_BY_USERID);
+					agencyEvent.userId = 1;
+					agencyEvent.failureCallback = noAgencyHandler;
+					agencyEvent.dispatch();
+					return;
+				}
+				
+				// Load agency by 
+				var agencyEvent:PcAgencyEvent = new PcAgencyEvent(PcAgencyEvent.GET_ROOT_AGENCY_BY_USERID);
+				agencyEvent.userId = model.loginUser.id;
+				agencyEvent.failureCallback = noAgencyHandler;
+				agencyEvent.dispatch();
 			}
 			
 			private var _isTreeMinSize:Boolean = false;
