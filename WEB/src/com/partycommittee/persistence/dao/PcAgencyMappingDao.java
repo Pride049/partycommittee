@@ -17,4 +17,6 @@ public interface PcAgencyMappingDao {
 	public void deleteAgencyMapping(PcAgencyMapping agencyMapping);
 	
 	public void deleteAgencyMappingByAgencyId(Integer id);
+
+	void updateAgencyMappingByUser(Long id, Integer rootAgencyId);
 }

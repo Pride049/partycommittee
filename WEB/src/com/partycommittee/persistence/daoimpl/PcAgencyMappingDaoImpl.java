@@ -79,4 +79,20 @@ public class PcAgencyMappingDaoImpl extends JpaDaoBase implements PcAgencyMappin
 		}
 	}
 
+	@Override
+	public void updateAgencyMappingByUser(Long id, Integer rootAgencyId) {
+		try {
+			final String sql = "update PcAgencyMapping set agencyId = " + rootAgencyId 
+					+ " where userId = " + id;
+			this.getJpaTemplate().execute(new JpaCallback<Object>(){
+				public Object doInJpa(EntityManager em)throws PersistenceException {
+					int size = em.createQuery(sql).executeUpdate();
+					return size;
+				}
+	 		 });
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 }

@@ -39,8 +39,9 @@ public interface PcUserDao {
 	/**
 	 * Create new user.
 	 * @param user
+	 * @return PcUser
 	 */
-	public void createUser(PcUser user);
+	public PcUser createUser(PcUser user);
 	
 	/**
 	 * Update user.

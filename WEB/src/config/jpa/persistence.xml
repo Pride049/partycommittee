@@ -7,7 +7,7 @@
 	<persistence-unit name="JpaBottle" transaction-type="RESOURCE_LOCAL">
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
   		<properties>
-  		    <property name="hibernate.dialect" value="org.hibernate.dialect.SQLServerDialect"/>
+  		    <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect"/>
 	  	</properties>
 	</persistence-unit>
 </persistence>
