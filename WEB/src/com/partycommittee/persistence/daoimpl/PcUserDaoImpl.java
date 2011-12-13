@@ -36,6 +36,11 @@ public class PcUserDaoImpl extends JpaDaoBase implements PcUserDao {
 			List<Long> totalList = super.find(totalSql);
 			if (totalList != null) {
 				page.setRecordCount(totalList.get(0).intValue());
+				if ((page.getRecordCount() % page.getPageSize()) != 0) {
+					page.setPageCount(page.getRecordCount() / page.getPageSize() + 1);
+				} else {
+					page.setPageCount(page.getRecordCount() / page.getPageSize());
+				}
 			}
 			EntityManager em = super.getEntityManager();
 			Query q = em.createQuery(sql);

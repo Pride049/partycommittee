@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.partycommittee.persistence.daoimpl.PcAgencyMappingDaoImpl;
 import com.partycommittee.persistence.daoimpl.PcUserDaoImpl;
+import com.partycommittee.persistence.po.PcAgencyMapping;
 import com.partycommittee.persistence.po.PcUser;
 import com.partycommittee.remote.vo.PcUserVo;
 import com.partycommittee.remote.vo.helper.PageHelperVo;
@@ -70,20 +71,32 @@ public class PcUserService {
 	
 	public void createUser(PcUserVo userVo) {
 		PcUser user = PcUserVo.toPCUser(userVo);
-		String privilege = userVo.getPrivilege();
 		user = pcUserDaoImpl.createUser(user);
-		if (privilege == null || privilege.equals("")) {
-			return;
-		}
-		Integer rootAgencyId = getRootAgencyId(privilege.split(","));
-		if (rootAgencyId != null) {
-			pcAgencyMappingDaoImpl.updateAgencyMappingByUser(user.getId(), rootAgencyId);
-		}
+		updateUserAgencyMapping(user.getId(), userVo.getPrivilege());
 	}
 	
 	public void updateUser(PcUserVo userVo) {
 		PcUser user = PcUserVo.toPCUser(userVo);
 		pcUserDaoImpl.updateUser(user);
+		updateUserAgencyMapping(user.getId(), userVo.getPrivilege());
+	}
+	
+	private void updateUserAgencyMapping(Long userId, String privilege) {
+		if (privilege == null || privilege.equals("")) {
+			return;
+		}
+		Integer rootAgencyId = getRootAgencyId(privilege.split(","));
+		if (rootAgencyId != null) {
+			List<PcAgencyMapping> mappingList = pcAgencyMappingDaoImpl.getAgencyMappingByUserId(userId.intValue());
+			if (mappingList == null || mappingList.size() == 0) {
+				PcAgencyMapping newMapping = new PcAgencyMapping();
+				newMapping.setAgencyId(rootAgencyId);
+				newMapping.setUserId(userId.intValue());
+				pcAgencyMappingDaoImpl.createAgencyMapping(newMapping);
+				return;
+			}
+			pcAgencyMappingDaoImpl.updateAgencyMappingByUser(userId, rootAgencyId);
+		}
 	}
 	
 	public void deleteUser(PcUserVo userVo) {
