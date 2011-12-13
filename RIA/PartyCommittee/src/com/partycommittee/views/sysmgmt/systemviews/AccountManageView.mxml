@@ -63,7 +63,7 @@
 				if (!pageResult) {
 					return;
 				}
-				page = pageResult.page;
+				page = pageResult.pageHelper;
 				dp = pageResult.list;
 			}
 			

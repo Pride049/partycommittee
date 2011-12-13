@@ -32,7 +32,7 @@
 				pages = new Array();
 				if (this._page.pageCount) {
 					for (var i:int = 0; i < this._page.pageCount; i++) {
-						pages.push(i);
+						pages.push(i + 1);
 					}
 				}
 				if (this._page.recordCount) {
@@ -64,13 +64,13 @@
 				 startingIndex="{(page.pageIndex - 3 &lt; 0) ? 0 : (page.pageIndex - 3)}"> 
 		<mx:LinkButton label="{(prepeater.currentIndex + 1).toString()}" 
 					   enabled="{int(prepeater.currentIndex) + 1 != page.pageIndex}" 
-					   click="getData(event.currentTarget.repeaterIndex)"/> 
+					   click="getData(event.currentTarget.repeaterIndex + 1)"/> 
 	</mx:Repeater> 
 	<mx:LinkButton label="&gt;" 
 				   enabled="{page.pageIndex &lt; page.pageCount}" 
 				   click="getData(page.pageIndex + 1)"/> 
 	<mx:LinkButton label="&gt;&gt;" 
-				   enabled="{page.pageIndex != page.pageCount}" 
+				   enabled="{page.pageIndex != page.pageCount &amp;&amp; page.pageCount != 0}" 
 				   click="getData(page.pageCount)"/> 
 	<s:Spacer width="100%"/>
 	<mx:Label text="{totalRecordStr}"/>

@@ -8,7 +8,7 @@ package com.partycommittee.vo.page
 		public function PageResultVo() {
 		}
 		
-		public var page:PageHelperVo;
+		public var pageHelper:PageHelperVo;
 		public var list:ArrayCollection;
 	}
 }
