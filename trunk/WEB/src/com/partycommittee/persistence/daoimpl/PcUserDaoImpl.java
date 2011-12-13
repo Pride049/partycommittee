@@ -31,7 +31,7 @@ public class PcUserDaoImpl extends JpaDaoBase implements PcUserDao {
 	public PageResultVo<PcUser> getUserListByPage(PageHelperVo page) {
 		try {
 			PageResultVo<PcUser> pageResult = new PageResultVo<PcUser>();
-			String sql = "from PcUser";
+			String sql = "from PcUser where 1 = 1";
 			String totalSql = "select count (*) from PcUser";
 			List<Long> totalList = super.find(totalSql);
 			if (totalList != null) {
@@ -57,13 +57,15 @@ public class PcUserDaoImpl extends JpaDaoBase implements PcUserDao {
 	}
 
 	@Override
-	public void createUser(PcUser user) {
+	public PcUser createUser(PcUser user) {
 		try {
 			user.setId(null);
 			super.persist(user);
+			return user;
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
+		return null;
 	}
 
 	@Override

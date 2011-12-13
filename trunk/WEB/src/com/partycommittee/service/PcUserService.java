@@ -8,6 +8,7 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.partycommittee.persistence.daoimpl.PcAgencyMappingDaoImpl;
 import com.partycommittee.persistence.daoimpl.PcUserDaoImpl;
 import com.partycommittee.persistence.po.PcUser;
 import com.partycommittee.remote.vo.PcUserVo;
@@ -22,6 +23,12 @@ public class PcUserService {
 	private PcUserDaoImpl pcUserDaoImpl;
 	public void setPCUserDaoImpl(PcUserDaoImpl pcUserDaoImpl) {
 		this.pcUserDaoImpl = pcUserDaoImpl;
+	}
+	
+	@Resource(name="PcAgencyMappingDaoImpl")
+	private PcAgencyMappingDaoImpl pcAgencyMappingDaoImpl;
+	public void setPcAgencyMappingDaoImpl(PcAgencyMappingDaoImpl pcAgencyMappingDaoImpl) {
+		this.pcAgencyMappingDaoImpl = pcAgencyMappingDaoImpl;
 	}
 	
 	public PcUserVo login(String username, String password) {
@@ -63,7 +70,15 @@ public class PcUserService {
 	
 	public void createUser(PcUserVo userVo) {
 		PcUser user = PcUserVo.toPCUser(userVo);
-		pcUserDaoImpl.createUser(user);
+		String privilege = userVo.getPrivilege();
+		user = pcUserDaoImpl.createUser(user);
+		if (privilege == null || privilege.equals("")) {
+			return;
+		}
+		Integer rootAgencyId = getRootAgencyId(privilege.split(","));
+		if (rootAgencyId != null) {
+			pcAgencyMappingDaoImpl.updateAgencyMappingByUser(user.getId(), rootAgencyId);
+		}
 	}
 	
 	public void updateUser(PcUserVo userVo) {
@@ -76,4 +91,21 @@ public class PcUserService {
 		pcUserDaoImpl.deleteUser(user);
 	}
 	
+	private Integer getRootAgencyId(String[] strings) {
+		Integer temp = null;
+		for (String str : strings) {
+			Long id = Long.parseLong(str);
+			if (id == null) {
+				continue;
+			}
+			if (temp == null) {
+				temp = id.intValue();
+			} else {
+				if (id.intValue() < temp) {
+					temp = id.intValue();
+				}
+			}
+		}
+		return temp;
+	}
 }
