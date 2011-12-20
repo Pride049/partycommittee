@@ -68,9 +68,11 @@
 	</fx:Declarations>
 	<mx:TabNavigator width="100%" height="100%">
 		<agencyviews:AgencyView id="agencyView" width="100%" height="100%" 
-								label="组织基本情况" agency="{agency}"/>
+								label="基本情况" agency="{agency}"/>
+		<!--
 		<agencyviews:ChildrenAgencyView id="childrenView" width="100%" height="100%"
 										label="下级党组织管理" agency="{agency}"/>
+		-->
 		<partymember:PartyMemberView id="memberView" width="100%" height="100%" 
 									 label="党员管理" agency="{agency}"/>
 	</mx:TabNavigator>

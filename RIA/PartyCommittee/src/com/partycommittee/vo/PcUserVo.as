@@ -1,5 +1,7 @@
 package com.partycommittee.vo 
 {
+	import mx.collections.ArrayCollection;
+
 	[Bindable]
 	[RemoteClass(alias="com.partycommittee.remote.vo.PcUserVo")]
 	public class PcUserVo {
@@ -17,5 +19,7 @@ package com.partycommittee.vo
 		public var description:String;
 		public var privilege:String;
 		public var comment:String;
+		
+		public var agencyList:ArrayCollection;
 	}
 }

@@ -7,9 +7,9 @@ package com.partycommittee.util
 		public static function getSexCodeDes(codeId:Number):String {
 			switch (codeId) {
 				case PCConst.SEX_MALE:
-					return "男性";
+					return "男";
 				case PCConst.SEX_FEMALE:
-					return "女性";
+					return "女";
 				default:
 					return null;
 			}

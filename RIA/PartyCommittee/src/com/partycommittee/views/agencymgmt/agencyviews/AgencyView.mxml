@@ -106,27 +106,60 @@
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
 	
-	<mx:VBox width="100%" maxWidth="500"
+	<mx:VBox width="100%" height="100%"
 			 horizontalAlign="center" verticalAlign="middle"
 			 horizontalScrollPolicy="off" verticalScrollPolicy="off">
-		<mx:Form width="100%" top="mainRow:0" bottom="mainRow:0">
-			<mx:FormItem label="组织性质" width="100%">
-				<mx:Label id="orgTypeLbl" text="{agencyCodeDes}" width="100%"/>
-			</mx:FormItem>
-			<mx:FormItem label="组织名称" required="true" width="100%">
-				<mx:TextInput id="orgNameTxt" width="100%"/>
-			</mx:FormItem>
-			<mx:FormItem label="组织负责人" width="100%">
-				<component:PersonChooseBox id="personChooseBox" width="100%"
-										   agency="{agency}"/>
-			</mx:FormItem>
-			<mx:FormItem label="电话号码" width="100%">
-				<mx:TextInput id="telTxt" width="100%" restrict="0-9\-"/>
-			</mx:FormItem>
-			<mx:FormItem label="描述" width="100%">
-				<mx:TextArea id="descriptionTxt" width="100%" height="100%"/>
-			</mx:FormItem>
-		</mx:Form>
+		<mx:HBox width="100%" height="100%"
+				 horizontalAlign="center" verticalAlign="middle"
+				 horizontalScrollPolicy="off" verticalScrollPolicy="off">
+			<mx:Form width="100%" labelWidth="80">
+				<mx:FormItem label="组织性质:" width="100%">
+					<mx:Label id="orgTypeLbl" text="{agencyCodeDes}" width="100%"/>
+				</mx:FormItem>
+				<mx:FormItem label="组织名称:" required="true" width="100%">
+					<mx:TextInput id="orgNameTxt" width="100%"/>
+				</mx:FormItem>
+				<mx:FormItem label="组织负责人:" width="100%"
+							 visible="{agency &amp;&amp; agency.codeId != PCConst.AGENCY_CODE_BOARDCOMMITTEES}"
+							 includeInLayout="{agency &amp;&amp; agency.codeId != PCConst.AGENCY_CODE_BOARDCOMMITTEES}">
+					<component:PersonChooseBox id="personChooseBox" width="100%"
+											   agency="{agency}"/>
+				</mx:FormItem>
+				<mx:FormItem label="电话号码:" width="100%">
+					<mx:TextInput id="telTxt" width="100%" restrict="0-9\-"/>
+				</mx:FormItem>
+				<mx:FormItem label="改选时间:" width="100%">
+					<mx:DateField id="setupDateField"/>
+				</mx:FormItem>
+				<mx:FormItem label="描述:" width="100%">
+					<mx:TextArea id="descriptionTxt" width="100%" height="100%"/>
+				</mx:FormItem>
+			</mx:Form>
+			<mx:VRule height="90%"/>
+			<mx:Form width="100%" labelWidth="80">
+				<mx:FormItem label="党小组数:" width="100%">
+					<mx:Label id="teamNumLbl" width="100%"/>
+				</mx:FormItem>
+				<mx:FormItem label="支部人数:" width="100%">
+					<mx:Label id="memberNumLbl" width="100%"/>
+				</mx:FormItem>
+				<mx:FormItem label="支部书记:" width="100%">
+					<mx:TextInput id="clerkLbl" width="100%"/>
+				</mx:FormItem>
+				<mx:FormItem label="支部副书记:" width="100%">
+					<mx:TextInput id="deputyClerkLbl" width="100%"/>
+				</mx:FormItem>
+				<mx:FormItem label="组织委员:" width="100%">
+					<mx:TextInput id="orgMemberLbl" width="100%"/>
+				</mx:FormItem>
+				<mx:FormItem label="宣传委员:" width="100%">
+					<mx:TextInput id="pubMemberLbl" width="100%"/>
+				</mx:FormItem>
+				<mx:FormItem label="纪检委员:" width="100%">
+					<mx:TextInput id="disciplineMemberLbl" width="100%"/>
+				</mx:FormItem>
+			</mx:Form>
+		</mx:HBox>
 		<mx:ControlBar width="100%" horizontalAlign="center">
 			<button:PcButton label="保存" click="save()"/>
 			<button:PcButton label="重置" click="reset()"/>

@@ -64,4 +64,15 @@ public class PcAgencyDaoImpl extends JpaDaoBase implements PcAgencyDao {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<PcAgency> getAgencyListByIds(String privilege) {
+		try {
+			return super.find("from PcAgency where id in (" + privilege + ")");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 }

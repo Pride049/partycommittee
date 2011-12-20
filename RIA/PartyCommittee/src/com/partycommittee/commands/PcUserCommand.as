@@ -42,6 +42,9 @@ package com.partycommittee.commands
 				case PcUserEvent.LOGIN:
 					pcUserProxy.login(pcUserEvent.user.username, pcUserEvent.user.password);
 					break;
+				case PcUserEvent.LOGOUT:
+					pcUserProxy.userLogOut();
+					break;
 				case PcUserEvent.GET_SESSION:
 					pcUserProxy.getLoginUser();
 					break;
@@ -68,6 +71,9 @@ package com.partycommittee.commands
 					} else {
 						onFailure();
 					}
+					break;
+				case PcUserEvent.LOGOUT:
+					navigateToURL(new URLRequest(model.LOGIN_PAGE),"_top");
 					break;
 				case PcUserEvent.GET_SESSION:
 					break;

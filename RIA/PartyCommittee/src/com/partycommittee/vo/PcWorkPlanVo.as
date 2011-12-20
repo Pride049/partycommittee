@@ -1,5 +1,6 @@
 package com.partycommittee.vo
 {
+	[Bindable]
 	[RemoteClass(alias="com.partycommittee.remote.vo.PcWorkPlanVo")]
 	public class PcWorkPlanVo {
 		public function PcWorkPlanVo() {

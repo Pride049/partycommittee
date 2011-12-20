@@ -1,6 +1,5 @@
 package com.partycommittee.persistence.daoimpl;
 
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
@@ -45,6 +44,17 @@ public class PcWorkPlanDaoImpl extends JpaDaoBase implements PcWorkPlanDao {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<PcWorkPlan> getCommitWorkPlanListByAgencyIds(List<Integer> agencyIds) {
+		try {
+			return super.find("from PcWorkPlan where ");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 }

@@ -10,7 +10,7 @@ package com.partycommittee.vo
 		public var postId:Number;
 		public var name:String;
 		public var sexId:Number;
-		public var nation:String;
+		public var nationId:Number;
 		public var birthday:Date;
 		public var workday:Date;
 		public var joinday:Date;
@@ -19,9 +19,11 @@ package com.partycommittee.vo
 		public var birthPlace:String;
 		public var address:String;
 		public var dutyId:Number;
+		public var adminDuty:String;
 		public var sort:Number;
 		public var ext:String;
 		public var active:Number;
 		public var updatetime:Date;
+		public var comment:String;
 	}
 }

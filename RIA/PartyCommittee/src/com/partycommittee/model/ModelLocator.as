@@ -48,6 +48,8 @@ package com.partycommittee.model
 		
 		public var LOGIN_PAGE:String;
 		public var INDEX_PAGE:String;
+		
+		public var selectedMenu:Object;
 	}
 }
 

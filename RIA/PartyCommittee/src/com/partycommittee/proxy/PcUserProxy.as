@@ -41,6 +41,10 @@ package com.partycommittee.proxy
 			service.login(username, password);
 		}
 		
+		public function userLogOut():void {
+			service.userLogOut();
+		}
+		
 		public function getLoginUser():void {
 			service.getLoginUser();
 		}

@@ -12,8 +12,8 @@
 			import mx.collections.ArrayCollection;
 			[Bindable]
 			private var listDp:ArrayCollection = new ArrayCollection([
-				{id:"orgManage", label:"组织管理", navView:"orgView"},
-				{id:"partyMemberManage", label:"党员管理", navView:"partyMemberView"}
+				{id:"orgManage", label:"基本情况", navView:"orgView"},
+				{id:"partyMemberManage", label:"党员管理", navView:"orgView"}
 			]);
 			
 			private function onItemClick():void {

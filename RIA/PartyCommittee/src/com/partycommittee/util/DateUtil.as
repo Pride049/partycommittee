@@ -25,16 +25,22 @@ package com.partycommittee.util
 			return targetDate.getTime() == sourceDate.getTime();
 		}
 		
-		public static function toISOString(date:Date):String {
+		public static function toISOString(date:Date, isDateTime:Boolean = true):String {
 			if (!date) {
 				return "";
 			}
-			return date.getFullYear() + "-" + 
-				fixString((date.getMonth() + 1)) + "-" + 
-				fixString(date.getDate()) + " " + 
-				fixString(date.getHours()) + ":" + 
-				fixString(date.getMinutes()) + ":" + 
-				fixString(date.getSeconds());
+			if (isDateTime) {
+				return date.getFullYear() + "-" + 
+					fixString((date.getMonth() + 1)) + "-" + 
+					fixString(date.getDate()) + " " + 
+					fixString(date.getHours()) + ":" + 
+					fixString(date.getMinutes()) + ":" + 
+					fixString(date.getSeconds());
+			} else {
+				return date.getFullYear() + "-" + 
+					fixString((date.getMonth() + 1)) + "-" + 
+					fixString(date.getDate());
+			}
 		}
 		
 		public static function toDailyISOString(date:Date):String {

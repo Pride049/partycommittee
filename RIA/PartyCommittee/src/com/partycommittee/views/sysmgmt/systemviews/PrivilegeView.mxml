@@ -8,12 +8,16 @@
 	<fx:Script>
 		<![CDATA[
 			import com.partycommittee.control.tree.classes.Node;
+			import com.partycommittee.events.PcAgencyEvent;
+			import com.partycommittee.manager.tree.TreeMgr;
 			import com.partycommittee.model.ModelLocator;
 			import com.partycommittee.vo.PcAgencyVo;
 			
 			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
 			import mx.events.CollectionEvent;
+			import mx.events.PropertyChangeEvent;
+			import mx.utils.ObjectUtil;
 			
 			[Bindable]
 			private var model:ModelLocator = ModelLocator.getInstance();
@@ -21,36 +25,77 @@
 			[Bindable]
 			private var dp:ArrayCollection;
 			
+			private var _cloneIdArry:Array;
 			private var _agencyIdArry:Array;
 			[Bindable]
 			public function get agencyIdArry():Array {
 				this._agencyIdArry = new Array();
 				getSelection(dp);
+				if (this._cloneIdArry && this._cloneIdArry.length) {
+					for each (var cloneIdItem:Number in this._cloneIdArry) {
+						var isRepeat:Boolean = false;
+						var len:int = this._agencyIdArry.length;
+						while (len--) {
+							if (this._agencyIdArry[len] == cloneIdItem) {
+								isRepeat = true;
+								break;
+							}
+						}
+						if (!isRepeat) {
+							this._agencyIdArry.push(cloneIdItem);
+						}
+					}
+				}
 				return this._agencyIdArry;
 			}
 			public function set agencyIdArry(value:Array):void {
 				this._agencyIdArry = value;
-				updateData();
+				// Clone id array when Update
+				this._cloneIdArry = ObjectUtil.clone(value) as Array;
+//				updateData();
 			}
 			
 			private function creationCompleted():void {
-				dp = model.treeCollection;
+				var agencyEvent:PcAgencyEvent = new PcAgencyEvent(PcAgencyEvent.GET_ROOT_AGENCY_FOR_PRIVILEGE);
+				agencyEvent.userId = 1;
+				agencyEvent.successCallback = onGetRootAgency;
+				agencyEvent.dispatch();
+			}
+			
+			private function onGetRootAgency(data:Object, evt:PcAgencyEvent):void {
+				dp = new ArrayCollection();
+				var rootItem:Node = TreeMgr.getInstance().createItem(data as PcAgencyVo);
+				dp.addItem(rootItem);
 				dp.addEventListener(CollectionEvent.COLLECTION_CHANGE, onCollectionChanged);
-				dpHandler(dp);
+				updateData();
+//				dpHandler(dp);
 			}
 			
 			private function onCollectionChanged(event:CollectionEvent):void {
-				updateData();
-			}
-			
-			private function dpHandler(nodes:ArrayCollection):void {
-				for each (var node:Node in nodes) {
-					node.ckSelected = false;
-					if (node.children && node.children.length) {
-						dpHandler(node.children);
+				// If is "ckSelected" changed, do nothing. 
+				// Else call updateData() to update new items' selection.
+				var needUpdate:Boolean = true;
+				if (event.items && event.items.length > 0) {
+					for each (var evtItem:PropertyChangeEvent in event.items) {
+						if (evtItem.property == "ckSelected") {
+							needUpdate = false;
+							break;
+						}
 					}
 				}
+				if (needUpdate) {
+					updateData();
+				}
 			}
+			
+//			private function dpHandler(nodes:ArrayCollection):void {
+//				for each (var node:Node in nodes) {
+//					node.ckSelected = false;
+//					if (node.children && node.children.length) {
+//						dpHandler(node.children);
+//					}
+//				}
+//			}
 			
 			private function updateData():void {
 				if (!this._agencyIdArry || !this._agencyIdArry.length) {
@@ -79,9 +124,20 @@
 					if (node.children && node.children.length) {
 						getSelection(node.children);
 					}
+					var agency:PcAgencyVo = node.entity as PcAgencyVo;
 					if (node.ckSelected) {
-						var agency:PcAgencyVo = node.entity as PcAgencyVo;
 						this._agencyIdArry.push(agency.id);
+					} else {
+						if (!this._cloneIdArry || !this._cloneIdArry.length) {
+							continue;
+						}
+						var len:int = this._cloneIdArry.length;
+						while (len--) {
+							if (this._cloneIdArry[len] == agency.id) {
+								this._cloneIdArry.splice(len, 1);
+								continue;
+							}
+						}
 					}
 				}
 			}

@@ -6,6 +6,7 @@ package com.partycommittee.events
 	public class PcAgencyEvent extends BaseEvent {
 		public static const PCAGENCY_EVENT:String = "com.partycommittee.events.PcAgencyEvent";
 		
+		public static const GET_ROOT_AGENCY_FOR_PRIVILEGE:String = "getRootAgencyForPrivilege";
 		public static const GET_ROOT_AGENCY_BY_USERID:String = "getRootAgencyByUserId";
 		public static const GET_CHILDREN:String = "getChildren";
 		

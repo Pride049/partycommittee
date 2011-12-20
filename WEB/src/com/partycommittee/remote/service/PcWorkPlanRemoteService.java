@@ -1,5 +1,7 @@
 package com.partycommittee.remote.service;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 
 import org.springframework.flex.remoting.RemotingDestination;
@@ -21,7 +23,11 @@ public class PcWorkPlanRemoteService {
 
 	@RemotingInclude
 	public void createWorkPlan(PcWorkPlanVo workPlan) {
-		pcWorkPlanService.createWorkPlan(workPlan);
+		try {
+			pcWorkPlanService.createWorkPlan(workPlan);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@RemotingInclude
@@ -30,7 +36,12 @@ public class PcWorkPlanRemoteService {
 	}
 	
 	@RemotingInclude
-	public PcWorkPlanVo getWorkPlayYearly(Integer agencyId, Integer year) {
+	public PcWorkPlanVo getWorkPlanYearly(Integer agencyId, Integer year) {
 		return pcWorkPlanService.getWorkPlayYearly(agencyId, year);
+	}
+	
+	@RemotingInclude
+	public List<PcWorkPlanVo> getCommitWorkplanListByParentId(Integer agencyId) {
+		return pcWorkPlanService.getCommitWorkplanListByParentId(agencyId);
 	}
 }

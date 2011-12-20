@@ -29,6 +29,7 @@ package com.partycommittee.commands
 					pcAgencyProxy.updateAgency(pcAgencyEvent.agency);
 					break;
 				case PcAgencyEvent.GET_ROOT_AGENCY_BY_USERID:
+				case PcAgencyEvent.GET_ROOT_AGENCY_FOR_PRIVILEGE:
 					pcAgencyProxy.getRootAgencyByUserId(pcAgencyEvent.userId);
 					break;
 				case PcAgencyEvent.GET_CHILDREN:
@@ -55,6 +56,8 @@ package com.partycommittee.commands
 					} else {
 						onFailure();
 					}
+					break;
+				case PcAgencyEvent.GET_ROOT_AGENCY_FOR_PRIVILEGE:
 					break;
 				case PcAgencyEvent.GET_CHILDREN:
 					break;
