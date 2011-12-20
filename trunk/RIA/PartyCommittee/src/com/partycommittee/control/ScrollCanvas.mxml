@@ -200,17 +200,6 @@
 			private function onSecondLinkBtnClick():void {
 				this.thirdLvLbl = "";
 			}
-			
-			private function onLogout():void {
-				var userEvt:PcUserEvent = new PcUserEvent(PcUserEvent.LOGOUT);
-				userEvt.failureCallback = onLogoutFailure;
-				userEvt.dispatch();
-			}
-			
-			private function onLogoutFailure(info:Object, evt:PcUserEvent):void {
-				Alert.show(info.toString());
-			}
-			
 		]]>
 	</fx:Script>
 	
@@ -247,13 +236,6 @@
 				<mx:Canvas id="moveLblCav" width="100%" height="100%" borderStyle="none"
 						   borderVisible="false" horizontalScrollPolicy="off"
 						   verticalScrollPolicy="off"/>
-				<!--<mx:Button width="30" height="10" click="showAll();"/>-->
-				<mx:HBox right="10" bottom="10">
-					<mx:Label text="{'当前登录用户：' + (model.loginUser ? model.loginUser.username : '')}"
-							  fontWeight="bold"/>
-					<button:PcButton id="logoutBtn" label="退出" click="onLogout()" color="0x0000ff"
-								   fontWeight="bold"/>
-				</mx:HBox>
 			</mx:HBox>
 		</mx:Canvas>
 		<mx:Canvas id="allCanvas" top="{mHeight+2}" width="100%" height="{nHeight}" includeInLayout="false" visible="false"

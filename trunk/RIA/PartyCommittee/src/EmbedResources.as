@@ -5,8 +5,8 @@ package
 		public function EmbedResources() {
 		}
 		
-		[Embed(source="assets/images/top_banner.swf")]
-		public static const topBannerSWF:Class;
+		[Embed(source="assets/images/top_banner.jpg")]
+		public static const topBannerImg:Class;
 		
 	}
 }

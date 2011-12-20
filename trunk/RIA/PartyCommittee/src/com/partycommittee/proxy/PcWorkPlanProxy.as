@@ -29,8 +29,8 @@ package com.partycommittee.proxy
 			service.updateWorkPlanAndSubmit(workPlan);
 		}
 		
-		public function getWorkPlayYearly(agencyId:Number, year:Number):void {
-			service.getWorkPlayYearly(agencyId, year);
+		public function getWorkPlanYearly(agencyId:Number, year:Number):void {
+			service.getWorkPlanYearly(agencyId, year);
 		}
 		
 	}
