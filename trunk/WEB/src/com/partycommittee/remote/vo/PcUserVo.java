@@ -2,6 +2,7 @@ package com.partycommittee.remote.vo;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import com.partycommittee.persistence.po.PcUser;
 
@@ -18,6 +19,16 @@ public class PcUserVo implements Serializable {
 	private Date lastlogintime;
 	private String privilege;
 	
+	private List<PcAgencyVo> agencyList;
+	
+	public List<PcAgencyVo> getAgencyList() {
+		return agencyList;
+	}
+
+	public void setAgencyList(List<PcAgencyVo> agencyList) {
+		this.agencyList = agencyList;
+	}
+
 	public Long getId() {
 		return id;
 	}

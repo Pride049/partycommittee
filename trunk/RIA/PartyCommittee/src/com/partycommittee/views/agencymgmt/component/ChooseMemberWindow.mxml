@@ -18,6 +18,7 @@
 			import com.partycommittee.manager.popup.PopupMgr;
 			import com.partycommittee.util.CRUDEventType;
 			import com.partycommittee.util.LblFunctionHelper;
+			import com.partycommittee.views.partymember.PartyMemberWindow;
 			import com.partycommittee.vo.PcAgencyVo;
 			import com.partycommittee.vo.PcMemberVo;
 			import com.partycommittee.vo.page.PageHelperVo;
@@ -59,8 +60,8 @@
 				updateData();
 			}
 			
-			private function updateData():void {
-				if (!agency || (agency.codeId != 10 && agency.codeId != 13)) {
+			public function updateData():void {
+				if (!agency || (agency.codeId == PCConst.AGENCY_CODE_BOARDCOMMITTEES)) {
 					return;
 				}
 				var evt:PcMemberEvent = new PcMemberEvent(PcMemberEvent.GET_MEMBERS_BY_AGENCYID, null, agency.id);
@@ -70,18 +71,27 @@
 			}
 			
 			private function onLoadMembers(data:Object, evt:PcMemberEvent):void {
-//				dp = data as ArrayCollection;
-				var pageResult:PageResultVo = data as PageResultVo;
-				if (!pageResult) {
-					return;
-				}
-				page = pageResult.pageHelper;
-				dp = pageResult.list;
+				dp = data as ArrayCollection;
+//				var pageResult:PageResultVo = data as PageResultVo;
+//				if (!pageResult) {
+//					return;
+//				}
+//				page = pageResult.pageHelper;
+//				dp = pageResult.list;
 			}
 			
 			private function onOkBtnClick():void {
 				this._selectedMember = datagrid.selectedItem as PcMemberVo;
 				this.close();
+			}
+			
+			private function onCreateMember():void {
+				if (!agency) {
+					return;
+				}
+				var window:PartyMemberWindow = new PartyMemberWindow();
+				window.parentView = this;
+				PopupMgr.instance.popupWindow(window);
 			}
 		]]>
 	</fx:Script>
@@ -107,8 +117,11 @@
 										   labelFunction="{LblFunctionHelper.dateLblFunc}"/>
 			</mx:columns>
 		</mx:AdvancedDataGrid>
-		<pagebar:PageBar page="{page}" width="100%"/>
+		<pagebar:PageBar page="{page}" width="100%"
+						 enabled="false"/>
 		<mx:ControlBar width="100%" horizontalAlign="center">
+			<button:PcButton label="新建党员" click="onCreateMember()"/>
+			<s:Spacer width="100%"/>
 			<button:PcButton label="确定" click="onOkBtnClick()"
 							 enabled="{datagrid.selectedItem}"/>
 			<button:PcButton label="关闭" click="close()"/>

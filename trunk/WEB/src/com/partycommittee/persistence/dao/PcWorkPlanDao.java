@@ -1,5 +1,7 @@
 package com.partycommittee.persistence.dao;
 
+import java.util.List;
+
 import com.partycommittee.persistence.po.PcWorkPlan;
 
 public interface PcWorkPlanDao {
@@ -9,5 +11,7 @@ public interface PcWorkPlanDao {
 	public PcWorkPlan createWorkPlan(PcWorkPlan workPlan);
 
 	public void updateWorkPlan(PcWorkPlan workPlan);
+	
+	public List<PcWorkPlan> getCommitWorkPlanListByAgencyIds(List<Integer> agencyIds);
 
 }

@@ -11,6 +11,6 @@ package com.partycommittee.vo.page
 		public var recordCount:Number;
 		public var pageCount:Number;
 		public var pageIndex:Number = 1;
-		public var pageSize:Number = 1;
+		public var pageSize:Number = 30;
 	}
 }

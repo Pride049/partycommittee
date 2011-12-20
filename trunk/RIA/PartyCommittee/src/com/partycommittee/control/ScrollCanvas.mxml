@@ -3,16 +3,23 @@
 		   xmlns:s="library://ns.adobe.com/flex/spark" 
 		   xmlns:mx="library://ns.adobe.com/flex/mx" 
 		   width="100%"
-		   creationComplete="onCreationCompleted()">
+		   creationComplete="onCreationCompleted()" xmlns:button="com.partycommittee.control.button.*">
 	
 	<fx:Script>
 		<![CDATA[
+			import com.partycommittee.events.PcUserEvent;
+			import com.partycommittee.manager.navigation.NavigationMgr;
+			import com.partycommittee.model.ModelLocator;
+			
 			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
 			import mx.controls.Text;
 			import mx.effects.Move;
 			import mx.events.EffectEvent;
 			import mx.events.FlexEvent;
+			import mx.events.PropertyChangeEvent;
+			
+			public static var mainPageMenuItem:Object = {id:"orgManage", label:"基本情况", navView:"orgView"};
 			
 			private var bitmapData:BitmapData;
 			
@@ -27,7 +34,19 @@
 			[Bindable]
 			private var totalHeight:Number;
 			
+			[Bindable]
+			private var secondLvLbl:String = "";
+			[Bindable]
+			private var thirdLvLbl:String = "";
+			
 			private var stopTimer:Timer;
+			
+			[Bindable]
+			private var model:ModelLocator = ModelLocator.getInstance();
+			
+			[Bindable]
+			private var infoTxt:String;
+			private var _selectedMenuItem:Object;
 			
 			private function onCreationCompleted():void {
 //				var startTimer:Timer = new Timer(10000, 1);
@@ -53,6 +72,36 @@
 				this._moveOut.xFrom = 10;
 				this._moveOut.xTo = 0 - this.width;
 				this._moveOut.addEventListener(EffectEvent.EFFECT_END, onMoveOutEffectEnd);
+				
+				model.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, onPropertyChange);
+			}
+			
+			private function onPropertyChange(event:PropertyChangeEvent):void {
+				if (event.property == "selectedMenu") {
+					this._selectedMenuItem = model.selectedMenu;
+					updateInfoStr();
+				}
+			}
+			
+			private function updateInfoStr():void {
+				if (this._selectedMenuItem && this._selectedMenuItem.hasOwnProperty("label")) {
+					switch (this._selectedMenuItem.id) {
+						case "orgManage":
+						case "partyMemberManage":
+							secondLvLbl = "组织管理";
+							thirdLvLbl = this._selectedMenuItem.label;
+							break;
+						case "inputReport":
+							secondLvLbl = "组织生活";
+							thirdLvLbl = this._selectedMenuItem.label;
+							break;
+						case "accountManage":
+							secondLvLbl = "系统管理";
+							thirdLvLbl = this._selectedMenuItem.label;
+							break;
+						
+					}
+				}
 			}
 			
 			private function onStartTimerCompleted(event:TimerEvent):void {
@@ -133,13 +182,35 @@
 			}
 			
 			private var infoList:ArrayCollection = new ArrayCollection([
-				{id:1, message:"2011年-年度计划未填写！"},
-				{id:2, message:"2011年-第一季度度计划未填写！"},
+//				{id:1, message:"2011年-年度计划未填写！"},
+//				{id:2, message:"2011年-第一季度度计划未填写！"},
 			]);
 			
 			override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void {
 				super.updateDisplayList(unscaledWidth, unscaledHeight);
 			}
+			
+			private function returnToMainPage():void {
+				NavigationMgr.getInstance().navigateToView(mainPageMenuItem.navView);
+				this._selectedMenuItem = mainPageMenuItem;
+				updateInfoStr();
+				this.secondLvLbl = this.thirdLvLbl = "";
+			}
+			
+			private function onSecondLinkBtnClick():void {
+				this.thirdLvLbl = "";
+			}
+			
+			private function onLogout():void {
+				var userEvt:PcUserEvent = new PcUserEvent(PcUserEvent.LOGOUT);
+				userEvt.failureCallback = onLogoutFailure;
+				userEvt.dispatch();
+			}
+			
+			private function onLogoutFailure(info:Object, evt:PcUserEvent):void {
+				Alert.show(info.toString());
+			}
+			
 		]]>
 	</fx:Script>
 	
@@ -152,17 +223,37 @@
 			<mx:HBox width="100%" height="100%" borderStyle="solid"  
 					 horizontalAlign="center" verticalAlign="middle"
 					 horizontalScrollPolicy="off" verticalScrollPolicy="off">
-				<mx:Canvas width="180" buttonMode="true" useHandCursor="true"
-						   horizontalScrollPolicy="off" verticalScrollPolicy="off">
-					<mx:Label id="globalInfoLbl" horizontalCenter="0" width="100%" textAlign="center" 
-							  mouseChildren="false" 
-							  text="当前位置  > 组织管理"/>
-				</mx:Canvas>
+				<mx:HBox horizontalScrollPolicy="off" verticalScrollPolicy="off"
+						 horizontalAlign="center" verticalAlign="middle">
+					<mx:LinkButton label="主页" click="returnToMainPage()"
+								   color="0x0000ff" fontWeight="bold"/>
+					<mx:Label text=">"
+							  visible="{secondLvLbl != ''}"
+							  includeInLayout="{secondLvLbl != ''}"/>
+					<mx:LinkButton label="{secondLvLbl}"
+								   color="0x0000ff" fontWeight="bold"
+								   visible="{secondLvLbl != ''}"
+								   includeInLayout="{secondLvLbl != ''}"
+								   click="onSecondLinkBtnClick()"/>
+					<mx:Label text=">"
+							  visible="{thirdLvLbl != ''}"
+							  includeInLayout="{thirdLvLbl != ''}"/>
+					<mx:LinkButton id="thirdLinkBtn" label="{thirdLvLbl}"
+								   color="0x0000ff" fontWeight="bold"
+								   visible="{thirdLvLbl != ''}"
+								   includeInLayout="{thirdLvLbl != ''}"/>
+				</mx:HBox>
 				<mx:VRule height="80%"/>
 				<mx:Canvas id="moveLblCav" width="100%" height="100%" borderStyle="none"
 						   borderVisible="false" horizontalScrollPolicy="off"
 						   verticalScrollPolicy="off"/>
 				<!--<mx:Button width="30" height="10" click="showAll();"/>-->
+				<mx:HBox right="10" bottom="10">
+					<mx:Label text="{'当前登录用户：' + (model.loginUser ? model.loginUser.username : '')}"
+							  fontWeight="bold"/>
+					<button:PcButton id="logoutBtn" label="退出" click="onLogout()" color="0x0000ff"
+								   fontWeight="bold"/>
+				</mx:HBox>
 			</mx:HBox>
 		</mx:Canvas>
 		<mx:Canvas id="allCanvas" top="{mHeight+2}" width="100%" height="{nHeight}" includeInLayout="false" visible="false"

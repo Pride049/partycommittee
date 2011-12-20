@@ -9,9 +9,11 @@
 	<fx:Script>
 		<![CDATA[
 			import com.partycommittee.model.ModelLocator;
+			import com.partycommittee.views.agencymgmt.agencyactivity.workplan.QuarterWorkPlanView;
 			import com.partycommittee.views.agencymgmt.agencyactivity.workplan.YearWorkPlanView;
 			import com.partycommittee.vo.PcAgencyVo;
 			
+			import mx.containers.Canvas;
 			import mx.events.PropertyChangeEvent;
 			
 			[Bindable]
@@ -60,6 +62,43 @@
 				yearWorkPlan.percentHeight = 100;
 				yearWorkPlan.percentWidth = 100;
 				tab.addChild(yearWorkPlan);
+				var quarterWorkPlan:QuarterWorkPlanView = new QuarterWorkPlanView();
+				quarterWorkPlan.agency = agency;
+				quarterWorkPlan.percentHeight = 100;
+				quarterWorkPlan.percentWidth = 100;
+				quarterWorkPlan.enabled = false;
+				tab.addChild(quarterWorkPlan);
+				
+				// Disable for demo.
+				var quarterSummary:Canvas = new Canvas();
+				quarterSummary.label = "季度执行情况";
+				quarterSummary.enabled = false;
+				tab.addChild(quarterSummary);
+				var classView:Canvas = new Canvas();
+				classView.label = "党课";
+				classView.enabled = false;
+				tab.addChild(classView);
+				var branchMemberMeeting:Canvas = new Canvas();
+				branchMemberMeeting.label = "支部党员大会";
+				branchMemberMeeting.enabled = false;
+				tab.addChild(branchMemberMeeting);
+				var branchPartycommittee:Canvas = new Canvas();
+				branchPartycommittee.label = "支部委员会";
+				branchPartycommittee.enabled = false;
+				tab.addChild(branchPartycommittee);
+				var teamMeeting:Canvas = new Canvas();
+				teamMeeting.label = "党小组会";
+				teamMeeting.enabled = false;
+				tab.addChild(teamMeeting);
+				var otherMeeting:Canvas = new Canvas();
+				otherMeeting.label = "其他会议";
+				otherMeeting.enabled = false;
+				tab.addChild(otherMeeting);
+				var yearlySummary:Canvas = new Canvas();
+				yearlySummary.label = "年终总结";
+				yearlySummary.enabled = false;
+				tab.addChild(yearlySummary);
+				
 				switch (this._agency.codeId) {
 					case PCConst.AGENCY_CODE_BASICCOMMITTEES:
 						break;

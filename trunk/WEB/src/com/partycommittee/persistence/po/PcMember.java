@@ -25,7 +25,7 @@ public class PcMember implements java.io.Serializable {
 	private Integer postId;
 	private String name;
 	private Integer sexId;
-	private String nation;
+	private Integer nationId;
 	private Date birthday;
 	private Date workday;
 	private Date joinday;
@@ -34,9 +34,12 @@ public class PcMember implements java.io.Serializable {
 	private String birthPlace;
 	private String address;
 	private Integer dutyId;
+	private String adminDuty;
 	private String ext;
 	private Integer active;
 	private Date updatetime;
+	private String comment;
+	private Integer sort;
 	
 	@Id
 	@Column(name = "id", unique = true, nullable = false)
@@ -80,12 +83,12 @@ public class PcMember implements java.io.Serializable {
 		this.sexId = sexId;
 	}
 	
-	@Column(name = "nation")
-	public String getNation() {
-		return this.nation;
+	@Column(name = "nation_id")
+	public Integer getNationId() {
+		return this.nationId;
 	}
-	public void setNation(String nation) {
-		this.nation = nation;
+	public void setNationId(Integer nationId) {
+		this.nationId = nationId;
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
@@ -156,6 +159,14 @@ public class PcMember implements java.io.Serializable {
 		this.dutyId = dutyId;
 	}
 	
+	@Column(name = "admin_duty")
+	public String getAdminDuty() {
+		return this.adminDuty;
+	}
+	public void setAdminDuty(String adminDuty) {
+		this.adminDuty = adminDuty;
+	}
+	
 	@Column(name = "ext")
 	public String getExt() {
 		return this.ext;
@@ -179,5 +190,21 @@ public class PcMember implements java.io.Serializable {
 	}
 	public void setUpdatetime(Date updatetime) {
 		this.updatetime = updatetime;
+	}
+	
+	@Column(name = "comment")
+	public String getComment() {
+		return comment;
+	}
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+	
+	@Column(name = "sort")
+	public Integer getSort() {
+		return this.sort;
+	}
+	public void setSort(Integer sort) {
+		this.sort = sort;
 	}
 }

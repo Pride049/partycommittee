@@ -17,6 +17,8 @@
 			import com.partycommittee.manager.popup.PopupMgr;
 			import com.partycommittee.util.CRUDEventType;
 			import com.partycommittee.util.DutyCodeUtil;
+			import com.partycommittee.util.EduCodeUtil;
+			import com.partycommittee.util.NationCodeUtil;
 			import com.partycommittee.util.SexCodeUtil;
 			import com.partycommittee.vo.PcMemberVo;
 			
@@ -26,7 +28,7 @@
 			[Bindable]
 			public var type:String = CRUDEventType.CREATE;
 			
-			public var parentView:PartyMemberView;
+			public var parentView:Object;
 			
 			private var _memberVo:PcMemberVo;
 			[Bindable]
@@ -42,6 +44,8 @@
 			}
 			
 			private function updateData():void {
+				this.agencyNameTxt.text = this.parentView.agency.name;
+				
 				if (!this._memberVo) {
 					return;
 				}
@@ -51,13 +55,16 @@
 				}
 				birthplaceTxt.text = this._memberVo.birthPlace;
 				dutyCmb.selectedItem = this._memberVo.dutyId;
-				eduBox.eduId = this._memberVo.eduId;
+				adminDutyTxt.text = this._memberVo.adminDuty;
+				eduCmb.selectedItem = this._memberVo.eduId;
 				if (this._memberVo.joinday) {
 					joinDateField.selectedDate = this._memberVo.joinday;
 				}
 				nameTxt.text = this._memberVo.name;
-				nationTxt.text = this._memberVo.nation;
+				nationCmb.selectedItem = this._memberVo.nationId;
 				sexCmb.selectedItem = this._memberVo.sexId;
+				commentTxt.text = this._memberVo.comment;
+				sortTxt.text = this._memberVo.sort + '';
 				if (this._memberVo.workday) {
 					workDateField.selectedDate = this._memberVo.workday;
 				}
@@ -108,12 +115,15 @@
 				newMember.birthday = birthdayDateField.selectedDate;
 				newMember.birthPlace = birthplaceTxt.text;
 				newMember.dutyId = dutyCmb.selectedItem as Number;
-				newMember.eduId = eduBox.eduId;
+				newMember.eduId = eduCmb.selectedItem as Number;
 				newMember.joinday = joinDateField.selectedDate;
 				newMember.name = nameTxt.text;
-				newMember.nation = nationTxt.text;
+				newMember.nationId = nationCmb.selectedItem as Number;
 				newMember.sexId = sexCmb.selectedItem as Number;
 				newMember.workday = workDateField.selectedDate;
+				newMember.comment = commentTxt.text;
+				newMember.adminDuty = adminDutyTxt.text;
+				newMember.sort = sortTxt.text as Number;
 				return newMember;
 			}
 			
@@ -130,6 +140,14 @@
 			private function dutyLblFunc(item:Object):String {
 				return DutyCodeUtil.getDutyCodeDes(item as Number);
 			}
+			
+			private function nationLblFunc(item:Object):String {
+				return NationCodeUtil.getNationDesById(item as Number);
+			}
+			
+			private function eduLblFunc(item:Object):String {
+				return EduCodeUtil.getEduCodeDes(item as Number);
+			}
 		]]>
 	</fx:Script>
 	<fx:Declarations>
@@ -142,6 +160,9 @@
 		<mx:Form width="600" height="100%"
 				 minWidth="200"
 				 horizontalScrollPolicy="off" verticalScrollPolicy="off">
+			<mx:FormItem label="党组织名称:" width="100%">
+				<mx:TextInput id="agencyNameTxt" editable="false"/>
+			</mx:FormItem>
 			<mx:FormItem label="姓名:" required="true" width="100%">
 				<mx:TextInput id="nameTxt" width="100%"/>
 			</mx:FormItem>
@@ -151,7 +172,9 @@
 							 dataProvider="{PCConst.SexList}"/>
 			</mx:FormItem>
 			<mx:FormItem label="民族:" required="true" width="100%">
-				<mx:TextInput id="nationTxt" width="100%"/>
+				<mx:ComboBox id="nationCmb" 
+							 dataProvider="{PCConst.nationList}"
+							 labelFunction="nationLblFunc"/>
 			</mx:FormItem>
 			<mx:FormItem label="出生年月:" required="true" width="100%">
 				<mx:DateField id="birthdayDateField" width="150"
@@ -161,7 +184,14 @@
 				<mx:TextInput id="birthplaceTxt" width="100%"/>
 			</mx:FormItem>
 			<mx:FormItem label="文化程度:" width="100%">
+				<!--
 				<component:ChooseEduBox id="eduBox" width="100%"/>
+				-->
+				<mx:ComboBox id="eduCmb" dataProvider="{PCConst.EduList}"
+							 labelFunction="eduLblFunc"/>
+			</mx:FormItem>
+			<mx:FormItem label="行政职务:" width="100%">
+				<mx:TextInput id="adminDutyTxt" width="100%"/>
 			</mx:FormItem>
 			<mx:FormItem label="职务:" width="100%">
 				<mx:ComboBox id="dutyCmb" width="100%" maxWidth="100"
@@ -178,6 +208,9 @@
 			</mx:FormItem>
 			<mx:FormItem label="现在家庭住址:" width="100%">
 				<mx:TextArea id="addressTxt" width="100%" height="60"/>
+			</mx:FormItem>
+			<mx:FormItem label="排序:" width="100%">
+				<mx:TextInput id="sortTxt" width="100%" restrict="0-9"/>
 			</mx:FormItem>
 			<mx:FormItem label="备注:" width="100%">
 				<mx:TextArea id="commentTxt" width="100%" height="60"/>

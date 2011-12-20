@@ -11,6 +11,7 @@ package com.partycommittee.events
 		public static const PCUSEREVENT:String = "com.partycommittee.events.PCUserEvent";
 		
 		public static const LOGIN:String = "login";
+		public static const LOGOUT:String = "logout";
 		public static const GET_SESSION:String = "getSession";
 		
 		private var _user:PcUserVo;

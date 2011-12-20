@@ -53,10 +53,10 @@
 				var user:PcUserVo = data as PcUserVo;
 				model.loginUser = user;
 				if (!user) {
-					var agencyEvent:PcAgencyEvent = new PcAgencyEvent(PcAgencyEvent.GET_ROOT_AGENCY_BY_USERID);
-					agencyEvent.userId = 1;
-					agencyEvent.failureCallback = noAgencyHandler;
-					agencyEvent.dispatch();
+//					var agencyEvent:PcAgencyEvent = new PcAgencyEvent(PcAgencyEvent.GET_ROOT_AGENCY_BY_USERID);
+//					agencyEvent.userId = 1;
+//					agencyEvent.failureCallback = noAgencyHandler;
+//					agencyEvent.dispatch();
 					return;
 				}
 				

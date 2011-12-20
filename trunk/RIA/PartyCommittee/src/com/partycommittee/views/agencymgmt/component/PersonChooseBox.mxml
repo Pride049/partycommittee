@@ -3,7 +3,8 @@
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
 		 xmlns:mx="library://ns.adobe.com/flex/mx"
 		 horizontalAlign="center" verticalAlign="middle" 
-		 xmlns:button="com.partycommittee.control.button.*">
+		 xmlns:button="com.partycommittee.control.button.*"
+		 width="100%">
 	<fx:Script>
 		<![CDATA[
 			import com.partycommittee.manager.popup.PopupMgr;
@@ -42,7 +43,7 @@
 			}
 			
 			private function onBrowseBtnClick():void {
-				if (!agency || (agency.codeId != 10 && agency.codeId != 13)) {
+				if (!agency || (agency.codeId == PCConst.AGENCY_CODE_BOARDCOMMITTEES)) {
 					return;
 				}
 				var win:ChooseMemberWindow = new ChooseMemberWindow();

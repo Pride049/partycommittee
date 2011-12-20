@@ -38,6 +38,14 @@ public class PcUserRemoteService {
 	}
 	
 	@RemotingInclude
+	public String userLogOut() {
+		HttpServletRequest request = FlexContext.getHttpRequest();
+		HttpSession session = request.getSession();
+		session.removeAttribute(SessionConstant.SESSON_USER);
+		return "";
+	}
+	
+	@RemotingInclude
 	public PcUserVo getLoginUser() {
 		HttpServletRequest request = FlexContext.getHttpRequest();
 		HttpSession session = request.getSession();

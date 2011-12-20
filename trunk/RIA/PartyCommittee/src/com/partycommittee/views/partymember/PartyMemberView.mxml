@@ -57,7 +57,7 @@
 			}
 			
 			public function updateData():void {
-				if (!agency || (agency.codeId != 10 && agency.codeId != 13)) {
+				if (!agency || (agency.codeId == PCConst.AGENCY_CODE_BOARDCOMMITTEES)) {
 					this.enabled = false;
 					return;
 				}
@@ -99,6 +99,10 @@
 				window.title = "修改党员";
 				window.memberVo = datagrid. selectedItem as PcMemberVo;
 				PopupMgr.instance.popupWindow(window);
+			}
+			
+			private function onItemDoubleClick():void {
+				updateMember();
 			}
 			
 			private var deleteMemberList:ArrayCollection = new ArrayCollection();
@@ -156,25 +160,28 @@
 		<mx:AdvancedDataGrid id="datagrid" width="100%" height="100%" 
 										   headerStyleName="dataGridHeader"
 										   allowMultipleSelection="true"
-										   dataProvider="{dp}">
+										   dataProvider="{dp}" lockedColumnCount="1"
+										   horizontalScrollPolicy="auto"
+										   doubleClickEnabled="true"
+										   doubleClick="onItemDoubleClick()">
 			<mx:columns>
-				<mx:AdvancedDataGridColumn headerText="姓名" dataField="name"/>
-				<mx:AdvancedDataGridColumn headerText="性别" dataField="sexId" 
+				<mx:AdvancedDataGridColumn headerText="姓名" dataField="name" width="120"/>
+				<mx:AdvancedDataGridColumn headerText="性别" dataField="sexId" width="80"
 										   labelFunction="{LblFunctionHelper.memberSexLblFunc}"/>
-				<mx:AdvancedDataGridColumn headerText="民族" dataField="nation"/>
-				<mx:AdvancedDataGridColumn headerText="出生年月" dataField="birthday"
+				<mx:AdvancedDataGridColumn headerText="民族" dataField="nation" width="80"/>
+				<mx:AdvancedDataGridColumn headerText="出生年月" dataField="birthday" width="120"
 										   labelFunction="{LblFunctionHelper.dateLblFunc}"/>
-				<mx:AdvancedDataGridColumn headerText="籍贯" dataField="birthPlace"/>
-				<mx:AdvancedDataGridColumn headerText="职务" dataField="dutyId"
+				<mx:AdvancedDataGridColumn headerText="籍贯" dataField="birthPlace" width="120"/>
+				<mx:AdvancedDataGridColumn headerText="职务" dataField="dutyId" width="100"
 										   labelFunction="{LblFunctionHelper.memberDutyLblFunc}"/>
-				<mx:AdvancedDataGridColumn headerText="何时入党" dataField="joinday"
+				<mx:AdvancedDataGridColumn headerText="何时入党" dataField="joinday" width="120"
 										   labelFunction="{LblFunctionHelper.dateLblFunc}"/>
-				<mx:AdvancedDataGridColumn headerText="参加工作时间" dataField="workday"
+				<mx:AdvancedDataGridColumn headerText="参加工作时间" dataField="workday" width="150"
 										   labelFunction="{LblFunctionHelper.dateLblFunc}"/>
 			</mx:columns>
 		</mx:AdvancedDataGrid>
 		<mx:ControlBar width="100%" horizontalAlign="right">
-			<pagebar:PageBar page="{page}" width="100%"/>
+			<pagebar:PageBar page="{page}" width="100%" enabled="false"/>
 			<button:PcButton label="下载Excel模板"/>
 			<button:PcButton label="上传党员Excel"/>
 			<button:PcButton label="生成Excel"/>

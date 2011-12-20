@@ -13,7 +13,7 @@ public class PcMemberVo implements Serializable {
 	private Integer postId;
 	private String name;
 	private Integer sexId;
-	private String nation;
+	private Integer nationId;
 	private Date birthday;
 	private Date workday;
 	private Date joinday;
@@ -22,10 +22,19 @@ public class PcMemberVo implements Serializable {
 	private String birthPlace;
 	private String address;
 	private Integer dutyId;
+	private String adminDuty;
 	private String ext;
 	private Integer active;
 	private Date updatetime;
+	private String comment;
+	private Integer sort;
 	
+	public String getComment() {
+		return comment;
+	}
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
 	public Integer getId() {
 		return id;
 	}
@@ -56,11 +65,11 @@ public class PcMemberVo implements Serializable {
 	public void setSexId(Integer sexId) {
 		this.sexId = sexId;
 	}
-	public String getNation() {
-		return nation;
+	public Integer getNationId() {
+		return nationId;
 	}
-	public void setNation(String nation) {
-		this.nation = nation;
+	public void setNationId(Integer nationId) {
+		this.nationId = nationId;
 	}
 	public Date getBirthday() {
 		return birthday;
@@ -91,6 +100,12 @@ public class PcMemberVo implements Serializable {
 	}
 	public void setEduId(Integer eduId) {
 		this.eduId = eduId;
+	}
+	public String getAdminDuty() {
+		return this.adminDuty;
+	}
+	public void setAdminDuty(String adminDuty) {
+		this.adminDuty = adminDuty;
 	}
 	public String getBirthPlace() {
 		return birthPlace;
@@ -128,25 +143,35 @@ public class PcMemberVo implements Serializable {
 	public void setUpdatetime(Date updatetime) {
 		this.updatetime = updatetime;
 	}
+	public Integer getSort() {
+		return this.sort;
+	}
+	public void setSort(Integer sort) {
+		this.sort = sort;
+	}
 	
 	public static PcMember toPcMember(PcMemberVo memberVo) {
 		PcMember member = new PcMember();
 		member.setAddress(memberVo.getAddress());
 		member.setAgencyId(memberVo.getAgencyId());
 		member.setBirthday(memberVo.getBirthday());
+		member.setBirthPlace(memberVo.getBirthPlace());
 		member.setDutyId(memberVo.getDutyId());
 		member.setEduId(memberVo.getEduId());
 		member.setExt(memberVo.getExt());
 		member.setId(memberVo.getId());
 		member.setJoinday(memberVo.getJoinday());
 		member.setName(memberVo.getName());
-		member.setNation(memberVo.getNation());
+		member.setNationId(memberVo.getNationId());
 		member.setPostday(memberVo.getPostday());
 		member.setPostId(memberVo.getPostId());
 		member.setSexId(memberVo.getSexId());
 		member.setActive(memberVo.getActive());
 		member.setUpdatetime(memberVo.getUpdatetime());
 		member.setWorkday(memberVo.getWorkday());
+		member.setComment(memberVo.getComment());
+		member.setAdminDuty(memberVo.getAdminDuty());
+		member.setSort(memberVo.getSort());
 		return member;
 	}
 	
@@ -155,19 +180,23 @@ public class PcMemberVo implements Serializable {
 		memberVo.setAddress(member.getAddress());
 		memberVo.setAgencyId(member.getAgencyId());
 		memberVo.setBirthday(member.getBirthday());
+		memberVo.setBirthPlace(member.getBirthPlace());
 		memberVo.setDutyId(member.getDutyId());
 		memberVo.setEduId(member.getEduId());
 		memberVo.setExt(member.getExt());
 		memberVo.setId(member.getId());
 		memberVo.setJoinday(member.getJoinday());
 		memberVo.setName(member.getName());
-		memberVo.setNation(member.getNation());
+		memberVo.setNationId(member.getNationId());
 		memberVo.setPostday(member.getPostday());
 		memberVo.setPostId(member.getPostId());
 		memberVo.setSexId(member.getSexId());
 		memberVo.setActive(member.getActive());
 		memberVo.setUpdatetime(member.getUpdatetime());
 		memberVo.setWorkday(member.getWorkday());
+		memberVo.setComment(member.getComment());
+		memberVo.setAdminDuty(member.getAdminDuty());
+		memberVo.setSort(member.getSort());
 		return memberVo;
 	}
 }

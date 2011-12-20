@@ -15,4 +15,6 @@ public interface PcAgencyDao {
 	public void updateAgency(PcAgency agency);
 	
 	public void deleteAgency(PcAgency agency);
+
+	List<PcAgency> getAgencyListByIds(String privilege);
 }

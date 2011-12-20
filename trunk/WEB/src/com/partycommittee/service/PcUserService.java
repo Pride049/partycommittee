@@ -8,10 +8,13 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.partycommittee.persistence.daoimpl.PcAgencyDaoImpl;
 import com.partycommittee.persistence.daoimpl.PcAgencyMappingDaoImpl;
 import com.partycommittee.persistence.daoimpl.PcUserDaoImpl;
+import com.partycommittee.persistence.po.PcAgency;
 import com.partycommittee.persistence.po.PcAgencyMapping;
 import com.partycommittee.persistence.po.PcUser;
+import com.partycommittee.remote.vo.PcAgencyVo;
 import com.partycommittee.remote.vo.PcUserVo;
 import com.partycommittee.remote.vo.helper.PageHelperVo;
 import com.partycommittee.remote.vo.helper.PageResultVo;
@@ -30,6 +33,12 @@ public class PcUserService {
 	private PcAgencyMappingDaoImpl pcAgencyMappingDaoImpl;
 	public void setPcAgencyMappingDaoImpl(PcAgencyMappingDaoImpl pcAgencyMappingDaoImpl) {
 		this.pcAgencyMappingDaoImpl = pcAgencyMappingDaoImpl;
+	}
+	
+	@Resource(name="PcAgencyDaoImpl")
+	private PcAgencyDaoImpl pcAgencyDaoImpl;
+	public void setPcAgencyDaoImpl(PcAgencyDaoImpl pcAgencyDaoImpl) {
+		this.pcAgencyDaoImpl = pcAgencyDaoImpl;
 	}
 	
 	public PcUserVo login(String username, String password) {
@@ -62,11 +71,36 @@ public class PcUserService {
 		result.setPageHelper(pageResult.getPageHelper());
 		if (pageResult.getList() != null && pageResult.getList().size() > 0) {
 			for (PcUser user : pageResult.getList()) {
-				list.add(PcUserVo.fromPCUser(user));
+				PcUserVo userVo = PcUserVo.fromPCUser(user);
+				getAgencyList(userVo);
+				list.add(userVo);
 			}
 		}
 		result.setList(list);
 		return result;
+	}
+	
+	public void getAgencyList(PcUserVo userVo) {
+		String privilege = userVo.getPrivilege();
+		if (privilege != null && !privilege.equals("")) {
+			List<PcAgencyVo> agencyList = new ArrayList<PcAgencyVo>();
+			List<PcAgency> list = pcAgencyDaoImpl.getAgencyListByIds(privilege);
+			if (list != null && list.size() > 0) {
+				for (PcAgency agencyItem : list) {
+					agencyList.add(PcAgencyVo.fromPcAgency(agencyItem));
+				}
+			}
+			userVo.setAgencyList(agencyList);
+		}
+//		List<PcAgencyVo> list = new ArrayList<PcAgencyVo>();
+//		for (String privilegeItem : privilegeList) {
+//			int agencyId = Integer.parseInt(privilegeItem);
+//			PcAgency agencyItem = pcAgencyDaoImpl.getAgencyById(agencyId);
+//			if (agencyItem != null) {
+//				list.add(PcAgencyVo.fromPcAgency(agencyItem));
+//			}
+//		}
+//		userVo.setAgencyList(list);
 	}
 	
 	public void createUser(PcUserVo userVo) {

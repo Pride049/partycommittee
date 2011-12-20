@@ -12,31 +12,69 @@
 		   xmlns:stats="com.partycommittee.views.stats.*" 
 		   xmlns:sysmgmt="com.partycommittee.views.sysmgmt.*"
 		   horizontalScrollPolicy="auto"
-		   verticalScrollPolicy="auto"
-		   >
+		   verticalScrollPolicy="auto" 
+		   xmlns:mainmenu="com.partycommittee.control.mainmenu.*">
     
 	<fx:Script>
 		<![CDATA[
 			import com.partycommittee.events.AccordionItemClickEvent;
+			import com.partycommittee.events.MenuEvent;
+			import com.partycommittee.events.PcUserEvent;
 			import com.partycommittee.manager.navigation.NavigationMgr;
 			import com.partycommittee.model.ModelLocator;
 			
 			import mx.collections.XMLListCollection;
-			import mx.events.MenuEvent;
+			import mx.events.IndexChangedEvent;
+			
+			[Bindable]
+			private var menuData:Array = [
+				{label:'组织管理', children:[
+					{label:'基本情况', navView:'roomView'},
+					{label:'党员管理', navView:''}
+				], menuEvent:false},
+				{label:'组织生活', children:[
+					{label:'浏览', navView:'roomView'},
+					{label:'填报', navView:''}
+				], menuEvent:false},
+				{label:'统计分析', children:[
+				], menuEvent:false, enable:false},
+				{label:'系统管理', children:[
+					{label:'账户管理', navView:'roomView'},
+				], menuEvent:false},
+			];
 			
 			[Bindable]
 			public var model:ModelLocator = ModelLocator.getInstance();
 			
 			private function onCreationCompleted():void {
 				this.addEventListener(AccordionItemClickEvent.ITEM_CLICK, onAccordionItemClick);
+				this.mainMenu.addEventListener(MenuEvent.ITEM_CLICK, onMenuItemClick);
+			}
+			
+			private function onMenuItemClick(event:MenuEvent):void {
+				
 			}
 			
 			private function onAccordionItemClick(event:AccordionItemClickEvent):void {
+				model.selectedMenu = event.item;
+				onDividerPress();
 				if (!event.item || !event.item.hasOwnProperty("navView")) {
 					return;
 				}
 				NavigationMgr.getInstance().navigateToView(event.item["navView"]);
 			}
+			
+			private var isAccordionMin:Boolean = false;
+			public function onDividerPress():void {
+				if (isAccordionMin) {
+					accordionView.width = 180;
+					isAccordionMin = false;
+				} else {
+					accordionView.width = 0;
+					isAccordionMin = true;
+				}
+			}
+			
         ]]>
     </fx:Script>
 	
@@ -47,23 +85,17 @@
 		<s:ConstraintRow id="bottomRow" height="30"/>
 	</mx:constraintRows>
 	
-	<mx:HBox top="headerRow:0" bottom="headerRow:0"
-			 width="100%" horizontalGap="0">
-		<s:SWFLoader source="{EmbedResources.topBannerSWF}"/>
-	</mx:HBox>
-	
 	<mx:HDividedBox top="mainRow:0" bottom="mainRow:0"
-			width="100%"
-			horizontalGap="3">
-		<mx:Accordion height="100%" width="180" headerHeight="30" headerStyleName="accrodionHeader" >
+			width="100%" dividerPress="onDividerPress()">
+		<mx:Accordion id="accordionView" height="100%" width="180" headerHeight="30" headerStyleName="accrodionHeader" >
 			<agencymgmt:AgencyManageList width="100%" height="100%"/>
 			<agencymgmt:AgencyActivityList width="100%" height="100%"/>
 			<stats:StatsList width="100%" height="100%"/>
 			<sysmgmt:SystemList width="100%" height="100%"/>
 		</mx:Accordion>
 		<mx:VBox width="100%" height="100%">
-			<control:ScrollCanvas width="100%"/>
-			<views:MainContainer width="100%" height="100%"
+			<control:ScrollCanvas id="scrollCav" width="100%"/>
+			<views:MainContainer id="mainContainer" width="100%" height="100%"
 								 borderColor="#000000" borderStyle="solid"
 								 borderVisible="true"/>
 		</mx:VBox>
@@ -73,6 +105,13 @@
 			   top="bottomRow:0" bottom="bottomRow:0">
 		<mx:Label text="Copyright @ 2011 www.bjgaj.gov.cn All Rights Reserved"
 				  horizontalCenter="0" verticalCenter="0"/>
+	</mx:Canvas>
+	
+	<mx:Canvas top="headerRow:0" bottom="headerRow:0"
+			   width="100%">
+		<s:SWFLoader source="{EmbedResources.topBannerSWF}"/>
+		<mainmenu:MainMenu id="mainMenu" menuData="{menuData}" itemGap="5"
+						   right="5" bottom="0"/>
 	</mx:Canvas>
    
 </mx:Canvas>
