@@ -21,7 +21,7 @@ package com.partycommittee.commands
 					proxy.updateWorkPlan(pcWorkPlanEvt.workPlan);
 					break;
 				case PcWorkPlanEvent.GET_WORKPLAN_YEARLY:
-					proxy.getWorkPlayYearly(pcWorkPlanEvt.agency.id, pcWorkPlanEvt.year);
+					proxy.getWorkPlanYearly(pcWorkPlanEvt.agency.id, pcWorkPlanEvt.year);
 					break;
 				case CRUDEventType.CREATE:
 					proxy.createWorkPlan(pcWorkPlanEvt.workPlan);
