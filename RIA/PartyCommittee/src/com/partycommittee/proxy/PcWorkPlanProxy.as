@@ -33,5 +33,17 @@ package com.partycommittee.proxy
 			service.getWorkPlanYearly(agencyId, year);
 		}
 		
+		public function getCommitWorkplanListByParentId(parentId:Number):void {
+			service.getCommitWorkplanListByParentId(parentId);
+		}
+		
+		public function approvalWorkplan():void {
+			service.approvalWorkplan();
+		}
+		
+		public function evaluateWrokplan():void {
+			service.evaluateWrokplan();
+		}
+		
 	}
 }

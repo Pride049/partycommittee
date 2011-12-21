@@ -26,6 +26,15 @@ package com.partycommittee.commands
 				case CRUDEventType.CREATE:
 					proxy.createWorkPlan(pcWorkPlanEvt.workPlan);
 					break;
+				case PcWorkPlanEvent.GET_COMMIT_CHILDREN_WORKPLAN:
+					proxy.getCommitWorkplanListByParentId(pcWorkPlanEvt.agency.id);
+					break;
+				case PcWorkPlanEvent.APPROVAL_WORKPLAN:
+					proxy.approvalWorkplan();
+					break;
+				case PcWorkPlanEvent.EVALUATE_WORKPLAN:
+					proxy.evaluateWrokplan();
+					break;
 				default :
 					break;
 			}
@@ -40,6 +49,12 @@ package com.partycommittee.commands
 				case CRUDEventType.UPDATE:
 					break;
 				case PcWorkPlanEvent.GET_WORKPLAN_YEARLY:
+					break;
+				case PcWorkPlanEvent.GET_COMMIT_CHILDREN_WORKPLAN:
+					break;
+				case PcWorkPlanEvent.APPROVAL_WORKPLAN:
+					break;
+				case PcWorkPlanEvent.EVALUATE_WORKPLAN:
 					break;
 				default:
 					break;

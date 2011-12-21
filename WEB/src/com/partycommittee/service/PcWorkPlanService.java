@@ -86,4 +86,17 @@ public class PcWorkPlanService {
 		}
 		return list;
 	}
+	
+	public PcWorkPlanContentVo getWorkPlanContentByWorkPlanId(Integer workPlanId) {
+		PcWorkPlanContent content = pcWorkPlanContentDaoImpl.getContentByWorkPlanId(workPlanId);
+		return PcWorkPlanContentVo.fromPcWorkPlanContent(content);
+	}
+	
+	public void approvalWorkPlan(PcWorkPlanVo workPlanVo) {
+		
+	}
+	
+	public void evaluateWrokplan(PcWorkPlanVo workPlanVo) {
+		
+	}
 }
