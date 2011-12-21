@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation:NavigationView xmlns:fx="http://ns.adobe.com/mxml/2009" 
+						   xmlns:s="library://ns.adobe.com/flex/spark" 
+						   xmlns:mx="library://ns.adobe.com/flex/mx"
+						   styleName="mainCanvas"
+						   width="100%" height="100%" 
+						   xmlns:navigation="com.partycommittee.manager.navigation.*" 
+						   xmlns:component="com.partycommittee.views.agencymgmt.component.*">
+	<fx:Script>
+		<![CDATA[
+			import com.partycommittee.events.PcWorkPlanEvent;
+			import com.partycommittee.model.ModelLocator;
+			import com.partycommittee.util.WorkPlanCodeUtil;
+			import com.partycommittee.views.agencymgmt.agencyactivity.workplan.QuarterWorkPlanView;
+			import com.partycommittee.views.agencymgmt.agencyactivity.workplan.YearWorkPlanView;
+			import com.partycommittee.vo.PcAgencyVo;
+			import com.partycommittee.vo.PcWorkPlanVo;
+			
+			import mx.collections.ArrayCollection;
+			import mx.containers.Canvas;
+			import mx.events.PropertyChangeEvent;
+			
+			[Bindable]
+			private var model:ModelLocator = ModelLocator.getInstance();
+			
+			private var _agency:PcAgencyVo;
+			[Bindable]
+			public function get agency():PcAgencyVo {
+				return this._agency;
+			}
+			public function set agency(value:PcAgencyVo):void {
+				this._agency = value;
+			}
+			
+			[Bindable]
+			private var dp:ArrayCollection = new ArrayCollection();
+			
+			private function onCreationCompleted():void {
+				onNavigateIn();
+			}
+			
+			override protected function onNavigateIn():void {
+				if (agency != model.focusAgencyVo) {
+					agency = model.focusAgencyVo;
+					refreshData();
+				}
+				model.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, onModelChanged);
+			}
+			
+			override protected function onNavigateOut():void {
+				model.removeEventListener(PropertyChangeEvent.PROPERTY_CHANGE, onModelChanged);
+			}
+			
+			private function onModelChanged(event:PropertyChangeEvent):void {
+				if (event.property == "focusAgencyVo") {
+					agency = model.focusAgencyVo;
+					refreshData();
+				}
+			}
+			
+			private function refreshData():void {
+				var pcWorkPlanEvent:PcWorkPlanEvent = new PcWorkPlanEvent(PcWorkPlanEvent.GET_COMMIT_CHILDREN_WORKPLAN);
+				pcWorkPlanEvent.agency = agency;
+				pcWorkPlanEvent.failureCallback = getWorkPlanFailure;
+				pcWorkPlanEvent.successCallback = getWorkPlanSuccess;
+				pcWorkPlanEvent.dispatch();
+			}
+			
+			private function getWorkPlanSuccess(data:Object, evt:PcWorkPlanEvent):void {
+				dp = data as ArrayCollection;
+			}
+			
+			private function getWorkPlanFailure(info:Object, evt:PcWorkPlanEvent):void {
+			}
+			
+			private function typeLblFunc(item:Object, col:*):String {
+				return WorkPlanCodeUtil.getWorkPlanTypeDes((item as PcWorkPlanVo).typeId);
+			}
+			
+			private function agencyLblFunc(item:Object, col:*):String {
+				return (item as PcWorkPlanVo).typeId + "";
+			}
+			
+			private function quarterLblFunc(item:Object, col:*):String {
+				switch ((item as PcWorkPlanVo).quarter) {
+					case 1:
+						return "第一季度";
+					case 2:
+						return "第二季度";
+					case 3:
+						return "第三季度";
+					case 4:
+						return "第四季度";
+				}
+				return "";
+			}
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<mx:VBox width="100%" height="100%">
+		<mx:HBox width="100%" height="50"
+				 horizontalAlign="center" verticalAlign="middle"
+				 horizontalScrollPolicy="off" verticalScrollPolicy="off">
+			<mx:Label text="下级工作计划浏览" fontSize="20" fontWeight="bold"/>
+		</mx:HBox>
+		<mx:AdvancedDataGrid id="datagrid" width="100%" height="100%" 
+							 headerStyleName="dataGridHeader"
+							 dataProvider="{dp}">
+			<mx:columns>
+				<mx:AdvancedDataGridColumn headerText="ID" dataField="id"/>
+				<mx:AdvancedDataGridColumn headerText="类型" dataField="typeId"
+										   labelFunction="typeLblFunc"/>
+				<mx:AdvancedDataGridColumn headerText="党组织" dataField="agencyId"
+										   labelFunction="agencyLblFunc"/>
+				<mx:AdvancedDataGridColumn headerText="年度" dataField="year"/>
+				<mx:AdvancedDataGridColumn headerText="季度" dataField="quarter"
+										   labelFunction="quarterLblFunc"/>
+				<mx:AdvancedDataGridColumn headerText="审批">
+					<mx:itemRenderer>
+						<fx:Component>
+						</fx:Component>
+					</mx:itemRenderer>
+				</mx:AdvancedDataGridColumn>
+				<mx:AdvancedDataGridColumn headerText="评价">
+					<mx:itemRenderer>
+						<fx:Component>
+						</fx:Component>
+					</mx:itemRenderer>
+				</mx:AdvancedDataGridColumn>
+			</mx:columns>
+		</mx:AdvancedDataGrid>
+	</mx:VBox>
+	
+</navigation:NavigationView>
