@@ -8,6 +8,7 @@ import org.springframework.flex.remoting.RemotingDestination;
 import org.springframework.flex.remoting.RemotingInclude;
 import org.springframework.stereotype.Service;
 
+import com.partycommittee.remote.vo.PcWorkPlanContentVo;
 import com.partycommittee.remote.vo.PcWorkPlanVo;
 import com.partycommittee.service.PcWorkPlanService;
 
@@ -20,7 +21,7 @@ public class PcWorkPlanRemoteService {
 	public void setPcWorkPlanService(PcWorkPlanService pcWorkPlanService) {
 		this.pcWorkPlanService = pcWorkPlanService;
 	}
-
+	
 	@RemotingInclude
 	public void createWorkPlan(PcWorkPlanVo workPlan) {
 		try {
@@ -43,5 +44,20 @@ public class PcWorkPlanRemoteService {
 	@RemotingInclude
 	public List<PcWorkPlanVo> getCommitWorkplanListByParentId(Integer agencyId) {
 		return pcWorkPlanService.getCommitWorkplanListByParentId(agencyId);
+	}
+	
+	@RemotingInclude
+	public PcWorkPlanContentVo getWorkPlanContentByWorkPlanId(Integer workPlanId) {
+		return pcWorkPlanService.getWorkPlanContentByWorkPlanId(workPlanId);
+	}
+	
+	@RemotingInclude
+	public void approvalWorkplan(PcWorkPlanVo workPlanVo) {
+		pcWorkPlanService.approvalWorkPlan(workPlanVo);
+	}
+	
+	@RemotingInclude
+	public void evaluateWrokplan(PcWorkPlanVo workPlanVo) {
+		pcWorkPlanService.evaluateWrokplan(workPlanVo);
 	}
 }

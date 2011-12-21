@@ -50,7 +50,18 @@ public class PcWorkPlanDaoImpl extends JpaDaoBase implements PcWorkPlanDao {
 	@Override
 	public List<PcWorkPlan> getCommitWorkPlanListByAgencyIds(List<Integer> agencyIds) {
 		try {
-			return super.find("from PcWorkPlan where ");
+			if (agencyIds == null || agencyIds.size() == 0) {
+				return null;
+			}
+			String ids = "";
+			for (Integer idItem : agencyIds) {
+				if (ids.equals("")) {
+					ids = idItem + "";
+				} else {
+					ids += "," + idItem;
+				}
+			}
+			return super.find("from PcWorkPlan where agencyId in (" + ids + ")");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -7,6 +7,10 @@ package com.partycommittee.events
 		public static const PCWORKPLAN_EVENT:String = "com.partycommittee.events.PcWorkPlanEvent";
 		
 		public static const GET_WORKPLAN_YEARLY:String = "getWorkPlanYearly";
+		public static const GET_COMMIT_CHILDREN_WORKPLAN:String = "getCommitChildrenWorkplan";
+		public static const GET_WORKPLAN_CONTENT_BY_WORKPLANID:String = "getWorkPlanContentByWorkPlanId";
+		public static const APPROVAL_WORKPLAN:String = "approvalWorkPlan";
+		public static const EVALUATE_WORKPLAN:String = "valuateWorkPlan";
 		
 		private var _agency:PcAgencyVo;
 		public function set agency(value:PcAgencyVo):void {

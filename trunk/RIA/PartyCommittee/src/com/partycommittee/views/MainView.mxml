@@ -42,7 +42,7 @@
 					{id:'partyMemberManage', label:'党员管理', navView:'orgView'}
 				], menuEvent:false},
 				{label:'组织生活', children:[
-					{label:'浏览', navView:''},
+					{id:'browseReport', label:'浏览', navView:'browseWorkplanView'},
 					{id:'inputReport', label:'填报', navView:'agencyActivityView'}
 				], menuEvent:false},
 				{label:'统计分析', children:[
