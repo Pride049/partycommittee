@@ -117,7 +117,7 @@
 				 includeInLayout.loginView="true"
 				 visible.operatingView="false"
 				 includeInLayout.operatingView="false">
-			<mx:Label id="companyNameLbl" text="北京市公安局基层党支部组织生活会" fontSize="20"/>
+			<mx:Label id="companyNameLbl" text="北京市公安局基层党支部组织生活" fontSize="24" fontWeight="bold" />
 		</mx:HBox>
 		
 		<!-- Login Form -->
