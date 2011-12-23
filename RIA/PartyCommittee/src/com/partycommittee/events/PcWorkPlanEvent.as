@@ -7,8 +7,14 @@ package com.partycommittee.events
 		public static const PCWORKPLAN_EVENT:String = "com.partycommittee.events.PcWorkPlanEvent";
 		
 		public static const GET_WORKPLAN_YEARLY:String = "getWorkPlanYearly";
+		public static const GET_WORKPLAN_YEARLY_SUMMARY:String = "getWorkPlanYearlySummary";
+		public static const GET_WORKPLAN_QUARTER:String = "getWorkPlanQuarter";
+		public static const GET_WORKPLAN_QUARTER_LIST:String = "getWorkPlanQuarterList";
+		public static const GET_WORKPLAN_QUARTER_RESULT_LIST:String = "getWorkPlanQuarterResultList";
 		public static const GET_COMMIT_CHILDREN_WORKPLAN:String = "getCommitChildrenWorkplan";
 		public static const GET_WORKPLAN_CONTENT_BY_WORKPLANID:String = "getWorkPlanContentByWorkPlanId";
+		public static const SUBMIT_WORKPLAN:String = "submitWorkPlan";
+		
 		public static const APPROVAL_WORKPLAN:String = "approvalWorkPlan";
 		public static const EVALUATE_WORKPLAN:String = "valuateWorkPlan";
 		
@@ -34,6 +40,14 @@ package com.partycommittee.events
 		}
 		public function set year(value:Number):void {
 			this._year = value;
+		}
+		
+		private var _quarter:Number;
+		public function get quarter():Number {
+			return this._quarter;
+		}
+		public function set quarter(value:Number):void {
+			this._quarter = value;
 		}
 		
 		private var _kind:String;

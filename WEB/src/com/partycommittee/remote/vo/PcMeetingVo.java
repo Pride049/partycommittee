@@ -1,0 +1,145 @@
+package com.partycommittee.remote.vo;
+
+import java.io.Serializable;
+
+public class PcMeetingVo implements Serializable {
+	private static final long serialVersionUID = -4158070788187357500L;
+	
+	private Integer id;
+	private Integer agencyId;
+	private Integer typeId;
+	private Integer year;
+	private Integer quarter;
+	private Integer week;
+	private String moderator;
+	private String theme;
+	private Integer attend;
+	private Integer asence;
+	private Integer statusId;
+	private Integer active;
+	private String comment;
+		
+	private String asenceMemberIds;
+		
+	private PcMeetingContentVo content;
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public Integer getAgencyId() {
+		return agencyId;
+	}
+
+	public void setAgencyId(Integer agencyId) {
+		this.agencyId = agencyId;
+	}
+
+	public Integer getTypeId() {
+		return typeId;
+	}
+
+	public void setTypeId(Integer typeId) {
+		this.typeId = typeId;
+	}
+
+	public Integer getYear() {
+		return year;
+	}
+
+	public void setYear(Integer year) {
+		this.year = year;
+	}
+
+	public Integer getQuarter() {
+		return quarter;
+	}
+
+	public void setQuarter(Integer quarter) {
+		this.quarter = quarter;
+	}
+
+	public Integer getWeek() {
+		return week;
+	}
+
+	public void setWeek(Integer week) {
+		this.week = week;
+	}
+
+	public String getModerator() {
+		return moderator;
+	}
+
+	public void setModerator(String moderator) {
+		this.moderator = moderator;
+	}
+
+	public String getTheme() {
+		return theme;
+	}
+
+	public void setTheme(String theme) {
+		this.theme = theme;
+	}
+
+	public Integer getAttend() {
+		return attend;
+	}
+
+	public void setAttend(Integer attend) {
+		this.attend = attend;
+	}
+
+	public Integer getAsence() {
+		return asence;
+	}
+
+	public void setAsence(Integer asence) {
+		this.asence = asence;
+	}
+
+	public Integer getStatusId() {
+		return statusId;
+	}
+
+	public void setStatusId(Integer statusId) {
+		this.statusId = statusId;
+	}
+
+	public Integer getActive() {
+		return active;
+	}
+
+	public void setActive(Integer active) {
+		this.active = active;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+
+	public String getAsenceMemberIds() {
+		return asenceMemberIds;
+	}
+
+	public void setAsenceMemberIds(String asenceMemberIds) {
+		this.asenceMemberIds = asenceMemberIds;
+	}
+
+	public PcMeetingContentVo getContent() {
+		return content;
+	}
+
+	public void setContent(PcMeetingContentVo content) {
+		this.content = content;
+	}
+}

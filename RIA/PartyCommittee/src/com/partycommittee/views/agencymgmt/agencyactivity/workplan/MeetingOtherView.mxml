@@ -7,7 +7,7 @@
 					  showCloseButton="true" titleStyleName="panelTitle"
 					  close="PopupMgr.instance.removeWindow(this)" 
 					  height="650" width="500"
-					  title="季度计划"
+					  title="季度执行情况"
 					  creationComplete="onCreationCompleted()"
 					  xmlns:button="com.partycommittee.control.button.*" 
 					  xmlns:richtexttoolbar="com.partycommittee.control.richtexttoolbar.*">
@@ -112,7 +112,7 @@
 			
 			private function onLoadContentFailure(info:Object, evt:PcWorkPlanEvent):void {
 				this.enabled = true;
-				Alert.show("读取工作计划内容失败！");
+				Alert.show("读取执行情况内容失败！");
 			}
 			
 			private function resetData():void {
@@ -167,7 +167,7 @@
 			
 			private function onWorkPlanCreateFailure(info:Object, workPlanEvt:PcWorkPlanEvent):void {
 				this.enabled = true;
-				Alert.show("保存季度工作计划失败！");
+				Alert.show("保存季度执行情况失败！");
 			}
 			
 			private function onWorkPlanUpdateSuccess(data:Object, workPlanEvt:PcWorkPlanEvent):void {
@@ -178,12 +178,12 @@
 			
 			private function onWorkPlanUpdateFailure(info:Object, workPlanEvt:PcWorkPlanEvent):void {
 				this.enabled = true;
-				Alert.show("修改季度工作计划失败！");
+				Alert.show("修改季度执行情况失败！");
 			}
 			
 			private function getNewWorkPlan():PcWorkPlanVo {
 				var workPlan:PcWorkPlanVo = new PcWorkPlanVo();
-				workPlan.typeId = PCConst.WORKPLAN_TYPE_QUARTER;
+				workPlan.typeId = PCConst.WORKPLAN_TYPE_QUARTER_SUMMARY;
 				workPlan.year = year;
 				workPlan.quarter = quarter;
 				workPlan.agencyId = agency.id;
@@ -215,7 +215,7 @@
 			 horizontalScrollPolicy="off" verticalScrollPolicy="off">
 		<mx:HBox width="100%" horizontalAlign="center"
 				 horizontalScrollPolicy="off" verticalScrollPolicy="off">
-			<mx:Label fontSize="20" fontWeight="bold" text="{year + '年度第' + quarter + '季度工作计划'}"/>
+			<mx:Label fontSize="20" fontWeight="bold" text="{year + '年度第' + quarter + '季度执行情况'}"/>
 			<mx:Label fontSize="20" fontWeight="bold"
 					  text="{(workPlan &amp;&amp; workPlan.statusId == 1) ? ' （已上报）' : ''}"/>
 		</mx:HBox>

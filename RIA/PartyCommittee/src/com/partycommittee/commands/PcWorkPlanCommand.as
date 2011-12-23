@@ -23,11 +23,29 @@ package com.partycommittee.commands
 				case PcWorkPlanEvent.GET_WORKPLAN_YEARLY:
 					proxy.getWorkPlanYearly(pcWorkPlanEvt.agency.id, pcWorkPlanEvt.year);
 					break;
+				case PcWorkPlanEvent.GET_WORKPLAN_YEARLY_SUMMARY:
+					proxy.getWorkPlanYearlySummary(pcWorkPlanEvt.agency.id, pcWorkPlanEvt.year);
+					break;
 				case CRUDEventType.CREATE:
 					proxy.createWorkPlan(pcWorkPlanEvt.workPlan);
 					break;
 				case PcWorkPlanEvent.GET_COMMIT_CHILDREN_WORKPLAN:
 					proxy.getCommitWorkplanListByParentId(pcWorkPlanEvt.agency.id);
+					break;
+				case PcWorkPlanEvent.GET_WORKPLAN_QUARTER:
+					proxy.getWorkPlanQuarter(pcWorkPlanEvt.agency.id, pcWorkPlanEvt.year, pcWorkPlanEvt.quarter);
+					break;
+				case PcWorkPlanEvent.GET_WORKPLAN_QUARTER_LIST:
+					proxy.getWorkPlanListQuarter(pcWorkPlanEvt.agency.id, pcWorkPlanEvt.year);
+					break;
+				case PcWorkPlanEvent.GET_WORKPLAN_QUARTER_RESULT_LIST:
+					proxy.getResultListQuarter(pcWorkPlanEvt.agency.id, pcWorkPlanEvt.year);
+					break;
+				case PcWorkPlanEvent.GET_WORKPLAN_CONTENT_BY_WORKPLANID:
+					proxy.getContentByWorkPlanId(pcWorkPlanEvt.workPlan.id);
+					break;
+				case PcWorkPlanEvent.SUBMIT_WORKPLAN:
+					proxy.submitWorkPlan(pcWorkPlanEvt.workPlan);
 					break;
 				case PcWorkPlanEvent.APPROVAL_WORKPLAN:
 					proxy.approvalWorkplan();
@@ -49,6 +67,8 @@ package com.partycommittee.commands
 				case CRUDEventType.UPDATE:
 					break;
 				case PcWorkPlanEvent.GET_WORKPLAN_YEARLY:
+					break;
+				case PcWorkPlanEvent.GET_WORKPLAN_QUARTER:
 					break;
 				case PcWorkPlanEvent.GET_COMMIT_CHILDREN_WORKPLAN:
 					break;

@@ -78,6 +78,9 @@
 	<mx:RemoteObject id="pcWorkPlan"
 					 destination="PcWorkPlan"
 					 channelSet="{channelSet}"/>
+	<mx:RemoteObject id="pcMeeting"
+					 destination="PcMeeting"
+					 channelSet="{channelSet}"/>
 	
     <!-- HTTPService example
 	<mx:HTTPService

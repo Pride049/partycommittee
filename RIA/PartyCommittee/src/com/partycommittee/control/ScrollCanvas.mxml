@@ -3,7 +3,8 @@
 		   xmlns:s="library://ns.adobe.com/flex/spark" 
 		   xmlns:mx="library://ns.adobe.com/flex/mx" 
 		   width="100%"
-		   creationComplete="onCreationCompleted()" xmlns:button="com.partycommittee.control.button.*">
+		   creationComplete="onCreationCompleted()" 
+		   xmlns:button="com.partycommittee.control.button.*">
 	
 	<fx:Script>
 		<![CDATA[
@@ -89,6 +90,10 @@
 						case "orgManage":
 						case "partyMemberManage":
 							secondLvLbl = "组织管理";
+							thirdLvLbl = this._selectedMenuItem.label;
+							break;
+						case "browseReport":
+							secondLvLbl = "组织生活";
 							thirdLvLbl = this._selectedMenuItem.label;
 							break;
 						case "inputReport":
