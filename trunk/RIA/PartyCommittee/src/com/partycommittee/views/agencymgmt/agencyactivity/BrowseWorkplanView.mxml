@@ -5,7 +5,7 @@
 						   styleName="mainCanvas"
 						   width="100%" height="100%" 
 						   xmlns:navigation="com.partycommittee.manager.navigation.*" 
-						   xmlns:component="com.partycommittee.views.agencymgmt.component.*">
+						   xmlns:component="com.partycommittee.views.agencymgmt.component.*" xmlns:button="com.partycommittee.control.button.*">
 	<fx:Script>
 		<![CDATA[
 			import com.partycommittee.events.PcWorkPlanEvent;
@@ -94,6 +94,14 @@
 				}
 				return "";
 			}
+			
+			public function approvalWorkPlan(workPlan:PcWorkPlanVo):void {
+				
+			}
+			
+			public function evaluateWorkPlan(workPlan:PcWorkPlanVo):void {
+				
+			}
 		]]>
 	</fx:Script>
 	
@@ -111,7 +119,7 @@
 							 headerStyleName="dataGridHeader"
 							 dataProvider="{dp}">
 			<mx:columns>
-				<mx:AdvancedDataGridColumn headerText="ID" dataField="id"/>
+				<mx:AdvancedDataGridColumn headerText="序号" dataField="id"/>
 				<mx:AdvancedDataGridColumn headerText="类型" dataField="typeId"
 										   labelFunction="typeLblFunc"/>
 				<mx:AdvancedDataGridColumn headerText="党组织" dataField="agencyId"
@@ -122,12 +130,38 @@
 				<mx:AdvancedDataGridColumn headerText="审批">
 					<mx:itemRenderer>
 						<fx:Component>
+							<mx:Box horizontalAlign="center" verticalAlign="middle"
+									horizontalScrollPolicy="off" verticalScrollPolicy="off">
+								<fx:Script>
+									<![CDATA[
+										import com.partycommittee.vo.PcWorkPlanVo;
+										
+										protected function approvalBtnClick():void {
+											outerDocument.approvalWorkPlan(data as PcWorkPlanVo);
+										}
+									]]>
+								</fx:Script>
+								<button:PcButton label="审批" click="approvalBtnClick()"/>
+							</mx:Box>
 						</fx:Component>
 					</mx:itemRenderer>
 				</mx:AdvancedDataGridColumn>
 				<mx:AdvancedDataGridColumn headerText="评价">
 					<mx:itemRenderer>
 						<fx:Component>
+							<mx:Box horizontalAlign="center" verticalAlign="middle"
+									horizontalScrollPolicy="off" verticalScrollPolicy="off">
+								<fx:Script>
+									<![CDATA[
+										import com.partycommittee.vo.PcWorkPlanVo;
+										
+										protected function evaluateBtnClick():void {
+											outerDocument.evaluateWorkPlan(data as PcWorkPlanVo);
+										}
+									]]>
+								</fx:Script>
+								<button:PcButton label="评价" click="evaluateBtnClick()"/>
+							</mx:Box>
 						</fx:Component>
 					</mx:itemRenderer>
 				</mx:AdvancedDataGridColumn>

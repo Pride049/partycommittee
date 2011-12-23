@@ -68,6 +68,17 @@ public class PcWorkPlanService {
 		workPlanVo.setWorkPlanContent(PcWorkPlanContentVo.fromPcWorkPlanContent(workPlanContent));
 		return workPlanVo;
 	}
+	
+	public PcWorkPlanVo getWorkPlayYearlySummary(Integer agencyId, Integer year) {
+		PcWorkPlan workPlan = pcWorkPlanDaoImpl.getWorkPlanYearlySummaryByAgencyId(agencyId, year);
+		if (workPlan == null) {
+			return null;
+		}
+		PcWorkPlanContent workPlanContent = pcWorkPlanContentDaoImpl.getContentByWorkPlanId(workPlan.getId());
+		PcWorkPlanVo workPlanVo = PcWorkPlanVo.fromPcWorkPlan(workPlan);
+		workPlanVo.setWorkPlanContent(PcWorkPlanContentVo.fromPcWorkPlanContent(workPlanContent));
+		return workPlanVo;
+	}
 
 	public List<PcWorkPlanVo> getCommitWorkplanListByParentId(Integer agencyId) {
 		List<PcWorkPlanVo> list = new ArrayList<PcWorkPlanVo>();
@@ -99,4 +110,77 @@ public class PcWorkPlanService {
 	public void evaluateWrokplan(PcWorkPlanVo workPlanVo) {
 		
 	}
+
+	public PcWorkPlanVo getWorkPlanQuarter(Integer agencyId, Integer year,
+			Integer quarter) {
+		PcWorkPlan workPlan = pcWorkPlanDaoImpl.getWorkPlanQuarterByAgencyId(agencyId, year, quarter);
+		if (workPlan == null) {
+			return null;
+		}
+		PcWorkPlanContent workPlanContent = pcWorkPlanContentDaoImpl.getContentByWorkPlanId(workPlan.getId());
+		PcWorkPlanVo workPlanVo = PcWorkPlanVo.fromPcWorkPlan(workPlan);
+		workPlanVo.setWorkPlanContent(PcWorkPlanContentVo.fromPcWorkPlanContent(workPlanContent));
+		return workPlanVo;
+	}
+
+	public List<PcWorkPlanVo> getWorkPlanListQuarter(Integer agencyId, Integer year) {
+		List<PcWorkPlanVo> list = createOriginalQuarterWorkPlanList(agencyId, year, 2);
+		List<PcWorkPlan> workPlanList = pcWorkPlanDaoImpl.getWorkPlanQuarterByYear(agencyId, year);
+		if (workPlanList == null || workPlanList.size() == 0) {
+			return list;
+		}
+		for (PcWorkPlan workPlanItem : workPlanList) {
+			for (int i = 0; i < list.size(); i++) {
+				PcWorkPlanVo workPlanVo = list.get(i);
+				if (workPlanVo.getQuarter().intValue() == workPlanItem.getQuarter().intValue()) {
+					list.remove(i);
+					list.add(i, PcWorkPlanVo.fromPcWorkPlan(workPlanItem));
+				}
+			}
+		}
+		return list;
+	}
+
+	private List<PcWorkPlanVo> createOriginalQuarterWorkPlanList(Integer agencyId, Integer year, Integer typeId) {
+		List<PcWorkPlanVo> list = new ArrayList<PcWorkPlanVo>();
+		for (int i = 1; i <= 4; i++) {
+			PcWorkPlanVo pcWorkPlan = new PcWorkPlanVo();
+			pcWorkPlan.setYear(year);
+			pcWorkPlan.setQuarter(i);
+			pcWorkPlan.setTypeId(typeId);
+			pcWorkPlan.setAgencyId(agencyId);
+			pcWorkPlan.setStatusId(2);
+			list.add(pcWorkPlan);
+		}
+		return list;
+	}
+
+	public List<PcWorkPlanVo> getResultListQuarter(Integer agencyId, Integer year) {
+		List<PcWorkPlanVo> list = createOriginalQuarterWorkPlanList(agencyId, year, 3);
+		List<PcWorkPlan> workPlanList = pcWorkPlanDaoImpl.getResultQuarterByYear(agencyId, year);
+		if (workPlanList == null || workPlanList.size() == 0) {
+			return list;
+		}
+		for (PcWorkPlan workPlanItem : workPlanList) {
+			for (int i = 0; i < list.size(); i++) {
+				PcWorkPlanVo workPlanVo = list.get(i);
+				if (workPlanVo.getQuarter().intValue() == workPlanItem.getQuarter().intValue()) {
+					list.remove(i);
+					list.add(i, PcWorkPlanVo.fromPcWorkPlan(workPlanItem));
+				}
+			}
+		}
+		return list;
+	}
+
+	public void submitWorkPlan(PcWorkPlanVo workPlan) {
+		workPlan.setStatusId(1);
+		pcWorkPlanDaoImpl.updateWorkPlan(PcWorkPlanVo.toPcWorkPlan(workPlan));
+	}
+
+	public PcWorkPlanContentVo getContentByWorkPlanId(Integer workPlanId) {
+		PcWorkPlanContent content = pcWorkPlanContentDaoImpl.getContentByWorkPlanId(workPlanId);
+		return PcWorkPlanContentVo.fromPcWorkPlanContent(content);
+	}
+
 }

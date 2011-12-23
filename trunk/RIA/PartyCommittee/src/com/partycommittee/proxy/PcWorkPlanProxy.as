@@ -33,6 +33,30 @@ package com.partycommittee.proxy
 			service.getWorkPlanYearly(agencyId, year);
 		}
 		
+		public function getWorkPlanYearlySummary(agencyId:Number, year:Number):void {
+			service.getWorkPlanYearlySummary(agencyId, year);
+		}
+		
+		public function getWorkPlanQuarter(agencyId:Number, year:Number, quarter:Number):void {
+			service.getWorkPlanQuarter(agencyId, year, quarter);
+		}
+		
+		public function getWorkPlanListQuarter(agencyId:Number, year:Number):void {
+			service.getWorkPlanListQuarter(agencyId, year);
+		}
+		
+		public function getResultListQuarter(agencyId:Number, year:Number):void {
+			service.getResultListQuarter(agencyId, year);
+		}
+		
+		public function getContentByWorkPlanId(workPlanId:Number):void {
+			service.getContentByWorkPlanId(workPlanId);
+		}
+		
+		public function submitWorkPlan(workPlan:PcWorkPlanVo):void {
+			service.submitWorkPlan(workPlan);
+		}
+		
 		public function getCommitWorkplanListByParentId(parentId:Number):void {
 			service.getCommitWorkplanListByParentId(parentId);
 		}

@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" 
+		 width="100%" height="100%"
+		 creationComplete="onCreationCompleted()" 
+		 xmlns:button="com.partycommittee.control.button.*">
+	<fx:Script>
+		<![CDATA[
+			import com.partycommittee.events.PcWorkPlanEvent;
+			import com.partycommittee.manager.popup.PopupMgr;
+			import com.partycommittee.util.LblFunctionHelper;
+			import com.partycommittee.util.WorkPlanCodeUtil;
+			import com.partycommittee.vo.PcAgencyVo;
+			import com.partycommittee.vo.PcWorkPlanVo;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.events.FlexEvent;
+			
+			public static const TYPE_WORKPLAN:String = "workPlan";
+			public static const TYPE_RESULT:String = "result";
+			
+			[Bindable]
+			private var dp:ArrayCollection = new ArrayCollection();
+			
+			private var _agency:PcAgencyVo;
+			[Bindable]
+			public function get agency():PcAgencyVo {
+				return this._agency;
+			}
+			public function set agency(value:PcAgencyVo):void {
+				this._agency = value;
+			}
+			
+			private var _type:String = "workPlan";
+			[Bindable]
+			public function get type():String {
+				return this._type;
+			}
+			public function set type(value:String):void {
+				this._type = value;
+			}
+			
+			private function onCreationCompleted():void {
+				addEventListener(FlexEvent.SHOW, onViewShow);
+			}
+			
+			private function onViewShow(event:FlexEvent):void {
+				if (agency) {
+					updateData();
+				}
+			}
+			
+			public function updateData():void {
+				if (type == TYPE_WORKPLAN) {
+					getWorkPlanList();
+				} else {
+					getResultList();
+				}
+			}
+			
+			private function getWorkPlanList():void {
+				var evt:PcWorkPlanEvent = new PcWorkPlanEvent(PcWorkPlanEvent.GET_WORKPLAN_QUARTER_LIST);
+				evt.agency = agency;
+				evt.year = new Date().getFullYear();
+				evt.successCallback = onWorkPlanListSuccess;
+				evt.failureCallback = onWorkPlanListFailure;
+				this.enabled = false;
+				evt.dispatch();
+			}
+			
+			private function onWorkPlanListSuccess(data:Object, evt:PcWorkPlanEvent):void {
+				this.enabled = true;
+				dp = data as ArrayCollection;
+			}
+			
+			private function onWorkPlanListFailure(info:Object, evt:PcWorkPlanEvent):void {
+				this.enabled = true;
+				Alert.show(info.toString());
+			}
+			
+			private function getResultList():void {
+				var evt:PcWorkPlanEvent = new PcWorkPlanEvent(PcWorkPlanEvent.GET_WORKPLAN_QUARTER_RESULT_LIST);
+				evt.agency = agency;
+				evt.year = new Date().getFullYear();
+				evt.successCallback = onWorkPlanResultListSuccess;
+				evt.failureCallback = onWorkPlanResultListFailure;
+				this.enabled = false;
+				evt.dispatch();
+			}
+			
+			private function onWorkPlanResultListSuccess(data:Object, evt:PcWorkPlanEvent):void {
+				this.enabled = true;
+				dp = data as ArrayCollection;
+			}
+			
+			private function onWorkPlanResultListFailure(info:Object, evt:PcWorkPlanEvent):void {
+				this.enabled = true;
+				Alert.show(info.toString());
+			}
+			
+			public function editWorkPlan(workPlan:PcWorkPlanVo):void {
+				if (type == TYPE_WORKPLAN) {
+					var workPlanWin:QuarterWorkPlanView = new QuarterWorkPlanView();
+					workPlanWin.agency = agency;
+					workPlanWin.workPlan = workPlan;
+					workPlanWin.parentView = this;
+					PopupMgr.instance.popupWindow(workPlanWin);
+				} else {
+					var resultWin:QuarterResultView = new QuarterResultView();
+					resultWin.agency = agency;
+					resultWin.workPlan = workPlan;
+					resultWin.parentView = this;
+					PopupMgr.instance.popupWindow(resultWin);
+				}
+			}
+			
+			public function submitWorkPlan(workPlan:PcWorkPlanVo):void {
+				var evt:PcWorkPlanEvent = new PcWorkPlanEvent(PcWorkPlanEvent.SUBMIT_WORKPLAN);
+				evt.workPlan = workPlan;
+				evt.successCallback = onSubmitWorkPlanSuccess;
+				evt.failureCallback = onSubmitWorkPlanFailure;
+				this.enabled = false;
+				evt.dispatch();
+			}
+			
+			private function onSubmitWorkPlanSuccess(data:Object, evt:PcWorkPlanEvent):void {
+				this.enabled = true;
+				updateData();
+			}
+			
+			private function onSubmitWorkPlanFailure(info:Object, evt:PcWorkPlanEvent):void {
+				this.enabled = true;
+				Alert.show(info.toString());
+			}
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<mx:AdvancedDataGrid id="dg" dataProvider="{dp}" width="100%" height="100%">
+		<mx:columns>
+			<mx:AdvancedDataGridColumn headerText="年度" dataField="year"/>
+			<mx:AdvancedDataGridColumn headerText="季度" dataField="quarter" 
+									   labelFunction="{LblFunctionHelper.workPlanQuarterLblFunc}"/>
+			<mx:AdvancedDataGridColumn headerText="类型" dataField="typeId"
+									   labelFunction="{LblFunctionHelper.workPlanTypeLblFunc}"/>
+			<mx:AdvancedDataGridColumn headerText="状态" dataField="statusId"
+									   labelFunction="{LblFunctionHelper.workPlanStatusLblFunc}"/>
+			<mx:AdvancedDataGridColumn headerText="操作">
+				<mx:itemRenderer>
+					<fx:Component>
+						<mx:Box horizontalAlign="center" verticalAlign="middle"
+								horizontalScrollPolicy="off" verticalScrollPolicy="off">
+							<fx:Script>
+								<![CDATA[
+									import com.partycommittee.vo.PcWorkPlanVo;
+									
+									protected function editBtnClick():void {
+										outerDocument.editWorkPlan(data as PcWorkPlanVo);
+									}
+								]]>
+							</fx:Script>
+							<button:PcButton id="editBtn" label="修改" click="editBtnClick()"
+											 enabled="{(data as PcWorkPlanVo).statusId != 1}"/>
+						</mx:Box>
+					</fx:Component>
+				</mx:itemRenderer>
+			</mx:AdvancedDataGridColumn>
+			<mx:AdvancedDataGridColumn headerText="上报">
+				<mx:itemRenderer>
+					<fx:Component>
+						<mx:Box horizontalAlign="center" verticalAlign="middle"
+								horizontalScrollPolicy="off" verticalScrollPolicy="off">
+							<fx:Script>
+								<![CDATA[
+									import com.partycommittee.vo.PcWorkPlanVo;
+									
+									protected function submitBtnClick():void {
+										outerDocument.submitWorkPlan(data as PcWorkPlanVo);
+									}
+								]]>
+							</fx:Script>
+							<button:PcButton id="submitBtn" label="上报" click="submitBtnClick()"
+											 enabled="{(data as PcWorkPlanVo).statusId != 1 &amp;&amp; (data as PcWorkPlanVo).id}"/>
+						</mx:Box>
+					</fx:Component>
+				</mx:itemRenderer>
+			</mx:AdvancedDataGridColumn>
+		</mx:columns>
+	</mx:AdvancedDataGrid>
+</mx:Canvas>

@@ -12,7 +12,7 @@ package com.partycommittee.util
 			var yearCollection:ArrayCollection = new ArrayCollection();
 			var currentYear:Number = new Date().getFullYear();
 			for (var i:int = 0; i < WORKPLAN_YEAR_LENGTH; i++) {
-				yearCollection.addItem(currentYear - i);
+				yearCollection.addItem(currentYear + i);
 			}
 			return yearCollection;
 		}

@@ -42,6 +42,16 @@ public class PcWorkPlanRemoteService {
 	}
 	
 	@RemotingInclude
+	public PcWorkPlanVo getWorkPlanYearlySummary(Integer agencyId, Integer year) {
+		return pcWorkPlanService.getWorkPlayYearlySummary(agencyId, year);
+	}
+	
+	@RemotingInclude
+	public PcWorkPlanVo getWorkPlanQuarter(Integer agencyId, Integer year, Integer quarter) {
+		return pcWorkPlanService.getWorkPlanQuarter(agencyId, year, quarter);
+	}
+	
+	@RemotingInclude
 	public List<PcWorkPlanVo> getCommitWorkplanListByParentId(Integer agencyId) {
 		return pcWorkPlanService.getCommitWorkplanListByParentId(agencyId);
 	}
@@ -60,4 +70,25 @@ public class PcWorkPlanRemoteService {
 	public void evaluateWrokplan(PcWorkPlanVo workPlanVo) {
 		pcWorkPlanService.evaluateWrokplan(workPlanVo);
 	}
+	
+	@RemotingInclude
+	public List<PcWorkPlanVo> getWorkPlanListQuarter(Integer agencyId, Integer year) {
+		return pcWorkPlanService.getWorkPlanListQuarter(agencyId, year);
+	}
+	
+	@RemotingInclude
+	public List<PcWorkPlanVo> getResultListQuarter(Integer agencyId, Integer year) {
+		return pcWorkPlanService.getResultListQuarter(agencyId, year);
+	}
+	
+	@RemotingInclude
+	public void submitWorkPlan(PcWorkPlanVo workPlan) {
+		pcWorkPlanService.submitWorkPlan(workPlan);
+	}
+	
+	@RemotingInclude
+	public PcWorkPlanContentVo getContentByWorkPlanId(Integer workPlanId) {
+		return pcWorkPlanService.getContentByWorkPlanId(workPlanId);
+	}
+	
 }

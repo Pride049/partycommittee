@@ -46,7 +46,7 @@
 			}
 			
 			private function updatePwSuccess(data:Object, evt:PcUserEvent):void {
-				model.loginUser = data as PcUserVo;
+				model.loginUser = evt.user;
 				close();
 			}
 			

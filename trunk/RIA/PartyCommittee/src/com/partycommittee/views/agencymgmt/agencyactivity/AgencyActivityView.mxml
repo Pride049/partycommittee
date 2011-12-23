@@ -9,7 +9,10 @@
 	<fx:Script>
 		<![CDATA[
 			import com.partycommittee.model.ModelLocator;
+			import com.partycommittee.views.agencymgmt.agencyactivity.workplan.MeetingListView;
+			import com.partycommittee.views.agencymgmt.agencyactivity.workplan.QuarterWorkPlanListView;
 			import com.partycommittee.views.agencymgmt.agencyactivity.workplan.QuarterWorkPlanView;
+			import com.partycommittee.views.agencymgmt.agencyactivity.workplan.YearSummaryView;
 			import com.partycommittee.views.agencymgmt.agencyactivity.workplan.YearWorkPlanView;
 			import com.partycommittee.vo.PcAgencyVo;
 			
@@ -57,46 +60,82 @@
 				}
 				
 				tab.removeAll();
+				
 				var yearWorkPlan:YearWorkPlanView = new YearWorkPlanView();
 				yearWorkPlan.agency = agency;
 				yearWorkPlan.percentHeight = 100;
 				yearWorkPlan.percentWidth = 100;
 				tab.addChild(yearWorkPlan);
-				var quarterWorkPlan:QuarterWorkPlanView = new QuarterWorkPlanView();
-				quarterWorkPlan.agency = agency;
-				quarterWorkPlan.percentHeight = 100;
-				quarterWorkPlan.percentWidth = 100;
-				quarterWorkPlan.enabled = false;
-				tab.addChild(quarterWorkPlan);
 				
-				// Disable for demo.
-				var quarterSummary:Canvas = new Canvas();
-				quarterSummary.label = "季度执行情况";
-				quarterSummary.enabled = false;
-				tab.addChild(quarterSummary);
-				var classView:Canvas = new Canvas();
-				classView.label = "党课";
-				classView.enabled = false;
-				tab.addChild(classView);
-				var branchMemberMeeting:Canvas = new Canvas();
+				var quarterWorkPlanList:QuarterWorkPlanListView = new QuarterWorkPlanListView();
+				quarterWorkPlanList.label = "季度工作计划";
+				quarterWorkPlanList.agency = agency;
+				quarterWorkPlanList.type = QuarterWorkPlanListView.TYPE_WORKPLAN;
+				quarterWorkPlanList.percentHeight = 100;
+				quarterWorkPlanList.percentWidth = 100;
+				tab.addChild(quarterWorkPlanList);
+				
+				var quarterWorkPlanResultList:QuarterWorkPlanListView = new QuarterWorkPlanListView();
+				quarterWorkPlanResultList.label = "季度执行情况";
+				quarterWorkPlanResultList.type = QuarterWorkPlanListView.TYPE_RESULT;
+				quarterWorkPlanResultList.agency = agency;
+				quarterWorkPlanResultList.percentHeight = 100;
+				quarterWorkPlanResultList.percentWidth = 100;
+				tab.addChild(quarterWorkPlanResultList);
+				
+				var classMeetingView:MeetingListView = new MeetingListView();
+				classMeetingView.label = "党课";
+				classMeetingView.type = PCConst.WORKPLAN_TYPE_CLASS;
+				classMeetingView.agency = agency;
+				classMeetingView.percentHeight = 100;
+				classMeetingView.percentWidth = 100;
+				tab.addChild(classMeetingView);
+				
+				var branchMemberMeeting:MeetingListView = new MeetingListView();
 				branchMemberMeeting.label = "支部党员大会";
-				branchMemberMeeting.enabled = false;
+				branchMemberMeeting.type = PCConst.WORKPLAN_TYPE_MEETING_BRANCH_MEMBER;
+				branchMemberMeeting.agency = agency;
+				branchMemberMeeting.percentHeight = 100;
+				branchMemberMeeting.percentWidth = 100;
 				tab.addChild(branchMemberMeeting);
-				var branchPartycommittee:Canvas = new Canvas();
-				branchPartycommittee.label = "支部委员会";
-				branchPartycommittee.enabled = false;
-				tab.addChild(branchPartycommittee);
-				var teamMeeting:Canvas = new Canvas();
+				
+				var branchCommitteeMeeting:MeetingListView = new MeetingListView();
+				branchCommitteeMeeting.label = "支部委员会";
+				branchCommitteeMeeting.type = PCConst.WORKPLAN_TYPE_MEETING_BRANCH_COMMITTEE;
+				branchCommitteeMeeting.agency = agency;
+				branchCommitteeMeeting.percentHeight = 100;
+				branchCommitteeMeeting.percentWidth = 100;
+				tab.addChild(branchCommitteeMeeting);
+				
+				var branchLifeMeeting:MeetingListView = new MeetingListView();
+				branchLifeMeeting.label = "支部民主生活会";
+				branchLifeMeeting.type = PCConst.WORKPLAN_TYPE_MEETING_BRANCH_LIFE;
+				branchLifeMeeting.agency = agency;
+				branchLifeMeeting.percentHeight = 100;
+				branchLifeMeeting.percentWidth = 100;
+				tab.addChild(branchLifeMeeting);
+				
+				var teamMeeting:MeetingListView = new MeetingListView();
 				teamMeeting.label = "党小组会";
-				teamMeeting.enabled = false;
+				teamMeeting.type = PCConst.WORKPLAN_TYPE_MEETING_TEAM;
+				teamMeeting.agency = agency;
+				teamMeeting.percentHeight = 100;
+				teamMeeting.percentWidth = 100;
 				tab.addChild(teamMeeting);
-				var otherMeeting:Canvas = new Canvas();
+				
+				var otherMeeting:MeetingListView = new MeetingListView();
 				otherMeeting.label = "其他会议";
-				otherMeeting.enabled = false;
+				otherMeeting.type = PCConst.WORKPLAN_TYPE_MEETING_OTHER;
+				otherMeeting.agency = agency;
+				otherMeeting.percentHeight = 100;
+				otherMeeting.percentWidth = 100;
 				tab.addChild(otherMeeting);
-				var yearlySummary:Canvas = new Canvas();
+				
+				var yearlySummary:YearSummaryView = new YearSummaryView();
 				yearlySummary.label = "年终总结";
-				yearlySummary.enabled = false;
+				yearlySummary.agency = agency;
+				yearlySummary.percentHeight = 100;
+				yearlySummary.percentWidth = 100;
 				tab.addChild(yearlySummary);
 				
 				switch (this._agency.codeId) {
