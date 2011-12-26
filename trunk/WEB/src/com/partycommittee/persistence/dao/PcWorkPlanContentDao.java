@@ -9,5 +9,7 @@ public interface PcWorkPlanContentDao {
 	public void createContent(PcWorkPlanContent content);
 
 	public void upateContent(PcWorkPlanContent content);
+
+	PcWorkPlanContent getContentByWorkPlanIdAndType(Integer workPlanId, int i);
 	
 }

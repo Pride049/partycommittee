@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="utf-8"?>
+<control:EscapeWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					  xmlns:s="library://ns.adobe.com/flex/spark" 
+					  xmlns:mx="library://ns.adobe.com/flex/mx" 
+					  xmlns:control="com.partycommittee.control.*"
+					  horizontalAlign="center" verticalAlign="middle"
+					  showCloseButton="true" titleStyleName="panelTitle"
+					  close="PopupMgr.instance.removeWindow(this)" 
+					  height="650" width="900"
+					  title="{meetingTitle}"
+					  creationComplete="onCreationCompleted()"
+					  xmlns:button="com.partycommittee.control.button.*" 
+					  xmlns:richtexttoolbar="com.partycommittee.control.richtexttoolbar.*" 
+					  xmlns:component="com.partycommittee.views.agencymgmt.agencyactivity.workplan.component.*">
+	<fx:Script>
+		<![CDATA[
+			import com.partycommittee.events.PcMeetingEvent;
+			import com.partycommittee.manager.popup.PopupMgr;
+			import com.partycommittee.views.agencymgmt.agencyactivity.BrowseMeetingView;
+			import com.partycommittee.vo.PcAgencyVo;
+			import com.partycommittee.vo.PcMeetingContentVo;
+			import com.partycommittee.vo.PcMeetingVo;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			
+			private var isNew:Boolean = true;
+			
+			[Bindable]
+			private var meetingTitle:String;
+			[Bindable]
+			private var hasHandle:Boolean = false;
+			
+			[Bindable]
+			private var year:Number;
+			[Bindable]
+			private var quarter:Number = 1;
+			
+			private var _meeting:PcMeetingVo;
+			[Bindable]
+			public function get meeting():PcMeetingVo {
+				return this._meeting;
+			}
+			public function set meeting(value:PcMeetingVo):void {
+				this._meeting = value;
+			}
+			
+			private var _type:Number;
+			[Bindable]
+			public function get type():Number {
+				return this._type;
+			}
+			public function set type(value:Number):void {
+				this._type = value;
+			}
+			
+			[Bindable]
+			private var yearDp:ArrayCollection;
+			
+			private var _agency:PcAgencyVo;
+			[Bindable]
+			public function get agency():PcAgencyVo {
+				return this._agency;
+			}
+			public function set agency(value:PcAgencyVo):void {
+				this._agency = value;
+			}
+			
+			private var _parentView:BrowseMeetingView;
+			[Bindable]
+			public function get parentView():BrowseMeetingView {
+				return this._parentView;
+			}
+			public function set parentView(value:BrowseMeetingView):void {
+				this._parentView = value;
+			}
+			
+			private function onCreationCompleted():void {
+				updateData();
+			}
+			
+			private function updateData():void {
+				if (!agency || !meeting) {
+					return;
+				}
+				
+				year = meeting.year;
+				quarter = meeting.quarter;
+				
+				switch (meeting.typeId) {
+					case PCConst.WORKPLAN_TYPE_CLASS:
+						meetingTitle = year + "年第" + quarter + "季度党课 评价";
+						break;
+					case PCConst.WORKPLAN_TYPE_MEETING_BRANCH_COMMITTEE:
+						meetingTitle = year + "年第" + quarter + "季度支部委员会 评价";
+						break;
+					case PCConst.WORKPLAN_TYPE_MEETING_BRANCH_LIFE:
+						meetingTitle = year + "年第" + quarter + "季度支部生活会 评价";
+						break;
+					case PCConst.WORKPLAN_TYPE_MEETING_BRANCH_MEMBER:
+						meetingTitle = year + "年第" + quarter + "季度支部党员大会 评价";
+						break;
+					case PCConst.WORKPLAN_TYPE_MEETING_OTHER:
+						meetingTitle = meeting.meetingName + " 评价";
+						break;
+				}
+				
+				if (meeting.id) {
+					isNew = false;
+					dateField.selectedDate = meeting.meetingDatetime;
+					themeTxt.text = meeting.theme;
+					attendTxt.text = meeting.attend + "";
+					asenceTxt.text = meeting.asence + "";
+					asenceBox.meeting = meeting;
+					if (meeting.content) {
+						personTxt.text = meeting.content.memberName;
+						textArea.htmlText = meeting.content.content;
+					} else {
+						loadMeetingContent();
+					}
+				} else {
+					isNew = true;
+				}
+			}
+			
+			private function loadMeetingContent():void {
+				var evt:PcMeetingEvent = new PcMeetingEvent(PcMeetingEvent.GET_MEETING_CONTENT);
+				evt.meeting = meeting;
+				evt.successCallback = onLoadContentSuccess;
+				evt.failureCallback = onLoadContentFailure;
+				this.enabled = false;
+				evt.dispatch();
+			}
+			
+			private function onLoadContentFailure(info:Object, evt:PcMeetingEvent):void {
+				this.enabled = true;
+				Alert.show("读取工作计划内容失败！");
+			}
+			
+			private function onLoadContentSuccess(data:Object, evt:PcMeetingEvent):void {
+				this.enabled = true;
+				var meetingContent:PcMeetingContentVo = data as PcMeetingContentVo;
+				personTxt.text = meetingContent.memberName;
+				textArea.htmlText = meetingContent.content;
+				getEvaluateInfo();
+			}
+			
+			private function getEvaluateInfo():void {
+				var meetingEvt:PcMeetingEvent = new PcMeetingEvent(PcMeetingEvent.GET_EVALUATE_INFO);
+				meetingEvt.meeting = meeting;
+				meetingEvt.successCallback = onGetEvaluateInfoSuccess;
+				meetingEvt.failureCallback = onGetEvaluateInfoFailure;
+				this.enabled = false;
+				meetingEvt.dispatch();
+			}
+			
+			private function onGetEvaluateInfoSuccess(data:Object, evt:PcMeetingEvent):void {
+				this.enabled = true;
+				if (data as PcMeetingContentVo) {
+					this.hasHandle = true;
+					var contentVo:PcMeetingContentVo = data as PcMeetingContentVo;
+					this.handlePersonTxt.text = contentVo.memberName;
+					this.handleTextArea.htmlText = contentVo.content;
+				} else {
+					this.hasHandle = false;
+				}
+			}
+			
+			private function onGetEvaluateInfoFailure(info:Object, evt:PcMeetingEvent):void {
+				this.enabled = true;
+				Alert.show(info.toString());
+			}
+			
+			private function onHandle():void {
+				doEvaluate();
+			}
+			
+			private function doEvaluate():void {
+				var evaluateEvt:PcMeetingEvent = new PcMeetingEvent(PcMeetingEvent.EVALUATE_MEETING, agency);
+				evaluateEvt.meeting = meeting;
+				evaluateEvt.meetingContent = getHandleContent();
+				evaluateEvt.successCallback = onEvaluateSuccess;
+				evaluateEvt.failureCallback = onEvaluateFailure;
+				this.enabled = false;
+				evaluateEvt.dispatch();
+			}
+			
+			private function onEvaluateSuccess(data:Object, workPlanEvt:PcMeetingEvent):void {
+				this.enabled = true;
+				parentView.refreshData();
+				this.close();
+			}
+			
+			private function onEvaluateFailure(info:Object, workPlanEvt:PcMeetingEvent):void {
+				this.enabled = true;
+				Alert.show("评价失败！");
+			}
+			
+			private function getHandleContent():PcMeetingContentVo {
+				var contentVo:PcMeetingContentVo = new PcMeetingContentVo();
+				contentVo.memberName = handlePersonTxt.text;
+				contentVo.content = handleTextArea.htmlText;
+				return contentVo;
+			}
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<mx:VBox width="100%" height="100%"
+			 left="6" right="6" top="6" bottom="6"
+			 horizontalScrollPolicy="off" verticalScrollPolicy="off">
+		<mx:HBox width="100%" horizontalAlign="center"
+				 horizontalScrollPolicy="off" verticalScrollPolicy="off">
+			<mx:Label fontSize="20" fontWeight="bold" text="{meetingTitle}"/>
+		</mx:HBox>
+		<mx:HBox width="100%" height="100%"
+				 horizontalScrollPolicy="off" verticalScrollPolicy="off">
+			<mx:VBox width="50%" height="100%"
+					 horizontalScrollPolicy="off" verticalScrollPolicy="off">
+				<mx:HBox width="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off">
+					<mx:HBox width="50%"
+							 horizontalScrollPolicy="off" verticalScrollPolicy="off">
+						<mx:Label text="时    间:" width="75"/>
+						<mx:DateField id="dateField" width="100%"
+									  formatString="YYYY-MM-DD" editable="false"/>
+					</mx:HBox>
+					<mx:HBox width="50%"
+							 horizontalScrollPolicy="off" verticalScrollPolicy="off">
+						<mx:Label text="授课人:" width="75"/>
+						<mx:TextInput id="personTxt" width="100%" editable="false"/>
+					</mx:HBox>
+				</mx:HBox>
+				<mx:HBox width="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off">
+					<mx:Label text="内    容:" width="75"/>
+					<mx:TextInput id="themeTxt" width="100%" editable="false"/>
+				</mx:HBox>
+				<mx:HBox width="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off">
+					<mx:HBox width="50%"
+							 horizontalScrollPolicy="off" verticalScrollPolicy="off">
+						<mx:Label text="应到人数:" width="75"/>
+						<mx:TextInput id="attendTxt" width="100%" restrict="0-9" editable="false"/>
+					</mx:HBox>
+					<mx:HBox width="50%"
+							 horizontalScrollPolicy="off" verticalScrollPolicy="off">
+						<mx:Label text="缺席人数:" width="75"/>
+						<mx:TextInput id="asenceTxt" width="100%" editable="false"
+									  text="{asenceBox.asenceNumber + ''}"/>
+					</mx:HBox>
+				</mx:HBox>
+				<mx:HBox width="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off">
+					<mx:Label text="缺席人名单:" width="75"/>
+					<component:ChooseAsenceBox id="asenceBox" width="100%" meeting="{meeting}" editable="false"/>
+				</mx:HBox>
+				<richtexttoolbar:PopupRichTextToolBar width="100%" target="{textArea}"/>
+				<mx:TextArea id="textArea" width="100%" height="100%"
+							 editable="false"/>
+			</mx:VBox>
+			<mx:VRule height="100%"/>
+			<mx:VBox width="50%" height="100%"
+					 horizontalScrollPolicy="off" verticalScrollPolicy="off">
+				<mx:HBox width="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off">
+					<mx:Label text="评价人:"/>
+					<mx:TextInput id="handlePersonTxt" width="200"
+								  editable="{!hasHandle}"/>
+				</mx:HBox>
+				<richtexttoolbar:PopupRichTextToolBar width="100%" target="{handleTextArea}"/>
+				<mx:TextArea id="handleTextArea" width="100%" height="100%"
+							 editable="{!hasHandle}"/>
+			</mx:VBox>
+		</mx:HBox>
+		
+		<mx:ControlBar width="100%" horizontalAlign="center" verticalAlign="middle">
+			<button:PcButton label="评价" click="onHandle()" visible="{!hasHandle}" includeInLayout="{!hasHandle}"/>
+			<button:PcButton label="关闭" click="close()"/>
+		</mx:ControlBar>
+	</mx:VBox>
+	
+</control:EscapeWindow>

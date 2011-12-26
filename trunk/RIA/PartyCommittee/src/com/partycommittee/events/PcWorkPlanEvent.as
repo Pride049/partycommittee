@@ -1,6 +1,7 @@
 package com.partycommittee.events
 {
 	import com.partycommittee.vo.PcAgencyVo;
+	import com.partycommittee.vo.PcWorkPlanContentVo;
 	import com.partycommittee.vo.PcWorkPlanVo;
 	
 	public class PcWorkPlanEvent extends BaseEvent {
@@ -15,8 +16,12 @@ package com.partycommittee.events
 		public static const GET_WORKPLAN_CONTENT_BY_WORKPLANID:String = "getWorkPlanContentByWorkPlanId";
 		public static const SUBMIT_WORKPLAN:String = "submitWorkPlan";
 		
+		public static const GET_APPROVAL_INFO:String = "getApprovalInfo";
+		public static const GET_EVALUATE_INFO:String = "getEvaluateInfo";
 		public static const APPROVAL_WORKPLAN:String = "approvalWorkPlan";
 		public static const EVALUATE_WORKPLAN:String = "valuateWorkPlan";
+		
+		public static const GET_ALERT_INFO:String = "getAlertInfo";
 		
 		private var _agency:PcAgencyVo;
 		public function set agency(value:PcAgencyVo):void {
@@ -48,6 +53,14 @@ package com.partycommittee.events
 		}
 		public function set quarter(value:Number):void {
 			this._quarter = value;
+		}
+		
+		private var _workPlanContent:PcWorkPlanContentVo;
+		public function get workPlanContent():PcWorkPlanContentVo {
+			return this._workPlanContent;
+		}
+		public function set workPlanContent(value:PcWorkPlanContentVo):void {
+			this._workPlanContent = value;
 		}
 		
 		private var _kind:String;

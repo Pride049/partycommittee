@@ -19,6 +19,8 @@ package com.partycommittee.vo
 		public var statusId:Number;
 		public var active:Number;
 		public var comment:String;
+		public var meetingDatetime:Date;
+		public var meetingName:String;
 		
 		public var asenceMemberIds:String;
 		

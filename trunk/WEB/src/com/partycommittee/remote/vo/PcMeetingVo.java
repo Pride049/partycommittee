@@ -1,6 +1,9 @@
 package com.partycommittee.remote.vo;
 
 import java.io.Serializable;
+import java.util.Date;
+
+import com.partycommittee.persistence.po.PcMeeting;
 
 public class PcMeetingVo implements Serializable {
 	private static final long serialVersionUID = -4158070788187357500L;
@@ -18,7 +21,25 @@ public class PcMeetingVo implements Serializable {
 	private Integer statusId;
 	private Integer active;
 	private String comment;
+	private Date meetingDatetime;
+	private String meetingName;
 		
+	public String getMeetingName() {
+		return meetingName;
+	}
+
+	public void setMeetingName(String meetingName) {
+		this.meetingName = meetingName;
+	}
+
+	public Date getMeetingDatetime() {
+		return meetingDatetime;
+	}
+
+	public void setMeetingDatetime(Date meetingDatetime) {
+		this.meetingDatetime = meetingDatetime;
+	}
+
 	private String asenceMemberIds;
 		
 	private PcMeetingContentVo content;
@@ -141,5 +162,45 @@ public class PcMeetingVo implements Serializable {
 
 	public void setContent(PcMeetingContentVo content) {
 		this.content = content;
+	}
+	
+	public static PcMeeting toPcMeeting(PcMeetingVo meetingVo) {
+		PcMeeting meeting = new PcMeeting();
+		meeting.setActive(meetingVo.getActive());
+		meeting.setAgencyId(meetingVo.getAgencyId());
+		meeting.setAsence(meetingVo.getAsence());
+		meeting.setAttend(meetingVo.getAttend());
+		meeting.setComment(meetingVo.getComment());
+		meeting.setId(meetingVo.getId());
+		meeting.setModerator(meetingVo.getModerator());
+		meeting.setQuarter(meetingVo.getQuarter());
+		meeting.setStatusId(meetingVo.getStatusId());
+		meeting.setTheme(meetingVo.getTheme());
+		meeting.setTypeId(meetingVo.getTypeId());
+		meeting.setWeek(meetingVo.getWeek());
+		meeting.setYear(meetingVo.getYear());
+		meeting.setMeetingDatetime(meetingVo.getMeetingDatetime());
+		meeting.setMeetingName(meetingVo.getMeetingName());
+		return meeting;
+	}
+	
+	public static PcMeetingVo fromPcMeeting(PcMeeting meeting) {
+		PcMeetingVo meetingVo = new PcMeetingVo();
+		meetingVo.setActive(meeting.getActive());
+		meetingVo.setAgencyId(meeting.getAgencyId());
+		meetingVo.setAsence(meeting.getAsence());
+		meetingVo.setAttend(meeting.getAttend());
+		meetingVo.setComment(meeting.getComment());
+		meetingVo.setId(meeting.getId());
+		meetingVo.setModerator(meeting.getModerator());
+		meetingVo.setQuarter(meeting.getQuarter());
+		meetingVo.setStatusId(meeting.getStatusId());
+		meetingVo.setTheme(meeting.getTheme());
+		meetingVo.setTypeId(meeting.getTypeId());
+		meetingVo.setWeek(meeting.getWeek());
+		meetingVo.setYear(meeting.getYear());
+		meetingVo.setMeetingDatetime(meeting.getMeetingDatetime());
+		meetingVo.setMeetingName(meeting.getMeetingName());
+		return meetingVo;
 	}
 }

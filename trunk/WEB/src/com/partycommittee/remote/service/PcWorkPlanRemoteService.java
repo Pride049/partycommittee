@@ -12,7 +12,7 @@ import com.partycommittee.remote.vo.PcWorkPlanContentVo;
 import com.partycommittee.remote.vo.PcWorkPlanVo;
 import com.partycommittee.service.PcWorkPlanService;
 
-@Service("PcWorkPlan")
+@Service("PcWorkPlanRo")
 @RemotingDestination(channels={"my-amf"})
 public class PcWorkPlanRemoteService {
 	
@@ -62,13 +62,13 @@ public class PcWorkPlanRemoteService {
 	}
 	
 	@RemotingInclude
-	public void approvalWorkplan(PcWorkPlanVo workPlanVo) {
-		pcWorkPlanService.approvalWorkPlan(workPlanVo);
+	public void approvalWorkplan(Integer workPlanId, PcWorkPlanContentVo contentVo) {
+		pcWorkPlanService.approvalWorkPlan(workPlanId, contentVo);
 	}
 	
 	@RemotingInclude
-	public void evaluateWrokplan(PcWorkPlanVo workPlanVo) {
-		pcWorkPlanService.evaluateWrokplan(workPlanVo);
+	public void evaluateWrokplan(Integer workPlanId, PcWorkPlanContentVo contentVo) {
+		pcWorkPlanService.evaluateWrokplan(workPlanId, contentVo);
 	}
 	
 	@RemotingInclude
@@ -91,4 +91,18 @@ public class PcWorkPlanRemoteService {
 		return pcWorkPlanService.getContentByWorkPlanId(workPlanId);
 	}
 	
+	@RemotingInclude
+	public PcWorkPlanContentVo getApprovalInfo(Integer workPlanId) {
+		return pcWorkPlanService.getApprovalInfo(workPlanId);
+	}
+	
+	@RemotingInclude
+	public PcWorkPlanContentVo getEvaluateInfo(Integer workPlanId) {
+		return pcWorkPlanService.getEvaluateInfo(workPlanId);
+	}
+	
+	@RemotingInclude
+	public List<PcWorkPlanVo> getAlertInfo(Integer agencyId, Integer year, Integer quarter) {
+		return pcWorkPlanService.getAlertInfo(agencyId, year, quarter);
+	}
 }

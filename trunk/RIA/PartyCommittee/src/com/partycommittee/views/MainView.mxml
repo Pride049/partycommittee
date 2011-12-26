@@ -57,7 +57,12 @@
 			
 			private function onCreationCompleted():void {
 //				this.addEventListener(AccordionItemClickEvent.ITEM_CLICK, onAccordionItemClick);
-				this.mainMenu.addEventListener(MenuEvent.ITEM_CLICK, onMenuItemClick);
+//				this.mainMenu.addEventListener(MenuEvent.ITEM_CLICK, onMenuItemClick);
+				mainContainer.mainViewStack.addEventListener(IndexChangedEvent.CHANGE, onPageChanged);
+			}
+			
+			private function onPageChanged(event:IndexChangedEvent):void {
+				scrollCav.updateNavigateBar(event.relatedObject);
 			}
 			
 			private function onMenuItemClick(event:MenuEvent):void {
@@ -149,8 +154,12 @@
 			<mx:Text htmlText="{logoffTxt}" link="onLogout(event)" fontWeight="bold"
 					 useHandCursor="true" buttonMode="true"/>
 		</mx:HBox>
+		<mx:ToggleButtonBar id="mainMenu" dataProvider="{mainContainer.mainViewStack}" fontWeight="bold"
+							right="5" bottom="0" height="28"/>
+		<!--
 		<mainmenu:MainMenu id="mainMenu" menuData="{menuData}" itemGap="5"
 						   right="5" bottom="0"/>
+		-->
 	</mx:Canvas>
    
 </mx:Canvas>

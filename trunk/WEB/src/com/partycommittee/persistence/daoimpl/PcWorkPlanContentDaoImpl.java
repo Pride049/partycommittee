@@ -44,4 +44,18 @@ public class PcWorkPlanContentDaoImpl extends JpaDaoBase implements PcWorkPlanCo
 		}
 	}
 
+	@SuppressWarnings("unchecked")
+	public PcWorkPlanContent getContentByWorkPlanIdAndType(Integer workPlanId, int i) {
+		try {
+			List<PcWorkPlanContent> list = super.find("from PcWorkPlanContent where workplanId = ? and type = ?", 
+					workPlanId, i);
+			if (list != null && list.size() > 0) {
+				return list.get(0);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 }
