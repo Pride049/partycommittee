@@ -165,6 +165,8 @@
 										   doubleClickEnabled="true"
 										   doubleClick="onItemDoubleClick()">
 			<mx:columns>
+				<mx:AdvancedDataGridColumn headerText="党内职务" dataField="dutyId" width="100"
+										   labelFunction="{LblFunctionHelper.memberDutyLblFunc}"/>				
 				<mx:AdvancedDataGridColumn headerText="姓名" dataField="name" width="120"/>
 				<mx:AdvancedDataGridColumn headerText="性别" dataField="sexId" width="80"
 										   labelFunction="{LblFunctionHelper.memberSexLblFunc}"/>
@@ -172,20 +174,20 @@
 				<mx:AdvancedDataGridColumn headerText="出生年月" dataField="birthday" width="120"
 										   labelFunction="{LblFunctionHelper.dateLblFunc}"/>
 				<mx:AdvancedDataGridColumn headerText="籍贯" dataField="birthPlace" width="120"/>
-				<mx:AdvancedDataGridColumn headerText="职务" dataField="dutyId" width="100"
-										   labelFunction="{LblFunctionHelper.memberDutyLblFunc}"/>
 				<mx:AdvancedDataGridColumn headerText="何时入党" dataField="joinday" width="120"
 										   labelFunction="{LblFunctionHelper.dateLblFunc}"/>
 				<mx:AdvancedDataGridColumn headerText="参加工作时间" dataField="workday" width="150"
 										   labelFunction="{LblFunctionHelper.dateLblFunc}"/>
 			</mx:columns>
 		</mx:AdvancedDataGrid>
+		<!--
 		<mx:ControlBar width="100%" horizontalAlign="right">
 			<pagebar:PageBar page="{page}" width="100%" enabled="false"/>
 			<button:PcButton label="下载Excel模板"/>
 			<button:PcButton label="上传党员Excel"/>
 			<button:PcButton label="生成Excel"/>
 		</mx:ControlBar>
+		-->
 	</mx:VBox>
 	
 </mx:Canvas>

@@ -39,7 +39,7 @@
 			private var menuData:Array = [
 				{label:'组织管理', children:[
 					{id:'orgManage', label:'基本情况', navView:'orgView'},
-					{id:'partyMemberManage', label:'党员管理', navView:'orgView'}
+					{id:'partyMemberManage', label:'支委管理', navView:'orgView'}
 				], menuEvent:false},
 				{label:'组织生活', children:[
 					{id:'browseReport', label:'浏览', navView:'browseWorkplanView'},
@@ -138,7 +138,7 @@
 	
 	<mx:Canvas width="100%" backgroundColor="0xefefef"
 			   top="bottomRow:0" bottom="bottomRow:0">
-		<mx:Label text="Copyright @ 2011 www.bjgaj.gov.cn All Rights Reserved"
+		<mx:Label text="北京宏景世纪软件有限公司版权所有"
 				  horizontalCenter="0" verticalCenter="0"/>
 	</mx:Canvas>
 	
