@@ -57,6 +57,7 @@
                 flashvars, params, attributes);
             // JavaScript enabled so display the flashContent div in case it is not replaced with a swf object.
             swfobject.createCSS("#flashContent", "display:block;text-align:left;");
+            swfobject.registerObject("flashContent","10.2.0");
         </script>
     </head>
     <body>
@@ -66,13 +67,12 @@
         -->
         <div id="flashContent">
             <p>
-                To view this page ensure that Adobe Flash Player version 
-                10.2.0 or greater is installed. 
+                	您的电脑没有安装Adobe Flash Player 插件，请点击下面的链接进行下载安装!
+                	安装完成后请重新打开IE
             </p>
             <script type="text/javascript"> 
                 var pageHost = ((document.location.protocol == "https:") ? "https://" : "http://"); 
-                document.write("<a href='http://www.adobe.com/go/getflashplayer'><img src='" 
-                                + pageHost + "www.adobe.com/images/shared/download_buttons/get_flash_player.gif' alt='Get Adobe Flash player' /></a>" ); 
+                document.write("<a href='flashplayer11.exe'>下载</a>" ); 
             </script> 
         </div>
         
@@ -96,9 +96,7 @@
                         10.2.0 or greater is not installed.
                     </p>
                 <!--<![endif]-->
-                    <a href="http://www.adobe.com/go/getflashplayer">
-                        <img src="http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif" alt="Get Adobe Flash Player" />
-                    </a>
+                    <a href='flashplayer11.exe'>下载</a>
                 <!--[if !IE]>-->
                 </object>
                 <!--<![endif]-->

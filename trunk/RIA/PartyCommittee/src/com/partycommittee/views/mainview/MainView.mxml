@@ -106,7 +106,7 @@
 	
 	<mx:AdvancedDataGrid id="dg" dataProvider="{dp}" width="100%" height="100%">
 		<mx:columns>
-			<mx:AdvancedDataGridColumn headerText="组织生活类型" dataField="typeId"
+			<mx:AdvancedDataGridColumn headerText="内容" dataField="typeId"
 									   labelFunction="{LblFunctionHelper.workPlanTypeLblFunc}"/>
 			<mx:AdvancedDataGridColumn headerText="状态" dataField="statusId"
 									   labelFunction="statusLblFunc"/>

@@ -145,6 +145,7 @@
 	<mx:Canvas top="headerRow:0" bottom="headerRow:0"
 			   width="100%">
 		<mx:Image source="{EmbedResources.topBannerImg}"/>
+		<!--
 		<mx:HBox right="10" bottom="38" cornerRadius="5"
 				 backgroundColor="0xffffff" backgroundAlpha="1">
 			<mx:Label text="{'当前登录用户：' + (model.loginUser ? model.loginUser.username : '')}"
@@ -154,6 +155,7 @@
 			<mx:Text htmlText="{logoffTxt}" link="onLogout(event)" fontWeight="bold"
 					 useHandCursor="true" buttonMode="true"/>
 		</mx:HBox>
+		-->
 		<mx:ToggleButtonBar id="mainMenu" dataProvider="{mainContainer.mainViewStack}" fontWeight="bold"
 							right="5" bottom="0" height="28"/>
 		<!--
