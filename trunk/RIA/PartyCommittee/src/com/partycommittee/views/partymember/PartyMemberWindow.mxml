@@ -5,7 +5,7 @@
 					  xmlns:control="com.partycommittee.control.*"
 					  horizontalAlign="center" verticalAlign="middle"
 					  showCloseButton="true" 
-					  title="建立党员" titleStyleName="panelTitle"
+					  title="建立支委委员" titleStyleName="panelTitle"
 					  close="PopupMgr.instance.removeWindow(this)" 
 					  xmlns:button="com.partycommittee.control.button.*"
 					  horizontalScrollPolicy="off" verticalScrollPolicy="off" 
@@ -63,7 +63,7 @@
 				nameTxt.text = this._memberVo.name;
 				nationCmb.selectedItem = this._memberVo.nationId;
 				sexCmb.selectedItem = this._memberVo.sexId;
-				commentTxt.text = this._memberVo.comment;
+				//commentTxt.text = this._memberVo.comment;
 				sortTxt.text = this._memberVo.sort + '';
 				if (this._memberVo.workday) {
 					workDateField.selectedDate = this._memberVo.workday;
@@ -121,7 +121,7 @@
 				newMember.nationId = nationCmb.selectedItem as Number;
 				newMember.sexId = sexCmb.selectedItem as Number;
 				newMember.workday = workDateField.selectedDate;
-				newMember.comment = commentTxt.text;
+				//newMember.comment = commentTxt.text;
 				newMember.adminDuty = adminDutyTxt.text;
 				newMember.sort = sortTxt.text as Number;
 				return newMember;
@@ -163,6 +163,11 @@
 			<mx:FormItem label="党组织名称:" width="100%">
 				<mx:TextInput id="agencyNameTxt" editable="false"/>
 			</mx:FormItem>
+			<mx:FormItem label="党内职务:" width="100%">
+				<mx:ComboBox id="dutyCmb" width="100%" maxWidth="100"
+							 labelFunction="dutyLblFunc"
+							 dataProvider="{PCConst.dutyList}"/>
+			</mx:FormItem>			
 			<mx:FormItem label="姓名:" required="true" width="100%">
 				<mx:TextInput id="nameTxt" width="100%"/>
 			</mx:FormItem>
@@ -193,11 +198,6 @@
 			<mx:FormItem label="行政职务:" width="100%">
 				<mx:TextInput id="adminDutyTxt" width="100%"/>
 			</mx:FormItem>
-			<mx:FormItem label="职务:" width="100%">
-				<mx:ComboBox id="dutyCmb" width="100%" maxWidth="100"
-							 labelFunction="dutyLblFunc"
-							 dataProvider="{PCConst.dutyList}"/>
-			</mx:FormItem>
 			<mx:FormItem label="何时入党:" required="true" width="100%">
 				<mx:DateField id="joinDateField" width="150"
 							  formatString="YYYY-MM-DD"/>
@@ -212,9 +212,11 @@
 			<mx:FormItem label="排序:" width="100%">
 				<mx:TextInput id="sortTxt" width="100%" restrict="0-9"/>
 			</mx:FormItem>
+			<!--
 			<mx:FormItem label="备注:" width="100%">
 				<mx:TextArea id="commentTxt" width="100%" height="60"/>
 			</mx:FormItem>
+			-->
 		</mx:Form>
 		<mx:ControlBar width="100%" horizontalAlign="center">
 			<button:PcButton label="保存" click="save()"/>
