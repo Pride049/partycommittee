@@ -1,6 +1,7 @@
 package com.partycommittee.proxy
 {
 	import com.adobe.cairngorm.business.ServiceLocator;
+	import com.partycommittee.vo.PcWorkPlanContentVo;
 	import com.partycommittee.vo.PcWorkPlanVo;
 	
 	import mx.rpc.IResponder;
@@ -61,12 +62,24 @@ package com.partycommittee.proxy
 			service.getCommitWorkplanListByParentId(parentId);
 		}
 		
-		public function approvalWorkplan():void {
-			service.approvalWorkplan();
+		public function approvalWorkplan(workPlanId:Number, content:PcWorkPlanContentVo):void {
+			service.approvalWorkplan(workPlanId, content);
 		}
 		
-		public function evaluateWrokplan():void {
-			service.evaluateWrokplan();
+		public function evaluateWrokplan(workPlanId:Number, content:PcWorkPlanContentVo):void {
+			service.evaluateWrokplan(workPlanId, content);
+		}
+		
+		public function getApprovalInfo(workPlanId:Number):void {
+			service.getApprovalInfo(workPlanId);
+		}
+		
+		public function getEvaluateInfo(workPlanId:Number):void {
+			service.getEvaluateInfo(workPlanId);
+		}
+		
+		public function getAlertInfo(agencyId:Number, year:Number, quarter:Number):void {
+			service.getAlertInfo(agencyId, year, quarter);
 		}
 		
 	}

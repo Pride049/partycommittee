@@ -115,13 +115,13 @@
 				branchLifeMeeting.percentWidth = 100;
 				tab.addChild(branchLifeMeeting);
 				
-				var teamMeeting:MeetingListView = new MeetingListView();
-				teamMeeting.label = "党小组会";
-				teamMeeting.type = PCConst.WORKPLAN_TYPE_MEETING_TEAM;
-				teamMeeting.agency = agency;
-				teamMeeting.percentHeight = 100;
-				teamMeeting.percentWidth = 100;
-				tab.addChild(teamMeeting);
+//				var teamMeeting:MeetingListView = new MeetingListView();
+//				teamMeeting.label = "党小组会";
+//				teamMeeting.type = PCConst.WORKPLAN_TYPE_MEETING_TEAM;
+//				teamMeeting.agency = agency;
+//				teamMeeting.percentHeight = 100;
+//				teamMeeting.percentWidth = 100;
+//				tab.addChild(teamMeeting);
 				
 				var otherMeeting:MeetingListView = new MeetingListView();
 				otherMeeting.label = "其他会议";

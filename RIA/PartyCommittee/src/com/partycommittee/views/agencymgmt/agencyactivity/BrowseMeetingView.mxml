@@ -10,18 +10,15 @@
 	<fx:Script>
 		<![CDATA[
 			import com.partycommittee.events.PcAgencyEvent;
-			import com.partycommittee.events.PcWorkPlanEvent;
+			import com.partycommittee.events.PcMeetingEvent;
 			import com.partycommittee.manager.popup.PopupMgr;
 			import com.partycommittee.model.ModelLocator;
 			import com.partycommittee.util.WorkPlanCodeUtil;
-			import com.partycommittee.views.agencymgmt.agencyactivity.workplan.QuarterWorkPlanView;
-			import com.partycommittee.views.agencymgmt.agencyactivity.workplan.WorkPlanHandlerView;
-			import com.partycommittee.views.agencymgmt.agencyactivity.workplan.YearWorkPlanView;
+			import com.partycommittee.views.agencymgmt.agencyactivity.workplan.MeetingHandlerView;
 			import com.partycommittee.vo.PcAgencyVo;
-			import com.partycommittee.vo.PcWorkPlanVo;
+			import com.partycommittee.vo.PcMeetingVo;
 			
 			import mx.collections.ArrayCollection;
-			import mx.containers.Canvas;
 			import mx.controls.Alert;
 			import mx.events.PropertyChangeEvent;
 			
@@ -40,8 +37,9 @@
 			[Bindable]
 			private var dp:ArrayCollection = new ArrayCollection();
 			
-			public function enterView():void {
+			private function onCreationCompleted():void {
 				onNavigateIn();
+				refreshData();
 			}
 			
 			override protected function onNavigateIn():void {
@@ -65,7 +63,7 @@
 			
 			public function refreshData():void {
 				if (agency.children && agency.children.length) {
-					getCommitWorkPlan();
+					getCommitMeeting();
 					return;
 				}
 				var pcAgencyEvt:PcAgencyEvent = new PcAgencyEvent(PcAgencyEvent.GET_CHILDREN, agency);
@@ -76,35 +74,35 @@
 			
 			private function onGetChildrenSuccess(data:Object, evt:PcAgencyEvent):void {
 				agency.children = data as ArrayCollection;
-				getCommitWorkPlan();
+				getCommitMeeting();
 			}
 			
 			private function onGetChildrenFailure(data:Object, evt:PcAgencyEvent):void {
 				Alert.show(data.toString());
 			}
 			
-			private function getCommitWorkPlan():void {
-				var pcWorkPlanEvent:PcWorkPlanEvent = new PcWorkPlanEvent(PcWorkPlanEvent.GET_COMMIT_CHILDREN_WORKPLAN);
-				pcWorkPlanEvent.agency = agency;
-				pcWorkPlanEvent.failureCallback = getWorkPlanFailure;
-				pcWorkPlanEvent.successCallback = getWorkPlanSuccess;
-				pcWorkPlanEvent.dispatch();
+			private function getCommitMeeting():void {
+				var pcMeetingEvent:PcMeetingEvent = new PcMeetingEvent(PcMeetingEvent.GET_COMMIT_CHILDREN_MEETING);
+				pcMeetingEvent.agency = agency;
+				pcMeetingEvent.failureCallback = getMeetingFailure;
+				pcMeetingEvent.successCallback = getMeetingSuccess;
+				pcMeetingEvent.dispatch();
 			}
 			
-			private function getWorkPlanSuccess(data:Object, evt:PcWorkPlanEvent):void {
+			private function getMeetingSuccess(data:Object, evt:PcMeetingEvent):void {
 				dp = data as ArrayCollection;
 			}
 			
-			private function getWorkPlanFailure(info:Object, evt:PcWorkPlanEvent):void {
+			private function getMeetingFailure(info:Object, evt:PcMeetingEvent):void {
 				Alert.show(info.toString());
 			}
 			
 			private function typeLblFunc(item:Object, col:*):String {
-				return WorkPlanCodeUtil.getWorkPlanTypeDes((item as PcWorkPlanVo).typeId);
+				return WorkPlanCodeUtil.getWorkPlanTypeDes((item as PcMeetingVo).typeId);
 			}
 			
 			private function agencyLblFunc(item:Object, col:*):String {
-				var agencyId:Number = (item as PcWorkPlanVo).agencyId;
+				var agencyId:Number = (item as PcMeetingVo).agencyId;
 				for each (var child:PcAgencyVo in agency.children) {
 					if (child.id == agencyId) {
 						return child.name;
@@ -114,7 +112,7 @@
 			}
 			
 			private function quarterLblFunc(item:Object, col:*):String {
-				switch ((item as PcWorkPlanVo).quarter) {
+				switch ((item as PcMeetingVo).quarter) {
 					case 1:
 						return "第一季度";
 					case 2:
@@ -127,19 +125,10 @@
 				return "";
 			}
 			
-			public function approvalWorkPlan(workPlan:PcWorkPlanVo):void {
-				var win:WorkPlanHandlerView = new WorkPlanHandlerView();
+			public function evaluateMeeting(meeting:PcMeetingVo):void {
+				var win:MeetingHandlerView = new MeetingHandlerView();
 				win.agency = agency;
-				win.workPlan = workPlan;
-				win.parentView = this;
-				win.type = PCConst.WORKFLOW_TYPE_APPROVAL;
-				PopupMgr.instance.popupWindow(win);
-			}
-			
-			public function evaluateWorkPlan(workPlan:PcWorkPlanVo):void {
-				var win:WorkPlanHandlerView = new WorkPlanHandlerView();
-				win.agency = agency;
-				win.workPlan = workPlan;
+				win.meeting = meeting;
 				win.parentView = this;
 				win.type = PCConst.WORKFLOW_TYPE_EVALUATE;
 				PopupMgr.instance.popupWindow(win);
@@ -156,7 +145,7 @@
 		<mx:HBox width="100%" height="50"
 				 horizontalAlign="center" verticalAlign="middle"
 				 horizontalScrollPolicy="off" verticalScrollPolicy="off">
-			<mx:Label text="下级工作计划浏览" fontSize="20" fontWeight="bold"/>
+			<mx:Label text="下级会议浏览" fontSize="20" fontWeight="bold"/>
 		</mx:HBox>
 		-->
 		<mx:AdvancedDataGrid id="datagrid" width="100%" height="100%" 
@@ -164,34 +153,13 @@
 							 dataProvider="{dp}">
 			<mx:columns>
 				<mx:AdvancedDataGridColumn headerText="序号" dataField="id"/>
-				<mx:AdvancedDataGridColumn headerText="类型" dataField="typeId"
+				<mx:AdvancedDataGridColumn headerText="会议类型" dataField="typeId"
 										   labelFunction="typeLblFunc"/>
 				<mx:AdvancedDataGridColumn headerText="党组织" dataField="agencyId"
 										   labelFunction="agencyLblFunc"/>
 				<mx:AdvancedDataGridColumn headerText="年度" dataField="year"/>
 				<mx:AdvancedDataGridColumn headerText="季度" dataField="quarter"
 										   labelFunction="quarterLblFunc"/>
-				<mx:AdvancedDataGridColumn headerText="审批">
-					<mx:itemRenderer>
-						<fx:Component>
-							<mx:Box horizontalAlign="center" verticalAlign="middle"
-									horizontalScrollPolicy="off" verticalScrollPolicy="off">
-								<fx:Script>
-									<![CDATA[
-										import com.partycommittee.vo.PcWorkPlanVo;
-										
-										protected function approvalBtnClick():void {
-											outerDocument.approvalWorkPlan(data as PcWorkPlanVo);
-										}
-									]]>
-								</fx:Script>
-								<button:PcButton label="审批" click="approvalBtnClick()"
-												 enabled="{(data as PcWorkPlanVo).typeId == PCConst.WORKPLAN_TYPE_YEARLY ||
-												 	(data as PcWorkPlanVo).typeId == PCConst.WORKPLAN_TYPE_QUARTER}"/>
-							</mx:Box>
-						</fx:Component>
-					</mx:itemRenderer>
-				</mx:AdvancedDataGridColumn>
 				<mx:AdvancedDataGridColumn headerText="评价">
 					<mx:itemRenderer>
 						<fx:Component>
@@ -199,16 +167,14 @@
 									horizontalScrollPolicy="off" verticalScrollPolicy="off">
 								<fx:Script>
 									<![CDATA[
-										import com.partycommittee.vo.PcWorkPlanVo;
+										import com.partycommittee.vo.PcMeetingVo;
 										
 										protected function evaluateBtnClick():void {
-											outerDocument.evaluateWorkPlan(data as PcWorkPlanVo);
+											outerDocument.evaluateMeeting(data as PcMeetingVo);
 										}
 									]]>
 								</fx:Script>
-								<button:PcButton label="评价" click="evaluateBtnClick()"
-												 enabled="{(data as PcWorkPlanVo).typeId != PCConst.WORKPLAN_TYPE_YEARLY &amp;&amp;
-												 (data as PcWorkPlanVo).typeId != PCConst.WORKPLAN_TYPE_QUARTER}"/>
+								<button:PcButton label="评价" click="evaluateBtnClick()"/>
 							</mx:Box>
 						</fx:Component>
 					</mx:itemRenderer>

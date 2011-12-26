@@ -121,4 +121,19 @@ public class PcWorkPlanDaoImpl extends JpaDaoBase implements PcWorkPlanDao {
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
+	public PcWorkPlan getResultQuarterByAgencyId(Integer agencyId,
+			Integer year, Integer quarter) {
+		try {
+			List<PcWorkPlan> list = super.find("from PcWorkPlan where agencyId = ? and year = ? and quarter = ? and typeId = ?"
+					, agencyId, year, quarter, 3);
+			if (list != null && list.size() > 0) {
+				return list.get(0);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 }

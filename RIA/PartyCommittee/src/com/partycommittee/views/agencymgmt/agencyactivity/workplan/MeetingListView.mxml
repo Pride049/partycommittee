@@ -60,13 +60,16 @@
 						getBranchCommitteeList();
 						break;
 					case PCConst.WORKPLAN_TYPE_MEETING_BRANCH_LIFE:
+						getBranchLifeList();
 						break;
 					case PCConst.WORKPLAN_TYPE_MEETING_BRANCH_MEMBER:
+						getBranchMemberList();
 						break;
 					case PCConst.WORKPLAN_TYPE_MEETING_OTHER:
+						getOtherList();
 						break;
-					case PCConst.WORKPLAN_TYPE_MEETING_TEAM:
-						break;
+//					case PCConst.WORKPLAN_TYPE_MEETING_TEAM:
+//						break;
 				}
 			}
 			
@@ -110,29 +113,77 @@
 				Alert.show(info.toString());
 			}
 			
+			private function getBranchLifeList():void {
+				var evt:PcMeetingEvent = new PcMeetingEvent(PcMeetingEvent.GET_BRANCH_LIFE_LIST);
+				evt.agency = agency;
+				evt.year = new Date().getFullYear();
+				evt.successCallback = onBranchLifeListSuccess;
+				evt.failureCallback = onBranchLifeListFailure;
+				this.enabled = false;
+				evt.dispatch();
+			}
+			
+			private function onBranchLifeListSuccess(data:Object, evt:PcMeetingEvent):void {
+				this.enabled = true;
+				dp = data as ArrayCollection;
+			}
+			
+			private function onBranchLifeListFailure(info:Object, evt:PcMeetingEvent):void {
+				this.enabled = true;
+				dp = data as ArrayCollection;
+			}
+			
+			private function getBranchMemberList():void {
+				var evt:PcMeetingEvent = new PcMeetingEvent(PcMeetingEvent.GET_BRANCH_MEMBER_LIST);
+				evt.agency = agency;
+				evt.year = new Date().getFullYear();
+				evt.successCallback = onBranchMemberListSuccess;
+				evt.failureCallback = onBranchMemberListFailure;
+				this.enabled = false;
+				evt.dispatch();
+			}
+			
+			private function onBranchMemberListSuccess(data:Object, evt:PcMeetingEvent):void {
+				this.enabled = true;
+				dp = data as ArrayCollection;
+			}
+			
+			private function onBranchMemberListFailure(info:Object, evt:PcMeetingEvent):void {
+				this.enabled = true;
+				Alert.show(info.toString());
+			}
+			
+			private function getOtherList():void {
+				var evt:PcMeetingEvent = new PcMeetingEvent(PcMeetingEvent.GET_OTHER_LIST);
+				evt.agency = agency;
+				evt.year = new Date().getFullYear();
+				evt.successCallback = onOtherListSuccess;
+				evt.failureCallback = onOtherListFailure;
+				this.enabled = false;
+				evt.dispatch();
+			}
+			
+			private function onOtherListSuccess(data:Object, evt:PcMeetingEvent):void {
+				this.enabled = true;
+				this.dp = data as ArrayCollection;
+			}
+			
+			private function onOtherListFailure(info:Object, evt:PcMeetingEvent):void {
+				this.enabled = true;
+				Alert.show(info.toString());
+			}
+			
 			public function editMeeting(meeting:PcMeetingVo):void {
-				switch (type) {
-					case PCConst.WORKPLAN_TYPE_CLASS:
-						var classMeetingWin:MeetingView = new MeetingView();
-						classMeetingWin.agency = agency;
-						classMeetingWin.meeting = meeting;
-						PopupMgr.instance.popupWindow(classMeetingWin);
-						break;
-					case PCConst.WORKPLAN_TYPE_MEETING_BRANCH_COMMITTEE:
-						break;
-					case PCConst.WORKPLAN_TYPE_MEETING_BRANCH_LIFE:
-						break;
-					case PCConst.WORKPLAN_TYPE_MEETING_BRANCH_MEMBER:
-						break;
-					case PCConst.WORKPLAN_TYPE_MEETING_OTHER:
-						break;
-					case PCConst.WORKPLAN_TYPE_MEETING_TEAM:
-						break;
-				}
+				var win:MeetingView = new MeetingView();
+				win.agency = agency;
+				win.meeting = meeting;
+				win.meetingType = type;
+				win.parentView = this;
+				PopupMgr.instance.popupWindow(win);
 			}
 			
 			public function submitMeeting(meeting:PcMeetingVo):void {
-				var evt:PcMeetingEvent = new PcMeetingEvent(PcWorkPlanEvent.SUBMIT_WORKPLAN);
+				var evt:PcMeetingEvent = new PcMeetingEvent(PcMeetingEvent.SUBMIT_MEETING);
 				evt.meeting = meeting;
 				evt.successCallback = onSubmitMeetingSuccess;
 				evt.failureCallback = onSubmitMeetingFailure;
@@ -178,7 +229,8 @@
 									}
 								]]>
 							</fx:Script>
-							<button:PcButton id="editBtn" label="修改" click="editBtnClick()"/>
+							<button:PcButton id="editBtn" label="修改" click="editBtnClick()"
+											 enabled="{(data as PcMeetingVo).statusId != 1}"/>
 						</mx:Box>
 					</fx:Component>
 				</mx:itemRenderer>
@@ -197,7 +249,8 @@
 									}
 								]]>
 							</fx:Script>
-							<button:PcButton id="submitBtn" label="上报" click="submitBtnClick()"/>
+							<button:PcButton id="submitBtn" label="上报" click="submitBtnClick()"
+											 enabled="{(data as PcMeetingVo).statusId != 1 &amp;&amp; (data as PcMeetingVo).id}"/>
 						</mx:Box>
 					</fx:Component>
 				</mx:itemRenderer>

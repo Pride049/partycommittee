@@ -11,6 +11,12 @@
 			import com.partycommittee.events.PcUserEvent;
 			import com.partycommittee.manager.navigation.NavigationMgr;
 			import com.partycommittee.model.ModelLocator;
+			import com.partycommittee.views.agencymgmt.OrgView;
+			import com.partycommittee.views.agencymgmt.agencyactivity.AgencyActivityView;
+			import com.partycommittee.views.agencymgmt.agencyactivity.BrowseView;
+			import com.partycommittee.views.sysmgmt.systemviews.AccountManageView;
+			
+			import flash.net.sendToURL;
 			
 			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
@@ -109,6 +115,20 @@
 				}
 			}
 			
+			public function updateNavigateBar(item:Object):void {
+				if (item as OrgView) {
+					secondLvLbl = "组织管理";
+				} else if (item as BrowseView) {
+					secondLvLbl = "组织生活浏览";
+				} else if (item as AgencyActivityView) {
+					secondLvLbl = "组织生活填报";
+				} else if (item as AccountManageView) {
+					secondLvLbl = "账号管理";
+				} else {
+					secondLvLbl = "";
+				}
+			}
+			
 			private function onStartTimerCompleted(event:TimerEvent):void {
 				this.includeInLayout = true;
 				startScroll();
@@ -196,9 +216,9 @@
 			}
 			
 			private function returnToMainPage():void {
-				NavigationMgr.getInstance().navigateToView(mainPageMenuItem.navView);
-				this._selectedMenuItem = mainPageMenuItem;
-				updateInfoStr();
+				NavigationMgr.getInstance().navigateToView("mainView");
+//				this._selectedMenuItem = mainPageMenuItem;
+//				updateInfoStr();
 				this.secondLvLbl = this.thirdLvLbl = "";
 			}
 			
@@ -219,7 +239,7 @@
 					 horizontalScrollPolicy="off" verticalScrollPolicy="off">
 				<mx:HBox horizontalScrollPolicy="off" verticalScrollPolicy="off"
 						 horizontalAlign="center" verticalAlign="middle">
-					<mx:LinkButton label="主页" click="returnToMainPage()"
+					<mx:LinkButton label="首页" click="returnToMainPage()"
 								   color="0x0000ff" fontWeight="bold"/>
 					<mx:Label text=">"
 							  visible="{secondLvLbl != ''}"

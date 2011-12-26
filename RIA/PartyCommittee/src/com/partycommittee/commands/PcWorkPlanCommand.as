@@ -48,11 +48,19 @@ package com.partycommittee.commands
 					proxy.submitWorkPlan(pcWorkPlanEvt.workPlan);
 					break;
 				case PcWorkPlanEvent.APPROVAL_WORKPLAN:
-					proxy.approvalWorkplan();
+					proxy.approvalWorkplan(pcWorkPlanEvt.workPlan.id, pcWorkPlanEvt.workPlanContent);
 					break;
 				case PcWorkPlanEvent.EVALUATE_WORKPLAN:
-					proxy.evaluateWrokplan();
+					proxy.evaluateWrokplan(pcWorkPlanEvt.workPlan.id, pcWorkPlanEvt.workPlanContent);
 					break;
+				case PcWorkPlanEvent.GET_APPROVAL_INFO:
+					proxy.getApprovalInfo(pcWorkPlanEvt.workPlan.id);
+					break;
+				case PcWorkPlanEvent.GET_EVALUATE_INFO:
+					proxy.getEvaluateInfo(pcWorkPlanEvt.workPlan.id);
+					break;
+				case PcWorkPlanEvent.GET_ALERT_INFO:
+					proxy.getAlertInfo(pcWorkPlanEvt.agency.id, pcWorkPlanEvt.year, pcWorkPlanEvt.quarter);
 				default :
 					break;
 			}

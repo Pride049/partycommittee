@@ -3,6 +3,8 @@ package com.partycommittee.remote.vo;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.partycommittee.persistence.po.PcMeetingContent;
+
 public class PcMeetingContentVo implements Serializable {
 	private static final long serialVersionUID = 3297647266353084328L;
 	
@@ -56,5 +58,28 @@ public class PcMeetingContentVo implements Serializable {
 	public void setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
 	}
+	
+	public static PcMeetingContent toPcMeetingContent(PcMeetingContentVo contentVo) {
+		PcMeetingContent content = new PcMeetingContent();
+		content.setContent(contentVo.getContent());
+		content.setId(contentVo.getId());
+		content.setMeetingId(contentVo.getMeetingId());
+		content.setMemberId(contentVo.getMemberId());
+		content.setMemberName(contentVo.getMemberName());
+		content.setType(contentVo.getType());
+		content.setUpdateTime(contentVo.getUpdateTime());
+		return content;
+	}
 
+	public static PcMeetingContentVo fromPcMeetingContent(PcMeetingContent content) {
+		PcMeetingContentVo contentVo = new PcMeetingContentVo();
+		contentVo.setContent(content.getContent());
+		contentVo.setId(content.getId());
+		contentVo.setMeetingId(content.getMeetingId());
+		contentVo.setMemberId(content.getMemberId());
+		contentVo.setMemberName(content.getMemberName());
+		contentVo.setType(content.getType());
+		contentVo.setUpdateTime(content.getUpdateTime());
+		return contentVo;
+	}
 }

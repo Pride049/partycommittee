@@ -1,6 +1,7 @@
 package com.partycommittee.persistence.po;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,6 +9,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "pc_meeting")
@@ -27,6 +30,8 @@ public class PcMeeting implements Serializable {
 	private Integer statusId;
 	private Integer active;
 	private String comment;
+	private Date meetingDatetime;
+	private String meetingName;
 	
 	@Id
 	@Column(name = "id", unique = true, nullable = false)
@@ -132,5 +137,22 @@ public class PcMeeting implements Serializable {
 	}
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "meeting_datetime")
+	public Date getMeetingDatetime() {
+		return meetingDatetime;
+	}
+	public void setMeetingDatetime(Date meetingDatetime) {
+		this.meetingDatetime = meetingDatetime;
+	}
+	
+	@Column(name = "meeting_name")
+	public String getMeetingName() {
+		return meetingName;
+	}
+	public void setMeetingName(String meetingName) {
+		this.meetingName = meetingName;
 	}
 }

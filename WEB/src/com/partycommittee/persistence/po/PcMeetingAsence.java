@@ -15,6 +15,7 @@ public class PcMeetingAsence implements Serializable {
 	private static final long serialVersionUID = -4609563183889602041L;
 	
 	private Integer id;
+	private Integer meetingId;
 	private String memberIds;
 	
 	@Id
@@ -25,6 +26,14 @@ public class PcMeetingAsence implements Serializable {
 	}
 	public void setId(Integer id) {
 		this.id = id;
+	}
+	
+	@Column(name = "meeting_id")
+	public Integer getMeetingId() {
+		return meetingId;
+	}
+	public void setMeetingId(Integer meetingId) {
+		this.meetingId = meetingId;
 	}
 	
 	@Column(name = "member_ids")
