@@ -15,6 +15,8 @@
 			import com.partycommittee.views.agencymgmt.agencyactivity.AgencyActivityView;
 			import com.partycommittee.views.agencymgmt.agencyactivity.BrowseView;
 			import com.partycommittee.views.sysmgmt.systemviews.AccountManageView;
+			import com.partycommittee.views.sysmgmt.systemviews.PwEditWindow;
+			import com.partycommittee.manager.popup.PopupMgr;
 			
 			import flash.net.sendToURL;
 			
@@ -27,6 +29,11 @@
 			import mx.events.PropertyChangeEvent;
 			
 			public static var mainPageMenuItem:Object = {id:"orgManage", label:"基本情况", navView:"orgView"};
+			
+			[Bindable]
+			private var updatePwTxt:String = '<u><font color="#0000ff"><a href="event:updatePw">修改密码</a></font></u>';
+			[Bindable]
+			private var logoffTxt:String = '<u><font color="#0000ff"><a href="event:updatePw">注销</a></font></u>';;			
 			
 			private var bitmapData:BitmapData;
 			
@@ -225,6 +232,21 @@
 			private function onSecondLinkBtnClick():void {
 				this.thirdLvLbl = "";
 			}
+			
+			private function updatePwHandler(event:TextEvent):void {
+				var win:PwEditWindow = new PwEditWindow();
+				PopupMgr.instance.popupWindow(win);
+			}			
+			
+			private function onLogout(event:TextEvent):void {
+				var userEvt:PcUserEvent = new PcUserEvent(PcUserEvent.LOGOUT);
+				userEvt.failureCallback = onLogoutFailure;
+				userEvt.dispatch();
+			}
+			
+			private function onLogoutFailure(info:Object, evt:PcUserEvent):void {
+				Alert.show(info.toString());
+			}			
 		]]>
 	</fx:Script>
 	
@@ -239,7 +261,7 @@
 					 horizontalScrollPolicy="off" verticalScrollPolicy="off">
 				<mx:HBox horizontalScrollPolicy="off" verticalScrollPolicy="off"
 						 horizontalAlign="center" verticalAlign="middle">
-					<mx:LinkButton label="首页" click="returnToMainPage()"
+					<mx:LinkButton label="主页" click="returnToMainPage()"
 								   color="0x0000ff" fontWeight="bold"/>
 					<mx:Label text=">"
 							  visible="{secondLvLbl != ''}"
@@ -256,11 +278,24 @@
 								   color="0x0000ff" fontWeight="bold"
 								   visible="{thirdLvLbl != ''}"
 								   includeInLayout="{thirdLvLbl != ''}"/>
+
+				
 				</mx:HBox>
 				<mx:VRule height="80%"/>
 				<mx:Canvas id="moveLblCav" width="100%" height="100%" borderStyle="none"
 						   borderVisible="false" horizontalScrollPolicy="off"
 						   verticalScrollPolicy="off"/>
+				
+				<mx:HBox right="10"
+						 backgroundColor="0xffffff" backgroundAlpha="1" horizontalAlign="right">
+					<mx:Label text="{'当前登录用户：' + (model.loginUser ? model.loginUser.username : '')}"
+							  fontWeight="bold"/>
+					<mx:Text htmlText="{updatePwTxt}" link="updatePwHandler(event)" fontWeight="bold"
+							 useHandCursor="true" buttonMode="true"/>
+					<mx:Text htmlText="{logoffTxt}" link="onLogout(event)" fontWeight="bold"
+							 useHandCursor="true" buttonMode="true"/>
+				</mx:HBox>					
+				
 			</mx:HBox>
 		</mx:Canvas>
 		<mx:Canvas id="allCanvas" top="{mHeight+2}" width="100%" height="{nHeight}" includeInLayout="false" visible="false"
