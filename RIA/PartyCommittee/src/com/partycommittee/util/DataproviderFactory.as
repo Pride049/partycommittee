@@ -16,5 +16,14 @@ package com.partycommittee.util
 			}
 			return yearCollection;
 		}
+		
+		public static function getRangeYearDp():ArrayCollection {
+			var yearCollection:ArrayCollection = new ArrayCollection();
+			var currentYear:Number = new Date().getFullYear();
+			for (var i:int = 0; i < WORKPLAN_YEAR_LENGTH + 1; i++) {
+				yearCollection.addItem(currentYear - i);
+			}
+			return yearCollection;
+		}
 	}
 }
