@@ -60,6 +60,9 @@ public class PcAgencyService {
 	
 	public PcAgencyVo getAgencyById(int agencyId) {
 		PcAgency agency = pcAgencyDaoImpl.getAgencyById(agencyId);
+		if (agency == null) {
+			return null;
+		}
 		PcAgencyVo agencyVo = PcAgencyVo.fromPcAgency(agency);
 		if (agency.getMemberId() != null) {
 			PcMember member = pcMemberDaoImpl.getMemberById(agency.getMemberId());
