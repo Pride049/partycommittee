@@ -103,4 +103,14 @@ public class PcMemberDaoImpl extends JpaDaoBase implements PcMemberDao {
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
+	public List<PcMember> getDutyMemberListByAgencyId(Integer agencyId) {
+		try {
+			return super.getJpaTemplate().find("from PcMember where dutyId in (1, 2, 3, 4, 5, 6, 10, 11) and agencyId = " + agencyId);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return null;
+	}
+
 }

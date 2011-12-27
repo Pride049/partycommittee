@@ -15,6 +15,7 @@ import com.partycommittee.persistence.daoimpl.PcMemberDaoImpl;
 import com.partycommittee.persistence.po.PcAgency;
 import com.partycommittee.persistence.po.PcAgencyRelation;
 import com.partycommittee.persistence.po.PcMember;
+import com.partycommittee.remote.vo.PcAgencyInfoVo;
 import com.partycommittee.remote.vo.PcAgencyVo;
 import com.partycommittee.remote.vo.PcMemberVo;
 
@@ -106,5 +107,33 @@ public class PcAgencyService {
 		// Delete agency.
 		pcAgencyDaoImpl.deleteAgency(agency);
 		
+	}
+
+	public PcAgencyInfoVo getAgencyInfo(Integer agencyId) {
+		PcAgencyInfoVo agencyInfo = new PcAgencyInfoVo();
+		// get team number.
+		List<PcAgencyRelation> relationList = pcAgencyRelationDaoImpl.getChildrenByParentId(agencyId);
+		if (relationList != null) {
+			agencyInfo.setTeamNumber(relationList.size());
+		} else {
+			agencyInfo.setTeamNumber(0);
+		}
+		// get member number.
+		List<PcMember> memberList = pcMemberDaoImpl.getMemberListByAgencyId(agencyId);
+		if (memberList != null) {
+			agencyInfo.setMemberNumber(memberList.size());
+		} else {
+			agencyInfo.setMemberNumber(0);
+		}
+		// get duty member list.
+		List<PcMemberVo> list = new ArrayList<PcMemberVo>();
+		List<PcMember> dutyList = pcMemberDaoImpl.getDutyMemberListByAgencyId(agencyId);
+		if (dutyList != null && dutyList.size() > 0) {
+			for (PcMember memberItem : dutyList) {
+				list.add(PcMemberVo.fromPcMember(memberItem));
+			}
+		}
+		agencyInfo.setDutyMemberList(list);
+		return agencyInfo;
 	}
 }

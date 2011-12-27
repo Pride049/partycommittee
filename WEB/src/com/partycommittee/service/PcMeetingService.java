@@ -61,6 +61,7 @@ public class PcMeetingService {
 	}
 	
 	public List<PcMeetingVo> getBranchCommitteeMeetingList(Integer agencyId, Integer year) {
+		// At least once every month.
 		List<PcMeetingVo> list = createOriginalMeetingList(agencyId, year, 8);
 		List<PcMeeting> meetingList = pcMeetingDaoImpl.getMeetingList(agencyId, year, 8);
 		if (meetingList == null || meetingList.size() == 0) {
@@ -103,23 +104,55 @@ public class PcMeetingService {
 	}
 
 	public List<PcMeetingVo> getBranchMemberMeetingList(Integer agencyId, Integer year) {
+		// At least once every quarter.
 		List<PcMeetingVo> list = createOriginalMeetingList(agencyId, year, 6);
 		List<PcMeeting> meetingList = pcMeetingDaoImpl.getMeetingList(agencyId, year, 6);
 		if (meetingList == null || meetingList.size() == 0) {
 			return list;
 		}
+		List<PcMeetingVo> meetingList1 = new ArrayList<PcMeetingVo>();
+		List<PcMeetingVo> meetingList2 = new ArrayList<PcMeetingVo>();
+		List<PcMeetingVo> meetingList3 = new ArrayList<PcMeetingVo>();
+		List<PcMeetingVo> meetingList4 = new ArrayList<PcMeetingVo>();
 		for (PcMeeting meetingItem : meetingList) {
-			for (int i = 0; i < list.size(); i++) {
-				PcMeetingVo meetingVo = list.get(i);
-				if (meetingVo.getQuarter().intValue() == meetingItem.getQuarter().intValue()) {
-					list.remove(i);
-					PcMeetingVo meetingVoItem = PcMeetingVo.fromPcMeeting(meetingItem);
-					String asenceMemberIds = pcMeetingAsenceDaoImpl.getMemberIdsByMeetingId(meetingVoItem.getId());
-					meetingVoItem.setAsenceMemberIds(asenceMemberIds);
-					list.add(i, meetingVoItem);
-				}
+			if (meetingItem.getQuarter() == 1) {
+				meetingList1.add(PcMeetingVo.fromPcMeeting(meetingItem));
+			} else if (meetingItem.getQuarter() == 2) {
+				meetingList2.add(PcMeetingVo.fromPcMeeting(meetingItem));
+			} else if (meetingItem.getQuarter() == 3) {
+				meetingList3.add(PcMeetingVo.fromPcMeeting(meetingItem));
+			} else {
+				meetingList4.add(PcMeetingVo.fromPcMeeting(meetingItem));
+			}
+//			for (int i = 0; i < list.size(); i++) {
+//				PcMeetingVo meetingVo = list.get(i);
+//				if (meetingVo.getQuarter().intValue() == meetingItem.getQuarter().intValue()) {
+//					list.remove(i);
+//					PcMeetingVo meetingVoItem = PcMeetingVo.fromPcMeeting(meetingItem);
+//					String asenceMemberIds = pcMeetingAsenceDaoImpl.getMemberIdsByMeetingId(meetingVoItem.getId());
+//					meetingVoItem.setAsenceMemberIds(asenceMemberIds);
+//					list.add(i, meetingVoItem);
+//				}
+//			}
+		}
+		for (PcMeetingVo originalItem : list) {
+			if (originalItem.getQuarter() == 1 && meetingList1.size() > 0) {
+				list.remove(originalItem);
+			}
+			if (originalItem.getQuarter() == 2 && meetingList2.size() > 0) {
+				list.remove(originalItem);
+			}
+			if (originalItem.getQuarter() == 3 && meetingList3.size() > 0) {
+				list.remove(originalItem);
+			}
+			if (originalItem.getQuarter() == 4 && meetingList4.size() > 0) {
+				list.remove(originalItem);
 			}
 		}
+		list.addAll(meetingList1);
+		list.addAll(meetingList2);
+		list.addAll(meetingList3);
+		list.addAll(meetingList4);
 		return list;
 	}
 

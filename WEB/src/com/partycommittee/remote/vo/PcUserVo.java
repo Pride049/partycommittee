@@ -19,6 +19,7 @@ public class PcUserVo implements Serializable {
 	private Date lastlogintime;
 	private String privilege;
 	private Integer enableReport;
+	private Integer agencyCodeId;
 	
 	private List<PcAgencyVo> agencyList;
 	
@@ -108,6 +109,14 @@ public class PcUserVo implements Serializable {
 	public void setEnableReport(Integer enableReport) {
 		this.enableReport = enableReport;
 	}
+	
+	public Integer getAgencyCodeId() {
+		return agencyCodeId;
+	}
+
+	public void setAgencyCodeId(Integer agencyCodeId) {
+		this.agencyCodeId = agencyCodeId;
+	}
 
 	public static PcUserVo fromPCUser(PcUser user) {
 		PcUserVo pcUserVo = new PcUserVo();
@@ -121,6 +130,7 @@ public class PcUserVo implements Serializable {
 		pcUserVo.setLastlogintime(user.getLastlogintime());
 		pcUserVo.setPrivilege(user.getPrivilege());
 		pcUserVo.setEnableReport(user.getEnableReport());
+		pcUserVo.setAgencyCodeId(user.getAgencyCodeId());
 		return pcUserVo;
 	}
 	
@@ -136,6 +146,7 @@ public class PcUserVo implements Serializable {
 		pcUser.setLastlogintime(pcUserVo.getLastlogintime());
 		pcUser.setPrivilege(pcUserVo.getPrivilege());
 		pcUser.setEnableReport(pcUserVo.getEnableReport());
+		pcUser.setAgencyCodeId(pcUserVo.getAgencyCodeId());
 		return pcUser;
 	}
 
