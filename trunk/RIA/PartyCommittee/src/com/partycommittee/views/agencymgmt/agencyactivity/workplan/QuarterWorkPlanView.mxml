@@ -25,6 +25,9 @@
 			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
 			
+			[Bindable]
+			public var detailMode:Boolean = false;
+			
 			private var isNew:Boolean = true;
 			
 			[Bindable]
@@ -237,9 +240,11 @@
 					 editable="{!workPlan || workPlan.statusId == 2}"/>
 		<mx:ControlBar width="100%" horizontalAlign="center" verticalAlign="middle">
 			<button:PcButton label="暂存" click="onSaveWithoutSubmit()"
-							 enabled="{!workPlan || workPlan.statusId == 2}"/>
+							 enabled="{!workPlan || workPlan.statusId == 2}"
+							 visible="{!detailMode}" includeInLayout="{!detailMode}"/>
 			<button:PcButton label="上报" click="onSaveAndCommit()"
-							 enabled="{!workPlan || workPlan.statusId != 1}"/>
+							 enabled="{!workPlan || workPlan.statusId != 1}"
+							 visible="{!detailMode}" includeInLayout="{!detailMode}"/>
 			<button:PcButton label="关闭" click="close()"/>
 		</mx:ControlBar>
 	</mx:VBox>

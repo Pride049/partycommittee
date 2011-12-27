@@ -6,12 +6,44 @@
 						   width="100%" height="100%" 
 						   xmlns:navigation="com.partycommittee.manager.navigation.*" 
 						   xmlns:component="com.partycommittee.views.agencymgmt.component.*" 
-						   xmlns:agencyactivity="com.partycommittee.views.agencymgmt.agencyactivity.*">
+						   xmlns:agencyactivity="com.partycommittee.views.agencymgmt.agencyactivity.*"
+						   creationComplete="onCreationCompleted()">
 	<fx:Script>
 		<![CDATA[
+			import com.partycommittee.model.ModelLocator;
+			import com.partycommittee.vo.PcAgencyVo;
+			
+			import mx.events.PropertyChangeEvent;
+			
+			[Bindable]
+			private var model:ModelLocator = ModelLocator.getInstance();
 			
 			override protected function onNavigateIn():void {
 				workPlanView.enterView();
+			}
+			
+			private function onCreationCompleted():void {
+				updateDisplay();
+				model.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, onModelChanged);
+			}
+			
+			private function onModelChanged(event:PropertyChangeEvent):void {
+				if (event.property == "focusAgencyVo") {
+					updateDisplay();
+				}
+			}
+			
+			private function updateDisplay():void {
+				if (!model.focusAgencyVo) {
+					return;
+				}
+				var agency:PcAgencyVo = model.focusAgencyVo;
+				// Remove activity browse if the agency is the leaf node type.
+				if (agency.codeId != PCConst.AGENCY_CODE_TEAM && agency.codeId != PCConst.AGENCY_CODE_BRANCH) {
+					this.enabled = true;
+				} else {
+					this.enabled = false;
+				}
 			}
 		]]>
 	</fx:Script>
