@@ -87,7 +87,7 @@
 			
 			private function onGetMembersFailure(data:Object, evt:PcMemberEvent):void {
 				this.enabled = true;
-				Alert.show("读取党员列表失败！");
+				Alert.show("读取支委委员列表失败！");
 			}
 			
 			private function onChooseBtnClick():void {
