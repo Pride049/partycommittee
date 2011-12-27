@@ -96,7 +96,7 @@
 				var window:PartyMemberWindow = new PartyMemberWindow();
 				window.type = CRUDEventType.UPDATE;
 				window.parentView = this;
-				window.title = "修改党员";
+				window.title = "修改支委委员";
 				window.memberVo = datagrid. selectedItem as PcMemberVo;
 				PopupMgr.instance.popupWindow(window);
 			}
@@ -184,12 +184,14 @@
 										   labelFunction="{LblFunctionHelper.dateLblFunc}"/>
 			</mx:columns>
 		</mx:AdvancedDataGrid>
+		<!--
 		<mx:ControlBar width="100%" horizontalAlign="right">
 			<pagebar:PageBar page="{page}" width="100%" enabled="false"/>
 			<button:PcButton label="下载Excel模板"/>
 			<button:PcButton label="上传党员Excel"/>
 			<button:PcButton label="生成Excel"/>
 		</mx:ControlBar>
+		-->
 	</mx:VBox>
 	
 </mx:Canvas>
