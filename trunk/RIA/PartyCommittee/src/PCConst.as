@@ -28,6 +28,8 @@ package
 			 DUTY_MASSES_MEMBER,
 			 DUTY_SECRECY_MEMBER,
 			 DUTY_UNITEDFRONT_MEMBER,
+			 DUTY_WOMEN_MEMBER,
+			 DUTY_UNION_MEMBER,
 			 DUTY_PARTYCOMMITTEE_MEMBER,
 			 DUTY_TEAM_MEMBER,
 			 DUTY_TEAM_LEADER]
@@ -42,9 +44,11 @@ package
 		public static const DUTY_MASSES_MEMBER:int = 7;
 		public static const DUTY_SECRECY_MEMBER:int = 8;
 		public static const DUTY_UNITEDFRONT_MEMBER:int = 9;
-		public static const DUTY_PARTYCOMMITTEE_MEMBER:int = 10;
-		public static const DUTY_TEAM_MEMBER:int = 11;
-		public static const DUTY_TEAM_LEADER:int = 12;
+		public static const DUTY_WOMEN_MEMBER:int = 10;
+		public static const DUTY_UNION_MEMBER:int = 11;
+		public static const DUTY_PARTYCOMMITTEE_MEMBER:int = 12;
+		public static const DUTY_TEAM_MEMBER:int = 13;
+		public static const DUTY_TEAM_LEADER:int = 14;
 		
 		// Sex code define.
 		public static const SexList:ArrayCollection = new ArrayCollection(

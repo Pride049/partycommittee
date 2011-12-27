@@ -20,6 +20,7 @@ package com.partycommittee.vo
 		public var privilege:String;
 		public var comment:String;
 		public var enableReport:Number;
+		public var agencyCodeId:Number;
 		
 		public var agencyList:ArrayCollection;
 	}

@@ -48,6 +48,13 @@ package com.partycommittee.util
 			return "";
 		}
 		
+		public static function memberNationLblFunc(item:Object, col:*):String {
+			if (item as PcMemberVo) {
+				return NationCodeUtil.getNationDesById((item as PcMemberVo).nationId);
+			}
+			return "";
+		}
+		
 		public static function userStatusLblFunc(item:Object, col:*):String {
 			if (item as PcUserVo) {
 				return (item as PcUserVo).status == 1 ? "启用" : "禁用";

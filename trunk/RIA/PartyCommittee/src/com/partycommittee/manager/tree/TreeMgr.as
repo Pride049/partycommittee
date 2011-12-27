@@ -38,6 +38,8 @@ package com.partycommittee.manager.tree
 			model.tree.selectedItem = rootItem;
 			model.focusAgencyVo = rootItem.entity as PcAgencyVo;
 			model.tree.fetchChildrenData(rootItem);
+			
+			model.isTreeInitialized = true;
 		}
 		
 		public function createItem(agencyVo:PcAgencyVo):Node {

@@ -14,6 +14,7 @@
 					  xmlns:systemviews="com.partycommittee.views.sysmgmt.systemviews.*">
 	<fx:Script>
 		<![CDATA[
+			import com.partycommittee.events.PcAgencyEvent;
 			import com.partycommittee.events.PcUserEvent;
 			import com.partycommittee.util.CRUDEventType;
 			import com.partycommittee.vo.PcUserVo;

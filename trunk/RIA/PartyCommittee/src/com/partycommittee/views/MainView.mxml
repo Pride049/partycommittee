@@ -31,11 +31,6 @@
 			import mx.events.IndexChangedEvent;
 			
 			[Bindable]
-			private var updatePwTxt:String = '<u><font color="#0000ff"><a href="event:updatePw">修改密码</a></font></u>';
-			[Bindable]
-			private var logoffTxt:String = '<u><font color="#0000ff"><a href="event:updatePw">注销</a></font></u>';;
-			
-			[Bindable]
 			private var menuData:Array = [
 				{label:'组织管理', children:[
 					{id:'orgManage', label:'基本情况', navView:'orgView'},
@@ -92,21 +87,6 @@
 //					isAccordionMin = true;
 //				}
 //			}
-			
-			private function onLogout(event:TextEvent):void {
-				var userEvt:PcUserEvent = new PcUserEvent(PcUserEvent.LOGOUT);
-				userEvt.failureCallback = onLogoutFailure;
-				userEvt.dispatch();
-			}
-			
-			private function onLogoutFailure(info:Object, evt:PcUserEvent):void {
-				Alert.show(info.toString());
-			}
-			
-			private function updatePwHandler(event:TextEvent):void {
-				var win:PwEditWindow = new PwEditWindow();
-				PopupMgr.instance.popupWindow(win);
-			}
 			
 		]]>
     </fx:Script>
