@@ -54,10 +54,10 @@
 				var user:PcUserVo = data as PcUserVo;
 				model.loginUser = user;
 				if (!user) {
-//					var agencyEvent:PcAgencyEvent = new PcAgencyEvent(PcAgencyEvent.GET_ROOT_AGENCY_BY_USERID);
-//					agencyEvent.userId = 1;
-//					agencyEvent.failureCallback = noAgencyHandler;
-//					agencyEvent.dispatch();
+					var agencyEvent:PcAgencyEvent = new PcAgencyEvent(PcAgencyEvent.GET_ROOT_AGENCY_BY_USERID);
+					agencyEvent.userId = 1;
+					agencyEvent.failureCallback = noAgencyHandler;
+					agencyEvent.dispatch();
 					return;
 				}
 				
@@ -69,7 +69,13 @@
 				
 				// Remove agency report view if the user not have privilege.
 				if (model.loginUser.enableReport != 1) {
-					mainViewStack.removeChild(agencyActivityView);
+					activityView.tab.removeChild(activityView.reportView);
+//					mainViewStack.removeChild(agencyActivityView);
+				}
+				
+				// Remove recount view if the user not have root agency privilege.
+				if (!model.loginUser.privilege || model.loginUser.privilege.indexOf("1") == -1) {
+					mainViewStack.removeChild(accountView);
 				}
 			}
 			
@@ -124,12 +130,17 @@
 				<agencymgmt:OrgView id="orgView" width="100%" height="100%" 
 									label="组织管理"
 									viewStack="{mainViewStack}"/>
+				<!--
 				<agencyactivity:BrowseView id="browseWorkplanView" width="100%" height="100%" 
 										   label="组织生活浏览"
 										   viewStack="{mainViewStack}"/>
-				<agencyactivity:AgencyActivityView id="agencyActivityView" width="100%" height="100%"
+				<agencyactivity:ReportView id="agencyActivityView" width="100%" height="100%"
 												   label="组织生活填报"
 												   viewStack="{mainViewStack}"/>
+				-->
+				<agencyactivity:ActivityView id="activityView" width="100%" height="100%"
+											 label="组织生活"
+											 viewStack="{mainViewStack}"/>
 				<systemviews:AccountManageView id="accountView" width="100%" height="100%" 
 											   label="账号管理"
 											   viewStack="{mainViewStack}"/>

@@ -212,6 +212,7 @@ package com.partycommittee.control.tree {
          callRemoteService(node);
       }
 
+	  public var isLoading:Boolean = false; 
       protected function callRemoteService(node:Node):void {
          // Dispatch event for call service.
 		 var agencyEvent:PcAgencyEvent = new PcAgencyEvent(PcAgencyEvent.GET_CHILDREN);
@@ -219,6 +220,7 @@ package com.partycommittee.control.tree {
 		 agencyEvent.agency = node.entity as PcAgencyVo;
 		 agencyEvent.successCallback = onGetChildrenSuccess;
 		 agencyEvent.failureCallback = onGetChildrenFailure;
+		 isLoading = true;
 		 agencyEvent.dispatch();
       }
 
@@ -408,10 +410,12 @@ package com.partycommittee.control.tree {
       }
 	  
 	  private function onGetChildrenFailure(info:Object, evt:PcAgencyEvent):void {
+		  isLoading = false;
 		  addErrorStat(evt.node, "读取错误！" + info.message);
 	  }
 	  
 	  private function onGetChildrenSuccess(data:Object, evt:PcAgencyEvent):void {
+		  isLoading = false;
 		  var parentNode:Node = evt.node;
 		  if (!parentNode) {
 		  	  return;
@@ -446,6 +450,9 @@ package com.partycommittee.control.tree {
 		 if (node) {
 			 parentNode.children.addItem(node);
 			 if (parentNode.entity is PcAgencyVo) {
+				 if (!(parentNode.entity as PcAgencyVo).children) {
+					 (parentNode.entity as PcAgencyVo).children = new ArrayCollection();
+				 }
 				 (parentNode.entity as PcAgencyVo).children.addItem(agencyVo);
 			 }
 		 }

@@ -58,7 +58,7 @@ package com.partycommittee.commands
 					proxy.evaluateMeeting(pcMeetingEvt.meeting.id, pcMeetingEvt.meetingContent);
 					break;
 				case PcMeetingEvent.GET_ALERT_INFO:
-					proxy.getAlertInfo(pcMeetingEvt.meeting.id, pcMeetingEvt.year, pcMeetingEvt.quarter);
+					proxy.getAlertInfo(pcMeetingEvt.agency.id, pcMeetingEvt.year, pcMeetingEvt.quarter);
 					break;
 				default :
 					break;

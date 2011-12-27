@@ -50,6 +50,8 @@ package com.partycommittee.model
 		public var INDEX_PAGE:String;
 		
 		public var selectedMenu:Object;
+		
+		public var isTreeInitialized:Boolean = false;
 	}
 }
 

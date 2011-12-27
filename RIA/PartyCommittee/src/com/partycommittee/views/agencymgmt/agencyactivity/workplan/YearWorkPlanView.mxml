@@ -188,10 +188,6 @@
 					  text="{(workPlan &amp;&amp; workPlan.statusId == 1) ? ' （已上报）' : ''}"/>
 		</mx:HBox>
 		<mx:HBox width="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off">
-			<mx:Label text="年    份："/>
-			<mx:ComboBox id="yearCmb" dataProvider="{yearDp}" change="onYearCmbChanged()"/>
-		</mx:HBox>
-		<mx:HBox width="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off">
 			<mx:Label text="填写人："/>
 			<mx:TextInput id="personTxt" width="200"
 						  editable="{!workPlan || workPlan.statusId == 2}"/>
@@ -199,6 +195,10 @@
 		<richtexttoolbar:PopupRichTextToolBar width="100%" target="{textArea}"/>
 		<mx:TextArea id="textArea" width="100%" height="100%"
 					 editable="{!workPlan || workPlan.statusId == 2}"/>
+		<mx:HBox width="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off">
+			<mx:Label text="年    份："/>
+			<mx:ComboBox id="yearCmb" dataProvider="{yearDp}" change="onYearCmbChanged()"/>
+		</mx:HBox>
 		<mx:ControlBar width="100%" horizontalAlign="center" verticalAlign="middle">
 			<button:PcButton label="暂存" click="onSaveWithoutSubmit()"
 							 enabled="{!workPlan || workPlan.statusId == 2}"/>

@@ -10,13 +10,14 @@
 		<![CDATA[
 			import com.partycommittee.events.PcUserEvent;
 			import com.partycommittee.manager.navigation.NavigationMgr;
+			import com.partycommittee.manager.popup.PopupMgr;
 			import com.partycommittee.model.ModelLocator;
 			import com.partycommittee.views.agencymgmt.OrgView;
-			import com.partycommittee.views.agencymgmt.agencyactivity.AgencyActivityView;
+			import com.partycommittee.views.agencymgmt.agencyactivity.ActivityView;
 			import com.partycommittee.views.agencymgmt.agencyactivity.BrowseView;
+			import com.partycommittee.views.agencymgmt.agencyactivity.ReportView;
 			import com.partycommittee.views.sysmgmt.systemviews.AccountManageView;
 			import com.partycommittee.views.sysmgmt.systemviews.PwEditWindow;
-			import com.partycommittee.manager.popup.PopupMgr;
 			
 			import flash.net.sendToURL;
 			
@@ -28,12 +29,12 @@
 			import mx.events.FlexEvent;
 			import mx.events.PropertyChangeEvent;
 			
-			public static var mainPageMenuItem:Object = {id:"orgManage", label:"基本情况", navView:"orgView"};
-			
 			[Bindable]
 			private var updatePwTxt:String = '<u><font color="#0000ff"><a href="event:updatePw">修改密码</a></font></u>';
 			[Bindable]
-			private var logoffTxt:String = '<u><font color="#0000ff"><a href="event:updatePw">注销</a></font></u>';;			
+			private var logoffTxt:String = '<u><font color="#0000ff"><a href="event:updatePw">注销</a></font></u>';
+			
+			public static var mainPageMenuItem:Object = {id:"orgManage", label:"基本情况", navView:"orgView"};
 			
 			private var bitmapData:BitmapData;
 			
@@ -125,10 +126,8 @@
 			public function updateNavigateBar(item:Object):void {
 				if (item as OrgView) {
 					secondLvLbl = "组织管理";
-				} else if (item as BrowseView) {
-					secondLvLbl = "组织生活浏览";
-				} else if (item as AgencyActivityView) {
-					secondLvLbl = "组织生活填报";
+				} else if (item as ActivityView) {
+					secondLvLbl = "组织生活";
 				} else if (item as AccountManageView) {
 					secondLvLbl = "账号管理";
 				} else {
@@ -233,11 +232,6 @@
 				this.thirdLvLbl = "";
 			}
 			
-			private function updatePwHandler(event:TextEvent):void {
-				var win:PwEditWindow = new PwEditWindow();
-				PopupMgr.instance.popupWindow(win);
-			}			
-			
 			private function onLogout(event:TextEvent):void {
 				var userEvt:PcUserEvent = new PcUserEvent(PcUserEvent.LOGOUT);
 				userEvt.failureCallback = onLogoutFailure;
@@ -246,7 +240,12 @@
 			
 			private function onLogoutFailure(info:Object, evt:PcUserEvent):void {
 				Alert.show(info.toString());
-			}			
+			}
+			
+			private function updatePwHandler(event:TextEvent):void {
+				var win:PwEditWindow = new PwEditWindow();
+				PopupMgr.instance.popupWindow(win);
+			}
 		]]>
 	</fx:Script>
 	
@@ -261,7 +260,7 @@
 					 horizontalScrollPolicy="off" verticalScrollPolicy="off">
 				<mx:HBox horizontalScrollPolicy="off" verticalScrollPolicy="off"
 						 horizontalAlign="center" verticalAlign="middle">
-					<mx:LinkButton label="主页" click="returnToMainPage()"
+					<mx:LinkButton label="首页" click="returnToMainPage()"
 								   color="0x0000ff" fontWeight="bold"/>
 					<mx:Label text=">"
 							  visible="{secondLvLbl != ''}"
@@ -278,24 +277,20 @@
 								   color="0x0000ff" fontWeight="bold"
 								   visible="{thirdLvLbl != ''}"
 								   includeInLayout="{thirdLvLbl != ''}"/>
-
-				
 				</mx:HBox>
 				<mx:VRule height="80%"/>
 				<mx:Canvas id="moveLblCav" width="100%" height="100%" borderStyle="none"
 						   borderVisible="false" horizontalScrollPolicy="off"
 						   verticalScrollPolicy="off"/>
-				
-				<mx:HBox right="10"
-						 backgroundColor="0xffffff" backgroundAlpha="1" horizontalAlign="right">
+				<mx:HBox right="10" bottom="38" cornerRadius="5"
+						 backgroundColor="0xffffff" backgroundAlpha="1">
 					<mx:Label text="{'当前登录用户：' + (model.loginUser ? model.loginUser.username : '')}"
 							  fontWeight="bold"/>
 					<mx:Text htmlText="{updatePwTxt}" link="updatePwHandler(event)" fontWeight="bold"
 							 useHandCursor="true" buttonMode="true"/>
 					<mx:Text htmlText="{logoffTxt}" link="onLogout(event)" fontWeight="bold"
 							 useHandCursor="true" buttonMode="true"/>
-				</mx:HBox>					
-				
+				</mx:HBox>
 			</mx:HBox>
 		</mx:Canvas>
 		<mx:Canvas id="allCanvas" top="{mHeight+2}" width="100%" height="{nHeight}" includeInLayout="false" visible="false"

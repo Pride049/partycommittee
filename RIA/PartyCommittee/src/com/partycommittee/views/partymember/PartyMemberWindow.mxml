@@ -10,7 +10,7 @@
 					  xmlns:button="com.partycommittee.control.button.*"
 					  horizontalScrollPolicy="off" verticalScrollPolicy="off" 
 					  xmlns:component="com.partycommittee.views.partymember.component.*"
-					  creationComplete="onCreationCompleted()">
+					  creationComplete="onCreationCompleted()" xmlns:dateselect="com.partycommittee.control.dateselect.*">
 	<fx:Script>
 		<![CDATA[
 			import com.partycommittee.events.PcMemberEvent;
@@ -50,24 +50,18 @@
 					return;
 				}
 				addressTxt.text = this._memberVo.address;
-				if (this._memberVo.birthday) {
-					birthdayDateField.selectedDate = this._memberVo.birthday;
-				}
+				birthdayDateField.date = this._memberVo.birthday;
 				birthplaceTxt.text = this._memberVo.birthPlace;
 				dutyCmb.selectedItem = this._memberVo.dutyId;
 				adminDutyTxt.text = this._memberVo.adminDuty;
 				eduCmb.selectedItem = this._memberVo.eduId;
-				if (this._memberVo.joinday) {
-					joinDateField.selectedDate = this._memberVo.joinday;
-				}
+				joinDateField.date = this._memberVo.joinday;
 				nameTxt.text = this._memberVo.name;
 				nationCmb.selectedItem = this._memberVo.nationId;
 				sexCmb.selectedItem = this._memberVo.sexId;
 				//commentTxt.text = this._memberVo.comment;
 				sortTxt.text = this._memberVo.sort + '';
-				if (this._memberVo.workday) {
-					workDateField.selectedDate = this._memberVo.workday;
-				}
+				workDateField.date = this._memberVo.workday;
 			}
 			
 			private function save():void {
@@ -112,15 +106,15 @@
 				newMember.active = 1;
 				newMember.address = addressTxt.text;
 				newMember.agencyId = parentView.agency.id;
-				newMember.birthday = birthdayDateField.selectedDate;
+				newMember.birthday = birthdayDateField.date;
 				newMember.birthPlace = birthplaceTxt.text;
 				newMember.dutyId = dutyCmb.selectedItem as Number;
 				newMember.eduId = eduCmb.selectedItem as Number;
-				newMember.joinday = joinDateField.selectedDate;
+				newMember.joinday = joinDateField.date;
 				newMember.name = nameTxt.text;
 				newMember.nationId = nationCmb.selectedItem as Number;
 				newMember.sexId = sexCmb.selectedItem as Number;
-				newMember.workday = workDateField.selectedDate;
+				newMember.workday = workDateField.date;
 				//newMember.comment = commentTxt.text;
 				newMember.adminDuty = adminDutyTxt.text;
 				newMember.sort = sortTxt.text as Number;
@@ -182,8 +176,11 @@
 							 labelFunction="nationLblFunc"/>
 			</mx:FormItem>
 			<mx:FormItem label="出生年月:" required="true" width="100%">
+				<!--
 				<mx:DateField id="birthdayDateField" width="150"
 							  formatString="YYYY-MM-DD"/>
+				-->
+				<dateselect:DateSelectBox id="birthdayDateField"/>
 			</mx:FormItem>
 			<mx:FormItem label="籍贯:" width="100%">
 				<mx:TextInput id="birthplaceTxt" width="100%"/>
@@ -199,12 +196,18 @@
 				<mx:TextInput id="adminDutyTxt" width="100%"/>
 			</mx:FormItem>
 			<mx:FormItem label="何时入党:" required="true" width="100%">
+				<!--
 				<mx:DateField id="joinDateField" width="150"
 							  formatString="YYYY-MM-DD"/>
+				-->
+				<dateselect:DateSelectBox id="joinDateField"/>
 			</mx:FormItem>
 			<mx:FormItem label="参加工作时间:" required="true" width="100%">
+				<!--
 				<mx:DateField id="workDateField" width="150"
 							  formatString="YYYY-MM-DD"/>
+				-->
+				<dateselect:DateSelectBox id="workDateField"/>
 			</mx:FormItem>
 			<mx:FormItem label="现在家庭住址:" width="100%">
 				<mx:TextArea id="addressTxt" width="100%" height="60"/>

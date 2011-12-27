@@ -11,6 +11,7 @@ package com.partycommittee.vo
 		public var typeId:Number;
 		public var year:Number;
 		public var quarter:Number;
+		public var month:Number;
 		public var week:Number;
 		public var moderator:String;
 		public var theme:String;
