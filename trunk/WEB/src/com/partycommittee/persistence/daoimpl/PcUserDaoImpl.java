@@ -19,7 +19,7 @@ public class PcUserDaoImpl extends JpaDaoBase implements PcUserDao {
 	@Override
 	public List<PcUser> getUserList() {
 		try {
-			return super.getJpaTemplate().find("from PcUser");
+			return super.getJpaTemplate().find("from PcUser order by agencyCodeId asc");
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -31,7 +31,7 @@ public class PcUserDaoImpl extends JpaDaoBase implements PcUserDao {
 	public PageResultVo<PcUser> getUserListByPage(PageHelperVo page) {
 		try {
 			PageResultVo<PcUser> pageResult = new PageResultVo<PcUser>();
-			String sql = "from PcUser where 1 = 1";
+			String sql = "from PcUser where 1 = 1 order by agencyCodeId asc";
 			String totalSql = "select count (*) from PcUser";
 			List<Long> totalList = super.find(totalSql);
 			if (totalList != null) {

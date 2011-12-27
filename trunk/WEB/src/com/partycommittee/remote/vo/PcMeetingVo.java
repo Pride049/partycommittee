@@ -13,6 +13,7 @@ public class PcMeetingVo implements Serializable {
 	private Integer typeId;
 	private Integer year;
 	private Integer quarter;
+	private Integer month;
 	private Integer week;
 	private String moderator;
 	private String theme;
@@ -90,6 +91,14 @@ public class PcMeetingVo implements Serializable {
 
 	public void setWeek(Integer week) {
 		this.week = week;
+	}
+	
+	public Integer getMonth() {
+		return month;
+	}
+	
+	public void setMonth(Integer month) {
+		this.month = month;
 	}
 
 	public String getModerator() {

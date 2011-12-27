@@ -22,6 +22,7 @@ public class PcMeeting implements Serializable {
 	private Integer typeId;
 	private Integer year;
 	private Integer quarter;
+	private Integer month;
 	private Integer week;
 	private String moderator;
 	private String theme;
@@ -73,6 +74,14 @@ public class PcMeeting implements Serializable {
 	}
 	public void setQuarter(Integer quarter) {
 		this.quarter = quarter;
+	}
+	
+	@Column(name = "month")
+	public Integer getMonth() {
+		return month;
+	}
+	public void setMonth(Integer month) {
+		this.month = month;
 	}
 	
 	@Column(name = "week")

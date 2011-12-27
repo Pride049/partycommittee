@@ -105,14 +105,39 @@ public class PcUserService {
 	
 	public void createUser(PcUserVo userVo) {
 		PcUser user = PcUserVo.toPCUser(userVo);
+		updateAgencyCodeId(user);
 		user = pcUserDaoImpl.createUser(user);
 		updateUserAgencyMapping(user.getId(), userVo.getPrivilege());
 	}
 	
 	public void updateUser(PcUserVo userVo) {
 		PcUser user = PcUserVo.toPCUser(userVo);
+		updateAgencyCodeId(user);
 		pcUserDaoImpl.updateUser(user);
 		updateUserAgencyMapping(user.getId(), userVo.getPrivilege());
+	}
+	
+	private void updateAgencyCodeId(PcUser user) {
+		if (user.getPrivilege() != null && !user.getPrivilege().equals("")) {
+			List<PcAgency> agencyList = pcAgencyDaoImpl.getAgencyListByIds(user.getPrivilege());
+			if (agencyList == null || agencyList.size() == 0) {
+				user.setAgencyCodeId(null);
+			} else {
+				Integer rootCodeId = null;
+				for (PcAgency agency : agencyList) {
+					if (rootCodeId == null) {
+						rootCodeId = agency.getCodeId();
+					} else {
+						if (rootCodeId > agency.getCodeId()) {
+							rootCodeId = agency.getCodeId();
+						}
+					}
+				}
+				user.setAgencyCodeId(rootCodeId);
+			}
+		} else {
+			user.setAgencyCodeId(null);
+		}
 	}
 	
 	private void updateUserAgencyMapping(Long userId, String privilege) {

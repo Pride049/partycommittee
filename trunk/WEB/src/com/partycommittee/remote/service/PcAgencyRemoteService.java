@@ -9,6 +9,7 @@ import org.springframework.flex.remoting.RemotingDestination;
 import org.springframework.flex.remoting.RemotingInclude;
 import org.springframework.stereotype.Service;
 
+import com.partycommittee.remote.vo.PcAgencyInfoVo;
 import com.partycommittee.remote.vo.PcAgencyMappingVo;
 import com.partycommittee.remote.vo.PcAgencyRelationVo;
 import com.partycommittee.remote.vo.PcAgencyVo;
@@ -116,5 +117,10 @@ public class PcAgencyRemoteService {
 	@RemotingInclude
 	public void deleteAgency(PcAgencyVo agencyVo) {
 		pcAgencyService.deleteAgency(agencyVo);
+	}
+	
+	@RemotingInclude
+	public PcAgencyInfoVo getAgencyInfo(Integer agencyId) {
+		return pcAgencyService.getAgencyInfo(agencyId);
 	}
 }
