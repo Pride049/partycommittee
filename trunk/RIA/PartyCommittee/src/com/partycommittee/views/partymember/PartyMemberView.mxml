@@ -160,11 +160,12 @@
 		<mx:AdvancedDataGrid id="datagrid" width="100%" height="100%" 
 										   headerStyleName="dataGridHeader"
 										   allowMultipleSelection="true"
-										   dataProvider="{dp}" lockedColumnCount="1"
+										   dataProvider="{dp}" lockedColumnCount="2"
 										   horizontalScrollPolicy="auto"
 										   doubleClickEnabled="true"
 										   doubleClick="onItemDoubleClick()">
 			<mx:columns>
+				<mx:AdvancedDataGridColumn headerText="序号" dataField="sort" width="60"/>
 				<mx:AdvancedDataGridColumn headerText="姓名" dataField="name" width="120"/>
 				<mx:AdvancedDataGridColumn headerText="党内职务" dataField="dutyId" width="120"
 										   labelFunction="{LblFunctionHelper.memberDutyLblFunc}"/>
@@ -187,11 +188,9 @@
 		<!--
 		<mx:ControlBar width="100%" horizontalAlign="right">
 			<pagebar:PageBar page="{page}" width="100%" enabled="false"/>
-			<!--
 			<button:PcButton label="下载Excel模板"/>
 			<button:PcButton label="上传党员Excel"/>
 			<button:PcButton label="生成Excel"/>
-			-->
 		</mx:ControlBar>
 		-->
 	</mx:VBox>
