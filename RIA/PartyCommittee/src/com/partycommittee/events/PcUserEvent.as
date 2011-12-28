@@ -2,6 +2,7 @@ package com.partycommittee.events
 {
 	import com.adobe.cairngorm.control.CairngormEvent;
 	import com.partycommittee.util.CRUDEventType;
+	import com.partycommittee.vo.PcAgencyVo;
 	import com.partycommittee.vo.PcUserVo;
 	import com.partycommittee.vo.page.PageHelperVo;
 	
@@ -44,6 +45,14 @@ package com.partycommittee.events
 		}
 		public function get page():PageHelperVo {
 			return this._page;
+		}
+		
+		private var _agency:PcAgencyVo;
+		public function set agency(value:PcAgencyVo):void {
+			this._agency = value;
+		}
+		public function get agency():PcAgencyVo {
+			return this._agency;
 		}
 		
 		public function PcUserEvent(kind:String = "READ", user:PcUserVo = null, userList:ArrayCollection = null) {
