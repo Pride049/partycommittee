@@ -93,6 +93,7 @@
 	
 	<mx:constraintRows>
 		<s:ConstraintRow id="headerRow" height="125"/>
+		<s:ConstraintRow id="controlRow" height="28"/>
 		<s:ConstraintRow id="mainRow" height="100%"/>
 		<s:ConstraintRow id="bottomGap" height="2"/>
 		<s:ConstraintRow id="bottomRow" height="30"/>
@@ -136,12 +137,17 @@
 					 useHandCursor="true" buttonMode="true"/>
 		</mx:HBox>
 		-->
-		<mx:ToggleButtonBar id="mainMenu" dataProvider="{mainContainer.mainViewStack}" fontWeight="bold"
-							right="5" bottom="0" height="28"/>
+		
 		<!--
 		<mainmenu:MainMenu id="mainMenu" menuData="{menuData}" itemGap="5"
 						   right="5" bottom="0"/>
 		-->
+	</mx:Canvas>
+	
+	<mx:Canvas top="controlRow:0" bottom="controlRow:0"
+			   width="100%">
+		<mx:ToggleButtonBar id="mainMenu" dataProvider="{mainContainer.mainViewStack}" fontWeight="bold"
+							right="5" height="100%"/>
 	</mx:Canvas>
    
 </mx:Canvas>

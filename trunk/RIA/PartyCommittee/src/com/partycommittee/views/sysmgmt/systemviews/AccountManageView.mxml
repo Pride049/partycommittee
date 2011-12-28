@@ -18,6 +18,7 @@
 			import com.partycommittee.model.ModelLocator;
 			import com.partycommittee.util.CRUDEventType;
 			import com.partycommittee.util.LblFunctionHelper;
+			import com.partycommittee.vo.PcAgencyVo;
 			import com.partycommittee.vo.PcUserVo;
 			import com.partycommittee.vo.page.PageHelperVo;
 			import com.partycommittee.vo.page.PageResultVo;
@@ -26,6 +27,7 @@
 			import mx.controls.Alert;
 			import mx.core.FlexGlobals;
 			import mx.events.CloseEvent;
+			import mx.events.PropertyChangeEvent;
 			import mx.managers.PopUpManager;
 			
 			[Bindable]
@@ -37,6 +39,37 @@
 			[Bindable]
 			private var page:PageHelperVo;
 			
+			private var _agency:PcAgencyVo;
+			[Bindable]
+			public function get agency():PcAgencyVo {
+				return this._agency;
+			}
+			public function set agency(value:PcAgencyVo):void {
+				this._agency = value;
+			}
+			
+			override protected function onNavigateIn():void {
+				if (agency != model.focusAgencyVo) {
+					agency = model.focusAgencyVo;
+				}
+				model.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, onModelChanged);
+			}
+			
+			override protected function onNavigateOut():void {
+				model.removeEventListener(PropertyChangeEvent.PROPERTY_CHANGE, onModelChanged);
+			}
+			
+			private function onModelChanged(event:PropertyChangeEvent):void {
+				if (event.property == "focusAgencyVo") {
+					if (agency != model.focusAgencyVo) {
+						agency = model.focusAgencyVo;
+						if (useFilterCk.selected) {
+							refreshData();
+						}
+					}
+				}
+			}
+			
 			private function onCreationCompleted():void {
 				if (!page) {
 					page = new PageHelperVo();
@@ -45,13 +78,12 @@
 				pageBar.addEventListener("pageChange", refreshData);
 			}
 			
-			override protected function onNavigateIn():void {
-				refreshData();
-			}
-			
 			public function refreshData(evt:* = null):void {
 				var userEvt:PcUserEvent = new PcUserEvent();
 				userEvt.page = page;
+				if (useFilterCk.selected && agency) {
+					userEvt.agency = agency;
+				}
 				userEvt.successCallback = onGetUsersSuccess;
 				userEvt.failureCallback = onGetUsersFailure;
 				userEvt.dispatch();
@@ -131,6 +163,7 @@
 				}
 				return array;
 			}
+			
 		]]>
 	</fx:Script>
 	
@@ -152,6 +185,8 @@
 	
 	<mx:VBox width="100%" top="mainRow:0" bottom="mainRow:0">
 		<mx:ControlBar width="100%" horizontalAlign="right">
+			<mx:CheckBox id="useFilterCk" label="根据选择组织过滤" change="refreshData()"/>
+			<s:Spacer width="100%"/>
 			<button:PcButton label="新增" click="addAccount()"/>
 			<button:PcButton label="修改" click="updateAccount()" enabled="{datagrid.selectedItem}"/>
 			<button:PcButton label="删除" click="removeAccount()" enabled="{datagrid.selectedItem}"/>
