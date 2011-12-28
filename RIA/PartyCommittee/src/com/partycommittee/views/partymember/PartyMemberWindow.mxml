@@ -52,13 +52,30 @@
 				addressTxt.text = this._memberVo.address;
 				birthdayDateField.date = this._memberVo.birthday;
 				birthplaceTxt.text = this._memberVo.birthPlace;
-				dutyCmb.selectedItem = this._memberVo.dutyId;
+				if (this._memberVo.dutyId == 0) {
+					dutyCk.selected = true;
+				} else {
+					dutyCmb.selectedItem = this._memberVo.dutyId;
+				}
 				adminDutyTxt.text = this._memberVo.adminDuty;
-				eduCmb.selectedItem = this._memberVo.eduId;
+				postdayDateField.date = this._memberVo.postday;
+				if (this._memberVo.eduId == 0) {
+					eduCk.selected = true;
+				} else {
+					eduCmb.selectedItem = this._memberVo.eduId;
+				}
 				joinDateField.date = this._memberVo.joinday;
 				nameTxt.text = this._memberVo.name;
-				nationCmb.selectedItem = this._memberVo.nationId;
-				sexCmb.selectedItem = this._memberVo.sexId;
+				if (this._memberVo.nationId == 0) {
+					nationCk.selected = true;
+				} else {
+					nationCmb.selectedItem = this._memberVo.nationId;
+				}
+				if (this._memberVo.sexId == 0) {
+					sexCk.selected = true;
+				} else {
+					sexCmb.selectedItem = this._memberVo.sexId;
+				}
 				//commentTxt.text = this._memberVo.comment;
 				sortTxt.text = this._memberVo.sort + '';
 				workDateField.date = this._memberVo.workday;
@@ -108,15 +125,32 @@
 				newMember.agencyId = parentView.agency.id;
 				newMember.birthday = birthdayDateField.date;
 				newMember.birthPlace = birthplaceTxt.text;
-				newMember.dutyId = dutyCmb.selectedItem as Number;
-				newMember.eduId = eduCmb.selectedItem as Number;
+				if (dutyCk.selected) {
+					newMember.dutyId = 0;
+				} else {
+					newMember.dutyId = dutyCmb.selectedItem as Number;
+				}
+				if (eduCk.selected) {
+					newMember.eduId = 0;
+				} else {
+					newMember.eduId = eduCmb.selectedItem as Number;
+				}
 				newMember.joinday = joinDateField.date;
 				newMember.name = nameTxt.text;
-				newMember.nationId = nationCmb.selectedItem as Number;
-				newMember.sexId = sexCmb.selectedItem as Number;
+				if (nationCk.selected) {
+					newMember.nationId = 0;
+				} else {
+					newMember.nationId = nationCmb.selectedItem as Number;
+				}
+				if (sexCk.selected) {
+					newMember.sexId = 0;
+				} else {
+					newMember.sexId = sexCmb.selectedItem as Number;
+				}
 				newMember.workday = workDateField.date;
 				//newMember.comment = commentTxt.text;
 				newMember.adminDuty = adminDutyTxt.text;
+				newMember.postday = postdayDateField.date;
 				newMember.sort = Number(sortTxt.text);
 				return newMember;
 			}
@@ -158,22 +192,37 @@
 				<mx:TextInput id="agencyNameTxt" editable="false"/>
 			</mx:FormItem>
 			<mx:FormItem label="党内职务:" width="100%">
-				<mx:ComboBox id="dutyCmb" width="100%" maxWidth="100"
-							 labelFunction="dutyLblFunc"
-							 dataProvider="{PCConst.dutyList}"/>
-			</mx:FormItem>			
+				<mx:HBox width="100%">
+					<mx:ComboBox id="dutyCmb" width="100%" maxWidth="100"
+								 labelFunction="dutyLblFunc"
+								 dataProvider="{PCConst.dutyList}"
+								 enabled="{!dutyCk.selected}"/>
+					<mx:CheckBox id="dutyCk" label="清空"/>
+				</mx:HBox>
+			</mx:FormItem>
+			<mx:FormItem label="任党内职务时间:" width="100%">
+				<dateselect:DateSelectBox id="postdayDateField"/>
+			</mx:FormItem>
 			<mx:FormItem label="姓名:" required="true" width="100%">
 				<mx:TextInput id="nameTxt" width="100%"/>
 			</mx:FormItem>
 			<mx:FormItem label="性别:" width="100%">
-				<mx:ComboBox id="sexCmb" width="100%" maxWidth="100"
-							 labelFunction="sexLblFunc"
-							 dataProvider="{PCConst.SexList}"/>
+				<mx:HBox width="100%">
+					<mx:ComboBox id="sexCmb" width="100%" maxWidth="100"
+								 labelFunction="sexLblFunc"
+								 dataProvider="{PCConst.SexList}"
+								 enabled="{!sexCk.selected}"/>
+					<mx:CheckBox id="sexCk" label="清空"/>
+				</mx:HBox>
 			</mx:FormItem>
 			<mx:FormItem label="民族:" required="true" width="100%">
-				<mx:ComboBox id="nationCmb" 
-							 dataProvider="{PCConst.nationList}"
-							 labelFunction="nationLblFunc"/>
+				<mx:HBox width="100%">
+					<mx:ComboBox id="nationCmb" 
+								 dataProvider="{PCConst.nationList}"
+								 labelFunction="nationLblFunc"
+								 enabled="{!nationCk.selected}"/>
+					<mx:CheckBox id="nationCk" label="清空"/>
+				</mx:HBox>
 			</mx:FormItem>
 			<mx:FormItem label="出生年月:" required="true" width="100%">
 				<!--
@@ -189,8 +238,12 @@
 				<!--
 				<component:ChooseEduBox id="eduBox" width="100%"/>
 				-->
-				<mx:ComboBox id="eduCmb" dataProvider="{PCConst.EduList}"
-							 labelFunction="eduLblFunc"/>
+				<mx:HBox width="100%">
+					<mx:ComboBox id="eduCmb" dataProvider="{PCConst.EduList}"
+								 labelFunction="eduLblFunc"
+								 enabled="{!eduCk.selected}"/>
+					<mx:CheckBox id="eduCk" label="清空"/>
+				</mx:HBox>
 			</mx:FormItem>
 			<mx:FormItem label="行政职务:" width="100%">
 				<mx:TextInput id="adminDutyTxt" width="100%"/>
