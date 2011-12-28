@@ -18,9 +18,19 @@ package com.partycommittee.vo
 		public var tel:String;
 		public var comment:String;
 		public var setupDatetime:Date;
+		public var pcount:int; //'党小组数',
+		public var zbnum:int;  //'支部人数',
+		public var zbsj:String; //'支部书记',
+		public var zbfsj:String; //'支部副书记',
+		public var zzwy:String; //'组织委员',
+		public var xcwy:String; //'宣传委员',
+		public var jjwy:String; //'纪检委员',
+		public var qnwy:String; //'青年委员',
+		public var ghwy:String; //'工会委员',
+		public var fnwy:String; //'妇女委员',
+		public var ext:String = 'beijing';//'saas扩展字段',
 		
 		public var children:ArrayCollection = new ArrayCollection();
 		
-		public var ext:String;
 	}
 }
