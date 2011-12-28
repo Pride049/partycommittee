@@ -54,12 +54,29 @@ public class PcMemberService {
 	
 	public void createMember(PcMemberVo memberVo) {
 		PcMember member = PcMemberVo.toPcMember(memberVo);
+		memberHandler(member);
 		pcMemberDaoImpl.createPcMember(member);
 	}
 	
 	public void deleteMember(PcMemberVo memberVo) {
 		PcMember member = PcMemberVo.toPcMember(memberVo);
+		memberHandler(member);
 		pcMemberDaoImpl.deletePcMember(member);
+	}
+	
+	private void memberHandler(PcMember member) {
+		if (member.getDutyId() == 0) {
+			member.setDutyId(null);
+		}
+		if (member.getEduId() == 0) {
+			member.setEduId(null);
+		}
+		if (member.getNationId() == 0) {
+			member.setNationId(null);
+		}
+		if (member.getSexId() == 0) {
+			member.setSexId(null);
+		}
 	}
 	
 	public void updateMember(PcMemberVo memberVo) {
