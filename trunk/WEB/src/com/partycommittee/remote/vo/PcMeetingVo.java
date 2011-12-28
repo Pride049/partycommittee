@@ -190,6 +190,7 @@ public class PcMeetingVo implements Serializable {
 		meeting.setYear(meetingVo.getYear());
 		meeting.setMeetingDatetime(meetingVo.getMeetingDatetime());
 		meeting.setMeetingName(meetingVo.getMeetingName());
+		meeting.setMonth(meetingVo.getMonth());
 		return meeting;
 	}
 	
@@ -210,6 +211,7 @@ public class PcMeetingVo implements Serializable {
 		meetingVo.setYear(meeting.getYear());
 		meetingVo.setMeetingDatetime(meeting.getMeetingDatetime());
 		meetingVo.setMeetingName(meeting.getMeetingName());
+		meetingVo.setMonth(meeting.getMonth());
 		return meetingVo;
 	}
 }
