@@ -117,7 +117,7 @@
 				newMember.workday = workDateField.date;
 				//newMember.comment = commentTxt.text;
 				newMember.adminDuty = adminDutyTxt.text;
-				newMember.sort = sortTxt.text as Number;
+				newMember.sort = Number(sortTxt.text);
 				return newMember;
 			}
 			
