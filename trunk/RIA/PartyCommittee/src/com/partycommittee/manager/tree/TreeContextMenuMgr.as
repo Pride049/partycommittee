@@ -62,7 +62,7 @@ package com.partycommittee.manager.tree
 		private function initMenuItems():void {
 			refreshMenuItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, onRefresh);
 			
-			createFirstBranchMenuItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, onCreateChildren);
+//			createFirstBranchMenuItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, onCreateChildren);
 			createBasicMenuItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, onCreateChildren);
 			createBranchMenuItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, onCreateChildren);
 			createGaneralBranchMenuItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, onCreateChildren);
@@ -85,7 +85,7 @@ package com.partycommittee.manager.tree
 			this._menu.customItems = createMenuItems(agencyVo.codeId);
 		}
 		
-		private var createFirstBranchMenuItem:ContextMenuItem = new ContextMenuItem("建立第一党支部");
+//		private var createFirstBranchMenuItem:ContextMenuItem = new ContextMenuItem("建立第一党支部");
 		private var createBasicMenuItem:ContextMenuItem = new ContextMenuItem("建立基层党委");
 		private var createBranchMenuItem:ContextMenuItem = new ContextMenuItem("建立党支部");
 		private var createGaneralBranchMenuItem:ContextMenuItem = new ContextMenuItem("建立党总支部");
@@ -101,10 +101,10 @@ package com.partycommittee.manager.tree
 			var menuItems:Array = new Array();
 			switch (codeId) {
 				case PCConst.AGENCY_CODE_BOARDCOMMITTEES:
-					menuItems.push(createFirstBranchMenuItem, createBasicMenuItem, createBranchMenuItem);
+					menuItems.push(createBasicMenuItem, createBranchMenuItem);
 					break;
 				case PCConst.AGENCY_CODE_BASICCOMMITTEES:
-					menuItems.push(createFirstBranchMenuItem, createGaneralBranchMenuItem, createBranchMenuItem);
+					menuItems.push(createGaneralBranchMenuItem, createBranchMenuItem);
 					break;
 				case PCConst.AGENCY_CODE_BRANCH:
 //					menuItems.push(createTeamMenuItem);
@@ -140,9 +140,9 @@ package com.partycommittee.manager.tree
 			var menuItem:ContextMenuItem = event.currentTarget as ContextMenuItem;
 			var agencyCodeId:Number;
 			switch (menuItem) {
-				case createFirstBranchMenuItem:
-					agencyCodeId = PCConst.AGENCY_CODE_FIRSTBRANCH;
-					break;
+//				case createFirstBranchMenuItem:
+//					agencyCodeId = PCConst.AGENCY_CODE_FIRSTBRANCH;
+//					break;
 				case createBasicMenuItem:
 					agencyCodeId = PCConst.AGENCY_CODE_BASICCOMMITTEES;
 					break;

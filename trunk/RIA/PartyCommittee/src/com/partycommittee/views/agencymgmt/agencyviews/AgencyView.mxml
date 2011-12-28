@@ -48,7 +48,7 @@
 				agencyCodeDes = AgencyCodeUtil.getAgencyCodeDes(agency.codeId);
 				orgNameTxt.text = agency.name;
 				setupDateField.selectedDate = agency.setupDatetime;
-				personChooseBox.member = agency.member;
+//				personChooseBox.member = agency.member;
 				
 				if (model.isTreeInitialized) {
 					getAgencyInfo();
@@ -124,11 +124,12 @@
 				agencyVo.tel = agency.tel;
 				agencyVo.comment = agency.comment;
 				agencyVo.name = orgNameTxt.text;
-				if (personChooseBox.member) {
-					agencyVo.memberId = personChooseBox.member.id;
-				} else {
-					agencyVo.memberId = agency.memberId;
-				}
+//				if (personChooseBox.member) {
+//					agencyVo.memberId = personChooseBox.member.id;
+//				} else {
+//					agencyVo.memberId = agency.memberId;
+//				}
+				agencyVo.memberId = agency.memberId;
 				agencyVo.setupDatetime = agency.setupDatetime;
 				return agencyVo;
 			}
@@ -149,7 +150,7 @@
 			
 			private function reset():void {
 				orgNameTxt.text = agency.name;
-				personChooseBox.member = agency.member;
+//				personChooseBox.member = agency.member;
 			}
 			
 			private function onCallbackSuccessed(data:Object, evt:PcAgencyEvent):void {
@@ -185,12 +186,14 @@
 				<mx:FormItem label="支部名称:" required="true" width="100%">
 					<mx:TextInput id="orgNameTxt" width="100%"/>
 				</mx:FormItem>
+				<!--
 				<mx:FormItem label="组织负责人:" width="100%"
 							 visible="{agency &amp;&amp; agency.codeId != PCConst.AGENCY_CODE_BOARDCOMMITTEES}"
 							 includeInLayout="{agency &amp;&amp; agency.codeId != PCConst.AGENCY_CODE_BOARDCOMMITTEES}">
 					<component:PersonChooseBox id="personChooseBox" width="100%"
 											   agency="{agency}"/>
 				</mx:FormItem>
+				-->
 				<mx:FormItem label="改选时间:" width="100%">
 					<mx:DateField id="setupDateField" formatString="YYYY-MM-DD"/>
 				</mx:FormItem>

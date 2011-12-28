@@ -32,7 +32,8 @@ package
 			 DUTY_UNION_MEMBER,
 			 DUTY_PARTYCOMMITTEE_MEMBER,
 			 DUTY_TEAM_MEMBER,
-			 DUTY_TEAM_LEADER]
+			 DUTY_TEAM_LEADER,
+			 DUTY_OTHER]
 		);
 		
 		public static const DUTY_SECRETARY:int = 1;
@@ -49,6 +50,7 @@ package
 		public static const DUTY_PARTYCOMMITTEE_MEMBER:int = 12;
 		public static const DUTY_TEAM_MEMBER:int = 13;
 		public static const DUTY_TEAM_LEADER:int = 14;
+		public static const DUTY_OTHER:int = 15;
 		
 		// Sex code define.
 		public static const SexList:ArrayCollection = new ArrayCollection(

@@ -93,7 +93,7 @@
 			private function onChooseBtnClick():void {
 				var win:ChooseAsenceWindow = new ChooseAsenceWindow();
 				win.parentView = this;
-				if (this._meeting.asenceMemberIds) {
+				if (this._meeting && this._meeting.asenceMemberIds) {
 					win.asenceIds = this._meeting.asenceMemberIds.split(",");
 				} else {
 					win.asenceIds = new Array();

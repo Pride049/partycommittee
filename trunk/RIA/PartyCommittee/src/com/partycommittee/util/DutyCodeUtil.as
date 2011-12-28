@@ -34,6 +34,8 @@ package com.partycommittee.util
 					return "妇女委员";
 				case PCConst.DUTY_UNION_MEMBER:
 					return "工会委员";
+				case PCConst.DUTY_OTHER:
+					return "其他";					
 				default:
 					return null;
 			}

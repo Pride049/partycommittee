@@ -33,12 +33,24 @@
 			private var isNew:Boolean = true;
 			
 			[Bindable]
+			private var isCustom:Boolean = false;
+			
+			[Bindable]
 			public var detailMode:Boolean = false;
 			
 			[Bindable]
-			private var year:Number;
+			private var year:Number = new Date().getFullYear();
 			[Bindable]
 			private var quarter:Number = 1;
+			[Bindable]
+			private var month:Number = 1;
+			
+			[Bindable]
+			private var yearDp:ArrayCollection = new ArrayCollection();
+			[Bindable]
+			private var quarterDp:ArrayCollection = new ArrayCollection();
+			[Bindable]
+			private var monthDp:ArrayCollection = new ArrayCollection();
 			
 			private var _meetingType:Number;
 			[Bindable]
@@ -81,12 +93,9 @@
 			}
 			
 			private function updateData():void {
-				if (!agency || !meeting) {
+				if (!agency) {
 					return;
 				}
-				
-				year = meeting.year;
-				quarter = meeting.quarter;
 				
 				switch (meetingType) {
 					case PCConst.WORKPLAN_TYPE_CLASS:
@@ -116,8 +125,10 @@
 					otherMeetingTitleBox.visible = otherMeetingTitleBox.includeInLayout = false;
 				}
 				
-				if (meeting.id) {
+				if (meeting && meeting.id) {
 					isNew = false;
+					year = meeting.year;
+					quarter = meeting.quarter;
 					meetingNameTxt.text = meeting.meetingName;
 					dateField.selectedDate = meeting.meetingDatetime;
 					themeTxt.text = meeting.theme;
@@ -131,6 +142,17 @@
 					}
 				} else {
 					isNew = true;
+					if (!meeting) {
+						isCustom = true;
+						
+						// Hold meeting with random datetime.
+						yearDp = DataproviderFactory.getYearDp();
+						quarterDp = DataproviderFactory.createQuarterDp();
+						monthDp = DataproviderFactory.createMonthDp();
+						yearCmb.selectedItem = year = new Date().getFullYear();
+						monthCmb.selectedItem = month = 1;
+						quarterCmb.selectedItem = quarter = 1;
+					}
 				}
 			}
 			
@@ -221,6 +243,9 @@
 				newMeeting.typeId = meetingType;
 				newMeeting.year = year;
 				newMeeting.quarter = quarter;
+				if (meetingType == PCConst.WORKPLAN_TYPE_MEETING_BRANCH_COMMITTEE) {
+					newMeeting.month = month;
+				}
 				newMeeting.agencyId = agency.id;
 				newMeeting.moderator = personTxt.text;
 				newMeeting.theme = themeTxt.text;
@@ -250,6 +275,18 @@
 				meetingContent.type = PCConst.WORKFLOW_TYPE_REPORT;
 				return meetingContent;
 			}
+			
+			private function onYearCmbChanged():void {
+				year = yearCmb.selectedItem as Number;
+			}
+			
+			private function onQuarterCmbChanged():void {
+				quarter = quarterCmb.selectedItem as Number;
+			}
+			
+			private function onMonthCmbChanged():void {
+				month = monthCmb.selectedItem as Number;
+			}
 		]]>
 	</fx:Script>
 	<fx:Declarations>
@@ -264,6 +301,20 @@
 			<mx:Label fontSize="20" fontWeight="bold" text="{year + '年度第' + quarter + '季度' + title}"/>
 			<mx:Label fontSize="20" fontWeight="bold"
 					  text="{(meeting &amp;&amp; meeting.statusId == 1) ? ' （已上报）' : ''}"/>
+		</mx:HBox>
+		<mx:HBox id="dateTimeBox" width="100%" verticalAlign="middle"
+				 horizontalScrollPolicy="off" verticalScrollPolicy="off"
+				 visible="{isCustom}" includeInLayout="{isCustom}">
+			<mx:Label text="年份："/>
+			<mx:ComboBox id="yearCmb" dataProvider="{yearDp}" change="onYearCmbChanged()"/>
+			<mx:Label text="季度:"/>
+			<mx:ComboBox id="quarterCmb" dataProvider="{quarterDp}" change="onQuarterCmbChanged()"/>
+			<mx:Label text="月份:" 
+					  visible="{isCustom &amp;&amp; meetingType == PCConst.WORKPLAN_TYPE_MEETING_BRANCH_COMMITTEE}"
+					  includeInLayout="{isCustom &amp;&amp; meetingType == PCConst.WORKPLAN_TYPE_MEETING_BRANCH_COMMITTEE}"/>
+			<mx:ComboBox id="monthCmb" dataProvider="{monthDp}" change="onMonthCmbChanged()"
+						 visible="{isCustom &amp;&amp; meetingType == PCConst.WORKPLAN_TYPE_MEETING_BRANCH_COMMITTEE}"
+						 includeInLayout="{isCustom &amp;&amp; meetingType == PCConst.WORKPLAN_TYPE_MEETING_BRANCH_COMMITTEE}"/>
 		</mx:HBox>
 		<mx:HBox id="otherMeetingTitleBox" width="100%" horizontalAlign="center"
 				 horizontalScrollPolicy="off" verticalScrollPolicy="off">
