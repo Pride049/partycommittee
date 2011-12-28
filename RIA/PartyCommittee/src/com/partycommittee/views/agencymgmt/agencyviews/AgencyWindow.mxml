@@ -73,7 +73,7 @@
 				
 				codeDescription = AgencyCodeUtil.getAgencyCodeDes(agency.codeId);
 				nameTxt.text = agency.name;
-				personChooseBox.member = agency.member;
+//				personChooseBox.member = agency.member;
 				telTxt.text = agency.tel;
 				commentTxt.text = agency.comment;
 			}
@@ -142,9 +142,9 @@
 				agencyVo.id = agency.id;
 				agencyVo.codeId = agency.codeId;
 				agencyVo.name = nameTxt.text;
-				if (personChooseBox.member) {
-					agencyVo.memberId = personChooseBox.member.id;
-				}
+//				if (personChooseBox.member) {
+//					agencyVo.memberId = personChooseBox.member.id;
+//				}
 				agencyVo.setupDatetime = agency.setupDatetime;
 				agencyVo.tel = telTxt.text;
 				agencyVo.comment = commentTxt.text;
@@ -167,12 +167,14 @@
 			<mx:FormItem label="组织名称:" required="true" width="100%">
 				<mx:TextInput id="nameTxt" width="100%"/>
 			</mx:FormItem>
+			<!--
 			<mx:FormItem label="组织负责人:" width="100%"
 						 visible="{type == CRUDEventType.UPDATE}"
 						 includeInLayout="{type == CRUDEventType.UPDATE}">
 				<component:PersonChooseBox id="personChooseBox" width="100%"
 										   agency="{agency}"/>
 			</mx:FormItem>
+			-->
 			<mx:FormItem label="电话号码:" width="100%">
 				<mx:TextInput id="telTxt" width="150" restrict="0-9\-"/>
 			</mx:FormItem>
