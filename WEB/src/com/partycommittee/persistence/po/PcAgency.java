@@ -26,9 +26,20 @@ public class PcAgency implements java.io.Serializable {
 	private Integer number;
 	private Integer memberId;
 	private String tel;
-	private String ext;
 	private Date setupDatetime;
 	private String comment;
+
+	private Integer pcount;//'党小组数',
+	private Integer zbnum;//'支部人数',
+	private String zbsj;//'支部书记',
+	private String zbfsj;//'支部副书记',
+	private String zzwy;//'组织委员',
+	private String xcwy;//'宣传委员',
+	private String jjwy;//'纪检委员',
+	private String qnwy;//'青年委员',
+	private String ghwy;//'工会委员',
+	private String fnwy;//'妇女委员',
+	private String ext;//'saas扩展字段',
 	
 	@Id
 	@Column(name = "id")
@@ -104,4 +115,86 @@ public class PcAgency implements java.io.Serializable {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
+	
+	@Column(name = "p_count")
+	public Integer getPcount() {
+		return pcount;
+	}
+	public void setPcount(Integer pCount) {
+		pcount = pCount;
+	}
+	
+	@Column(name = "zb_num")
+	public Integer getZbnum() {
+		return zbnum;
+	}
+	
+	public void setZbnum(Integer zbNum) {
+		zbnum = zbNum;
+	}
+	
+	@Column(name = "zbsj")
+	public String getZbsj() {
+		return zbsj;
+	}
+	public void setZbsj(String zbsj) {
+		this.zbsj = zbsj;
+	}
+	
+	@Column(name = "zbfsj")
+	public String getZbfsj() {
+		return zbfsj;
+	}
+	public void setZbfsj(String zbfsj) {
+		this.zbfsj = zbfsj;
+	}
+	
+	@Column(name = "zzwy")
+	public String getZzwy() {
+		return zzwy;
+	}
+	public void setZzwy(String zzwy) {
+		this.zzwy = zzwy;
+	}
+	
+	@Column(name = "xcwy")
+	public String getXcwy() {
+		return xcwy;
+	}
+	public void setXcwy(String xcwy) {
+		this.xcwy = xcwy;
+	}
+	
+	@Column(name = "jjwy")
+	public String getJjwy() {
+		return jjwy;
+	}
+	public void setJjwy(String jjwy) {
+		this.jjwy = jjwy;
+	}
+	
+	@Column(name = "qnwy")
+	public String getQnwy() {
+		return qnwy;
+	}
+	public void setQnwy(String qnwy) {
+		this.qnwy = qnwy;
+	}
+	
+	@Column(name = "ghwy")
+	public String getGhwy() {
+		return ghwy;
+	}
+	public void setGhwy(String ghwy) {
+		this.ghwy = ghwy;
+	}
+	
+	@Column(name = "fnwy")
+	public String getFnwy() {
+		return fnwy;
+	}
+	public void setFnwy(String fnwy) {
+		this.fnwy = fnwy;
+	}
+	
 }

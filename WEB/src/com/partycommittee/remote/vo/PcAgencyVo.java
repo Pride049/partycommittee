@@ -16,9 +16,21 @@ public class PcAgencyVo implements Serializable {
 	private Integer memberId;
 	private PcMemberVo member;
 	private String tel;
-	private String ext;
 	private Date setupDatetime;
 	private String comment;
+
+	private Integer pcount;//'党小组数',
+	private Integer zbnum;//'支部人数',
+	private String zbsj;//'支部书记',
+	private String zbfsj;//'支部副书记',
+
+	private String zzwy;//'组织委员',
+	private String xcwy;//'宣传委员',
+	private String jjwy;//'纪检委员',
+	private String qnwy;//'青年委员',
+	private String ghwy;//'工会委员',
+	private String fnwy;//'妇女委员',
+	private String ext;//'saas扩展字段',	
 	
 	public Integer getId() {
 		return id;
@@ -87,6 +99,69 @@ public class PcAgencyVo implements Serializable {
 		this.comment = comment;
 	}
 	
+	public Integer getPcount() {
+		return pcount;
+	}
+	public void setPcount(Integer pcount) {
+		this.pcount = pcount;
+	}
+	public Integer getZbnum() {
+		return zbnum;
+	}
+	public void setZbnum(Integer zbnum) {
+		this.zbnum = zbnum;
+	}
+	
+	public String getZbsj() {
+		return zbsj;
+	}
+	public void setZbsj(String zbsj) {
+		this.zbsj = zbsj;
+	}
+	public String getZzwy() {
+		return zzwy;
+	}
+	public void setZzwy(String zzwy) {
+		this.zzwy = zzwy;
+	}
+	public String getXcwy() {
+		return xcwy;
+	}
+	public void setXcwy(String xcwy) {
+		this.xcwy = xcwy;
+	}
+	public String getJjwy() {
+		return jjwy;
+	}
+	public void setJjwy(String jjwy) {
+		this.jjwy = jjwy;
+	}
+	public String getQnwy() {
+		return qnwy;
+	}
+	public void setQnwy(String qnwy) {
+		this.qnwy = qnwy;
+	}
+	public String getGhwy() {
+		return ghwy;
+	}
+	public void setGhwy(String ghwy) {
+		this.ghwy = ghwy;
+	}
+	public String getFnwy() {
+		return fnwy;
+	}
+	public void setFnwy(String fnwy) {
+		this.fnwy = fnwy;
+	}
+	
+	public String getZbfsj() {
+		return zbfsj;
+	}
+	public void setZbfsj(String zbfsj) {
+		this.zbfsj = zbfsj;
+	}	
+	
 	public static PcAgency toPcAgency(PcAgencyVo agencyVo) {
 		PcAgency agency = new PcAgency();
 		agency.setExt(agencyVo.getExt());
@@ -98,6 +173,16 @@ public class PcAgencyVo implements Serializable {
 		agency.setSetupDatetime(agencyVo.getSetupDatetime());
 		agency.setTel(agencyVo.getTel());
 		agency.setComment(agencyVo.getComment());
+		agency.setPcount(agencyVo.getPcount());
+		agency.setZbnum(agencyVo.getZbnum());
+		agency.setZbsj(agencyVo.getZbsj());
+		agency.setZbfsj(agencyVo.getZbfsj());
+		agency.setZzwy(agencyVo.getZzwy());
+		agency.setXcwy(agencyVo.getXcwy());
+		agency.setJjwy(agencyVo.getJjwy());
+		agency.setQnwy(agencyVo.getQnwy());
+		agency.setGhwy(agencyVo.getGhwy());
+		agency.setFnwy(agencyVo.getFnwy());
 		return agency;
 	}
 	
@@ -112,6 +197,16 @@ public class PcAgencyVo implements Serializable {
 		agencyVo.setSetupDatetime(agency.getSetupDatetime());
 		agencyVo.setTel(agency.getTel());
 		agencyVo.setComment(agency.getComment());
+		agencyVo.setPcount(agency.getPcount());
+		agencyVo.setZbnum(agency.getZbnum());
+		agencyVo.setZbsj(agency.getZbsj());
+		agencyVo.setZbfsj(agency.getZbfsj());
+		agencyVo.setZzwy(agency.getZzwy());
+		agencyVo.setXcwy(agency.getXcwy());
+		agencyVo.setJjwy(agency.getJjwy());
+		agencyVo.setQnwy(agency.getQnwy());
+		agencyVo.setGhwy(agency.getGhwy());
+		agencyVo.setFnwy(agency.getFnwy());		
 		return agencyVo;
 	}
 }

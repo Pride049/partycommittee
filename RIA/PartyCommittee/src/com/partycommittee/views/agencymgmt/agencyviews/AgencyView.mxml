@@ -46,13 +46,13 @@
 				}
 				
 				agencyCodeDes = AgencyCodeUtil.getAgencyCodeDes(agency.codeId);
-				orgNameTxt.text = agency.name;
-				setupDateField.selectedDate = agency.setupDatetime;
+//				orgNameTxt.text = agency.name;
+//				setupDateField.selectedDate = agency.setupDatetime;
 //				personChooseBox.member = agency.member;
-				
-				if (model.isTreeInitialized) {
-					getAgencyInfo();
-				}
+//				
+//				if (model.isTreeInitialized) {
+//					getAgencyInfo();
+//				}
 			}
 			
 			private function getAgencyInfo():void {
@@ -64,41 +64,43 @@
 			}
 			
 			private function onGetAgencyInfoSuccess(data:Object, evt:PcAgencyEvent):void {
-				var agencyInfo:PcAgencyInfoVo = data as PcAgencyInfoVo;
-				if (!agencyInfo) {
-					return;
-				}
-				teamNumberTxt.text = agencyInfo.teamNumber + "";
-				memberNumberTxt.text = agencyInfo.memberNumber + "";
-				resetDutyMemberInfo();
-				for each (var memberVo:PcMemberVo in agencyInfo.dutyMemberList) {
-					switch (memberVo.dutyId) {
-						case PCConst.DUTY_SECRETARY:
-							clerkLbl.text += memberVo.name + " ";
-							break;
-						case PCConst.DUTY_DEPUTY_SECRETARY:
-							deputyClerkLbl.text += memberVo.name + " ";
-							break;
-						case PCConst.DUTY_ORGNIZATION_MEMBER:
-							orgMemberLbl.text += memberVo.name + " ";
-							break;
-						case PCConst.DUTY_PROPAGANDA_MEMBER:
-							pubMemberLbl.text += memberVo.name + " ";
-							break;
-						case PCConst.DUTY_DISCIPLINE_MEMBER:
-							disciplineMemberLbl.text += memberVo.name + " ";
-							break;
-						case PCConst.DUTY_YOUTH_MEMBER:
-							youthMemberLbl.text += memberVo.name + " ";
-							break;
-						case PCConst.DUTY_UNION_MEMBER:
-							unionMemberLbl.text += memberVo.name + " ";
-							break;
-						case PCConst.DUTY_WOMEN_MEMBER:
-							womenMemberLbl.text += memberVo.name + " ";
-							break;
-					}
-				}
+//				var agencyInfo:PcAgencyInfoVo = data as PcAgencyInfoVo;
+//				if (!agencyInfo) {
+//					return;
+//				}
+				
+				agency = data as PcAgencyVo;
+//				teamNumberTxt.text = agencyInfo.teamNumber + "";
+//				memberNumberTxt.text = agencyInfo.memberNumber + "";
+//				resetDutyMemberInfo();
+//				for each (var memberVo:PcMemberVo in agencyInfo.dutyMemberList) {
+//					switch (memberVo.dutyId) {
+//						case PCConst.DUTY_SECRETARY:
+//							clerkLbl.text += memberVo.name + " ";
+//							break;
+//						case PCConst.DUTY_DEPUTY_SECRETARY:
+//							deputyClerkLbl.text += memberVo.name + " ";
+//							break;
+//						case PCConst.DUTY_ORGNIZATION_MEMBER:
+//							orgMemberLbl.text += memberVo.name + " ";
+//							break;
+//						case PCConst.DUTY_PROPAGANDA_MEMBER:
+//							pubMemberLbl.text += memberVo.name + " ";
+//							break;
+//						case PCConst.DUTY_DISCIPLINE_MEMBER:
+//							disciplineMemberLbl.text += memberVo.name + " ";
+//							break;
+//						case PCConst.DUTY_YOUTH_MEMBER:
+//							youthMemberLbl.text += memberVo.name + " ";
+//							break;
+//						case PCConst.DUTY_UNION_MEMBER:
+//							unionMemberLbl.text += memberVo.name + " ";
+//							break;
+//						case PCConst.DUTY_WOMEN_MEMBER:
+//							womenMemberLbl.text += memberVo.name + " ";
+//							break;
+//					}
+//				}
 			}
 			
 			private function resetDutyMemberInfo():void {
@@ -138,7 +140,8 @@
 				if (!agency) {
 					return;
 				}
-				var updateAgency:PcAgencyVo = getUpdateAgency();
+				//var updateAgency:PcAgencyVo = getUpdateAgency();
+				var updateAgency:PcAgencyVo = agency;
 				if (updateAgency) {
 					var evt:PcAgencyEvent = new PcAgencyEvent(CRUDEventType.UPDATE, updateAgency);
 					evt.successCallback = onCallbackSuccessed;
@@ -184,7 +187,7 @@
 					<mx:Label id="orgTypeLbl" text="{agencyCodeDes}" width="100%"/>
 				</mx:FormItem>
 				<mx:FormItem label="支部名称:" required="true" width="100%">
-					<mx:TextInput id="orgNameTxt" width="100%"/>
+					<mx:TextInput id="orgNameTxt" text="{agency.name}" change="agency.name = orgNameTxt.text" width="100%"/>
 				</mx:FormItem>
 				<!--
 				<mx:FormItem label="组织负责人:" width="100%"
@@ -195,40 +198,40 @@
 				</mx:FormItem>
 				-->
 				<mx:FormItem label="改选时间:" width="100%">
-					<mx:DateField id="setupDateField" formatString="YYYY-MM-DD"/>
+					<mx:DateField id="setupDateField" selectedDate="{agency.setupDatetime}"  formatString="YYYY-MM-DD"/>
 				</mx:FormItem>
 				<mx:FormItem label="党小组数:" width="100%">
-					<mx:TextInput id="teamNumberTxt" width="100%" editable="false"/>
+					<mx:TextInput id="teamNumberTxt" text="{agency.pcount.toString()}" change="agency.pcount = Number(teamNumberTxt.text)"  width="100%"  />
 				</mx:FormItem>
 				<mx:FormItem label="支部人数:" width="100%">
-					<mx:TextInput id="memberNumberTxt" width="100%" editable="false"/>
+					<mx:TextInput id="memberNumberTxt" text="{agency.zbnum}" change="agency.zbnum = Number(memberNumberTxt.text)" width="100%"  />
 				</mx:FormItem>
 			</mx:Form>
 			<mx:VRule height="90%"/>
 			<mx:Form width="100%" labelWidth="80">
 				<mx:FormItem label="支部书记:" width="100%">
-					<mx:TextInput id="clerkLbl" width="100%" editable="false"/>
+					<mx:TextInput id="clerkLbl" width="100%" text="{agency.zbsj}" change="agency.zbsj = clerkLbl.text" />
 				</mx:FormItem>
 				<mx:FormItem label="支部副书记:" width="100%">
-					<mx:TextInput id="deputyClerkLbl" width="100%" editable="false"/>
+					<mx:TextInput id="deputyClerkLbl" width="100%" text="{agency.zbfsj}" change="agency.zbfsj = deputyClerkLbl.text" />
 				</mx:FormItem>
 				<mx:FormItem label="组织委员:" width="100%">
-					<mx:TextInput id="orgMemberLbl" width="100%" editable="false"/>
+					<mx:TextInput id="orgMemberLbl" width="100%" text="{agency.zzwy}" change="agency.zzwy = orgMemberLbl.text" />
 				</mx:FormItem>
-				<mx:FormItem label="宣传委员:" width="100%">
-					<mx:TextInput id="pubMemberLbl" width="100%" editable="false"/>
+				<mx:FormItem label="宣传委员:" width="100%" >
+					<mx:TextInput id="pubMemberLbl" width="100%" text="{agency.xcwy}" change="agency.xcwy = pubMemberLbl.text" />
 				</mx:FormItem>
 				<mx:FormItem label="纪检委员:" width="100%">
-					<mx:TextInput id="disciplineMemberLbl" width="100%" editable="false"/>
+					<mx:TextInput id="disciplineMemberLbl" text="{agency.jjwy}" change="agency.jjwy = disciplineMemberLbl.text" width="100%" />
 				</mx:FormItem>
 				<mx:FormItem label="青年委员:" width="100%">
-					<mx:TextInput id="youthMemberLbl" width="100%" editable="false"/>
+					<mx:TextInput id="youthMemberLbl" width="100%" text="{agency.qnwy}" change="agency.qnwy = youthMemberLbl.text"/>
 				</mx:FormItem>
 				<mx:FormItem label="工会委员:" width="100%">
-					<mx:TextInput id="unionMemberLbl" width="100%" editable="false"/>
+					<mx:TextInput id="unionMemberLbl" width="100%" text="{agency.ghwy}" change="agency.ghwy = unionMemberLbl.text" />
 				</mx:FormItem>
 				<mx:FormItem label="妇女委员:" width="100%">
-					<mx:TextInput id="womenMemberLbl" width="100%" editable="false"/>
+					<mx:TextInput id="womenMemberLbl" width="100%" text="{agency.fnwy}" change="agency.fnwy = womenMemberLbl.text" />
 				</mx:FormItem>
 			</mx:Form>
 		</mx:HBox>
