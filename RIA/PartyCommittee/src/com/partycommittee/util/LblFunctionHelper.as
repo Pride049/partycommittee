@@ -115,13 +115,7 @@ package com.partycommittee.util
 			} else if (item is PcMeetingVo) {
 				statusId = (item as PcMeetingVo).statusId;
 			}
-			switch (statusId) {
-				case 1:
-					return "已上报";
-				case 2:
-					return "未上报";
-			}
-			return "";
+			return WorkPlanStatusUtil.getWorkPlanStatusDes(statusId);
 		}
 		
 		public static function workPlanQuarterLblFunc(item:Object, col:*):String {

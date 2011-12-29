@@ -52,6 +52,8 @@ package com.partycommittee.model
 		public var selectedMenu:Object;
 		
 		public var isTreeInitialized:Boolean = false;
+		
+		public var reportYear:Number;
 	}
 }
 

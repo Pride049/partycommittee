@@ -52,6 +52,7 @@
 				if (agency != model.focusAgencyVo) {
 					agency = model.focusAgencyVo;
 				}
+				refreshData();
 				model.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, onModelChanged);
 			}
 			

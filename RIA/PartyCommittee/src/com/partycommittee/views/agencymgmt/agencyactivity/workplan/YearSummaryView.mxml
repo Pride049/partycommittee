@@ -11,16 +11,28 @@
 	<fx:Script>
 		<![CDATA[
 			import com.partycommittee.events.PcWorkPlanEvent;
+			import com.partycommittee.model.ModelLocator;
 			import com.partycommittee.util.CRUDEventType;
 			import com.partycommittee.util.DataproviderFactory;
 			import com.partycommittee.util.WorkPlanCodeUtil;
+			import com.partycommittee.util.WorkPlanStatusUtil;
 			import com.partycommittee.vo.PcAgencyVo;
 			import com.partycommittee.vo.PcWorkPlanContentVo;
 			import com.partycommittee.vo.PcWorkPlanVo;
 			
 			import mx.collections.ArrayCollection;
+			import mx.containers.TabNavigator;
 			import mx.controls.Alert;
 			import mx.events.FlexEvent;
+			import mx.events.PropertyChangeEvent;
+			
+			public var tab:TabNavigator;
+			
+			[Bindable]
+			private var workPlanStatusLbl:String;
+			
+			[Bindable]
+			public var browseMode:Boolean = false;
 			
 			[Bindable]
 			private var year:Number;
@@ -46,25 +58,27 @@
 				this._agency = value;
 			}
 			
+			[Bindable]
+			private var model:ModelLocator = ModelLocator.getInstance();
+			
 			private function onCreationCompleted():void {
+				model.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, onPropertyChanged);
 				addEventListener(FlexEvent.SHOW, onViewShow);
+				this.year = model.reportYear;
+			}
+			
+			private function onPropertyChanged(event:PropertyChangeEvent):void {
+				if (event.property == "reportYear") {
+					this.year = model.reportYear;
+					if (this.tab && this.tab.selectedChild == this) {
+						refresh();
+					}
+				}
 			}
 			
 			private function onViewShow(event:FlexEvent):void {
 				if (agency) {
-					updateData();
-				}
-			}
-			
-			private function updateData():void {
-				if (!agency) {
-					return;
-				}
-				
-				yearDp = DataproviderFactory.getYearDp();
-				if (yearDp && yearDp.length > 0) {
-					yearCmb.selectedIndex = 0;
-					onYearCmbChanged();
+					refresh();
 				}
 			}
 			
@@ -72,10 +86,10 @@
 				workPlan = null;
 				personTxt.text = "";
 				textArea.htmlText = "";
+				workPlanStatusLbl = "";
 			}
 			
-			private function onYearCmbChanged():void {
-				this.year = this.yearCmb.selectedItem as Number;
+			private function refresh():void {
 				var workPlanEvt:PcWorkPlanEvent = new PcWorkPlanEvent(PcWorkPlanEvent.GET_WORKPLAN_YEARLY_SUMMARY, agency);
 				workPlanEvt.year = year;
 				workPlanEvt.successCallback = onGetWorkPlanSuccess;
@@ -91,8 +105,17 @@
 					return;
 				}
 				workPlan = data as PcWorkPlanVo;
-				personTxt.text = workPlan.workPlanContent.memberName;
-				textArea.htmlText = workPlan.workPlanContent.content;
+				if (!workPlan) {
+					return;
+				}
+				workPlanStatusLbl =  WorkPlanStatusUtil.getWorkPlanStatusDes(workPlan.statusId);
+				if (workPlanStatusLbl != "") {
+					workPlanStatusLbl = " (" + workPlanStatusLbl + ")";
+				}
+				if (workPlan.workPlanContent) {
+					personTxt.text = workPlan.workPlanContent.memberName;
+					textArea.htmlText = workPlan.workPlanContent.content;
+				}
 			}
 			
 			private function onGetWorkPlanFailure():void {
@@ -139,7 +162,7 @@
 			
 			private function onWorkPlanCreateSuccess(data:Object, workPlanEvt:PcWorkPlanEvent):void {
 				this.enabled = true;
-				onYearCmbChanged();
+				refresh();
 			}
 			
 			private function onWorkPlanCreateFailure(info:Object, workPlanEvt:PcWorkPlanEvent):void {
@@ -149,7 +172,7 @@
 			
 			private function onWorkPlanUpdateSuccess(data:Object, workPlanEvt:PcWorkPlanEvent):void {
 				this.enabled = true;
-				onYearCmbChanged();
+				refresh();
 			}
 			
 			private function onWorkPlanUpdateFailure(info:Object, workPlanEvt:PcWorkPlanEvent):void {
@@ -192,7 +215,7 @@
 				 horizontalScrollPolicy="off" verticalScrollPolicy="off">
 			<mx:Label fontSize="20" fontWeight="bold" text="{year + '年终工作总结'}"/>
 			<mx:Label fontSize="20" fontWeight="bold"
-					  text="{(workPlan &amp;&amp; workPlan.statusId == 1) ? ' （已上报）' : ''}"/>
+					  text="{workPlanStatusLbl}"/>
 		</mx:HBox>
 		<mx:HBox width="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off">
 			<mx:Label text="填写人："/>
@@ -202,15 +225,20 @@
 		<richtexttoolbar:PopupRichTextToolBar width="100%" target="{textArea}"/>
 		<mx:TextArea id="textArea" width="100%" height="100%"
 					 editable="{!workPlan || workPlan.statusId == 2}"/>
+		<!--
 		<mx:HBox width="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off">
 			<mx:Label text="年    份："/>
 			<mx:ComboBox id="yearCmb" dataProvider="{yearDp}" change="onYearCmbChanged()"/>
 		</mx:HBox>
-		<mx:ControlBar width="100%" horizontalAlign="center" verticalAlign="middle">
+		-->
+		<mx:ControlBar width="100%" horizontalAlign="center" verticalAlign="middle"
+					   visible="{!browseMode}" includeInLayout="{!browseMode}">
 			<button:PcButton label="暂存" click="onSaveWithoutSubmit()"
 							 enabled="{!workPlan || workPlan.statusId == 2}"/>
 			<button:PcButton label="上报" click="onSaveAndCommit()"
-							 enabled="{!workPlan || workPlan.statusId != 1}"/>
+							 enabled="{!workPlan || workPlan.statusId == 2}"/>
+			<button:PcButton label="查看评价"
+							 enabled="{workPlan &amp;&amp; workPlan.statusId == 3}"/>
 		</mx:ControlBar>
 	</mx:VBox>
 	

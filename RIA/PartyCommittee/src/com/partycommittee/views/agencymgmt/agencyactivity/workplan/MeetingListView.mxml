@@ -10,6 +10,7 @@
 			import com.partycommittee.events.PcMeetingEvent;
 			import com.partycommittee.events.PcWorkPlanEvent;
 			import com.partycommittee.manager.popup.PopupMgr;
+			import com.partycommittee.model.ModelLocator;
 			import com.partycommittee.util.DataproviderFactory;
 			import com.partycommittee.util.LblFunctionHelper;
 			import com.partycommittee.util.WorkPlanCodeUtil;
@@ -18,8 +19,15 @@
 			import com.partycommittee.vo.PcWorkPlanVo;
 			
 			import mx.collections.ArrayCollection;
+			import mx.containers.TabNavigator;
 			import mx.controls.Alert;
 			import mx.events.FlexEvent;
+			import mx.events.PropertyChangeEvent;
+			
+			public var tab:TabNavigator;
+			
+			[Bindable]
+			public var browseMode:Boolean = false;
 			
 			[Bindable]
 			public var enableNewMeeting:Boolean = false;
@@ -47,10 +55,22 @@
 			
 			private var year:Number;
 			
+			[Bindable]
+			private var model:ModelLocator = ModelLocator.getInstance();
+			
 			private function onCreationCompleted():void {
-				yearCmb.dataProvider = DataproviderFactory.getRangeYearDp();
-				yearCmb.selectedItem = year = new Date().getFullYear();
+				model.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, onPropertyChanged);
 				addEventListener(FlexEvent.SHOW, onViewShow);
+				this.year = model.reportYear;
+			}
+			
+			private function onPropertyChanged(event:PropertyChangeEvent):void {
+				if (event.property == "reportYear") {
+					this.year = model.reportYear;
+					if (this.tab && this.tab.selectedChild == this) {
+						updateData();
+					}
+				}
 			}
 			
 			private function onViewShow(event:FlexEvent):void {
@@ -231,10 +251,6 @@
 				PopupMgr.instance.popupWindow(win);
 			}
 			
-			private function onYearCmbChanged():void {
-				year = yearCmb.selectedItem as Number;
-				updateData();
-			}
 		]]>
 	</fx:Script>
 	<fx:Declarations>
@@ -264,7 +280,7 @@
 								]]>
 							</fx:Script>
 							<button:PcButton id="editBtn" label="修改" click="editBtnClick()"
-											 enabled="{(data as PcMeetingVo).statusId != 1}"/>
+											 enabled="{(data as PcMeetingVo).statusId == 2 &amp;&amp; !outerDocument.browseMode}"/>
 						</mx:Box>
 					</fx:Component>
 				</mx:itemRenderer>
@@ -284,7 +300,7 @@
 								]]>
 							</fx:Script>
 							<button:PcButton id="submitBtn" label="上报" click="submitBtnClick()"
-											 enabled="{(data as PcMeetingVo).statusId != 1 &amp;&amp; (data as PcMeetingVo).id}"/>
+											 enabled="{(data as PcMeetingVo).statusId == 2 &amp;&amp; (data as PcMeetingVo).id &amp;&amp; !outerDocument.browseMode}"/>
 						</mx:Box>
 					</fx:Component>
 				</mx:itemRenderer>
@@ -336,7 +352,7 @@
 								]]>
 							</fx:Script>
 							<button:PcButton id="editBtn" label="修改" click="editBtnClick()"
-											 enabled="{(data as PcMeetingVo).statusId != 1}"/>
+											 enabled="{(data as PcMeetingVo).statusId == 2 &amp;&amp; !outerDocument.browseMode}"/>
 						</mx:Box>
 					</fx:Component>
 				</mx:itemRenderer>
@@ -356,7 +372,7 @@
 								]]>
 							</fx:Script>
 							<button:PcButton id="submitBtn" label="上报" click="submitBtnClick()"
-											 enabled="{(data as PcMeetingVo).statusId != 1 &amp;&amp; (data as PcMeetingVo).id}"/>
+											 enabled="{(data as PcMeetingVo).statusId == 2 &amp;&amp; (data as PcMeetingVo).id &amp;&amp; !outerDocument.browseMode}"/>
 						</mx:Box>
 					</fx:Component>
 				</mx:itemRenderer>
@@ -408,7 +424,7 @@
 									]]>
 								</fx:Script>
 								<button:PcButton id="editBtn" label="修改" click="editBtnClick()"
-												 enabled="{(data as PcMeetingVo).statusId != 1}"/>
+												 enabled="{(data as PcMeetingVo).statusId == 2 &amp;&amp; !outerDocument.browseMode}"/>
 							</mx:Box>
 						</fx:Component>
 					</mx:itemRenderer>
@@ -428,7 +444,7 @@
 									]]>
 								</fx:Script>
 								<button:PcButton id="submitBtn" label="上报" click="submitBtnClick()"
-												 enabled="{(data as PcMeetingVo).statusId != 1 &amp;&amp; (data as PcMeetingVo).id}"/>
+												 enabled="{(data as PcMeetingVo).statusId == 2 &amp;&amp; (data as PcMeetingVo).id &amp;&amp; !outerDocument.browseMode}"/>
 							</mx:Box>
 						</fx:Component>
 					</mx:itemRenderer>
@@ -457,11 +473,8 @@
 		</mx:AdvancedDataGrid>
 		<mx:ControlBar width="100%" height="32"
 					   horizontalAlign="right">
-			<mx:Label text="选择年份:"/>
-			<mx:ComboBox id="yearCmb" change="onYearCmbChanged()"/>
-			<mx:VRule height="90%" visible="{enableNewMeeting}" includeInLayout="{enableNewMeeting}"/>
 			<mx:Button id="createMeetingBtn" label="新建会议" click="onNewMeetingClick()"
-					   visible="{enableNewMeeting}" includeInLayout="{enableNewMeeting}"/>
+					   visible="{enableNewMeeting &amp;&amp; !browseMode}" includeInLayout="{enableNewMeeting &amp;&amp; !browseMode}"/>
 		</mx:ControlBar>
 	</mx:VBox>
 	

@@ -18,7 +18,7 @@
 			[Bindable]
 			private var model:ModelLocator = ModelLocator.getInstance();
 			
-			override protected function onNavigateIn():void {
+			public function enterView():void {
 				workPlanView.enterView();
 			}
 			
