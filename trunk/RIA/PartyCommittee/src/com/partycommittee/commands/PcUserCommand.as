@@ -37,7 +37,11 @@ package com.partycommittee.commands
 					break;
 				case CRUDEventType.READ:
 //					pcUserProxy.getPcUserList();
-					pcUserProxy.getPcUserListByPage(pcUserEvent.page);
+					if (pcUserEvent.agency) {
+						pcUserProxy.getPcUserListByPage(pcUserEvent.page, pcUserEvent.agency.id);
+					} else {
+						pcUserProxy.getPcUserListByPage(pcUserEvent.page);
+					}
 					break;
 				case PcUserEvent.LOGIN:
 					pcUserProxy.login(pcUserEvent.user.username, pcUserEvent.user.password);

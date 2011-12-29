@@ -19,6 +19,7 @@
 			import com.partycommittee.util.CRUDEventType;
 			import com.partycommittee.util.DataproviderFactory;
 			import com.partycommittee.util.WorkPlanCodeUtil;
+			import com.partycommittee.util.WorkPlanStatusUtil;
 			import com.partycommittee.vo.PcAgencyVo;
 			import com.partycommittee.vo.PcMeetingContentVo;
 			import com.partycommittee.vo.PcMeetingVo;
@@ -29,6 +30,9 @@
 			
 			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
+			
+			[Bindable]
+			private var workPlanStatusLbl:String;
 			
 			private var isNew:Boolean = true;
 			
@@ -127,6 +131,10 @@
 				
 				if (meeting && meeting.id) {
 					isNew = false;
+					workPlanStatusLbl = WorkPlanStatusUtil.getWorkPlanStatusDes(meeting.statusId);
+					if (workPlanStatusLbl != "") {
+						workPlanStatusLbl = " (" + workPlanStatusLbl + ")";
+					}
 					year = meeting.year;
 					quarter = meeting.quarter;
 					meetingNameTxt.text = meeting.meetingName;
@@ -287,6 +295,10 @@
 			private function onMonthCmbChanged():void {
 				month = monthCmb.selectedItem as Number;
 			}
+			
+			private function onBrowseEvaluate():void {
+				
+			}
 		]]>
 	</fx:Script>
 	<fx:Declarations>
@@ -300,7 +312,7 @@
 				 horizontalScrollPolicy="off" verticalScrollPolicy="off">
 			<mx:Label fontSize="20" fontWeight="bold" text="{year + '年度第' + quarter + '季度' + title}"/>
 			<mx:Label fontSize="20" fontWeight="bold"
-					  text="{(meeting &amp;&amp; meeting.statusId == 1) ? ' （已上报）' : ''}"/>
+					  text="{workPlanStatusLbl}"/>
 		</mx:HBox>
 		<mx:HBox id="dateTimeBox" width="100%" verticalAlign="middle"
 				 horizontalScrollPolicy="off" verticalScrollPolicy="off"
@@ -365,6 +377,8 @@
 			<button:PcButton label="上报" click="onSaveAndCommit()"
 							 enabled="{!meeting || meeting.statusId != 1}"
 							 visible="{!detailMode}" includeInLayout="{!detailMode}"/>
+			<button:PcButton label="查看评价" enabled="{meeting &amp;&amp; meeting.statusId == 4}"
+							 click="onBrowseEvaluate()"/>
 			<button:PcButton label="关闭" click="close()"/>
 		</mx:ControlBar>
 	</mx:VBox>

@@ -39,7 +39,7 @@
 			private var bitmapData:BitmapData;
 			
 			[Bindable]
-			public var mHeight:Number = 26;
+			public var mHeight:Number = 28;
 			[Bindable]
 			public var nHeight:Number = 120;
 			
@@ -259,7 +259,8 @@
 					 horizontalAlign="center" verticalAlign="middle"
 					 horizontalScrollPolicy="off" verticalScrollPolicy="off">
 				<mx:HBox horizontalScrollPolicy="off" verticalScrollPolicy="off"
-						 horizontalAlign="center" verticalAlign="middle">
+						 horizontalAlign="center" verticalAlign="middle"
+						 includeInLayout="false" visible="false">
 					<mx:LinkButton label="首页" click="returnToMainPage()"
 								   color="0x0000ff" fontWeight="bold"/>
 					<mx:Label text=">"
@@ -278,6 +279,7 @@
 								   visible="{thirdLvLbl != ''}"
 								   includeInLayout="{thirdLvLbl != ''}"/>
 				</mx:HBox>
+				<mx:ToggleButtonBar id="mainMenu" fontWeight="bold" height="100%"/>
 				<mx:VRule height="80%"/>
 				<mx:Canvas id="moveLblCav" width="100%" height="100%" borderStyle="none"
 						   borderVisible="false" horizontalScrollPolicy="off"

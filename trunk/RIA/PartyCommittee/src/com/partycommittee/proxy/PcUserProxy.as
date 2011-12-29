@@ -33,8 +33,8 @@ package com.partycommittee.proxy
 			service.getPcUserList();
 		}
 		
-		public function getPcUserListByPage(page:PageHelperVo):void {
-			service.getPcUserListByPage(page);
+		public function getPcUserListByPage(page:PageHelperVo, agencyId:Number = 0):void {
+			service.getPcUserListByPage(page, agencyId);
 		}
 		
 		public function login(username:String, password:String):void {

@@ -9,13 +9,17 @@
 						   xmlns:agencyactivity="com.partycommittee.views.agencymgmt.agencyactivity.*">
 	<fx:Script>
 		<![CDATA[
+			
+			override protected function onNavigateIn():void {
+				browseView.enterView();
+			}
 		]]>
 	</fx:Script>
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
 	<mx:TabNavigator id="tab" width="100%" height="100%">
-		<agencyactivity:BrowseView id="browseView" label="浏览" width="100%" height="100%"/>
-		<agencyactivity:ReportView id="reportView" label="填报" width="100%" height="100%"/>
+		<agencyactivity:BrowseView id="browseView" label="浏览下级上报" width="100%" height="100%"/>
+		<agencyactivity:ReportView id="reportView" label="填报及查看" width="100%" height="100%"/>
 	</mx:TabNavigator>
 </navigation:NavigationView>

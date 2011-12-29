@@ -200,9 +200,6 @@
 					<mx:CheckBox id="dutyCk" label="清空"/>
 				</mx:HBox>
 			</mx:FormItem>
-			<mx:FormItem label="任党内职务时间:" width="100%">
-				<dateselect:DateSelectBox id="postdayDateField"/>
-			</mx:FormItem>
 			<mx:FormItem label="姓名:" required="true" width="100%">
 				<mx:TextInput id="nameTxt" width="100%"/>
 			</mx:FormItem>
@@ -261,6 +258,9 @@
 							  formatString="YYYY-MM-DD"/>
 				-->
 				<dateselect:DateSelectBox id="workDateField"/>
+			</mx:FormItem>
+			<mx:FormItem label="任党内职务时间:" width="100%">
+				<dateselect:DateSelectBox id="postdayDateField"/>
 			</mx:FormItem>
 			<mx:FormItem label="现在家庭住址:" width="100%">
 				<mx:TextArea id="addressTxt" width="100%" height="60"/>

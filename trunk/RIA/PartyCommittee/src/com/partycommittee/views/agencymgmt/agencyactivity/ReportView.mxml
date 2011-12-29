@@ -5,10 +5,12 @@
 						   styleName="mainCanvas"
 						   width="100%" height="100%" 
 						   xmlns:navigation="com.partycommittee.manager.navigation.*" 
+						   creationComplete="onCreationCompleted()"
 						   xmlns:component="com.partycommittee.views.agencymgmt.component.*">
 	<fx:Script>
 		<![CDATA[
 			import com.partycommittee.model.ModelLocator;
+			import com.partycommittee.util.DataproviderFactory;
 			import com.partycommittee.views.agencymgmt.agencyactivity.workplan.MeetingListView;
 			import com.partycommittee.views.agencymgmt.agencyactivity.workplan.QuarterWorkPlanListView;
 			import com.partycommittee.views.agencymgmt.agencyactivity.workplan.QuarterWorkPlanView;
@@ -17,7 +19,11 @@
 			import com.partycommittee.vo.PcAgencyVo;
 			
 			import mx.containers.Canvas;
+			import mx.events.ListEvent;
 			import mx.events.PropertyChangeEvent;
+			
+			[Bindable]
+			public var enableReport:Boolean = true;
 			
 			[Bindable]
 			private var model:ModelLocator = ModelLocator.getInstance();
@@ -33,6 +39,8 @@
 			
 			private function onCreationCompleted():void {
 				onNavigateIn();
+				yearCmb.dataProvider = DataproviderFactory.getRangeYearDp();
+				yearCmb.selectedItem = model.reportYear = new Date().getFullYear();
 			}
 			
 			override protected function onNavigateIn():void {
@@ -65,6 +73,8 @@
 				yearWorkPlan.agency = agency;
 				yearWorkPlan.percentHeight = 100;
 				yearWorkPlan.percentWidth = 100;
+				yearWorkPlan.browseMode = !enableReport;
+				yearWorkPlan.tab = this.tab;
 				tab.addChild(yearWorkPlan);
 				
 				var quarterWorkPlanList:QuarterWorkPlanListView = new QuarterWorkPlanListView();
@@ -73,6 +83,8 @@
 				quarterWorkPlanList.type = QuarterWorkPlanListView.TYPE_WORKPLAN;
 				quarterWorkPlanList.percentHeight = 100;
 				quarterWorkPlanList.percentWidth = 100;
+				quarterWorkPlanList.browseMode = !enableReport;
+				quarterWorkPlanList.tab = this.tab;
 				tab.addChild(quarterWorkPlanList);
 				
 				var quarterWorkPlanResultList:QuarterWorkPlanListView = new QuarterWorkPlanListView();
@@ -81,6 +93,8 @@
 				quarterWorkPlanResultList.agency = agency;
 				quarterWorkPlanResultList.percentHeight = 100;
 				quarterWorkPlanResultList.percentWidth = 100;
+				quarterWorkPlanResultList.browseMode = !enableReport;
+				quarterWorkPlanResultList.tab = this.tab;
 				tab.addChild(quarterWorkPlanResultList);
 				
 				var classMeetingView:MeetingListView = new MeetingListView();
@@ -89,6 +103,8 @@
 				classMeetingView.agency = agency;
 				classMeetingView.percentHeight = 100;
 				classMeetingView.percentWidth = 100;
+				classMeetingView.browseMode = !enableReport;
+				classMeetingView.tab = this.tab;
 				tab.addChild(classMeetingView);
 				
 				var branchMemberMeeting:MeetingListView = new MeetingListView();
@@ -97,6 +113,8 @@
 				branchMemberMeeting.agency = agency;
 				branchMemberMeeting.percentHeight = 100;
 				branchMemberMeeting.percentWidth = 100;
+				branchMemberMeeting.browseMode = !enableReport;
+				branchMemberMeeting.tab = this.tab;
 				tab.addChild(branchMemberMeeting);
 				
 				var branchCommitteeMeeting:MeetingListView = new MeetingListView();
@@ -105,6 +123,8 @@
 				branchCommitteeMeeting.agency = agency;
 				branchCommitteeMeeting.percentHeight = 100;
 				branchCommitteeMeeting.percentWidth = 100;
+				branchCommitteeMeeting.browseMode = !enableReport;
+				branchCommitteeMeeting.tab = this.tab;
 				tab.addChild(branchCommitteeMeeting);
 				
 				var branchLifeMeeting:MeetingListView = new MeetingListView();
@@ -113,6 +133,8 @@
 				branchLifeMeeting.agency = agency;
 				branchLifeMeeting.percentHeight = 100;
 				branchLifeMeeting.percentWidth = 100;
+				branchLifeMeeting.browseMode = !enableReport;
+				branchLifeMeeting.tab = this.tab;
 				tab.addChild(branchLifeMeeting);
 				
 //				var teamMeeting:MeetingListView = new MeetingListView();
@@ -129,6 +151,8 @@
 				otherMeeting.agency = agency;
 				otherMeeting.percentHeight = 100;
 				otherMeeting.percentWidth = 100;
+				otherMeeting.browseMode = !enableReport;
+				otherMeeting.tab = this.tab;
 				tab.addChild(otherMeeting);
 				
 				var yearlySummary:YearSummaryView = new YearSummaryView();
@@ -136,6 +160,8 @@
 				yearlySummary.agency = agency;
 				yearlySummary.percentHeight = 100;
 				yearlySummary.percentWidth = 100;
+				yearlySummary.browseMode = !enableReport;
+				yearlySummary.tab = this.tab;
 				tab.addChild(yearlySummary);
 				
 				switch (this._agency.codeId) {
@@ -152,6 +178,10 @@
 				}
 			}
 			
+			private function onYearCmbChanged():void {
+				model.reportYear = yearCmb.selectedItem as Number;
+			}
+			
 		]]>
 	</fx:Script>
 	
@@ -159,7 +189,13 @@
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
 	
-	<mx:TabNavigator id="tab" width="100%" height="100%">
-	</mx:TabNavigator>
+	<mx:VBox width="100%" height="100%">
+		<mx:HBox width="100%">
+			<mx:Label text="选择年份:"/>
+			<mx:ComboBox id="yearCmb" change="onYearCmbChanged()"/>
+		</mx:HBox>
+		<mx:TabNavigator id="tab" width="100%" height="100%">
+		</mx:TabNavigator>
+	</mx:VBox>
 	
 </navigation:NavigationView>

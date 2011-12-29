@@ -9,6 +9,7 @@
 		<![CDATA[
 			import com.partycommittee.events.PcWorkPlanEvent;
 			import com.partycommittee.manager.popup.PopupMgr;
+			import com.partycommittee.model.ModelLocator;
 			import com.partycommittee.util.DataproviderFactory;
 			import com.partycommittee.util.LblFunctionHelper;
 			import com.partycommittee.util.WorkPlanCodeUtil;
@@ -16,11 +17,21 @@
 			import com.partycommittee.vo.PcWorkPlanVo;
 			
 			import mx.collections.ArrayCollection;
+			import mx.containers.TabNavigator;
 			import mx.controls.Alert;
 			import mx.events.FlexEvent;
+			import mx.events.PropertyChangeEvent;
 			
 			public static const TYPE_WORKPLAN:String = "workPlan";
 			public static const TYPE_RESULT:String = "result";
+			
+			public var tab:TabNavigator;
+			
+			[Bindable]
+			private var model:ModelLocator = ModelLocator.getInstance();
+			
+			[Bindable]
+			public var browseMode:Boolean = false;
 			
 			[Bindable]
 			private var dp:ArrayCollection = new ArrayCollection();
@@ -45,9 +56,18 @@
 			
 			private var year:Number;
 			private function onCreationCompleted():void {
-				yearCmb.dataProvider = DataproviderFactory.getRangeYearDp();
-				yearCmb.selectedItem = year = new Date().getFullYear();
+				model.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, onPropertyChanged);
 				addEventListener(FlexEvent.SHOW, onViewShow);
+				this.year = model.reportYear;
+			}
+			
+			private function onPropertyChanged(event:PropertyChangeEvent):void {
+				if (event.property == "reportYear") {
+					this.year = model.reportYear;
+					if (this.tab && this.tab.selectedChild == this) {
+						updateData();
+					}
+				}
 			}
 			
 			private function onViewShow(event:FlexEvent):void {
@@ -157,10 +177,6 @@
 				Alert.show(info.toString());
 			}
 			
-			private function onYearCmbChanged():void {
-				year = yearCmb.selectedItem as Number;
-				updateData();
-			}
 		]]>
 	</fx:Script>
 	<fx:Declarations>
@@ -192,7 +208,7 @@
 									]]>
 								</fx:Script>
 								<button:PcButton id="editBtn" label="修改" click="editBtnClick()"
-												 enabled="{(data as PcWorkPlanVo).statusId != 1}"/>
+												 enabled="{(data as PcWorkPlanVo).statusId == 2 &amp;&amp; !outerDocument.browseMode}"/>
 							</mx:Box>
 						</fx:Component>
 					</mx:itemRenderer>
@@ -212,7 +228,7 @@
 									]]>
 								</fx:Script>
 								<button:PcButton id="submitBtn" label="上报" click="submitBtnClick()"
-												 enabled="{(data as PcWorkPlanVo).statusId != 1 &amp;&amp; (data as PcWorkPlanVo).id}"/>
+												 enabled="{(data as PcWorkPlanVo).statusId == 2 &amp;&amp; (data as PcWorkPlanVo).id &amp;&amp; !outerDocument.browseMode}"/>
 							</mx:Box>
 						</fx:Component>
 					</mx:itemRenderer>
@@ -239,11 +255,6 @@
 				</mx:AdvancedDataGridColumn>
 			</mx:columns>
 		</mx:AdvancedDataGrid>
-		<mx:ControlBar width="100%" height="32"
-					   horizontalAlign="right">
-			<mx:Label text="选择年份:"/>
-			<mx:ComboBox id="yearCmb" change="onYearCmbChanged()"/>
-		</mx:ControlBar>
 	</mx:VBox>
 	
 </mx:Canvas>

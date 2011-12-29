@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<control:EscapeWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					  xmlns:s="library://ns.adobe.com/flex/spark" 
+					  xmlns:mx="library://ns.adobe.com/flex/mx" 
+					  xmlns:control="com.partycommittee.control.*"
+					  horizontalAlign="center" verticalAlign="middle"
+					  showCloseButton="true" titleStyleName="panelTitle"
+					  close="PopupMgr.instance.removeWindow(this)" 
+					  height="650" width="500"
+					  creationComplete="onCreationCompleted()"
+					  xmlns:button="com.partycommittee.control.button.*" 
+					  xmlns:richtexttoolbar="com.partycommittee.control.richtexttoolbar.*">
+	<fx:Script>
+		<![CDATA[
+			import com.partycommittee.vo.PcMeetingVo;
+			import com.partycommittee.vo.PcWorkPlanVo;
+			
+			import flashx.textLayout.debug.assert;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			
+			public var type:int = PCConst.WORKFLOW_TYPE_EVALUATE;
+			
+			private var isWorkPlan:Boolean = false;
+			
+			private var _meeting:PcMeetingVo;
+			[Bindable]
+			public function get meeting():PcMeetingVo {
+				return this._meeting;
+			}
+			public function set meeting(value:PcMeetingVo):void {
+				this._meeting = value;
+			}
+			
+			private var _workPlan:PcWorkPlanVo;
+			[Bindable]
+			public function get workPlan():PcWorkPlanVo {
+				return this._workPlan;
+			}
+			public function set workPlan(value:PcWorkPlanVo):void {
+				this._workPlan = value;
+			}
+			
+			private function onCreationCompleted():void {
+				updateData();
+			}
+			
+			private function updateData():void {
+				if (workPlan) {
+					isWorkPlan = true;
+				}
+				if (type == PCConst.WORKFLOW_TYPE_APPROVAL) {
+					getApprovalInfo();
+				} else {
+					getEvaluateInfo();
+				}
+			}
+			
+			private function getApprovalInfo():void {
+			}
+			
+			private function getEvaluateInfo():void {
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<mx:VBox width="100%" height="100%"
+			 left="6" right="6" top="6" bottom="6"
+			 horizontalScrollPolicy="off" verticalScrollPolicy="off">
+		<mx:HBox width="100%" height="100%"
+				 horizontalScrollPolicy="off" verticalScrollPolicy="off">
+			<mx:Label id="commentLbl" width="75"/>
+			<mx:VBox width="100%" height="100%"
+					 verticalGap="0"
+					 horizontalScrollPolicy="off" verticalScrollPolicy="off">
+				<richtexttoolbar:PopupRichTextToolBar width="100%" target="{textArea}"/>
+				<mx:TextArea id="textArea" width="100%" height="100%"
+							 editable="{!meeting || meeting.statusId == 2}"/>
+			</mx:VBox>
+		</mx:HBox>
+		<mx:HBox width="100%"
+				 horizontalScrollPolicy="off" verticalScrollPolicy="off">
+			<mx:Label id="personLbl" width="75"/>
+			<mx:TextInput id="personTxt" width="100%" editable="false"/>
+		</mx:HBox>
+		<mx:HBox width="100%"
+				 horizontalScrollPolicy="off" verticalScrollPolicy="off">
+			<mx:Label id="dateLbl" width="75"/>
+			<mx:TextInput id="dateTxt" width="100%" editable="false"/>
+		</mx:HBox>
+		<mx:ControlBar width="100%" horizontalAlign="center" verticalAlign="middle">
+			<button:PcButton label="关闭" click="close()"/>
+		</mx:ControlBar>
+	</mx:VBox>
+	
+</control:EscapeWindow>

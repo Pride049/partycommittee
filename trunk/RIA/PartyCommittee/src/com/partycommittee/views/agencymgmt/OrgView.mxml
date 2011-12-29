@@ -18,6 +18,15 @@
 			
 			import mx.events.PropertyChangeEvent;
 			
+			private var _editEnable:Boolean = true;
+			[Bindable]
+			public function get editEnable():Boolean {
+				return this._editEnable;
+			}
+			public function set editEnable(value:Boolean):void {
+				this._editEnable = value;
+			}
+			
 			private var _agency:PcAgencyVo;
 			[Bindable]
 			public function get agency():PcAgencyVo {
@@ -68,12 +77,12 @@
 	</fx:Declarations>
 	<mx:TabNavigator width="100%" height="100%">
 		<agencyviews:AgencyView id="agencyView" width="100%" height="100%" 
-								label="基本情况" agency="{agency}"/>
+								label="基本情况" agency="{agency}" editEnable="{editEnable}"/>
 		<!--
 		<agencyviews:ChildrenAgencyView id="childrenView" width="100%" height="100%"
 										label="下级党组织管理" agency="{agency}"/>
 		-->
 		<partymember:PartyMemberView id="memberView" width="100%" height="100%" 
-									 label="支委管理" agency="{agency}"/>
+									 label="支委管理" agency="{agency}" editEnable="{editEnable}"/>
 	</mx:TabNavigator>
 </navigation:NavigationView>

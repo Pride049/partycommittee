@@ -50,6 +50,14 @@ package com.partycommittee.manager.tree
 			return this._menu;
 		}
 		
+		private var _editEnable:Boolean = true;
+		public function get editEnable():Boolean {
+			return this._editEnable;
+		}
+		public function set editEnable(value:Boolean):void {
+			this._editEnable = value;
+		}
+		
 		public function registeContextMenu(loadingTree:LoadingTree):void {
 			tree = loadingTree;
 			menu = new ContextMenu();
@@ -99,6 +107,12 @@ package com.partycommittee.manager.tree
 		
 		private function createMenuItems(codeId:Number):Array {
 			var menuItems:Array = new Array();
+			if (!editEnable) {
+				if (codeId != PCConst.AGENCY_CODE_TEAM && codeId != PCConst.AGENCY_CODE_BRANCH) {
+					menuItems.push(refreshMenuItem);
+				}
+				return menuItems;
+			}
 			switch (codeId) {
 				case PCConst.AGENCY_CODE_BOARDCOMMITTEES:
 					menuItems.push(createBasicMenuItem, createBranchMenuItem);

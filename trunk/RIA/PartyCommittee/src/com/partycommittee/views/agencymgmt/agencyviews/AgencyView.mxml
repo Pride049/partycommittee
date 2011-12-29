@@ -25,6 +25,15 @@
 			import mx.events.PropertyChangeEvent;
 			import mx.managers.PopUpManager;
 			
+			private var _editEnable:Boolean = true;
+			[Bindable]
+			public function get editEnable():Boolean {
+				return this._editEnable;
+			}
+			public function set editEnable(value:Boolean):void {
+				this._editEnable = value;
+			}
+			
 			[Bindable]
 			private var agencyCodeDes:String;
 			
@@ -235,7 +244,8 @@
 				</mx:FormItem>
 			</mx:Form>
 		</mx:HBox>
-		<mx:ControlBar width="100%" horizontalAlign="center">
+		<mx:ControlBar width="100%" horizontalAlign="center"
+					   visible="{editEnable}" includeInLayout="{editEnable}">
 			<button:PcButton label="保存" click="save()"/>
 			<button:PcButton label="重置" click="reset()"/>
 		</mx:ControlBar>

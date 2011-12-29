@@ -16,6 +16,7 @@
 			
 			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
+			import mx.events.PropertyChangeEvent;
 			
 			[Bindable]
 			private var model:ModelLocator = ModelLocator.getInstance();
@@ -25,6 +26,14 @@
 			
 			private function onCreationCompleted():void {
 				onNavigateIn();
+				model.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, onPropertyChanged);
+			}
+			
+			private function onPropertyChanged(event:PropertyChangeEvent):void {
+				if (event.property == "loginUser") {
+					model.removeEventListener(PropertyChangeEvent.PROPERTY_CHANGE, onPropertyChanged);
+					onNavigateIn();
+				}
 			}
 			
 			override protected function onNavigateIn():void {

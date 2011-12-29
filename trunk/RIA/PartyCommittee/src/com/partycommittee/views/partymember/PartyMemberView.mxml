@@ -29,6 +29,15 @@
 			import mx.events.PropertyChangeEvent;
 			import mx.managers.PopUpManager;
 			
+			private var _editEnable:Boolean = true;
+			[Bindable]
+			public function get editEnable():Boolean {
+				return this._editEnable;
+			}
+			public function set editEnable(value:Boolean):void {
+				this._editEnable = value;
+			}
+			
 			[Bindable]
 			private var model:ModelLocator = ModelLocator.getInstance();
 			
@@ -152,7 +161,8 @@
 	
 	<mx:VBox width="100%" height="100%"
 			 horizontalScrollPolicy="off" verticalScrollPolicy="off">
-		<mx:ControlBar width="100%" horizontalAlign="right">
+		<mx:ControlBar width="100%" horizontalAlign="right"
+					   visible="{editEnable}" includeInLayout="{editEnable}">
 			<button:PcButton label="增加" click="addMember()"/>
 			<button:PcButton label="修改" click="updateMember()" enabled="{datagrid.selectedItem}"/>
 			<button:PcButton label="删除" click="deleteMember()" enabled="{datagrid.selectedItem}"/>
