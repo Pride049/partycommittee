@@ -9,6 +9,19 @@ import com.partycommittee.persistence.po.PcWorkPlan;
 
 @Repository("PcWorkPlanDaoImpl")
 public class PcWorkPlanDaoImpl extends JpaDaoBase implements PcWorkPlanDao {
+	
+	@SuppressWarnings("unchecked")
+	public PcWorkPlan getWorkPlanById(Integer id) {
+		try {
+			List<PcWorkPlan> list = super.find("from PcWorkPlan where id = ?", id);
+			if (list != null && list.size() > 0) {
+				return list.get(0);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override

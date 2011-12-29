@@ -106,4 +106,33 @@ public class PcUserDaoImpl extends JpaDaoBase implements PcUserDao {
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
+	public PageResultVo<PcUser> getUserListByPageAndAgencyId(PageHelperVo page,
+			Integer agencyId) {
+		try {
+			PageResultVo<PcUser> pageResult = new PageResultVo<PcUser>();
+			String sql = "from PcUser where privilege = '" + agencyId + "' order by agencyCodeId asc";
+			String totalSql = "select count (*) from PcUser where privilege = '" + agencyId + "'";
+			List<Long> totalList = super.find(totalSql);
+			if (totalList != null) {
+				page.setRecordCount(totalList.get(0).intValue());
+				if ((page.getRecordCount() % page.getPageSize()) != 0) {
+					page.setPageCount(page.getRecordCount() / page.getPageSize() + 1);
+				} else {
+					page.setPageCount(page.getRecordCount() / page.getPageSize());
+				}
+			}
+			EntityManager em = super.getEntityManager();
+			Query q = em.createQuery(sql);
+			q.setFirstResult(page.getPageSize() * (page.getPageIndex() - 1));
+			q.setMaxResults(page.getPageSize());
+			pageResult.setList((List<PcUser>)q.getResultList());
+			pageResult.setPageHelper(page);
+			return pageResult;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return null;
+	}
+
 }

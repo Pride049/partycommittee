@@ -106,12 +106,18 @@ public class PcWorkPlanService {
 	public void approvalWorkPlan(Integer workPlanId, PcWorkPlanContentVo contentVo) {
 		contentVo.setWorkplanId(workPlanId);
 		contentVo.setType(2);
+		PcWorkPlan workPlan = pcWorkPlanDaoImpl.getWorkPlanById(workPlanId);
+		workPlan.setStatusId(3);
+		pcWorkPlanDaoImpl.updateWorkPlan(workPlan);
 		pcWorkPlanContentDaoImpl.createContent(PcWorkPlanContentVo.toPcWorkPlanContent(contentVo));
 	}
 	
 	public void evaluateWrokplan(Integer workPlanId, PcWorkPlanContentVo contentVo) {
 		contentVo.setWorkplanId(workPlanId);
 		contentVo.setType(3);
+		PcWorkPlan workPlan = pcWorkPlanDaoImpl.getWorkPlanById(workPlanId);
+		workPlan.setStatusId(4);
+		pcWorkPlanDaoImpl.updateWorkPlan(workPlan);
 		pcWorkPlanContentDaoImpl.createContent(PcWorkPlanContentVo.toPcWorkPlanContent(contentVo));
 	}
 
