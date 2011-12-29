@@ -119,7 +119,7 @@
 	
 	<mx:Canvas width="100%" backgroundColor="0xefefef"
 			   top="bottomRow:0" bottom="bottomRow:0">
-		<mx:Label text="北京宏景世纪软件有限公司版权所有"
+		<mx:Label text="宏景世纪与北京市公安局联合开发"
 				  horizontalCenter="0" verticalCenter="0"/>
 	</mx:Canvas>
 	
