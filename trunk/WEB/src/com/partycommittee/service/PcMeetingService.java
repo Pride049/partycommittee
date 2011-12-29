@@ -255,6 +255,9 @@ public class PcMeetingService {
 	public void evaluateMeeting(Integer meetingId, PcMeetingContentVo contentVo) {
 		contentVo.setMeetingId(meetingId);
 		contentVo.setType(3);
+		PcMeeting pcMeeting = pcMeetingDaoImpl.getMeetingById(meetingId);
+		pcMeeting.setStatusId(4);
+		pcMeetingDaoImpl.updateMeeting(pcMeeting);
 		pcMeetingContentDaoImpl.createContent(PcMeetingContentVo.toPcMeetingContent(contentVo));
 	}
 
@@ -270,8 +273,10 @@ public class PcMeetingService {
 		}
 		List<PcMeeting> meetingList = new ArrayList<PcMeeting>();
 		meetingList = pcMeetingDaoImpl.getCommitMeetingListByAgencyIds(agencyIds);
-		for (PcMeeting meeting : meetingList) {
-			list.add(PcMeetingVo.fromPcMeeting(meeting));
+		if (meetingList != null && meetingList.size() > 0) {
+			for (PcMeeting meeting : meetingList) {
+				list.add(PcMeetingVo.fromPcMeeting(meeting));
+			}
 		}
 		return list;
 	}

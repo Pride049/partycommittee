@@ -61,10 +61,16 @@ public class PcUserService {
 		return list;
 	}
 	
-	public PageResultVo<PcUserVo> getUserListByPage(PageHelperVo page) {
+	public PageResultVo<PcUserVo> getUserListByPage(PageHelperVo page, Integer agencyId) {
 		PageResultVo<PcUserVo> result = new PageResultVo<PcUserVo>();
 		List<PcUserVo> list = new ArrayList<PcUserVo>();
-		PageResultVo<PcUser> pageResult = pcUserDaoImpl.getUserListByPage(page);
+		PageResultVo<PcUser> pageResult = new PageResultVo<PcUser>();
+		if (agencyId == 0) {
+			pageResult = pcUserDaoImpl.getUserListByPage(page);
+		} else {
+			pageResult = pcUserDaoImpl.getUserListByPageAndAgencyId(page, agencyId);
+		}
+		
 		if (pageResult == null) {
 			return null;
 		}

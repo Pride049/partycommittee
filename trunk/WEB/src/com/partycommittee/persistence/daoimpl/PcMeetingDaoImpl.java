@@ -86,5 +86,19 @@ public class PcMeetingDaoImpl extends JpaDaoBase implements PcMeetingDao {
 		}
 		return null;
 	}
+	
+	@SuppressWarnings("unchecked")
+	public PcMeeting getMeetingById(Integer id) {
+		try {
+			List<PcMeeting> list = new ArrayList<PcMeeting>();
+			list = super.find("from PcMeeting where id = ?", id);
+			if (list != null && list.size() > 0) {
+				return list.get(0);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 
 }

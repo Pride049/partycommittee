@@ -59,8 +59,8 @@ public class PcUserRemoteService {
 	}
 	
 	@RemotingInclude
-	public PageResultVo<PcUserVo> getPcUserListByPage(PageHelperVo page) {
-		return pCUserService.getUserListByPage(page);
+	public PageResultVo<PcUserVo> getPcUserListByPage(PageHelperVo page, Integer agencyId) {
+		return pCUserService.getUserListByPage(page, agencyId);
 	}
 	
 	@RemotingInclude
