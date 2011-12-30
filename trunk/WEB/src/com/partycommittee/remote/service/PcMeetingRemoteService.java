@@ -86,4 +86,9 @@ public class PcMeetingRemoteService {
 	public List<PcMeetingVo> getAlertInfo(Integer agencyId, Integer year, Integer quarter) {
 		return pcMeetingService.getAlertInfo(agencyId, year, quarter);
 	}
+	
+	@RemotingInclude
+	public PcMeetingContentVo getMeetingComment(PcMeetingVo meetingVo) {
+		return pcMeetingService.getMeetingComment(meetingVo);
+	}
 }

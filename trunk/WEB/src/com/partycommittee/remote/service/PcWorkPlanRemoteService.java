@@ -105,4 +105,9 @@ public class PcWorkPlanRemoteService {
 	public List<PcWorkPlanVo> getAlertInfo(Integer agencyId, Integer year, Integer quarter) {
 		return pcWorkPlanService.getAlertInfo(agencyId, year, quarter);
 	}
+	
+	@RemotingInclude
+	public PcWorkPlanContentVo getWorkplanComment(PcWorkPlanVo workPlanVo) {
+		return pcWorkPlanService.getWorkplanComment(workPlanVo);
+	}
 }

@@ -139,4 +139,16 @@ public class PcAgencyService {
 		agencyInfo.setDutyMemberList(list);
 		return agencyInfo;
 	}
+
+	public PcAgencyVo getParentAgency(Integer agencyId) {
+		PcAgencyRelation relation = pcAgencyRelationDaoImpl.getParentByAgencyId(agencyId);
+		if (relation == null || relation.getParentId() == null) {
+			return null;
+		}
+		PcAgency agency = pcAgencyDaoImpl.getAgencyById(relation.getParentId());
+		if (agency == null) {
+			return null;
+		}
+		return PcAgencyVo.fromPcAgency(agency);
+	}
 }

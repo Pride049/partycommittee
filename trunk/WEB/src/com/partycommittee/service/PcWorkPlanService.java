@@ -99,7 +99,7 @@ public class PcWorkPlanService {
 	}
 	
 	public PcWorkPlanContentVo getWorkPlanContentByWorkPlanId(Integer workPlanId) {
-		PcWorkPlanContent content = pcWorkPlanContentDaoImpl.getContentByWorkPlanId(workPlanId);
+		PcWorkPlanContent content = pcWorkPlanContentDaoImpl.getContentByWorkPlanIdAndType(workPlanId, 1);
 		return PcWorkPlanContentVo.fromPcWorkPlanContent(content);
 	}
 	
@@ -189,7 +189,7 @@ public class PcWorkPlanService {
 	}
 
 	public PcWorkPlanContentVo getContentByWorkPlanId(Integer workPlanId) {
-		PcWorkPlanContent content = pcWorkPlanContentDaoImpl.getContentByWorkPlanId(workPlanId);
+		PcWorkPlanContent content = pcWorkPlanContentDaoImpl.getContentByWorkPlanIdAndType(workPlanId, 1);
 		return PcWorkPlanContentVo.fromPcWorkPlanContent(content);
 	}
 
@@ -253,6 +253,22 @@ public class PcWorkPlanService {
 			list.add(workPlanVo);
 		}
 		return list;
+	}
+
+	public PcWorkPlanContentVo getWorkplanComment(PcWorkPlanVo workPlanVo) {
+		PcWorkPlanContent content = null;
+		if (workPlanVo == null) {
+			return null;
+		}
+		if (workPlanVo.getTypeId() == 1 || workPlanVo.getTypeId() == 2) {
+			content = pcWorkPlanContentDaoImpl.getContentByWorkPlanIdAndType(workPlanVo.getId(), 2);
+		} else {
+			content = pcWorkPlanContentDaoImpl.getContentByWorkPlanIdAndType(workPlanVo.getId(), 3);
+		}
+		if (content != null) {
+			return PcWorkPlanContentVo.fromPcWorkPlanContent(content);
+		}
+		return null;
 	}
 
 }
