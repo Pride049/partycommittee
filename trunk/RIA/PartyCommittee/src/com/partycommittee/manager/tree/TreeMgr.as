@@ -39,7 +39,6 @@ package com.partycommittee.manager.tree
 			if (root.codeId == PCConst.AGENCY_CODE_TEAM || root.codeId == PCConst.AGENCY_CODE_BRANCH) {
 				// Load parent node.
 				model.isLeafUser = true;
-				TreeContextMenuMgr.getInstance().enableRefresh = false;
 				var agencyEvt:PcAgencyEvent = new PcAgencyEvent(PcAgencyEvent.GET_PARENT);
 				agencyEvt.agency = root;
 				agencyEvt.successCallback = onGetParentSuccess;
