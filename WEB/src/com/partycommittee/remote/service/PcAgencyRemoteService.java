@@ -123,4 +123,9 @@ public class PcAgencyRemoteService {
 	public PcAgencyInfoVo getAgencyInfo(Integer agencyId) {
 		return pcAgencyService.getAgencyInfo(agencyId);
 	}
+	
+	@RemotingInclude
+	public PcAgencyVo getParentAgency(Integer agencyId) {
+		return pcAgencyService.getParentAgency(agencyId);
+	}
 }

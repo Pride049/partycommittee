@@ -13,7 +13,20 @@ public class PcMeetingContentDaoImpl extends JpaDaoBase implements PcMeetingCont
 	@SuppressWarnings("unchecked")
 	public PcMeetingContent getMeetingContent(Integer meetingId) {
 		try {
-			List<PcMeetingContent> list = super.find("from PcMeetingContent where meetingId = ?", meetingId);
+			List<PcMeetingContent> list = super.find("from PcMeetingContent where meetingId = ? and type = ?", meetingId, 1);
+			if (list != null && list.size() > 0) {
+				return list.get(0);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public PcMeetingContent getMeetingComment(Integer meetingId) {
+		try {
+			List<PcMeetingContent> list = super.find("from PcMeetingContent where meetingId = ? and type = ?", meetingId, 3);
 			if (list != null && list.size() > 0) {
 				return list.get(0);
 			}
