@@ -30,6 +30,7 @@
 			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
 			import mx.events.DividerEvent;
+			import mx.events.PropertyChangeEvent;
 			
 			[Bindable]
 			private var model:ModelLocator = ModelLocator.getInstance();
@@ -63,6 +64,8 @@
 					return;
 				}
 				
+				model.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, onPropertyChanged);
+				
 				// Load agency by 
 				var agencyEvent:PcAgencyEvent = new PcAgencyEvent(PcAgencyEvent.GET_ROOT_AGENCY_BY_USERID);
 				agencyEvent.userId = model.loginUser.id;
@@ -73,17 +76,27 @@
 				if (model.loginUser.enableReport != 1) {
 					activityView.reportView.enableReport = false;
 //					mainViewStack.removeChild(agencyActivityView);
-				}
-				
-				if (!isRootUser()) {
-					orgView.editEnable = false;
-					TreeContextMenuMgr.getInstance().editEnable = false;
-					treeControlBar.visible = treeControlBar.includeInLayout = false;
+					if (!isRootUser()) {
+						orgView.editEnable = false;
+						TreeContextMenuMgr.getInstance().editEnable = false;
+						treeControlBar.visible = treeControlBar.includeInLayout = false;
+					}
 				}
 				
 				// Remove recount view if the user not have root agency privilege.
 				if (!isRootUser()) {
 					mainViewStack.removeChild(accountView);
+				}
+			}
+			
+			private function onPropertyChanged(event:PropertyChangeEvent):void {
+				if (event.property == "isLeafUser") {
+					model.removeEventListener(PropertyChangeEvent.PROPERTY_CHANGE, onPropertyChanged);
+					if (model.isLeafUser) {
+						TreeContextMenuMgr.getInstance().editEnable = false;
+						treeControlBar.visible = treeControlBar.includeInLayout = false;
+						TreeContextMenuMgr.getInstance().enableRefresh = false;
+					}
 				}
 			}
 			

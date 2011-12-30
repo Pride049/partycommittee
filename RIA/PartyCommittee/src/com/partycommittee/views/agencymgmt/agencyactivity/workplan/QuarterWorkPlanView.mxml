@@ -116,9 +116,9 @@
 			
 			private function onLoadContentSuccess(data:Object, evt:PcWorkPlanEvent):void {
 				this.enabled = true;
-				var workPlanContent:PcWorkPlanContentVo = data as PcWorkPlanContentVo;
-				personTxt.text = workPlanContent.memberName;
-				textArea.htmlText = workPlanContent.content;
+				workPlan.workPlanContent = data as PcWorkPlanContentVo;
+				personTxt.text = workPlan.workPlanContent.memberName;
+				textArea.htmlText = workPlan.workPlanContent.content;
 			}
 			
 			private function onLoadContentFailure(info:Object, evt:PcWorkPlanEvent):void {
