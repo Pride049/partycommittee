@@ -169,12 +169,26 @@
 									<![CDATA[
 										import com.partycommittee.vo.PcMeetingVo;
 										
+//										[Bindable]
+//										private var btnLbl:String = "";
+//										override public function set data(value:Object):void {
+//											super.data = value;
+//											if (!(data as PcMeetingVo)) {
+//												return;
+//											}
+//											if ((data as PcMeetingVo).statusId == 4) {
+//												btnLbl = '完成';
+//											} else {
+//												btnLbl = '评价';
+//											}
+//										}
+										
 										protected function evaluateBtnClick():void {
 											outerDocument.evaluateMeeting(data as PcMeetingVo);
 										}
 									]]>
 								</fx:Script>
-								<button:PcButton label="评价" click="evaluateBtnClick()"/>
+								<button:PcButton label="{((data as PcMeetingVo).statusId == 4) ? '完成' : '评价'}" click="evaluateBtnClick()"/>
 							</mx:Box>
 						</fx:Component>
 					</mx:itemRenderer>

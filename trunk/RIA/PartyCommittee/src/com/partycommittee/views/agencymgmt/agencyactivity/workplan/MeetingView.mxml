@@ -121,6 +121,12 @@
 //						break;
 				}
 				
+				if (meetingType == PCConst.WORKPLAN_TYPE_CLASS) {
+					personLbl.text = "授课人:";
+				} else {
+					personLbl.text = "主持人:";
+				}
+				
 				if (meetingType == PCConst.WORKPLAN_TYPE_MEETING_OTHER) {
 					meetingTitleBox.visible = meetingTitleBox.includeInLayout = false;
 					otherMeetingTitleBox.visible = otherMeetingTitleBox.includeInLayout = true;
@@ -142,6 +148,7 @@
 					themeTxt.text = meeting.theme;
 					attendTxt.text = meeting.attend + "";
 					asenceTxt.text = meeting.asence + "";
+					asenceMembersTxt.text = meeting.asenceMemberIds;
 					if (meeting.content) {
 						personTxt.text = meeting.content.memberName;
 						textArea.htmlText = meeting.content.content;
@@ -259,6 +266,7 @@
 				newMeeting.theme = themeTxt.text;
 				newMeeting.attend = Number(attendTxt.text);
 				newMeeting.asence = Number(asenceTxt.text);
+				newMeeting.asenceMemberIds = asenceMembersTxt.text;
 				newMeeting.content = getMeetingContent();
 				newMeeting.meetingDatetime = dateField.selectedDate;
 				return newMeeting;
@@ -271,6 +279,7 @@
 				meeting.moderator = personTxt.text;
 				meeting.attend = Number(attendTxt.text);
 				meeting.asence = Number(asenceTxt.text);
+				meeting.asenceMemberIds = asenceMembersTxt.text;
 				meeting.content.memberName = personTxt.text;
 				meeting.content.content = textArea.htmlText;
 				return meeting;
@@ -297,7 +306,9 @@
 			}
 			
 			private function onBrowseEvaluate():void {
-				
+				var commentView:CommentView = new CommentView();
+				commentView.meeting = meeting;
+				PopupMgr.instance.popupWindow(commentView);
 			}
 		]]>
 	</fx:Script>
@@ -342,7 +353,7 @@
 			</mx:HBox>
 			<mx:HBox width="50%"
 					 horizontalScrollPolicy="off" verticalScrollPolicy="off">
-				<mx:Label text="授课人:" width="75"/>
+				<mx:Label id="personLbl" width="75"/>
 				<mx:TextInput id="personTxt" width="100%"/>
 			</mx:HBox>
 		</mx:HBox>
@@ -359,13 +370,15 @@
 			<mx:HBox width="50%"
 					 horizontalScrollPolicy="off" verticalScrollPolicy="off">
 				<mx:Label text="缺席人数:" width="75"/>
-				<mx:TextInput id="asenceTxt" width="100%" editable="false"
-							  text="{asenceBox.asenceNumber + ''}"/>
+				<mx:TextInput id="asenceTxt" width="100%" restrict="0-9"/>
 			</mx:HBox>
 		</mx:HBox>
 		<mx:HBox width="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off">
 			<mx:Label text="缺席人名单:" width="75"/>
+			<mx:TextInput id="asenceMembersTxt" width="100%"/>
+			<!--
 			<component:ChooseAsenceBox id="asenceBox" width="100%" meeting="{meeting}"/>
+			-->
 		</mx:HBox>
 		<richtexttoolbar:PopupRichTextToolBar width="100%" target="{textArea}"/>
 		<mx:TextArea id="textArea" width="100%" height="100%"

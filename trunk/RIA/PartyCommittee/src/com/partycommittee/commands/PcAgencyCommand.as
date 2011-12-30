@@ -38,6 +38,9 @@ package com.partycommittee.commands
 				case PcAgencyEvent.GET_AGENCY_INFO:
 					pcAgencyProxy.getAgencyInfo(pcAgencyEvent.agency.id);
 					break;
+				case PcAgencyEvent.GET_PARENT:
+					pcAgencyProxy.getParentAgency(pcAgencyEvent.agency.id);
+					break;
 				default :
 					break;
 			}

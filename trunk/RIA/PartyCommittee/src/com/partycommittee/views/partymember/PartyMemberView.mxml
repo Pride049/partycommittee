@@ -66,11 +66,9 @@
 			}
 			
 			public function updateData():void {
-				if (!agency || (agency.codeId == PCConst.AGENCY_CODE_BOARDCOMMITTEES)) {
-					this.enabled = false;
+				if (!agency) {
 					return;
 				}
-				this.enabled = true;
 				refreshData();
 			}
 			
@@ -191,7 +189,7 @@
 										   labelFunction="{LblFunctionHelper.dateLblFunc}"/>
 				<mx:AdvancedDataGridColumn headerText="文化程度" dataField="joinday" width="120"
 										   labelFunction="{LblFunctionHelper.memberEduLblFunc}"/>
-				<mx:AdvancedDataGridColumn headerText="任党内职务时间" dataField="dutyId" width="120"
+				<mx:AdvancedDataGridColumn headerText="任党内职务时间" dataField="postday" width="120"
 										   labelFunction="{LblFunctionHelper.dateLblFunc}"/>
 			</mx:columns>
 		</mx:AdvancedDataGrid>

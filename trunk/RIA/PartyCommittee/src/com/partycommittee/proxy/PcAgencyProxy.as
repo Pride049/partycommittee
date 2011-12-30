@@ -26,6 +26,10 @@ package com.partycommittee.proxy
 			service.getAgencyInfo(agencyId);
 		}
 		
+		public function getParentAgency(agencyId:Number):void {
+			service.getParentAgency(agencyId);
+		}
+		
 		public function createAgency(agency:PcAgencyVo):void {
 			service.createAgency(agency);
 		}

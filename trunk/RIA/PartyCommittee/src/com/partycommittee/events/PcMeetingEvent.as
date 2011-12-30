@@ -23,6 +23,7 @@ package com.partycommittee.events
 		public static const APPROVAL_MEETING:String = "approvalMeeting";
 		public static const EVALUATE_MEETING:String = "evaluateMeeting";
 		
+		public static const GET_MEETING_COMMENT:String = "getMeetingComment";
 		public static const GET_ALERT_INFO:String = "getAlertInfo";
 		
 		private var _agency:PcAgencyVo;

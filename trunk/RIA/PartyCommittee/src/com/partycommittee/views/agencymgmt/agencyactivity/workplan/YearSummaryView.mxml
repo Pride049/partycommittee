@@ -11,6 +11,7 @@
 	<fx:Script>
 		<![CDATA[
 			import com.partycommittee.events.PcWorkPlanEvent;
+			import com.partycommittee.manager.popup.PopupMgr;
 			import com.partycommittee.model.ModelLocator;
 			import com.partycommittee.util.CRUDEventType;
 			import com.partycommittee.util.DataproviderFactory;
@@ -202,6 +203,12 @@
 				workPlanContent.type = PCConst.WORKFLOW_TYPE_REPORT;
 				return workPlanContent;
 			}
+			
+			private function onBrowseEvaluate():void {
+				var commentView:CommentView = new CommentView();
+				commentView.workPlan = workPlan;
+				PopupMgr.instance.popupWindow(commentView);
+			}
 		]]>
 	</fx:Script>
 	<fx:Declarations>
@@ -238,7 +245,8 @@
 			<button:PcButton label="上报" click="onSaveAndCommit()"
 							 enabled="{!workPlan || workPlan.statusId == 2}"/>
 			<button:PcButton label="查看评价"
-							 enabled="{workPlan &amp;&amp; workPlan.statusId == 3}"/>
+							 enabled="{workPlan &amp;&amp; workPlan.statusId == 4}"
+							 click="onBrowseEvaluate()"/>
 		</mx:ControlBar>
 	</mx:VBox>
 	

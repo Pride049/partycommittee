@@ -56,8 +56,8 @@
 				model.loginUser = user;
 				if (!user) {
 //					var login:PcUserVo = new PcUserVo();
-//					login.id = 1;
-//					login.privilege = "1";
+//					login.id = 3;
+//					login.privilege = "3";
 //					login.enableReport = 1;
 //					model.loginUser = login;
 					return;
@@ -72,16 +72,26 @@
 				// Remove agency report view if the user not have privilege.
 				if (model.loginUser.enableReport != 1) {
 					activityView.reportView.enableReport = false;
-					orgView.editEnable = false;
-					TreeContextMenuMgr.getInstance().editEnable = false;
-					treeControlBar.visible = treeControlBar.includeInLayout = false;
 //					mainViewStack.removeChild(agencyActivityView);
 				}
 				
+				if (!isRootUser()) {
+					orgView.editEnable = false;
+					TreeContextMenuMgr.getInstance().editEnable = false;
+					treeControlBar.visible = treeControlBar.includeInLayout = false;
+				}
+				
 				// Remove recount view if the user not have root agency privilege.
-				if (!model.loginUser.privilege || model.loginUser.privilege.indexOf("1") == -1) {
+				if (!isRootUser()) {
 					mainViewStack.removeChild(accountView);
 				}
+			}
+			
+			private function isRootUser():Boolean {
+				if (!model.loginUser.privilege || model.loginUser.privilege != "1") {
+					return false;
+				}
+				return true;
 			}
 			
 			private var _isTreeMinSize:Boolean = false;

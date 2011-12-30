@@ -64,6 +64,9 @@
 			}
 			
 			public function refreshData():void {
+				if (!agency) {
+					return;
+				}
 				if (agency.children && agency.children.length) {
 					getCommitWorkPlan();
 					return;
@@ -178,16 +181,42 @@
 									horizontalScrollPolicy="off" verticalScrollPolicy="off">
 								<fx:Script>
 									<![CDATA[
+										import com.partycommittee.util.LblFunctionHelper;
 										import com.partycommittee.vo.PcWorkPlanVo;
+										
+//										[Bindable]
+//										private var needApproval:Boolean = false;
+//										[Bindable]
+//										private var approvalBtnLbl:String = "";
+//										override public function set data(value:Object):void {
+//											super.data = value;7
+//											if (!(data as PcWorkPlanVo)) {
+//												return;
+//											}
+//											if ((data as PcWorkPlanVo).typeId == PCConst.WORKPLAN_TYPE_YEARLY ||
+//												(data as PcWorkPlanVo).typeId == PCConst.WORKPLAN_TYPE_QUARTER) {
+//												needApproval = true;
+//												if ((data as PcWorkPlanVo).statusId == 3) {
+//													approvalBtnLbl = '完成';
+//												} else {
+//													approvalBtnLbl = '审批';
+//												}
+//											}
+//										}
 										
 										protected function approvalBtnClick():void {
 											outerDocument.approvalWorkPlan(data as PcWorkPlanVo);
 										}
 									]]>
 								</fx:Script>
-								<button:PcButton label="审批" click="approvalBtnClick()"
-												 enabled="{(data as PcWorkPlanVo).typeId == PCConst.WORKPLAN_TYPE_YEARLY ||
-												 	(data as PcWorkPlanVo).typeId == PCConst.WORKPLAN_TYPE_QUARTER}"/>
+								<button:PcButton label="{((data as PcWorkPlanVo).typeId == PCConst.WORKPLAN_TYPE_YEARLY ||
+												 (data as PcWorkPlanVo).typeId == PCConst.WORKPLAN_TYPE_QUARTER) &amp;&amp; 
+												 ((data as PcWorkPlanVo).statusId == 3) ? '完成' : '审批'}" 
+												 click="approvalBtnClick()"
+												 visible="{(data as PcWorkPlanVo).typeId == PCConst.WORKPLAN_TYPE_YEARLY ||
+												 (data as PcWorkPlanVo).typeId == PCConst.WORKPLAN_TYPE_QUARTER}" 
+												 includeInLayout="{(data as PcWorkPlanVo).typeId == PCConst.WORKPLAN_TYPE_YEARLY ||
+												 (data as PcWorkPlanVo).typeId == PCConst.WORKPLAN_TYPE_QUARTER}"/>
 							</mx:Box>
 						</fx:Component>
 					</mx:itemRenderer>
@@ -201,14 +230,38 @@
 									<![CDATA[
 										import com.partycommittee.vo.PcWorkPlanVo;
 										
+//										[Bindable]
+//										private var needEvaluate:Boolean = false;
+//										[Bindable]
+//										private var evaluateBtnLbl:String = "";
+//										override public function set data(value:Object):void {
+//											super.data = value;
+//											if (!(data as PcWorkPlanVo)) {
+//												return;
+//											}
+//											if ((data as PcWorkPlanVo).typeId == PCConst.WORKPLAN_TYPE_YEARLY_SUMMARY ||
+//												(data as PcWorkPlanVo).typeId == PCConst.WORKPLAN_TYPE_QUARTER_SUMMARY) {
+//												needEvaluate = true;
+//												if ((data as PcWorkPlanVo).statusId == 4) {
+//													evaluateBtnLbl = '完成';
+//												} else {
+//													evaluateBtnLbl = '评价';
+//												}
+//											}
+//										}
+										
 										protected function evaluateBtnClick():void {
 											outerDocument.evaluateWorkPlan(data as PcWorkPlanVo);
 										}
 									]]>
 								</fx:Script>
-								<button:PcButton label="评价" click="evaluateBtnClick()"
-												 enabled="{(data as PcWorkPlanVo).typeId != PCConst.WORKPLAN_TYPE_YEARLY &amp;&amp;
-												 (data as PcWorkPlanVo).typeId != PCConst.WORKPLAN_TYPE_QUARTER}"/>
+								<button:PcButton label="{((data as PcWorkPlanVo).typeId == PCConst.WORKPLAN_TYPE_YEARLY_SUMMARY ||
+												 (data as PcWorkPlanVo).typeId == PCConst.WORKPLAN_TYPE_QUARTER_SUMMARY) &amp;&amp;
+												 ((data as PcWorkPlanVo).statusId == 4) ? '完成' : '评价'}" click="evaluateBtnClick()"
+												 visible="{(data as PcWorkPlanVo).typeId == PCConst.WORKPLAN_TYPE_YEARLY_SUMMARY ||
+												 (data as PcWorkPlanVo).typeId == PCConst.WORKPLAN_TYPE_QUARTER_SUMMARY}" 
+												 includeInLayout="{(data as PcWorkPlanVo).typeId == PCConst.WORKPLAN_TYPE_YEARLY_SUMMARY ||
+												 (data as PcWorkPlanVo).typeId == PCConst.WORKPLAN_TYPE_QUARTER_SUMMARY}"/>
 							</mx:Box>
 						</fx:Component>
 					</mx:itemRenderer>

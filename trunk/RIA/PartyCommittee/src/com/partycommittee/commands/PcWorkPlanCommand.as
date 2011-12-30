@@ -61,6 +61,10 @@ package com.partycommittee.commands
 					break;
 				case PcWorkPlanEvent.GET_ALERT_INFO:
 					proxy.getAlertInfo(pcWorkPlanEvt.agency.id, pcWorkPlanEvt.year, pcWorkPlanEvt.quarter);
+					break;
+				case PcWorkPlanEvent.GET_WORKPLAN_COMMENT:
+					proxy.getWorkplanComment(pcWorkPlanEvt.workPlan);
+					break;
 				default :
 					break;
 			}

@@ -256,13 +256,14 @@
 	<fx:Declarations>
 		<!-- branch committee meeting columns -->
 		<fx:Array id="committeeColumns">
-			<mx:AdvancedDataGridColumn headerText="ID" dataField="id"/>
 			<mx:AdvancedDataGridColumn headerText="年度" dataField="year"/>
 			<mx:AdvancedDataGridColumn headerText="季度" dataField="quarter" 
 									   labelFunction="{LblFunctionHelper.workPlanQuarterLblFunc}"/>
 			<mx:AdvancedDataGridColumn headerText="月份" dataField="month"/>
 			<mx:AdvancedDataGridColumn headerText="会议" dataField="typeId"
 									   labelFunction="{LblFunctionHelper.workPlanTypeLblFunc}"/>
+			<mx:AdvancedDataGridColumn headerText="召开时间" dataField="meetingDatetime"
+									   labelFunction="{LblFunctionHelper.dateLblFunc}"/>
 			<mx:AdvancedDataGridColumn headerText="状态" dataField="statusId"
 									   labelFunction="{LblFunctionHelper.workPlanStatusLblFunc}"/>
 			<mx:AdvancedDataGridColumn headerText="操作">
@@ -329,12 +330,13 @@
 		
 		<!-- branch member meeting columns -->
 		<fx:Array id="memberColumns">
-			<mx:AdvancedDataGridColumn headerText="ID" dataField="id"/>
 			<mx:AdvancedDataGridColumn headerText="年度" dataField="year"/>
 			<mx:AdvancedDataGridColumn headerText="季度" dataField="quarter" 
 									   labelFunction="{LblFunctionHelper.workPlanQuarterLblFunc}"/>
 			<mx:AdvancedDataGridColumn headerText="会议" dataField="typeId"
 									   labelFunction="{LblFunctionHelper.workPlanTypeLblFunc}"/>
+			<mx:AdvancedDataGridColumn headerText="召开时间" dataField="meetingDatetime"
+									   labelFunction="{LblFunctionHelper.dateLblFunc}"/>
 			<mx:AdvancedDataGridColumn headerText="状态" dataField="statusId"
 									   labelFunction="{LblFunctionHelper.workPlanStatusLblFunc}"/>
 			<mx:AdvancedDataGridColumn headerText="操作">
@@ -407,6 +409,8 @@
 										   labelFunction="{LblFunctionHelper.workPlanQuarterLblFunc}"/>
 				<mx:AdvancedDataGridColumn headerText="会议" dataField="typeId"
 										   labelFunction="{LblFunctionHelper.workPlanTypeLblFunc}"/>
+				<mx:AdvancedDataGridColumn headerText="召开时间" dataField="meetingDatetime"
+										   labelFunction="{LblFunctionHelper.dateLblFunc}"/>
 				<mx:AdvancedDataGridColumn headerText="状态" dataField="statusId"
 										   labelFunction="{LblFunctionHelper.workPlanStatusLblFunc}"/>
 				<mx:AdvancedDataGridColumn headerText="操作">
@@ -473,8 +477,7 @@
 		</mx:AdvancedDataGrid>
 		<mx:ControlBar width="100%" height="32"
 					   horizontalAlign="right">
-			<mx:Button id="createMeetingBtn" label="新建会议" click="onNewMeetingClick()"
-					   visible="{enableNewMeeting &amp;&amp; !browseMode}" includeInLayout="{enableNewMeeting &amp;&amp; !browseMode}"/>
+			<mx:Button id="createMeetingBtn" label="新建会议" click="onNewMeetingClick()"/>
 		</mx:ControlBar>
 	</mx:VBox>
 	

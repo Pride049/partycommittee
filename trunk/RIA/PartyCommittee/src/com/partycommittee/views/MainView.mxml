@@ -96,7 +96,6 @@
 		<s:ConstraintRow id="headerRow" height="125"/>
 		<s:ConstraintRow id="mainRow" height="100%"/>
 		<s:ConstraintRow id="bottomGap" height="2"/>
-		<s:ConstraintRow id="bottomRow" height="30"/>
 	</mx:constraintRows>
 	
 	<mx:HDividedBox top="mainRow:0" bottom="mainRow:0"
@@ -116,13 +115,7 @@
 								 borderVisible="true"/>
 		</mx:VBox>
 	</mx:HDividedBox>
-	
-	<mx:Canvas width="100%" backgroundColor="0xefefef"
-			   top="bottomRow:0" bottom="bottomRow:0">
-		<mx:Label text="宏景世纪与北京市公安局联合开发"
-				  horizontalCenter="0" verticalCenter="0"/>
-	</mx:Canvas>
-	
+		
 	<mx:Canvas top="headerRow:0" bottom="headerRow:0"
 			   width="100%">
 		<mx:Image source="{EmbedResources.topBannerImg}"/>

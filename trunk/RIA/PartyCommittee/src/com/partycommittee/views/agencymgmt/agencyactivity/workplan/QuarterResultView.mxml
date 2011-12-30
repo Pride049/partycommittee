@@ -215,6 +215,12 @@
 				workPlanContent.type = PCConst.WORKFLOW_TYPE_REPORT;
 				return workPlanContent;
 			}
+			
+			private function onBrowseEvaluate():void {
+				var commentView:CommentView = new CommentView();
+				commentView.workPlan = workPlan;
+				PopupMgr.instance.popupWindow(commentView);
+			}
 		]]>
 	</fx:Script>
 	<fx:Declarations>
@@ -253,7 +259,8 @@
 			<button:PcButton label="上报" click="onSaveAndCommit()"
 							 enabled="{!workPlan || workPlan.statusId != 1}"
 							 visible="{!detailMode}" includeInLayout="{!detailMode}"/>
-			<button:PcButton label="查看评价" enabled="{workPlan &amp;&amp; workPlan.statusId == 4}"/>
+			<button:PcButton label="查看评价" enabled="{workPlan &amp;&amp; workPlan.statusId == 4}"
+							 click="onBrowseEvaluate()"/>
 			<button:PcButton label="关闭" click="close()"/>
 		</mx:ControlBar>
 	</mx:VBox>
