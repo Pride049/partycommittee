@@ -58,6 +58,14 @@ package com.partycommittee.manager.tree
 			this._editEnable = value;
 		}
 		
+		private var _enableRefresh:Boolean = true;
+		public function get enableRefresh():Boolean {
+			return this._enableRefresh;
+		}
+		public function set enableRefresh(value:Boolean):void {
+			this._enableRefresh = value;
+		}
+		
 		public function registeContextMenu(loadingTree:LoadingTree):void {
 			tree = loadingTree;
 			menu = new ContextMenu();
@@ -108,7 +116,7 @@ package com.partycommittee.manager.tree
 		private function createMenuItems(codeId:Number):Array {
 			var menuItems:Array = new Array();
 			if (!editEnable) {
-				if (codeId != PCConst.AGENCY_CODE_TEAM && codeId != PCConst.AGENCY_CODE_BRANCH) {
+				if (codeId != PCConst.AGENCY_CODE_TEAM && codeId != PCConst.AGENCY_CODE_BRANCH && enableRefresh) {
 					menuItems.push(refreshMenuItem);
 				}
 				return menuItems;
@@ -132,7 +140,7 @@ package com.partycommittee.manager.tree
 				case PCConst.AGENCY_CODE_TEAM:
 					break;
 			}
-			if (codeId != PCConst.AGENCY_CODE_TEAM && codeId != PCConst.AGENCY_CODE_BRANCH) {
+			if (codeId != PCConst.AGENCY_CODE_TEAM && codeId != PCConst.AGENCY_CODE_BRANCH && enableRefresh) {
 				menuItems.push(refreshMenuItem);
 			}
 			if (codeId != PCConst.AGENCY_CODE_BOARDCOMMITTEES) {

@@ -19,8 +19,11 @@
 			import com.partycommittee.vo.PcAgencyVo;
 			
 			import mx.containers.Canvas;
+			import mx.controls.ComboBox;
 			import mx.events.ListEvent;
 			import mx.events.PropertyChangeEvent;
+			
+			public var yearCmb:ComboBox;
 			
 			[Bindable]
 			public var enableReport:Boolean = true;
@@ -39,8 +42,11 @@
 			
 			private function onCreationCompleted():void {
 				onNavigateIn();
-				yearCmb.dataProvider = DataproviderFactory.getRangeYearDp();
-				yearCmb.selectedItem = model.reportYear = new Date().getFullYear();
+				if (yearCmb) {
+					yearCmb.dataProvider = DataproviderFactory.getRangeYearForReport();
+					yearCmb.selectedItem = model.reportYear = new Date().getFullYear();
+					yearCmb.addEventListener(Event.CHANGE, onYearCmbChanged);
+				}
 			}
 			
 			override protected function onNavigateIn():void {
@@ -178,7 +184,7 @@
 				}
 			}
 			
-			private function onYearCmbChanged():void {
+			private function onYearCmbChanged(event:Event):void {
 				model.reportYear = yearCmb.selectedItem as Number;
 			}
 			
@@ -189,13 +195,7 @@
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
 	
-	<mx:VBox width="100%" height="100%">
-		<mx:HBox width="100%">
-			<mx:Label text="选择年份:"/>
-			<mx:ComboBox id="yearCmb" change="onYearCmbChanged()"/>
-		</mx:HBox>
-		<mx:TabNavigator id="tab" width="100%" height="100%">
-		</mx:TabNavigator>
-	</mx:VBox>
+	<mx:TabNavigator id="tab" width="100%" height="100%">
+	</mx:TabNavigator>
 	
 </navigation:NavigationView>

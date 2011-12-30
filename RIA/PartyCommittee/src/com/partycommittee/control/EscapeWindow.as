@@ -66,7 +66,7 @@ package com.partycommittee.control {
                 maxHeight = FlexGlobals.topLevelApplication.height;
             }
 
-            addEventListener(KeyboardEvent.KEY_DOWN, keyHandler);
+//            addEventListener(KeyboardEvent.KEY_DOWN, keyHandler);
             addEventListener(KeyboardEvent.KEY_UP, onKeyUpHandler);
             addEventListener(MoveEvent.MOVE, onMoveHandler);
 

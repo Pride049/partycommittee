@@ -54,6 +54,9 @@ package com.partycommittee.model
 		public var isTreeInitialized:Boolean = false;
 		
 		public var reportYear:Number;
+		
+		public var isLeafUser:Boolean = false;
+		public var leafAgency:PcAgencyVo;
 	}
 }
 

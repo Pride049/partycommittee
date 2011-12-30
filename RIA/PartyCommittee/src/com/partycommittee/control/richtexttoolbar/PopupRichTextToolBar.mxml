@@ -742,13 +742,13 @@
 			
 			public function tryRemoveToolbar(interactiveObject:*,localPoint:Point = null):void
 			{
-				var isOutSide:Boolean = true;
-				if(interactiveObject)
-				{
-					isOutSide = checkOutside(interactiveObject.parent,localPoint);
-				} 	
-				if(isOutSide)			
-					dispatchEvent(new CloseEvent(CloseEvent.CLOSE));
+//				var isOutSide:Boolean = true;
+//				if(interactiveObject)
+//				{
+//					isOutSide = checkOutside(interactiveObject.parent,localPoint);
+//				} 	
+//				if(isOutSide)			
+//					dispatchEvent(new CloseEvent(CloseEvent.CLOSE));
 			}
 			
 			private function checkOutside(container:Object,localPoint:Point = null):Boolean

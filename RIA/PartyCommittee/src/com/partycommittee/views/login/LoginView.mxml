@@ -153,7 +153,7 @@
 					</mx:HBox>
 				</mx:FormItem>
 			</mx:Form>
-
+			
 		</mx:VBox>
 		
 		<!-- Logining View -->
@@ -167,6 +167,8 @@
 			<mx:ProgressBar width="70%" height="20" label="" labelPlacement="center"
 							horizontalCenter="0" verticalCenter="0" indeterminate="true"/>
 		</mx:VBox>
+		<mx:Label text="宏景世纪与北京市公安局联合开发" alpha="0.5"
+				  horizontalCenter="0" verticalCenter="0" horizontalCenter.loginView="-81" verticalCenter.loginView="116"/>
 	</s:Panel>
 	
 	<mx:transitions>

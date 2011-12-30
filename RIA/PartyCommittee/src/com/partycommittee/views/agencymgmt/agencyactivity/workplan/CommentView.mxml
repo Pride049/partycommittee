@@ -12,15 +12,19 @@
 					  xmlns:richtexttoolbar="com.partycommittee.control.richtexttoolbar.*">
 	<fx:Script>
 		<![CDATA[
+			import com.partycommittee.events.PcMeetingEvent;
+			import com.partycommittee.events.PcWorkPlanEvent;
+			import com.partycommittee.manager.popup.PopupMgr;
+			import com.partycommittee.util.DateUtil;
+			import com.partycommittee.vo.PcMeetingContentVo;
 			import com.partycommittee.vo.PcMeetingVo;
+			import com.partycommittee.vo.PcWorkPlanContentVo;
 			import com.partycommittee.vo.PcWorkPlanVo;
 			
 			import flashx.textLayout.debug.assert;
 			
 			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
-			
-			public var type:int = PCConst.WORKFLOW_TYPE_EVALUATE;
 			
 			private var isWorkPlan:Boolean = false;
 			
@@ -47,20 +51,77 @@
 			}
 			
 			private function updateData():void {
+				var isApproval:Boolean = false;
 				if (workPlan) {
-					isWorkPlan = true;
+					if (workPlan.typeId == PCConst.WORKPLAN_TYPE_QUARTER || 
+						workPlan.typeId == PCConst.WORKPLAN_TYPE_YEARLY) {
+						isApproval = true;
+					}
+					getWorkPlanComment();
 				}
-				if (type == PCConst.WORKFLOW_TYPE_APPROVAL) {
-					getApprovalInfo();
+				if (meeting) {
+					getMeetingComment();
+				}
+				
+				if (isApproval) {
+					this.title = "查看上级审批";
+					this.personLbl.text = "审批人:";
+					this.dateLbl.text = "审批日期:";
 				} else {
-					getEvaluateInfo();
+					this.title = "查看上级评价";
+					this.personLbl.text = "评价人:";
+					this.dateLbl.text = "评价日期:";
 				}
 			}
 			
-			private function getApprovalInfo():void {
+			private function getWorkPlanComment():void {
+				var workPlanEvt:PcWorkPlanEvent = new PcWorkPlanEvent(PcWorkPlanEvent.GET_WORKPLAN_COMMENT);
+				workPlanEvt.workPlan = workPlan;
+				workPlanEvt.successCallback = onGetWorkplanCommentSuccess;
+				workPlanEvt.failureCallback = onGetWorkplanCommentFailure;
+				this.enabled = false;
+				workPlanEvt.dispatch();
 			}
 			
-			private function getEvaluateInfo():void {
+			private function onGetWorkplanCommentSuccess(data:Object, evt:PcWorkPlanEvent):void {
+				this.enabled = true;
+				var workplanContent:PcWorkPlanContentVo = data as PcWorkPlanContentVo;
+				if (!workplanContent) {
+					return;
+				}
+				textArea.htmlText = workplanContent.content;
+				personTxt.text = workplanContent.memberName;
+				dateTxt.text = DateUtil.toISOString(workplanContent.updatetime);
+			}
+			
+			private function onGetWorkplanCommentFailure(info:Object, evt:PcWorkPlanEvent):void {
+				this.enabled = true;
+				Alert.show("获取内容失败！");
+			}
+			
+			private function getMeetingComment():void {
+				var meetingEvt:PcMeetingEvent = new PcMeetingEvent(PcMeetingEvent.GET_MEETING_COMMENT);
+				meetingEvt.meeting = meeting;
+				meetingEvt.successCallback = onGetMeetingCommentSuccess;
+				meetingEvt.failureCallback = onGetMeetingCommentFailure;
+				this.enabled = false;
+				meetingEvt.dispatch();
+			}
+			
+			private function onGetMeetingCommentSuccess(data:Object, evt:PcMeetingEvent):void {
+				this.enabled = true;
+				var meetingContent:PcMeetingContentVo = data as PcMeetingContentVo;
+				if (!meetingContent) {
+					return;
+				}
+				textArea.htmlText = meetingContent.content;
+				personTxt.text = meetingContent.memberName;
+				dateTxt.text = DateUtil.toISOString(meetingContent.updateTime);
+			}
+			
+			private function onGetMeetingCommentFailure(info:Object, evt:PcMeetingEvent):void {
+				this.enabled = true;
+				Alert.show("获取内容失败！");
 			}
 			
 		]]>
@@ -72,17 +133,12 @@
 	<mx:VBox width="100%" height="100%"
 			 left="6" right="6" top="6" bottom="6"
 			 horizontalScrollPolicy="off" verticalScrollPolicy="off">
-		<mx:HBox width="100%" height="100%"
+		<mx:VBox width="100%" height="100%"
+				 verticalGap="0"
 				 horizontalScrollPolicy="off" verticalScrollPolicy="off">
-			<mx:Label id="commentLbl" width="75"/>
-			<mx:VBox width="100%" height="100%"
-					 verticalGap="0"
-					 horizontalScrollPolicy="off" verticalScrollPolicy="off">
-				<richtexttoolbar:PopupRichTextToolBar width="100%" target="{textArea}"/>
-				<mx:TextArea id="textArea" width="100%" height="100%"
-							 editable="{!meeting || meeting.statusId == 2}"/>
-			</mx:VBox>
-		</mx:HBox>
+			<mx:TextArea id="textArea" width="100%" height="100%"
+						 editable="false"/>
+		</mx:VBox>
 		<mx:HBox width="100%"
 				 horizontalScrollPolicy="off" verticalScrollPolicy="off">
 			<mx:Label id="personLbl" width="75"/>

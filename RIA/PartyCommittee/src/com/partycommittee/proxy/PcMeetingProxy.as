@@ -66,5 +66,9 @@ package com.partycommittee.proxy
 			service.getAlertInfo(agencyId, year, quarter);
 		}
 		
+		public function getMeetingComment(meeting:PcMeetingVo):void {
+			service.getMeetingComment(meeting);
+		}
+		
 	}
 }

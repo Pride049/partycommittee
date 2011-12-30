@@ -82,5 +82,9 @@ package com.partycommittee.proxy
 			service.getAlertInfo(agencyId, year, quarter);
 		}
 		
+		public function getWorkplanComment(workplan:PcWorkPlanVo):void {
+			service.getWorkplanComment(workplan);
+		}
+		
 	}
 }

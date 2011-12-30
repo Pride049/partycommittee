@@ -76,6 +76,17 @@ package com.partycommittee.util
 			return "";
 		}
 		
+		public static function userPrivilegeLblFunc(item:Object, col:*):String {
+			if (item as PcUserVo) {
+				var userVo:PcUserVo = item as PcUserVo;
+				if (userVo.enableReport) {
+					return "填报权";
+				}
+				return "浏览权";
+			}
+			return "";
+		}
+		
 		public static function workPlanTypeLblFunc(item:Object, col:*):String {
 			var typeId:Number;
 			if (item is PcWorkPlanVo) {
