@@ -196,7 +196,7 @@
 					<mx:Label id="orgTypeLbl" text="{agencyCodeDes}" width="100%"/>
 				</mx:FormItem>
 				<mx:FormItem label="支部名称:" required="true" width="100%">
-					<mx:TextInput id="orgNameTxt" text="{agency.name}" change="agency.name = orgNameTxt.text" width="100%"/>
+					<mx:TextInput id="orgNameTxt" text="{agency.name}" change="agency.name = orgNameTxt.text" width="100%" maxChars="60"/>
 				</mx:FormItem>
 				<!--
 				<mx:FormItem label="组织负责人:" width="100%"
@@ -210,37 +210,37 @@
 					<mx:DateField id="setupDateField" selectedDate="{agency.setupDatetime}"  formatString="YYYY-MM-DD"/>
 				</mx:FormItem>
 				<mx:FormItem label="党小组数:" width="100%">
-					<mx:TextInput id="teamNumberTxt" text="{agency.pcount.toString()}" change="agency.pcount = Number(teamNumberTxt.text)"  width="100%" restrict="0-9"  />
+					<mx:TextInput id="teamNumberTxt" text="{agency.pcount.toString()}" change="agency.pcount = Number(teamNumberTxt.text)"  width="100%" restrict="0-9" maxChars="5"  />
 				</mx:FormItem>
 				<mx:FormItem label="支部人数:" width="100%">
-					<mx:TextInput id="memberNumberTxt" text="{agency.zbnum}" change="agency.zbnum = Number(memberNumberTxt.text)" width="100%" restrict="0-9" />
+					<mx:TextInput id="memberNumberTxt" text="{agency.zbnum}" change="agency.zbnum = Number(memberNumberTxt.text)" width="100%" restrict="0-9" maxChars="5" />
 				</mx:FormItem>
 			</mx:Form>
 			<mx:VRule height="90%"/>
 			<mx:Form width="100%" labelWidth="80">
 				<mx:FormItem label="支部书记:" width="100%">
-					<mx:TextInput id="clerkLbl" width="100%" text="{agency.zbsj}" change="agency.zbsj = clerkLbl.text" />
+					<mx:TextInput id="clerkLbl" width="100%" text="{agency.zbsj}" change="agency.zbsj = clerkLbl.text" maxChars="50"/>
 				</mx:FormItem>
 				<mx:FormItem label="支部副书记:" width="100%">
-					<mx:TextInput id="deputyClerkLbl" width="100%" text="{agency.zbfsj}" change="agency.zbfsj = deputyClerkLbl.text" />
+					<mx:TextInput id="deputyClerkLbl" width="100%" text="{agency.zbfsj}" change="agency.zbfsj = deputyClerkLbl.text" maxChars="50"/>
 				</mx:FormItem>
 				<mx:FormItem label="组织委员:" width="100%">
-					<mx:TextInput id="orgMemberLbl" width="100%" text="{agency.zzwy}" change="agency.zzwy = orgMemberLbl.text" />
+					<mx:TextInput id="orgMemberLbl" width="100%" text="{agency.zzwy}" change="agency.zzwy = orgMemberLbl.text" maxChars="50"/>
 				</mx:FormItem>
 				<mx:FormItem label="宣传委员:" width="100%" >
-					<mx:TextInput id="pubMemberLbl" width="100%" text="{agency.xcwy}" change="agency.xcwy = pubMemberLbl.text" />
+					<mx:TextInput id="pubMemberLbl" width="100%" text="{agency.xcwy}" change="agency.xcwy = pubMemberLbl.text" maxChars="50"/>
 				</mx:FormItem>
 				<mx:FormItem label="纪检委员:" width="100%">
-					<mx:TextInput id="disciplineMemberLbl" text="{agency.jjwy}" change="agency.jjwy = disciplineMemberLbl.text" width="100%" />
+					<mx:TextInput id="disciplineMemberLbl" text="{agency.jjwy}" change="agency.jjwy = disciplineMemberLbl.text" width="100%" maxChars="50"/>
 				</mx:FormItem>
 				<mx:FormItem label="青年委员:" width="100%">
-					<mx:TextInput id="youthMemberLbl" width="100%" text="{agency.qnwy}" change="agency.qnwy = youthMemberLbl.text"/>
+					<mx:TextInput id="youthMemberLbl" width="100%" text="{agency.qnwy}" change="agency.qnwy = youthMemberLbl.text" maxChars="60"/>
 				</mx:FormItem>
 				<mx:FormItem label="工会委员:" width="100%">
-					<mx:TextInput id="unionMemberLbl" width="100%" text="{agency.ghwy}" change="agency.ghwy = unionMemberLbl.text" />
+					<mx:TextInput id="unionMemberLbl" width="100%" text="{agency.ghwy}" change="agency.ghwy = unionMemberLbl.text" maxChars="50"/>
 				</mx:FormItem>
 				<mx:FormItem label="妇女委员:" width="100%">
-					<mx:TextInput id="womenMemberLbl" width="100%" text="{agency.fnwy}" change="agency.fnwy = womenMemberLbl.text" />
+					<mx:TextInput id="womenMemberLbl" width="100%" text="{agency.fnwy}" change="agency.fnwy = womenMemberLbl.text" maxChars="50"/>
 				</mx:FormItem>
 			</mx:Form>
 		</mx:HBox>
