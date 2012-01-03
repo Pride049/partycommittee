@@ -57,9 +57,9 @@
 				model.loginUser = user;
 				if (!user) {
 //					var login:PcUserVo = new PcUserVo();
-//					login.id = 3;
-//					login.privilege = "3";
-//					login.enableReport = 1;
+//					login.id = 4087;
+//					login.privilege = "1";
+//					login.enableReport = 0;
 //					model.loginUser = login;
 					return;
 				}

@@ -115,6 +115,9 @@
 					model.tree.dispatchEvent(new TreeOperationEvent(
 						TreeOperationEvent.NODE_CHANGED, model.tree.selectedItem));
 				}
+				var agencyEvent:PcAgencyEvent = new PcAgencyEvent(PcAgencyEvent.GET_ROOT_AGENCY_BY_USERID);
+				agencyEvent.userId = model.loginUser.id;
+				agencyEvent.dispatch();				
 				close();
 			}
 			
