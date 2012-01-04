@@ -57,9 +57,9 @@
 				model.loginUser = user;
 				if (!user) {
 //					var login:PcUserVo = new PcUserVo();
-//					login.id = 4087;
+//					login.id = 3;
 //					login.privilege = "1";
-//					login.enableReport = 0;
+//					login.enableReport = 1;
 //					model.loginUser = login;
 					return;
 				}
@@ -139,6 +139,17 @@
 				}
 				var focusAgency:PcAgencyVo = focusNode.entity as PcAgencyVo;
 				model.focusAgencyVo = focusAgency;
+				
+				// If is parent, do not allow edit.
+				if (model.isLeafUser && focusAgency != model.leafAgency) {
+					orgView.editEnable = false;
+					TreeContextMenuMgr.getInstance().editEnable = false;
+					treeControlBar.visible = treeControlBar.includeInLayout = false;
+				} else {
+					orgView.editEnable = true;
+					TreeContextMenuMgr.getInstance().editEnable = true;
+					treeControlBar.visible = treeControlBar.includeInLayout = true;
+				}
 			}
 		]]>
 	</fx:Script>
