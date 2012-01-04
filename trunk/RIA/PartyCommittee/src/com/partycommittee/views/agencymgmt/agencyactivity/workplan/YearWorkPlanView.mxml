@@ -245,7 +245,7 @@
 			<button:PcButton label="暂存" click="onSaveWithoutSubmit()"
 							 enabled="{!workPlan || workPlan.statusId == 2}"/>
 			<button:PcButton label="上报" click="onSaveAndCommit()"
-							 enabled="{!workPlan || workPlan.statusId == 1}"/>
+							 enabled="{!workPlan || workPlan.statusId == 2}"/>
 			<button:PcButton label="查看审批"
 							 enabled="{workPlan &amp;&amp; workPlan.statusId == 3}"
 							 click="onBrowseApproval()"/>
