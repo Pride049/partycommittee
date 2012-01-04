@@ -207,7 +207,7 @@
 										}
 									]]>
 								</fx:Script>
-								<button:PcButton id="editBtn" label="{(data as PcWorkPlanVo).id == 0 ? '新建' : '修改'}" click="editBtnClick()"
+								<button:PcButton id="editBtn" label="{(data as PcWorkPlanVo).id == 0 ? '填报' : '修改'}" click="editBtnClick()"
 												 enabled="{(data as PcWorkPlanVo).statusId == 2 &amp;&amp; !outerDocument.browseMode}"/>
 							</mx:Box>
 						</fx:Component>

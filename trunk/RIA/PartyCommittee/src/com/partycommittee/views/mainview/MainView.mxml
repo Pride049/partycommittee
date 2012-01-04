@@ -12,9 +12,14 @@
 			import com.partycommittee.events.PcWorkPlanEvent;
 			import com.partycommittee.model.ModelLocator;
 			import com.partycommittee.util.LblFunctionHelper;
+			import com.partycommittee.views.MainContainer;
 			import com.partycommittee.vo.PcAgencyVo;
+			import com.partycommittee.vo.PcMeetingVo;
+			import com.partycommittee.vo.PcWorkPlanVo;
 			
 			import mx.collections.ArrayCollection;
+			import mx.containers.TabNavigator;
+			import mx.containers.ViewStack;
 			import mx.controls.Alert;
 			import mx.events.PropertyChangeEvent;
 			
@@ -23,10 +28,11 @@
 			
 			[Bindable]
 			private var dp:ArrayCollection = new ArrayCollection();
-			
+						
 			private function onCreationCompleted():void {
 				onNavigateIn();
 				model.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, onPropertyChanged);
+				dg.addEventListener(TextEvent.LINK, onEventTextLink, false , 0, true); 
 			}
 			
 			private function onPropertyChanged(event:PropertyChangeEvent):void {
@@ -97,16 +103,83 @@
 				if (!item.hasOwnProperty('statusId')) {
 					return "";
 				}
+				
+				var txt:String;
 				switch (item.statusId as Number) {
 					case 0:
-						return "未填写";
+						txt = "未填写";
 					case 1:
-						return "已上报";
+						txt "已上报";
 					case 2:
-						return "未上报";
+						txt "未上报";
 				}
 				return "";
 			}
+			
+			protected function onEventTextLink(event:TextEvent):void {
+				
+				
+				var item:Object = dg.selectedItem;
+				var eventText:String = event.text;
+				if (eventText == 'nowp') {
+					
+					if (this.parent.parent.parent.parent is MainContainer) {
+						var obj:Object = this.parent.parent.parent.parent as MainContainer;
+						(obj.mainViewStack as ViewStack).selectedIndex = 2;
+						var nobj:Object = (obj.mainViewStack as ViewStack).getChildByName('activityView');
+						
+						var sobj:Object = (nobj as NavigationView).getChildByName('tab');
+						sobj.selectedIndex = 1;
+						
+						var tobj:Object = (sobj as TabNavigator).getChildByName('reportView');
+						
+						var fobj:Object = (tobj as NavigationView).getChildByName('tab');
+//						fobj.selectedIndex = 2;
+						
+						var typeId:Number;
+						if (item is PcWorkPlanVo) {
+							typeId = (item as PcWorkPlanVo).typeId;
+						} else if (item is PcMeetingVo) {
+							typeId = (item as PcMeetingVo).typeId;
+						}
+						switch (typeId) {
+							case PCConst.WORKPLAN_TYPE_YEARLY:
+								fobj.selectedIndex = 0;
+								break;
+							case PCConst.WORKPLAN_TYPE_YEARLY_SUMMARY:
+								fobj.selectedIndex = 8;
+								break;
+							case PCConst.WORKPLAN_TYPE_QUARTER:
+								fobj.selectedIndex = 1;
+								break;
+							case PCConst.WORKPLAN_TYPE_QUARTER_SUMMARY:
+								fobj.selectedIndex = 2;
+								break;
+							case PCConst.WORKPLAN_TYPE_CLASS:
+								fobj.selectedIndex = 3;
+								break;
+							case PCConst.WORKPLAN_TYPE_MEETING_BRANCH_COMMITTEE:
+								fobj.selectedIndex = 5;
+								break;
+							case PCConst.WORKPLAN_TYPE_MEETING_BRANCH_MEMBER:
+								fobj.selectedIndex = 4;
+								break;
+							case PCConst.WORKPLAN_TYPE_MEETING_BRANCH_LIFE:
+								fobj.selectedIndex = 6;
+								break;
+//							case PCConst.WORKPLAN_TYPE_MEETING_TEAM:
+//								Alert.show("党小组会");
+//								break;
+							case PCConst.WORKPLAN_TYPE_MEETING_OTHER:
+								fobj.selectedIndex = 7;
+								break;
+						}
+					}
+				}
+			}			
+			
+			
+
 		]]>
 	</fx:Script>
 	<fx:Declarations>
@@ -117,8 +190,10 @@
 		<mx:columns>
 			<mx:AdvancedDataGridColumn headerText="内容" dataField="typeId"
 									   labelFunction="{LblFunctionHelper.workPlanTypeLblFunc}"/>
-			<mx:AdvancedDataGridColumn headerText="状态" dataField="statusId"
-									   labelFunction="statusLblFunc"/>
+			<mx:AdvancedDataGridColumn headerText="状态" dataField="data"
+				itemRenderer="com.partycommittee.renderers.WpStatusRenderer">
+				
+			</mx:AdvancedDataGridColumn>
 		</mx:columns>
 	</mx:AdvancedDataGrid>
 	
