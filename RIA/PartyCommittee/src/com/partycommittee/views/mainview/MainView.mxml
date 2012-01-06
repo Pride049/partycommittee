@@ -115,9 +115,9 @@
 						var nobj:Object = (obj.mainViewStack as ViewStack).getChildByName('activityView');
 						
 						var sobj:Object = (nobj as NavigationView).getChildByName('tab');
-						sobj.selectedIndex = 1;
+						sobj.selectedIndex = 0;
 						
-						var tobj:Object = (sobj as TabNavigator).getChildByName('reportView');
+						var tobj:Object = (sobj as TabNavigator).getChildAt(0);
 						
 						var fobj:Object = (tobj as NavigationView).getChildByName('tab');
 //						fobj.selectedIndex = 2;

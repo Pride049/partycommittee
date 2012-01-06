@@ -19,36 +19,58 @@
 			
 			private function onCreationCompleted():void {
 				model.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, onModelChanged);
+//				updateData();		
 			}
 			
 			private function onModelChanged(event:PropertyChangeEvent):void {
 				if (event.property == "focusAgencyVo") {
-					if (!model.isLeafUser) {
-						return;
-					}
-					if (model.leafAgency == model.focusAgencyVo) {
-						this.enabled = true;
-					} else {
-						this.enabled = false;
-					}
+					updateData();year_hbox
 				}
 			}
 			
-			override protected function onNavigateIn():void {
-				browseView.enterView();
-			}
+			private function updateData():void {
+				tab.removeAll();
+				year_hbox.visible = false;
+				if (model.isLeafUser && model.focusAgencyVo.id != parseFloat(model.loginUser.privilege)) return;
+				if (model.focusAgencyVo.codeId == 10) {
+					var reportView:ReportView = new ReportView();
+					reportView.yearCmb = yearCmb;
+					reportView.label = "组织生活";
+					reportView.percentHeight = 100;
+					reportView.percentWidth = 100;
+					reportView.tab = this.tab;
+					tab.addChild(reportView);
+					if (model.loginUser.enableReport != 1) {
+						reportView.enableReport = false;				
+					}				
+					year_hbox.visible = true;
+				} else {
+					var browseView:BrowseView = new BrowseView();
+					browseView.label = "组织生活";
+					browseView.percentHeight = 100;
+					browseView.percentWidth = 100;
+					browseView.tab = this.tab;
+					tab.addChild(browseView);	
+					year_hbox.visible = false;
+				}
+
+			}			
+			
+			
+//			override protected function onNavigateIn():void {
+//				browseView.enterView();
+//			}
 		]]>
 	</fx:Script>
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
-	<mx:TabNavigator id="tab" width="100%" height="100%">
-		<agencyactivity:BrowseView id="browseView" label="浏览下级上报" width="100%" height="100%"/>
-		<agencyactivity:ReportView id="reportView" label="填报及查看" width="100%" height="100%" yearCmb="{yearCmb}"/>
+
+	<mx:TabNavigator id="tab" width="100%" height="100%" >
 	</mx:TabNavigator>
 	
-	<mx:HBox right="10" top="2" visible="{tab.selectedIndex == 1}">
+	<mx:HBox id="year_hbox" right="10" top="2" >
 		<mx:Label text="选择年份:"/>
 		<mx:ComboBox id="yearCmb"/>
-	</mx:HBox>
+	</mx:HBox>	
 </navigation:NavigationView>
