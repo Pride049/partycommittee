@@ -69,11 +69,11 @@
 				var user:PcUserVo = data as PcUserVo;
 				model.loginUser = user;
 				if (!user) {
-					var login:PcUserVo = new PcUserVo();
-					login.id = 3;
-					login.privilege = "3";
-					login.enableReport = 1;
-					model.loginUser = login;
+//					var login:PcUserVo = new PcUserVo();
+//					login.id = 3;
+//					login.privilege = "3";
+//					login.enableReport = 1;
+//					model.loginUser = login;
 					return;
 				}
 				
@@ -90,7 +90,7 @@
 					activityView.reportView.enableReport = false;
 //					mainViewStack.removeChild(agencyActivityView);
 					if (!isRootUser()) {
-						orgView.editEnable = false;
+//						orgView.editEnable = false;
 						TreeContextMenuMgr.getInstance().editEnable = false;
 						treeControlBar.visible = treeControlBar.includeInLayout = false;
 					}
@@ -100,6 +100,11 @@
 				if (!isRootUser()) {
 					mainViewStack.removeChild(accountView);
 				}
+				
+				
+				orgView.editEnable = (parseFloat(model.loginUser.privilege) == model.focusAgencyVo.id );
+				if (model.isLeafUser && model.loginUser.enableReport != 1) orgView.editEnable = false;		
+				
 			}
 			
 			private function onPropertyChanged(event:PropertyChangeEvent):void {
@@ -155,18 +160,21 @@
 				
 				// If is parent, do not allow edit.
 				if (model.isLeafUser && focusAgency != model.leafAgency) {
-					orgView.editEnable = false;
+//					orgView.editEnable = false;
 					if (model.loginUser.privilege == "1") {
 						TreeContextMenuMgr.getInstance().editEnable = false;
 						treeControlBar.visible = treeControlBar.includeInLayout = false;
 					}
 				} else {
-					orgView.editEnable = true;
+//					orgView.editEnable = true;
 					if (model.loginUser.privilege == "1") {
 						TreeContextMenuMgr.getInstance().editEnable = true;
 						treeControlBar.visible = treeControlBar.includeInLayout = true;
 					}
 				}
+				
+				orgView.editEnable = (parseFloat(model.loginUser.privilege) == model.focusAgencyVo.id );
+				if (model.isLeafUser && model.loginUser.enableReport != 1) orgView.editEnable = false;	
 			}
 		]]>
 	</fx:Script>
