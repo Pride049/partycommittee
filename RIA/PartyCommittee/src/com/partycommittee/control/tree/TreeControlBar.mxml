@@ -135,5 +135,5 @@
 	
 	<button:PcButton id="createBtn" label="建立" enabled="false" click="onCreateBtnClick()"/>
 	<button:PcButton id="deleteBtn" label="删除" enabled="false" click="onDeleteBtnClick()"/>
-	<button:PcButton id="revacationBtn" label="撤销" enabled="false" click="onRevacationBtnClick()"/>
+	<!--<button:PcButton id="revacationBtn" label="撤销" enabled="false" click="onRevacationBtnClick()"/>-->
 </mx:HBox>

@@ -42,8 +42,21 @@
 				hDivBox.liveDragging = true;
 				hDivBox.doubleClickEnabled = true;
 				hDivBox.getDividerAt(0).addEventListener(MouseEvent.DOUBLE_CLICK, onDividerDoubleClick);
-				
+				initToolbar();
 				initUserData();
+			}
+			
+			private function initToolbar():void {
+
+				
+				if (model.isLeafUser) {
+					TreeContextMenuMgr.getInstance().editEnable = false;
+					treeControlBar.visible = treeControlBar.includeInLayout = false;
+				} else {
+					TreeContextMenuMgr.getInstance().editEnable = true;
+					treeControlBar.visible = treeControlBar.includeInLayout = true;
+				}				
+				
 			}
 			
 			private function initUserData():void {
@@ -56,11 +69,11 @@
 				var user:PcUserVo = data as PcUserVo;
 				model.loginUser = user;
 				if (!user) {
-//					var login:PcUserVo = new PcUserVo();
-//					login.id = 3;
-//					login.privilege = "1";
-//					login.enableReport = 1;
-//					model.loginUser = login;
+					var login:PcUserVo = new PcUserVo();
+					login.id = 3;
+					login.privilege = "3";
+					login.enableReport = 1;
+					model.loginUser = login;
 					return;
 				}
 				
@@ -143,12 +156,16 @@
 				// If is parent, do not allow edit.
 				if (model.isLeafUser && focusAgency != model.leafAgency) {
 					orgView.editEnable = false;
-					TreeContextMenuMgr.getInstance().editEnable = false;
-					treeControlBar.visible = treeControlBar.includeInLayout = false;
+					if (model.loginUser.privilege == "1") {
+						TreeContextMenuMgr.getInstance().editEnable = false;
+						treeControlBar.visible = treeControlBar.includeInLayout = false;
+					}
 				} else {
 					orgView.editEnable = true;
-					TreeContextMenuMgr.getInstance().editEnable = true;
-					treeControlBar.visible = treeControlBar.includeInLayout = true;
+					if (model.loginUser.privilege == "1") {
+						TreeContextMenuMgr.getInstance().editEnable = true;
+						treeControlBar.visible = treeControlBar.includeInLayout = true;
+					}
 				}
 			}
 		]]>

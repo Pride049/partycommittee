@@ -15,6 +15,7 @@
 			import com.partycommittee.views.MainContainer;
 			import com.partycommittee.vo.PcAgencyVo;
 			import com.partycommittee.vo.PcMeetingVo;
+			import com.partycommittee.vo.PcUserVo;
 			import com.partycommittee.vo.PcWorkPlanVo;
 			
 			import mx.collections.ArrayCollection;
@@ -36,20 +37,21 @@
 			}
 			
 			private function onPropertyChanged(event:PropertyChangeEvent):void {
-				if (event.property == "loginUser") {
-					model.removeEventListener(PropertyChangeEvent.PROPERTY_CHANGE, onPropertyChanged);
+				if (event.property == "focusAgencyVo") {
+					//model.removeEventListener(PropertyChangeEvent.PROPERTY_CHANGE, onPropertyChanged);
 					onNavigateIn();
-				}
+				} 
 			}
 			
 			override protected function onNavigateIn():void {
 				dp = new ArrayCollection();
-				if (model.loginUser && model.loginUser.privilege != "") {
-					var rootAgencyId:Number = model.loginUser.privilege.split(',')[0] as Number;
-					var pcWorkPlanEvt:PcWorkPlanEvent = new PcWorkPlanEvent(PcWorkPlanEvent.GET_ALERT_INFO);
-					var agency:PcAgencyVo = new PcAgencyVo();
-					agency.id = rootAgencyId;
-					pcWorkPlanEvt.agency = agency;
+				
+				
+				var pcWorkPlanEvt:PcWorkPlanEvent = new PcWorkPlanEvent(PcWorkPlanEvent.GET_ALERT_INFO);
+				if (model.focusAgencyVo && model.focusAgencyVo.codeId == 10) {
+				
+					
+					pcWorkPlanEvt.agency = model.focusAgencyVo;
 					pcWorkPlanEvt.year = new Date().getFullYear();
 					pcWorkPlanEvt.quarter = getQuarter();
 					pcWorkPlanEvt.successCallback = onGetWorkPlanAlertSuccess;
@@ -61,14 +63,15 @@
 			private function onGetWorkPlanAlertSuccess(data:Object, evt:PcWorkPlanEvent):void {
 				dp.addAll(data as ArrayCollection);
 				var pcMeetingEvt:PcMeetingEvent = new PcMeetingEvent(PcMeetingEvent.GET_ALERT_INFO);
-				var agency:PcAgencyVo = new PcAgencyVo();
-				agency.id = model.loginUser.privilege.split(',')[0] as Number;
-				pcMeetingEvt.agency = agency;
-				pcMeetingEvt.year = new Date().getFullYear();
-				pcMeetingEvt.quarter = getQuarter();
-				pcMeetingEvt.successCallback = onGetMeetingAlertSuccess;
-				pcMeetingEvt.failureCallback = onGetMeetingAlertFailure;
-				pcMeetingEvt.dispatch();
+				if (model.focusAgencyVo && model.focusAgencyVo.codeId == 10) {
+					
+					pcMeetingEvt.agency = model.focusAgencyVo;
+					pcMeetingEvt.year = new Date().getFullYear();
+					pcMeetingEvt.quarter = getQuarter();
+					pcMeetingEvt.successCallback = onGetMeetingAlertSuccess;
+					pcMeetingEvt.failureCallback = onGetMeetingAlertFailure;
+					pcMeetingEvt.dispatch();
+				}
 			}
 			
 			private function onGetWorkPlanAlertFailure(info:Object, evt:PcWorkPlanEvent):void {
@@ -97,23 +100,6 @@
 				} else {
 					return 4;
 				}
-			}
-			
-			private function statusLblFunc(item:Object, col:*):String {
-				if (!item.hasOwnProperty('statusId')) {
-					return "";
-				}
-				
-				var txt:String;
-				switch (item.statusId as Number) {
-					case 0:
-						txt = "未填写";
-					case 1:
-						txt "已上报";
-					case 2:
-						txt "未上报";
-				}
-				return "";
 			}
 			
 			protected function onEventTextLink(event:TextEvent):void {
