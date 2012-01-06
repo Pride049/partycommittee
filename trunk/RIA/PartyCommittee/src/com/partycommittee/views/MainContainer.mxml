@@ -87,7 +87,7 @@
 				
 				// Remove agency report view if the user not have privilege.
 				if (model.loginUser.enableReport != 1) {
-					activityView.reportView.enableReport = false;
+//					activityView.reportView.enableReport = false;
 //					mainViewStack.removeChild(agencyActivityView);
 					if (!isRootUser()) {
 //						orgView.editEnable = false;
