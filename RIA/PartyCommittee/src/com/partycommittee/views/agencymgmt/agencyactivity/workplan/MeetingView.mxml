@@ -6,7 +6,7 @@
 					  horizontalAlign="center" verticalAlign="middle"
 					  showCloseButton="true" titleStyleName="panelTitle"
 					  close="PopupMgr.instance.removeWindow(this)" 
-					  height="650" width="500"
+					  height="650" width="800"
 					  creationComplete="onCreationCompleted()"
 					  xmlns:button="com.partycommittee.control.button.*" 
 					  xmlns:richtexttoolbar="com.partycommittee.control.richtexttoolbar.*" 

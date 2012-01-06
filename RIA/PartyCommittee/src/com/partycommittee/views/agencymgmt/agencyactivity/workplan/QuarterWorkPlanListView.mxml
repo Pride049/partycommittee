@@ -130,12 +130,20 @@
 					workPlanWin.agency = agency;
 					workPlanWin.workPlan = workPlan;
 					workPlanWin.parentView = this;
+					workPlanWin.detailMode = true;
+					if (model.loginUser.enableReport == 1) {
+						workPlanWin.detailMode = false;
+					} 
 					PopupMgr.instance.popupWindow(workPlanWin);
 				} else {
 					var resultWin:QuarterResultView = new QuarterResultView();
 					resultWin.agency = agency;
 					resultWin.workPlan = workPlan;
 					resultWin.parentView = this;
+					resultWin.detailMode = true;
+					if (model.loginUser.enableReport == 1) {
+						resultWin.detailMode = false;
+					} 					
 					PopupMgr.instance.popupWindow(resultWin);
 				}
 			}
@@ -200,19 +208,23 @@
 									horizontalScrollPolicy="off" verticalScrollPolicy="off">
 								<fx:Script>
 									<![CDATA[
+										import com.partycommittee.model.ModelLocator;
 										import com.partycommittee.vo.PcWorkPlanVo;
 										
 										protected function editBtnClick():void {
 											outerDocument.editWorkPlan(data as PcWorkPlanVo);
 										}
+										
 									]]>
-								</fx:Script>
-								<button:PcButton id="editBtn" label="{(data as PcWorkPlanVo).id == 0 ? '填报' : '修改'}" click="editBtnClick()"
-												 enabled="{(data as PcWorkPlanVo).statusId == 2 &amp;&amp; !outerDocument.browseMode}"/>
+								</fx:Script>								
+								<button:PcButton id="editBtn" label="{(data as PcWorkPlanVo).statusId == 1 ? '查看' : ( ModelLocator.getInstance().loginUser.enableReport == 1 ? (  (data as PcWorkPlanVo).id == 0 ? '填报' : '修改' ) : '查看' ) }" click="editBtnClick()"
+												 />								
 							</mx:Box>
 						</fx:Component>
 					</mx:itemRenderer>
 				</mx:AdvancedDataGridColumn>
+				
+				<!--
 				<mx:AdvancedDataGridColumn headerText="上报">
 					<mx:itemRenderer>
 						<fx:Component>
@@ -253,6 +265,8 @@
 						</fx:Component>
 					</mx:itemRenderer>
 				</mx:AdvancedDataGridColumn>
+			
+			-->
 			</mx:columns>
 		</mx:AdvancedDataGrid>
 	</mx:VBox>
