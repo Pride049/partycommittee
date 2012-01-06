@@ -29,7 +29,7 @@ public class PcAgencyMappingDaoImpl extends JpaDaoBase implements PcAgencyMappin
 	@Override
 	public List<PcAgencyMapping> getAgencyMappingByUserId(int userId) {
 		try {
-			return super.getJpaTemplate().find("from PcAgencyMapping where userId = " + userId);
+			return super.getJpaTemplate().find("from PcAgencyMapping where userId = " + userId + " order by agency_id asc ");
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
