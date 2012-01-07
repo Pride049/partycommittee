@@ -217,7 +217,7 @@
 										
 									]]>
 								</fx:Script>								
-								<button:PcButton id="editBtn" label="{(data as PcWorkPlanVo).statusId == 1 ? '查看' : ( ModelLocator.getInstance().loginUser.enableReport == 1 ? (  (data as PcWorkPlanVo).id == 0 ? '填报' : '修改' ) : '查看' ) }" click="editBtnClick()"
+								<button:PcButton id="editBtn" label="{ ( (data as PcWorkPlanVo).statusId == 1 || (data as PcWorkPlanVo).statusId == 3 || (data as PcWorkPlanVo).statusId == 4 ) ? '查看' : ( ModelLocator.getInstance().loginUser.enableReport == 1 ? (  (data as PcWorkPlanVo).id == 0 ? '填报' : '修改' ) : '查看' ) }" click="editBtnClick()"
 												 />								
 							</mx:Box>
 						</fx:Component>

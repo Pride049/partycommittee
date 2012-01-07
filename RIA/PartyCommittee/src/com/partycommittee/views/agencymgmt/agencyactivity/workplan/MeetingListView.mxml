@@ -285,7 +285,7 @@
 									}
 								]]>
 							</fx:Script>
-							<button:PcButton id="editBtn" label="{ (data as PcMeetingVo).statusId == 1   ? '查看' : (  ModelLocator.getInstance().loginUser.enableReport == 1 ? '修改' : '查看') }" click="editBtnClick()"/>
+							<button:PcButton id="editBtn" label="{ ( (data as PcMeetingVo).statusId == 1 || (data as PcMeetingVo).statusId == 3 || (data as PcMeetingVo).statusId == 4 )  ? '查看' : (  ModelLocator.getInstance().loginUser.enableReport == 1 ? '修改' : '查看') }" click="editBtnClick()"/>
 						</mx:Box>
 					</fx:Component>
 				</mx:itemRenderer>
@@ -359,7 +359,7 @@
 									}
 								]]>
 							</fx:Script>
-							<button:PcButton id="editBtn" label="{ (data as PcMeetingVo).statusId == 1   ? '查看' : (  ModelLocator.getInstance().loginUser.enableReport == 1 ? '修改' : '查看') }" click="editBtnClick()"/>
+							<button:PcButton id="editBtn" label="{ ( (data as PcMeetingVo).statusId == 1 || (data as PcMeetingVo).statusId == 3 || (data as PcMeetingVo).statusId == 4 )  ? '查看' : (  ModelLocator.getInstance().loginUser.enableReport == 1 ? '修改' : '查看') }" click="editBtnClick()"/>
 						</mx:Box>
 					</fx:Component>
 				</mx:itemRenderer>
@@ -434,7 +434,7 @@
 										}
 									]]>
 								</fx:Script>
-								<button:PcButton id="editBtn" label="{ (data as PcMeetingVo).statusId == 1  ? '查看' : (  ModelLocator.getInstance().loginUser.enableReport == 1 ? '修改' : '查看') }" click="editBtnClick()"/>
+								<button:PcButton id="editBtn" label="{ ( (data as PcMeetingVo).statusId == 1 || (data as PcMeetingVo).statusId == 3 || (data as PcMeetingVo).statusId == 4 )  ? '查看' : (  ModelLocator.getInstance().loginUser.enableReport == 1 ? '修改' : '查看') }" click="editBtnClick()"/>
 							</mx:Box>
 						</fx:Component>
 					</mx:itemRenderer>

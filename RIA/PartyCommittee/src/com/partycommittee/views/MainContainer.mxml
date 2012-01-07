@@ -66,6 +66,7 @@
 			}
 			
 			private function onGetSessionSuccess(data:Object, evt:PcUserEvent):void {
+				if (!data) return;
 				var user:PcUserVo = data as PcUserVo;
 				model.loginUser = user;
 				if (!user) {
@@ -101,9 +102,10 @@
 					mainViewStack.removeChild(accountView);
 				}
 				
-				
-				orgView.editEnable = (parseFloat(model.loginUser.privilege) == model.focusAgencyVo.id );
-				if (model.isLeafUser && model.loginUser.enableReport != 1) orgView.editEnable = false;		
+				if (orgView && model.focusAgencyVo) {
+					orgView.editEnable = (parseFloat(model.loginUser.privilege) == model.focusAgencyVo.id );
+					if (model.isLeafUser && model.loginUser.enableReport != 1) orgView.editEnable = false;
+				}
 				
 			}
 			
@@ -173,8 +175,10 @@
 					}
 				}
 				
-				orgView.editEnable = (parseFloat(model.loginUser.privilege) == model.focusAgencyVo.id );
-				if (model.isLeafUser && model.loginUser.enableReport != 1) orgView.editEnable = false;	
+				if (orgView && model.focusAgencyVo) {
+					orgView.editEnable = (parseFloat(model.loginUser.privilege) == model.focusAgencyVo.id );
+					if (model.isLeafUser && model.loginUser.enableReport != 1) orgView.editEnable = false;	
+				}
 			}
 		]]>
 	</fx:Script>
