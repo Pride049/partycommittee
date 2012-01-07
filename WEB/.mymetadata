@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project-module
   type="WEB"
-  name="PartyCommittee"
+  name="zzsh"
   id="myeclipse.1313373492571"
-  context-root="/PartyCommittee"
+  context-root="/zzsh"
   j2ee-spec="5.0"
-  archive="PartyCommittee.war">
+  archive="zzsh.war">
   <attributes>
     <attribute name="webrootdir" value="WebRoot" />
   </attributes>
