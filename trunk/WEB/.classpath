@@ -5,7 +5,7 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
-	<classpathentry kind="lib" path="C:/doc/apache-tomcat-7.0.5/lib/servlet-api.jar"/>
+	<classpathentry kind="lib" path="E:/workspace/tools/apache-tomcat-6.0.35/lib/servlet-api.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/commons-attributes-api.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/commons-attributes-compiler.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/commons-beanutils-core.jar"/>
