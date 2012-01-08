@@ -30,7 +30,7 @@ package com.partycommittee.commands
 					proxy.createWorkPlan(pcWorkPlanEvt.workPlan);
 					break;
 				case PcWorkPlanEvent.GET_COMMIT_CHILDREN_WORKPLAN:
-					proxy.getCommitWorkplanListByParentId(pcWorkPlanEvt.agency.id);
+					proxy.getCommitWorkplanListByParentId(pcWorkPlanEvt.agency.id, pcWorkPlanEvt.year);
 					break;
 				case PcWorkPlanEvent.GET_WORKPLAN_QUARTER:
 					proxy.getWorkPlanQuarter(pcWorkPlanEvt.agency.id, pcWorkPlanEvt.year, pcWorkPlanEvt.quarter);

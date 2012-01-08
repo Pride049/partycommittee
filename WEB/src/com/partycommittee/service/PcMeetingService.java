@@ -301,7 +301,7 @@ public class PcMeetingService {
 		pcMeetingContentDaoImpl.createContent(PcMeetingContentVo.toPcMeetingContent(contentVo));
 	}
 
-	public List<PcMeetingVo> getCommitChildrenMeeting(Integer agencyId) {
+	public List<PcMeetingVo> getCommitChildrenMeeting(Integer agencyId, Integer year) {
 		List<PcMeetingVo> list = new ArrayList<PcMeetingVo>();
 		List<PcAgencyRelation> agencyRelationList = pcAgencyRelationDaoImpl.getChildrenByParentId(agencyId);
 		if (agencyRelationList == null || agencyRelationList.size() == 0) {
@@ -312,7 +312,7 @@ public class PcMeetingService {
 			agencyIds.add(agencyRelation.getAgencyId());
 		}
 		List<PcMeeting> meetingList = new ArrayList<PcMeeting>();
-		meetingList = pcMeetingDaoImpl.getCommitMeetingListByAgencyIds(agencyIds);
+		meetingList = pcMeetingDaoImpl.getCommitMeetingListByAgencyIds(agencyIds, year);
 		if (meetingList != null && meetingList.size() > 0) {
 			for (PcMeeting meeting : meetingList) {
 				list.add(PcMeetingVo.fromPcMeeting(meeting));

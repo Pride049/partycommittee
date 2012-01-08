@@ -19,7 +19,7 @@ public class PcMemberDaoImpl extends JpaDaoBase implements PcMemberDao {
 	@Override
 	public List<PcMember> getMemberList() {
 		try {
-			return super.getJpaTemplate().find("from PcMember");
+			return super.getJpaTemplate().find("from PcMember Order By sort asc");
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -30,7 +30,7 @@ public class PcMemberDaoImpl extends JpaDaoBase implements PcMemberDao {
 	@Override
 	public List<PcMember> getMemberListByAgencyId(int agencyId) {
 		try {
-			return super.getJpaTemplate().find("from PcMember where agencyId = " + agencyId);
+			return super.getJpaTemplate().find("from PcMember where agencyId = " + agencyId + " Order By sort asc");
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

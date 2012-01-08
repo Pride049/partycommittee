@@ -24,13 +24,12 @@
 			
 			private function onModelChanged(event:PropertyChangeEvent):void {
 				if (event.property == "focusAgencyVo") {
-					updateData();year_hbox
+					updateData();
 				}
 			}
 			
 			private function updateData():void {
 				tab.removeAll();
-				year_hbox.visible = false;
 				if (model.isLeafUser && model.focusAgencyVo.id != parseFloat(model.loginUser.privilege)) return;
 				if (model.focusAgencyVo.codeId == 10) {
 					var reportView:ReportView = new ReportView();
@@ -42,16 +41,15 @@
 					tab.addChild(reportView);
 					if (model.loginUser.enableReport != 1) {
 						reportView.enableReport = false;				
-					}				
-					year_hbox.visible = true;
+					}
 				} else {
 					var browseView:BrowseView = new BrowseView();
+					browseView.yearCmb = yearCmb;
 					browseView.label = "组织生活";
 					browseView.percentHeight = 100;
 					browseView.percentWidth = 100;
 					browseView.tab = this.tab;
 					tab.addChild(browseView);	
-					year_hbox.visible = false;
 				}
 
 			}			

@@ -1,6 +1,8 @@
 package com.partycommittee.persistence.daoimpl;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
@@ -14,7 +16,7 @@ public class PcMeetingDaoImpl extends JpaDaoBase implements PcMeetingDao {
 	@SuppressWarnings("unchecked")
 	public List<PcMeeting> getMeetingList(Integer agencyId, Integer year, Integer typeId) {
 		try {
-			return super.find("from PcMeeting where agencyId = ? and year = ? and typeId = ?", 
+			return super.find("from PcMeeting where agency_id = ? and year = ? and typeId = ?", 
 					agencyId, year, typeId);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -52,7 +54,7 @@ public class PcMeetingDaoImpl extends JpaDaoBase implements PcMeetingDao {
 
 	@SuppressWarnings("unchecked")
 	public List<PcMeeting> getCommitMeetingListByAgencyIds(
-			List<Integer> agencyIds) {
+			List<Integer> agencyIds, Integer year) {
 		try {
 			if (agencyIds == null || agencyIds.size() == 0) {
 				return null;
@@ -65,7 +67,12 @@ public class PcMeetingDaoImpl extends JpaDaoBase implements PcMeetingDao {
 					ids += "," + idItem;
 				}
 			}
-			return super.find("from PcMeeting where agencyId in (" + ids + ")");
+			if (year == 0)  {
+				Calendar calendar=Calendar.getInstance();  
+				calendar.setTime(new Date()); 
+				year = calendar.get(Calendar.YEAR);
+			}			
+			return super.find("from PcMeeting where agency_id in (" + ids + ") AND year = " + year + " AND status_id <> 2 Order by agency_id ASC, quarter ASC, id DESC");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -76,7 +83,7 @@ public class PcMeetingDaoImpl extends JpaDaoBase implements PcMeetingDao {
 	public PcMeeting getMeeting(Integer agencyId, Integer year, Integer quarter, Integer typeId) {
 		try {
 			List<PcMeeting> list = new ArrayList<PcMeeting>();
-			list = super.find("from PcMeeting where agencyId = ? and year = ? and quarter = ? and typeId = ?", 
+			list = super.find("from PcMeeting where agency_id = ? and year = ? and quarter = ? and typeId = ?", 
 					agencyId, year, quarter, typeId);
 			if (list != null && list.size() > 0) {
 				return list.get(0);

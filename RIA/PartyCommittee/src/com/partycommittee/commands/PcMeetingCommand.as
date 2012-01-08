@@ -49,7 +49,7 @@ package com.partycommittee.commands
 					proxy.updateMeeting(meeting);
 					break;
 				case PcMeetingEvent.GET_COMMIT_CHILDREN_MEETING:
-					proxy.getCommitChildrenMeeting(pcMeetingEvt.agency.id);
+					proxy.getCommitChildrenMeeting(pcMeetingEvt.agency.id, pcMeetingEvt.year );
 					break;
 				case PcMeetingEvent.GET_EVALUATE_INFO:
 					proxy.getEvaluateInfo(pcMeetingEvt.meeting.id);

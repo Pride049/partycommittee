@@ -80,7 +80,7 @@ public class PcWorkPlanService {
 		return workPlanVo;
 	}
 
-	public List<PcWorkPlanVo> getCommitWorkplanListByParentId(Integer agencyId) {
+	public List<PcWorkPlanVo> getCommitWorkplanListByParentId(Integer agencyId, Integer year) {
 		List<PcWorkPlanVo> list = new ArrayList<PcWorkPlanVo>();
 		List<PcAgencyRelation> agencyRelationList = pcAgencyRelationDaoImpl.getChildrenByParentId(agencyId);
 		if (agencyRelationList == null || agencyRelationList.size() == 0) {
@@ -91,7 +91,7 @@ public class PcWorkPlanService {
 			agencyIds.add(agencyRelation.getAgencyId());
 		}
 		List<PcWorkPlan> workPlanList = new ArrayList<PcWorkPlan>();
-		workPlanList = pcWorkPlanDaoImpl.getCommitWorkPlanListByAgencyIds(agencyIds);
+		workPlanList = pcWorkPlanDaoImpl.getCommitWorkPlanListByAgencyIds(agencyIds, year);
 		for (PcWorkPlan workPlan : workPlanList) {
 			list.add(PcWorkPlanVo.fromPcWorkPlan(workPlan));
 		}

@@ -11,10 +11,13 @@
 	<fx:Script>
 		<![CDATA[
 			import com.partycommittee.model.ModelLocator;
+			import com.partycommittee.util.DataproviderFactory;
 			import com.partycommittee.vo.PcAgencyVo;
 			
+			import mx.controls.ComboBox;
 			import mx.events.PropertyChangeEvent;
 			
+			public var yearCmb:ComboBox; 
 			[Bindable]
 			private var model:ModelLocator = ModelLocator.getInstance();
 			
@@ -25,6 +28,11 @@
 			private function onCreationCompleted():void {
 				updateDisplay();
 				model.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, onModelChanged);
+				if (yearCmb) {
+					yearCmb.dataProvider = DataproviderFactory.getRangeYearForReport();
+					yearCmb.selectedItem = model.reportYear = new Date().getFullYear();
+					yearCmb.addEventListener(Event.CHANGE, onYearCmbChanged);
+				}				
 			}
 			
 			private function onModelChanged(event:PropertyChangeEvent):void {
@@ -45,6 +53,10 @@
 					this.enabled = false;
 				}
 			}
+			
+			private function onYearCmbChanged(event:Event):void {
+				model.reportYear = yearCmb.selectedItem as Number;
+			}			
 		]]>
 	</fx:Script>
 	<fx:Declarations>
