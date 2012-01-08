@@ -1,5 +1,7 @@
 package com.partycommittee.persistence.daoimpl;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
@@ -27,7 +29,7 @@ public class PcWorkPlanDaoImpl extends JpaDaoBase implements PcWorkPlanDao {
 	@Override
 	public PcWorkPlan getWorkPlanYearlyByAgencyId(Integer agencyId, Integer year) {
 		try {
-			List<PcWorkPlan> list = super.find("from PcWorkPlan where agencyId = ? and year = ? and typeId = ?"
+			List<PcWorkPlan> list = super.find("from PcWorkPlan where agency_id = ? and year = ? and typeId = ?"
 					, agencyId, year, 1);
 			if (list != null && list.size() > 0) {
 				return list.get(0);
@@ -42,7 +44,7 @@ public class PcWorkPlanDaoImpl extends JpaDaoBase implements PcWorkPlanDao {
 	public PcWorkPlan getWorkPlanYearlySummaryByAgencyId(Integer agencyId,
 			Integer year) {
 		try {
-			List<PcWorkPlan> list = super.find("from PcWorkPlan where agencyId = ? and year = ? and typeId = ?"
+			List<PcWorkPlan> list = super.find("from PcWorkPlan where agency_id = ? and year = ? and typeId = ?"
 					, agencyId, year, 4);
 			if (list != null && list.size() > 0) {
 				return list.get(0);
@@ -76,7 +78,7 @@ public class PcWorkPlanDaoImpl extends JpaDaoBase implements PcWorkPlanDao {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<PcWorkPlan> getCommitWorkPlanListByAgencyIds(List<Integer> agencyIds) {
+	public List<PcWorkPlan> getCommitWorkPlanListByAgencyIds(List<Integer> agencyIds, Integer year) {
 		try {
 			if (agencyIds == null || agencyIds.size() == 0) {
 				return null;
@@ -89,7 +91,12 @@ public class PcWorkPlanDaoImpl extends JpaDaoBase implements PcWorkPlanDao {
 					ids += "," + idItem;
 				}
 			}
-			return super.find("from PcWorkPlan where agencyId in (" + ids + ")");
+			if (year == 0)  {
+				Calendar calendar=Calendar.getInstance();  
+				calendar.setTime(new Date()); 
+				year = calendar.get(Calendar.YEAR);
+			}
+			return super.find("from PcWorkPlan where agency_id in (" + ids + ") AND year = " + year + " AND status_id <> 2 Order by agency_id ASC ");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -100,7 +107,7 @@ public class PcWorkPlanDaoImpl extends JpaDaoBase implements PcWorkPlanDao {
 	public PcWorkPlan getWorkPlanQuarterByAgencyId(Integer agencyId,
 			Integer year, Integer quarter) {
 		try {
-			List<PcWorkPlan> list = super.find("from PcWorkPlan where agencyId = ? and year = ? and quarter = ? and typeId = ?"
+			List<PcWorkPlan> list = super.find("from PcWorkPlan where agency_id = ? and year = ? and quarter = ? and typeId = ?"
 					, agencyId, year, quarter, 2);
 			if (list != null && list.size() > 0) {
 				return list.get(0);
@@ -114,7 +121,7 @@ public class PcWorkPlanDaoImpl extends JpaDaoBase implements PcWorkPlanDao {
 	@SuppressWarnings("unchecked")
 	public List<PcWorkPlan> getWorkPlanQuarterByYear(Integer agencyId, Integer year) {
 		try {
-			return super.find("from PcWorkPlan where agencyId = ? and year = ? and typeId = ?",
+			return super.find("from PcWorkPlan where agency_id = ? and year = ? and typeId = ?",
 					agencyId, year, 2);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -126,7 +133,7 @@ public class PcWorkPlanDaoImpl extends JpaDaoBase implements PcWorkPlanDao {
 	public List<PcWorkPlan> getResultQuarterByYear(Integer agencyId,
 			Integer year) {
 		try {
-			return super.find("from PcWorkPlan where agencyId = ? and year = ? and typeId = ?",
+			return super.find("from PcWorkPlan where agency_id = ? and year = ? and typeId = ?",
 					agencyId, year, 3);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -138,7 +145,7 @@ public class PcWorkPlanDaoImpl extends JpaDaoBase implements PcWorkPlanDao {
 	public PcWorkPlan getResultQuarterByAgencyId(Integer agencyId,
 			Integer year, Integer quarter) {
 		try {
-			List<PcWorkPlan> list = super.find("from PcWorkPlan where agencyId = ? and year = ? and quarter = ? and typeId = ?"
+			List<PcWorkPlan> list = super.find("from PcWorkPlan where agency_id = ? and year = ? and quarter = ? and typeId = ?"
 					, agencyId, year, quarter, 3);
 			if (list != null && list.size() > 0) {
 				return list.get(0);

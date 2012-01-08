@@ -50,8 +50,8 @@ package com.partycommittee.proxy
 			service.updateMeeting(meeting);
 		}
 		
-		public function getCommitChildrenMeeting(agencyId:Number):void {
-			service.getCommitChildrenMeeting(agencyId);
+		public function getCommitChildrenMeeting(agencyId:Number, year:Number):void {
+			service.getCommitChildrenMeeting(agencyId, year);
 		}
 		
 		public function getEvaluateInfo(meetingId:Number):void {

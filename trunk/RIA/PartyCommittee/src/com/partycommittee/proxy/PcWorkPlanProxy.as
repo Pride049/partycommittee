@@ -58,8 +58,8 @@ package com.partycommittee.proxy
 			service.submitWorkPlan(workPlan);
 		}
 		
-		public function getCommitWorkplanListByParentId(parentId:Number):void {
-			service.getCommitWorkplanListByParentId(parentId);
+		public function getCommitWorkplanListByParentId(parentId:Number, year:Number):void {
+			service.getCommitWorkplanListByParentId(parentId, year);
 		}
 		
 		public function approvalWorkplan(workPlanId:Number, content:PcWorkPlanContentVo):void {

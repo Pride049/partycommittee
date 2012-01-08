@@ -12,7 +12,7 @@ public interface PcWorkPlanDao {
 
 	public void updateWorkPlan(PcWorkPlan workPlan);
 	
-	public List<PcWorkPlan> getCommitWorkPlanListByAgencyIds(List<Integer> agencyIds);
+	public List<PcWorkPlan> getCommitWorkPlanListByAgencyIds(List<Integer> agencyIds, Integer year);
 	
 	public PcWorkPlan getWorkPlanQuarterByAgencyId(Integer agencyId,
 			Integer year, Integer quarter);

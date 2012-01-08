@@ -73,8 +73,8 @@ public class PcMeetingRemoteService {
 	}
 	
 	@RemotingInclude
-	public List<PcMeetingVo> getCommitChildrenMeeting(Integer agencyId) {
-		return pcMeetingService.getCommitChildrenMeeting(agencyId);
+	public List<PcMeetingVo> getCommitChildrenMeeting(Integer agencyId, Integer year) {
+		return pcMeetingService.getCommitChildrenMeeting(agencyId, year);
 	}
 	
 	@RemotingInclude

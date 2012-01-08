@@ -24,6 +24,8 @@
 			
 			[Bindable]
 			private var model:ModelLocator = ModelLocator.getInstance();
+
+			private var year:Number;
 			
 			private var _agency:PcAgencyVo;
 			[Bindable]
@@ -38,8 +40,9 @@
 			private var dp:ArrayCollection = new ArrayCollection();
 			
 			private function onCreationCompleted():void {
+				this.year = model.reportYear;
 				onNavigateIn();
-				refreshData();
+//				refreshData();
 			}
 			
 			override protected function onNavigateIn():void {
@@ -55,8 +58,9 @@
 			}
 			
 			private function onModelChanged(event:PropertyChangeEvent):void {
-				if (event.property == "focusAgencyVo") {
+				if (event.property == "focusAgencyVo" || event.property == 'reportYear') {
 					agency = model.focusAgencyVo;
+					this.year = model.reportYear;
 					refreshData();
 				}
 			}
@@ -84,6 +88,8 @@
 			private function getCommitMeeting():void {
 				var pcMeetingEvent:PcMeetingEvent = new PcMeetingEvent(PcMeetingEvent.GET_COMMIT_CHILDREN_MEETING);
 				pcMeetingEvent.agency = agency;
+				if (this.year == 0) this.year = new Date().getFullYear();
+				pcMeetingEvent.year = this.year;
 				pcMeetingEvent.failureCallback = getMeetingFailure;
 				pcMeetingEvent.successCallback = getMeetingSuccess;
 				pcMeetingEvent.dispatch();
