@@ -60,6 +60,10 @@
 				}
 			}
 			
+			override protected function onNavigateOut():void {
+				model.removeEventListener(PropertyChangeEvent.PROPERTY_CHANGE, onPropertyChanged);
+			}
+			
 			private function onGetWorkPlanAlertSuccess(data:Object, evt:PcWorkPlanEvent):void {
 				dp.addAll(data as ArrayCollection);
 				var pcMeetingEvt:PcMeetingEvent = new PcMeetingEvent(PcMeetingEvent.GET_ALERT_INFO);
@@ -85,10 +89,7 @@
 			private function onGetMeetingAlertFailure(info:Object, evt:PcMeetingEvent):void {
 				Alert.show(info.toString());
 			}
-			
-			override protected function onNavigateOut():void {
-			}
-			
+
 			private function getQuarter():Number {
 				var month:Number = new Date().getMonth();
 				if (month <= 3) {

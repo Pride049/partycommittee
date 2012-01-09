@@ -15,7 +15,7 @@
 		<![CDATA[
 			import com.partycommittee.model.ModelLocator;
 			import com.partycommittee.vo.PcAgencyVo;
-			
+
 			import mx.events.PropertyChangeEvent;
 			
 			private var _editEnable:Boolean = true;
