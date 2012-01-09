@@ -20,6 +20,7 @@
 			import com.partycommittee.util.CRUDEventType;
 			import com.partycommittee.vo.PcAgencyVo;
 			
+			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
 			import mx.managers.PopUpManager;
 			
@@ -108,19 +109,21 @@
 			private function onCallbackSuccessed(data:Object, evt:PcAgencyEvent):void {
 				this.enabled = true;
 				// Dispatch event to update tree.
-				if (evt.type == CRUDEventType.CREATE) {
+//				if (type == CRUDEventType.CREATE) {
 					model.tree.dispatchEvent(new TreeOperationEvent(
 						TreeOperationEvent.CHILD_NODE_CHAGNED, model.tree.selectedItem));
-				} else {
-					model.tree.dispatchEvent(new TreeOperationEvent(
-						TreeOperationEvent.NODE_CHANGED, model.tree.selectedItem));
-				}
-				var agencyEvent:PcAgencyEvent = new PcAgencyEvent(PcAgencyEvent.GET_ROOT_AGENCY_BY_USERID);
-				agencyEvent.userId = model.loginUser.id;
-				agencyEvent.dispatch();				
+//				} else {
+//					model.tree.dispatchEvent(new TreeOperationEvent(
+//						TreeOperationEvent.NODE_CHANGED, model.tree.selectedItem));
+//				}
+				
+//				model.tree = new ArrayCollection();
+//				var agencyEvent:PcAgencyEvent = new PcAgencyEvent(PcAgencyEvent.GET_ROOT_AGENCY_BY_USERID);
+//				agencyEvent.userId = model.loginUser.id;
+//				agencyEvent.dispatch();		
 				close();
 			}
-			
+						
 			private function onCallbackFailure(info:Object, evt:PcAgencyEvent):void {
 				this.enabled = true;
 				Alert.show(info.toString());

@@ -30,7 +30,17 @@
 			
 			public var parentView:Object;
 			
+			private var _editEnable:Boolean = true;
+			[Bindable]
+			public function get editEnable():Boolean {
+				return this._editEnable;
+			}
+			public function set editEnable(value:Boolean):void {
+				this._editEnable = value;
+			}
+			
 			private var _memberVo:PcMemberVo;
+
 			[Bindable]
 			public function get memberVo():PcMemberVo {
 				return this._memberVo;
@@ -275,7 +285,7 @@
 			-->
 		</mx:Form>
 		<mx:ControlBar width="100%" horizontalAlign="center">
-			<button:PcButton label="保存" click="save()"/>
+			<button:PcButton label="保存" click="save()" visible="{editEnable}"/>
 			<button:PcButton label="取消" click="close()"/>
 		</mx:ControlBar>
 	</mx:VBox>

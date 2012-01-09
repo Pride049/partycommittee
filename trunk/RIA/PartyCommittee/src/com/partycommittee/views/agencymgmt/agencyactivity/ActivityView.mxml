@@ -28,6 +28,10 @@
 				}
 			}
 			
+			override protected function onNavigateOut():void {
+				model.removeEventListener(PropertyChangeEvent.PROPERTY_CHANGE, onModelChanged);
+			}			
+			
 			private function updateData():void {
 				tab.removeAll();
 				if (model.isLeafUser && model.focusAgencyVo.id != parseFloat(model.loginUser.privilege)) return;

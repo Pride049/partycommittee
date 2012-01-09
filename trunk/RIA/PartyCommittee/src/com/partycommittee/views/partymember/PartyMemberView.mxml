@@ -17,6 +17,7 @@
 			import com.partycommittee.util.CRUDEventType;
 			import com.partycommittee.util.LblFunctionHelper;
 			import com.partycommittee.vo.PcAgencyVo;
+			import com.partycommittee.vo.PcMeetingVo;
 			import com.partycommittee.vo.PcMemberVo;
 			import com.partycommittee.vo.page.PageHelperVo;
 			import com.partycommittee.vo.page.PageResultVo;
@@ -103,8 +104,13 @@
 				var window:PartyMemberWindow = new PartyMemberWindow();
 				window.type = CRUDEventType.UPDATE;
 				window.parentView = this;
+				
+
 				window.title = "修改支委委员";
 				window.memberVo = datagrid. selectedItem as PcMemberVo;
+				// 党支部登录或者是本身的党委可以修改
+				window.editEnable = editEnable;
+				
 				PopupMgr.instance.popupWindow(window);
 			}
 			
