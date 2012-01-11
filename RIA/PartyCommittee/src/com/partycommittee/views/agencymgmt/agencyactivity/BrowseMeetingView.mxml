@@ -139,6 +139,13 @@
 				win.type = PCConst.WORKFLOW_TYPE_EVALUATE;
 				PopupMgr.instance.popupWindow(win);
 			}
+			
+
+			
+			private function onItemDoubleClick():void {
+				evaluateMeeting(datagrid.selectedItem as PcMeetingVo);
+			}			
+			
 		]]>
 	</fx:Script>
 	
@@ -156,7 +163,9 @@
 		-->
 		<mx:AdvancedDataGrid id="datagrid" width="100%" height="100%" 
 							 headerStyleName="dataGridHeader"
-							 dataProvider="{dp}">
+							 dataProvider="{dp}"
+							 doubleClickEnabled="true"
+							 doubleClick="onItemDoubleClick()">
 			<mx:columns>
 				<mx:AdvancedDataGridColumn headerText="序号" dataField="id"/>
 				<mx:AdvancedDataGridColumn headerText="会议类型" dataField="typeId"

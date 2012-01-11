@@ -255,6 +255,9 @@
 				PopupMgr.instance.popupWindow(win);
 			}
 			
+			private function onItemDoubleClick():void {
+				editMeeting(dg.selectedItem as PcMeetingVo);
+			}
 		]]>
 	</fx:Script>
 	<fx:Declarations>
@@ -409,7 +412,9 @@
 		</fx:Array>
 	</fx:Declarations>
 	<mx:VBox height="100%" width="100%">
-		<mx:AdvancedDataGrid id="dg" dataProvider="{dp}" width="100%" height="100%">
+		<mx:AdvancedDataGrid id="dg" dataProvider="{dp}" width="100%" height="100%"
+							 doubleClickEnabled="true"
+							 doubleClick="onItemDoubleClick()">
 			<mx:columns>
 				<mx:AdvancedDataGridColumn headerText="年度" dataField="year"/>
 				<mx:AdvancedDataGridColumn headerText="季度" dataField="quarter" 
@@ -485,7 +490,7 @@
 		</mx:AdvancedDataGrid>
 		<mx:ControlBar width="100%" height="32"
 					   horizontalAlign="right" visible="{!browseMode}">
-			<mx:Button id="createMeetingBtn" label="新建会议" click="onNewMeetingClick()"/>
+			<mx:Button id="createMeetingBtn" label="新建" click="onNewMeetingClick()"/>
 		</mx:ControlBar>
 	</mx:VBox>
 	
