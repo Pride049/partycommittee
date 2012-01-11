@@ -7,7 +7,8 @@
 		   label="年度计划"
 		   creationComplete="onCreationCompleted()"
 		   xmlns:button="com.partycommittee.control.button.*" 
-		   xmlns:richtexttoolbar="com.partycommittee.control.richtexttoolbar.*">
+		   xmlns:richtexttoolbar="com.partycommittee.control.richtexttoolbar.*"
+		   verticalScrollPolicy="auto">
 	<fx:Script>
 		<![CDATA[
 			import com.partycommittee.events.PcWorkPlanEvent;
@@ -231,7 +232,7 @@
 		<mx:TextArea id="textArea" width="100%" height="100%"
 					 editable="{!workPlan || workPlan.statusId == 2}"/>
 		
-		<mx:HBox horizontalAlign="right" width="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off">
+		<mx:HBox horizontalAlign="left" width="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off">
 			<mx:Label text="填写人："/>
 			<mx:TextInput id="personTxt" width="200"
 						  editable="{!workPlan || workPlan.statusId == 2}"/>
@@ -246,11 +247,11 @@
 		<mx:ControlBar width="100%" horizontalAlign="center" verticalAlign="middle"
 					   visible="{!browseMode}" includeInLayout="{!browseMode}">
 			<button:PcButton label="暂存" click="onSaveWithoutSubmit()"
-							 enabled="{!workPlan || workPlan.statusId == 2}"/>
+							 visible="{!workPlan || workPlan.statusId == 2}"/>
 			<button:PcButton label="上报" click="onSaveAndCommit()"
-							 enabled="{!workPlan || workPlan.statusId == 2}"/>
+							 visible="{!workPlan || workPlan.statusId == 2}"/>
 			<button:PcButton label="查看审批"
-							 enabled="{workPlan &amp;&amp; workPlan.statusId == 3}"
+							 visible="{workPlan &amp;&amp; workPlan.statusId == 3}"
 							 click="onBrowseApproval()"/>
 		</mx:ControlBar>
 	</mx:VBox>

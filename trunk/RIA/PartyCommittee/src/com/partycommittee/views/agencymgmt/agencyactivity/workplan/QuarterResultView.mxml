@@ -255,12 +255,12 @@
 		</mx:HBox>		
 		<mx:ControlBar width="100%" horizontalAlign="center" verticalAlign="middle">
 			<button:PcButton label="暂存" click="onSaveWithoutSubmit()"
-							 enabled="{!workPlan || workPlan.statusId == 2}"
-							 visible="{!detailMode}" includeInLayout="{!detailMode}"/>
+							 visible="{!workPlan || workPlan.statusId == 2}"
+							 includeInLayout="{!detailMode}"/>
 			<button:PcButton label="上报" click="onSaveAndCommit()"
-							 enabled="{!workPlan || workPlan.statusId == 2}"
-							 visible="{!detailMode}" includeInLayout="{!detailMode}"/>
-			<button:PcButton label="查看评价" enabled="{workPlan &amp;&amp; workPlan.statusId == 4}"
+							 visible="{!workPlan || workPlan.statusId == 2}"
+							 includeInLayout="{!detailMode}"/>
+			<button:PcButton label="查看评价" visible="{workPlan &amp;&amp; workPlan.statusId == 4}"
 							 click="onBrowseEvaluate()"/>
 			<button:PcButton label="关闭" click="close()"/>
 		</mx:ControlBar>

@@ -185,6 +185,10 @@
 				Alert.show(info.toString());
 			}
 			
+			private function onItemDoubleClick():void {
+				editWorkPlan(dg.selectedItem as PcWorkPlanVo);
+			}			
+			
 		]]>
 	</fx:Script>
 	<fx:Declarations>
@@ -192,7 +196,9 @@
 	</fx:Declarations>
 	
 	<mx:VBox width="100%" height="100%">
-		<mx:AdvancedDataGrid id="dg" dataProvider="{dp}" width="100%" height="100%">
+		<mx:AdvancedDataGrid id="dg" dataProvider="{dp}" width="100%" height="100%" 
+							 doubleClickEnabled="true"
+							 doubleClick="onItemDoubleClick()">
 			<mx:columns>
 				<mx:AdvancedDataGridColumn headerText="年度" dataField="year"/>
 				<mx:AdvancedDataGridColumn headerText="季度" dataField="quarter" 
