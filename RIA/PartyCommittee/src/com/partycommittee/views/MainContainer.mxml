@@ -77,7 +77,7 @@
 //					model.loginUser = login;
 					return;
 				}
-				
+
 				model.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, onPropertyChanged);
 				
 				// Load agency by 
@@ -116,6 +116,7 @@
 						TreeContextMenuMgr.getInstance().editEnable = false;
 						treeControlBar.visible = treeControlBar.includeInLayout = false;
 						TreeContextMenuMgr.getInstance().enableRefresh = false;
+						unExpandTree();
 					}
 				}
 			}
