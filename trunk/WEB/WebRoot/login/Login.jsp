@@ -36,6 +36,7 @@
             
         <script type="text/javascript" src="swfobject.js"></script>
         <script type="text/javascript">
+        		window.open('notice.htm','newwindow','height=300,width=500,top=0,left=0,toolbar=no,menubar=no,scrollbars=yes, resizable=no,location=no,status=no') 
             // For version detection, set to min. required Flash Player version, or 0 (or 0.0.0), for no version detection. 
             var swfVersionStr = "10.2.0";
             // To use express install, set to playerProductInstall.swf, otherwise the empty string. 
