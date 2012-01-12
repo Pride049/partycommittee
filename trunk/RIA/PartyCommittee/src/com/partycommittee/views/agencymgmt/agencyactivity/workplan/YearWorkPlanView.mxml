@@ -16,6 +16,7 @@
 			import com.partycommittee.model.ModelLocator;
 			import com.partycommittee.util.CRUDEventType;
 			import com.partycommittee.util.DataproviderFactory;
+			import com.partycommittee.util.DateUtil;
 			import com.partycommittee.util.WorkPlanCodeUtil;
 			import com.partycommittee.util.WorkPlanStatusUtil;
 			import com.partycommittee.vo.PcAgencyVo;
@@ -158,7 +159,7 @@
 				browseForm_approve.visible = "true";
 				b_textArea_app.htmlText = workplanContent.content;
 				b_personTxt_app.text = "审批人:" + workplanContent.memberName;
-//				dateTxt.text = DateUtil.toISOString(workplanContent.updatetime);
+				dateTxt.text = "审批日期:" + DateUtil.toISOString(workplanContent.updatetime);
 			}
 			
 			private function onGetWorkplanCommentFailure(info:Object, evt:PcWorkPlanEvent):void {
@@ -304,11 +305,16 @@
 				
 				
 				<mx:HBox width="100%" horizontalAlign="left" height="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off">
-					<s:Group>
-						<s:RichText rotation="90" left="10" right="10" top="10" bottom="10" fontSize="14" fontWeight="bold">
-							<s:content>年度工作计划</s:content>
-						</s:RichText>
-					</s:Group>
+					<mx:VBox left="6" right="6" top="6" bottom="6">
+						<mx:Label text="年"     />
+						<mx:Label text="度"     />
+						<mx:Label text="工"     />
+						<mx:Label text="作"     />
+						<mx:Label text="计"     />
+						<mx:Label text="划"     />
+					</mx:VBox>
+					
+					
 					
 					<mx:VBox width="100%" height="100%">
 						<mx:TextArea id="b_textArea" width="100%" height="100%"
@@ -319,16 +325,17 @@
 				
 				
 				<mx:HBox id="browseForm_approve"  horizontalAlign="left" width="0" height="0" horizontalScrollPolicy="off" verticalScrollPolicy="off" visible="false">
-					<s:Group>
-						<s:RichText rotation="90" left="10" right="10" top="10" bottom="10" fontSize="14" fontWeight="bold">
-							<s:content>审批</s:content>
-						</s:RichText>
-					</s:Group>
+					<mx:VBox left="6" right="6" top="6" bottom="6">
+						<mx:Label text="审"     />
+						<mx:Label text="批"     />
+					</mx:VBox>
+					
 					
 					<mx:VBox width="100%" height="100%">
 						<mx:TextArea id="b_textArea_app" width="100%" height="100%"
 									 editable="false"/>
 						<mx:Label id="b_personTxt_app" text="审批人："/>
+						<mx:Label id="dateTxt"/>
 					</mx:VBox>
 				</mx:HBox>				
 
