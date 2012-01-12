@@ -18,6 +18,7 @@
 			import com.partycommittee.manager.popup.PopupMgr;
 			import com.partycommittee.util.CRUDEventType;
 			import com.partycommittee.util.DataproviderFactory;
+			import com.partycommittee.util.DateUtil;
 			import com.partycommittee.util.WorkPlanCodeUtil;
 			import com.partycommittee.util.WorkPlanStatusUtil;
 			import com.partycommittee.vo.PcAgencyVo;
@@ -149,14 +150,29 @@
 					attendTxt.text = meeting.attend + "";
 					asenceTxt.text = meeting.asence + "";
 					asenceMembersTxt.text = meeting.asenceMemberIds;
-					if (meeting.content) {
-						personTxt.text = meeting.content.memberName;
-						textArea.htmlText = meeting.content.content;
+					
+					if (meeting.statusId == 0 || meeting.statusId == 2) {
+						meetingViewStack.selectedChild = reportForm;
+						if (meeting.content) {
+							personTxt.text = meeting.content.memberName;
+							textArea.htmlText = meeting.content.content;
+						} else {
+							loadMeetingContent();
+						}
 					} else {
-						loadMeetingContent();
+						meetingViewStack.selectedChild = browseForm;
+						if (meeting.content) {
+							b_textArea.htmlText = meeting.content.content;
+							if (meeting.statusId == 4) {
+								getMeetingComment();
+							}							
+						} else {
+							loadMeetingContent();
+						}						
 					}
 				} else {
 					isNew = true;
+					meetingViewStack.selectedChild = reportForm;
 					if (!meeting) {
 						isCustom = true;
 						
@@ -170,6 +186,31 @@
 					}
 				}
 			}
+			
+			private function getMeetingComment():void {
+				var meetingEvt:PcMeetingEvent = new PcMeetingEvent(PcMeetingEvent.GET_MEETING_COMMENT);
+				meetingEvt.meeting = meeting;
+				meetingEvt.successCallback = onGetMeetingCommentSuccess;
+				meetingEvt.failureCallback = onGetMeetingCommentFailure;
+				this.enabled = false;
+				meetingEvt.dispatch();
+			}
+			
+			private function onGetMeetingCommentSuccess(data:Object, evt:PcMeetingEvent):void {
+				this.enabled = true;
+				var meetingContent:PcMeetingContentVo = data as PcMeetingContentVo;
+				if (!meetingContent) {
+					return;
+				}
+				b_textArea_eva.htmlText = meetingContent.content;
+				b_personTxt.text = "评价人" + meetingContent.memberName;
+				dateTxt.text = "评价日期:" + DateUtil.toISOString(meetingContent.updateTime);
+			}
+			
+			private function onGetMeetingCommentFailure(info:Object, evt:PcMeetingEvent):void {
+				this.enabled = true;
+				Alert.show("获取内容失败！");
+			}			
 			
 			private function loadMeetingContent():void {
 				var evt:PcMeetingEvent = new PcMeetingEvent(PcMeetingEvent.GET_MEETING_CONTENT);
@@ -380,20 +421,58 @@
 			<component:ChooseAsenceBox id="asenceBox" width="100%" meeting="{meeting}"/>
 			-->
 		</mx:HBox>
-		<richtexttoolbar:PopupRichTextToolBar width="100%" target="{textArea}"/>
-		<mx:TextArea id="textArea" width="100%" height="100%"
-					 editable="{!meeting || meeting.statusId == 2}"/>
-		<mx:ControlBar width="100%" horizontalAlign="center" verticalAlign="middle">
-			<button:PcButton label="暂存" click="onSaveWithoutSubmit()"
-							 visible="{!meeting || meeting.statusId == 2}"
-							 includeInLayout="{!detailMode}"/>
-			<button:PcButton label="上报" click="onSaveAndCommit()"
-							 visible="{!meeting || meeting.statusId != 1}"
-							 includeInLayout="{!detailMode}"/>
-			<button:PcButton label="查看评价" visible="{meeting &amp;&amp; meeting.statusId == 4}"
-							 click="onBrowseEvaluate()"/>
-			<button:PcButton label="关闭" click="close()"/>
-		</mx:ControlBar>
+		
+		
+		<mx:ViewStack id="meetingViewStack" width="100%" height="100%" creationPolicy="all">
+			<mx:VBox id="reportForm" width="100%" height="100%"
+					 left="6" right="6" top="6" bottom="6"
+					 horizontalScrollPolicy="off" verticalScrollPolicy="off">
+				<richtexttoolbar:PopupRichTextToolBar width="100%" target="{textArea}"/>
+				<mx:TextArea id="textArea" width="100%" height="100%"
+							 editable="{!meeting || meeting.statusId == 2}"/>
+				<mx:ControlBar width="100%" horizontalAlign="center" verticalAlign="middle">
+					<button:PcButton label="暂存" click="onSaveWithoutSubmit()"
+									 visible="{!meeting || meeting.statusId == 2}"
+									 includeInLayout="{!detailMode}"/>
+					<button:PcButton label="上报" click="onSaveAndCommit()"
+									 visible="{!meeting || meeting.statusId == 2 || meeting.statusId == 0}"
+									 includeInLayout="{!detailMode}"/>
+					<button:PcButton label="关闭" click="close()"/>
+				</mx:ControlBar>
+			</mx:VBox>
+			
+			<mx:VBox id="browseForm" width="100%" height="100%"
+					 left="6" right="6" top="6" bottom="6"
+					 horizontalScrollPolicy="off" verticalScrollPolicy="off">
+				<mx:HBox width="100%" horizontalAlign="left" height="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off">
+					<mx:VBox left="6" right="6" top="6" bottom="6">
+						<mx:Label text="会"     />
+						<mx:Label text="议"     />
+						<mx:Label text="内"     />
+						<mx:Label text="容"     />						
+					</mx:VBox>						
+					<mx:TextArea id="b_textArea" width="100%" height="100%"
+								 editable="false"/>
+				</mx:HBox>
+				
+				<mx:HBox id="browseForm_evaluate"  horizontalAlign="left" width="0" height="0" horizontalScrollPolicy="off" verticalScrollPolicy="off" visible="false">
+					<mx:VBox left="6" right="6" top="6" bottom="6">
+						<mx:Label text="评"     />
+						<mx:Label text="价"     />
+					</mx:VBox>	
+					<mx:VBox width="100%" height="100%">
+						<mx:TextArea id="b_textArea_eva" width="100%" height="100%"
+									 editable="false"/>	
+						<mx:Label id="b_personTxt" />
+						<mx:Label id="dateTxt" />
+					</mx:VBox>
+				</mx:HBox>
+				<mx:ControlBar width="100%" horizontalAlign="center" verticalAlign="middle">
+					<button:PcButton label="关闭" click="close()"/>
+				</mx:ControlBar>
+			</mx:VBox>			
+			
+		</mx:ViewStack>
 	</mx:VBox>
 	
 </control:EscapeWindow>

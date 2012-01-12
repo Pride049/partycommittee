@@ -17,6 +17,7 @@
 			import com.partycommittee.manager.popup.PopupMgr;
 			import com.partycommittee.util.CRUDEventType;
 			import com.partycommittee.util.DataproviderFactory;
+			import com.partycommittee.util.DateUtil;
 			import com.partycommittee.util.WorkPlanCodeUtil;
 			import com.partycommittee.util.WorkPlanStatusUtil;
 			import com.partycommittee.vo.PcAgencyVo;
@@ -94,13 +95,30 @@
 					if (workPlanStatusLbl != "") {
 						workPlanStatusLbl = " (" + workPlanStatusLbl + ")";
 					}
-					if (workPlan.workPlanContent) {
-						personTxt.text = workPlan.workPlanContent.memberName;
-						textArea.htmlText = workPlan.workPlanContent.content;
+					
+					if (workPlan.statusId == 0 || workPlan.statusId == 2) {
+						QuearterViewStack.selectedChild = reportForm;
+					
+						if (workPlan.workPlanContent) {
+							personTxt.text = "填报人:" + workPlan.workPlanContent.memberName;
+							textArea.htmlText = workPlan.workPlanContent.content;
+						} else {
+							loadWorkPlanContent();
+						}
 					} else {
-						loadWorkPlanContent();
+						QuearterViewStack.selectedChild = browseForm;
+						if (workPlan.workPlanContent) {
+							b_personTxt.text = "填报人:" + workPlan.workPlanContent.memberName;
+							b_textArea.htmlText = workPlan.workPlanContent.content;
+							if (workPlan.statusId == 4) {
+								getWorkPlanComment(workPlan);
+							}
+						} else {
+							loadWorkPlanContent();
+						}
 					}
 				} else {
+					QuearterViewStack.selectedChild = reportForm;
 					isNew = true;
 				}
 			}
@@ -117,9 +135,43 @@
 			private function onLoadContentSuccess(data:Object, evt:PcWorkPlanEvent):void {
 				this.enabled = true;
 				workPlan.workPlanContent = data as PcWorkPlanContentVo;
-				personTxt.text = workPlan.workPlanContent.memberName;
-				textArea.htmlText = workPlan.workPlanContent.content;
+				if (workPlan.statusId == 0 || workPlan.statusId == 2) {
+					personTxt.text = workPlan.workPlanContent.memberName;
+					textArea.htmlText = workPlan.workPlanContent.content;
+				} else {
+					b_personTxt.text = "填报人:" + workPlan.workPlanContent.memberName;
+					b_textArea.htmlText = workPlan.workPlanContent.content;		
+					if (workPlan.statusId == 4) {
+						getWorkPlanComment(workPlan);
+					}					
+				}
 			}
+			
+			private function onGetWorkplanCommentFailure(info:Object, evt:PcWorkPlanEvent):void {
+				Alert.show("获取内容失败！");
+			}					
+			
+			private function getWorkPlanComment(workPlan:PcWorkPlanVo):void {
+				var workPlanEvt:PcWorkPlanEvent = new PcWorkPlanEvent(PcWorkPlanEvent.GET_WORKPLAN_COMMENT);
+				workPlanEvt.workPlan = workPlan;
+				workPlanEvt.successCallback = onGetWorkplanCommentSuccess;
+				workPlanEvt.failureCallback = onGetWorkplanCommentFailure;
+				workPlanEvt.dispatch();
+			}
+			
+			private function onGetWorkplanCommentSuccess(data:Object, evt:PcWorkPlanEvent):void {
+				this.enabled = true;
+				var workplanContent:PcWorkPlanContentVo = data as PcWorkPlanContentVo;
+				if (!workplanContent) {
+					return;
+				}
+				browseForm_evaluate.percentWidth = 100;
+				browseForm_evaluate.percentHeight = 30;
+				browseForm_evaluate.visible = "true";
+				b_textArea_eva.htmlText = workplanContent.content;
+				b_personTxt_eva.text = "评价人:" + workplanContent.memberName;
+				dateTxt.text = "评价日期:" + DateUtil.toISOString(workplanContent.updatetime);
+			}			
 			
 			private function onLoadContentFailure(info:Object, evt:PcWorkPlanEvent):void {
 				this.enabled = true;
@@ -226,10 +278,7 @@
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
-	
-	<mx:VBox width="100%" height="100%"
-			 left="6" right="6" top="6" bottom="6"
-			 horizontalScrollPolicy="off" verticalScrollPolicy="off">
+	<mx:VBox width="100%" height="100%">
 		<mx:HBox width="100%" horizontalAlign="center"
 				 horizontalScrollPolicy="off" verticalScrollPolicy="off">
 			<mx:Label fontSize="20" fontWeight="bold" text="{year + '年度第' + quarter + '季度执行情况'}"/>
@@ -242,28 +291,70 @@
 		</mx:HBox>
 		<mx:HBox width="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off">
 			<mx:Label text="季    度："/>
-			<mx:Label text="{quarter}"/>
-		</mx:HBox>
-
-		<richtexttoolbar:PopupRichTextToolBar width="100%" target="{textArea}"/>
-		<mx:TextArea id="textArea" width="100%" height="100%"
-					 editable="{!workPlan || workPlan.statusId == 2}"/>
-		<mx:HBox width="100%" horizontalAlign="right" horizontalScrollPolicy="off" verticalScrollPolicy="off">
-			<mx:Label text="填写人："/>
-			<mx:TextInput id="personTxt" width="200"
-						  editable="{!workPlan || workPlan.statusId == 2}"/>
+			<mx:Label text="第{quarter.toString()}季度"/>
 		</mx:HBox>		
-		<mx:ControlBar width="100%" horizontalAlign="center" verticalAlign="middle">
-			<button:PcButton label="暂存" click="onSaveWithoutSubmit()"
-							 visible="{!workPlan || workPlan.statusId == 2}"
-							 includeInLayout="{!detailMode}"/>
-			<button:PcButton label="上报" click="onSaveAndCommit()"
-							 visible="{!workPlan || workPlan.statusId == 2}"
-							 includeInLayout="{!detailMode}"/>
-			<button:PcButton label="查看评价" visible="{workPlan &amp;&amp; workPlan.statusId == 4}"
-							 click="onBrowseEvaluate()"/>
-			<button:PcButton label="关闭" click="close()"/>
-		</mx:ControlBar>
+		<mx:ViewStack id="QuearterViewStack" width="100%" height="100%" creationPolicy="all"
+					  left="6" right="6" top="6" bottom="6">
+			<mx:VBox id="reportForm" width="100%" height="100%"
+					 left="6" right="6" top="6" bottom="6"
+					 horizontalScrollPolicy="off" verticalScrollPolicy="off">
+		
+		
+				<richtexttoolbar:PopupRichTextToolBar width="100%" target="{textArea}"/>
+				<mx:TextArea id="textArea" width="100%" height="100%"
+							 editable="{!workPlan || workPlan.statusId == 2}"/>
+				<mx:HBox width="100%" horizontalAlign="right" horizontalScrollPolicy="off" verticalScrollPolicy="off">
+					<mx:Label text="填写人："/>
+					<mx:TextInput id="personTxt" width="200"
+								  editable="{!workPlan || workPlan.statusId == 2}"/>
+				</mx:HBox>		
+				<mx:ControlBar width="100%" horizontalAlign="center" verticalAlign="middle">
+					<button:PcButton label="暂存" click="onSaveWithoutSubmit()"
+									 visible="{!workPlan || workPlan.statusId == 2}"
+									 includeInLayout="{!detailMode}"/>
+					<button:PcButton label="上报" click="onSaveAndCommit()"
+									 visible="{!workPlan || workPlan.statusId == 2}"
+									 includeInLayout="{!detailMode}"/>
+					<button:PcButton label="关闭" click="close()"/>
+				</mx:ControlBar>
+			</mx:VBox>
+			
+			<mx:VBox id="browseForm" width="100%" height="100%"
+					 left="6" right="6" top="6" bottom="6"
+					 horizontalScrollPolicy="off" verticalScrollPolicy="off">
+				<mx:HBox width="100%" horizontalAlign="left" height="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off">
+					<mx:VBox left="6" right="6" top="6" bottom="6">
+						<mx:Label text="工"     />
+						<mx:Label text="作"     />
+						<mx:Label text="执"     />
+						<mx:Label text="行"     />
+						<mx:Label text="情"     />
+						<mx:Label text="况"     />
+					</mx:VBox>						
+					<mx:VBox width="100%" height="100%">
+						<mx:TextArea id="b_textArea" width="100%" height="100%"
+								 editable="false"/>
+						<mx:Label id="b_personTxt" text="填写人："/>	
+					</mx:VBox>
+				</mx:HBox>
+				
+				<mx:HBox id="browseForm_evaluate"  horizontalAlign="left" width="0" height="0" horizontalScrollPolicy="off" verticalScrollPolicy="off" visible="false">
+					<mx:VBox left="6" right="6" top="6" bottom="6">
+						<mx:Label text="评"     />
+						<mx:Label text="价"     />
+					</mx:VBox>	
+					<mx:VBox width="100%" height="100%">
+						<mx:TextArea id="b_textArea_eva" width="100%" height="100%"
+									 editable="false"/>
+						<mx:Label id="b_personTxt_eva" text="评价人："/>
+						<mx:Label id="dateTxt"/>
+					</mx:VBox>
+				</mx:HBox>
+				
+				<mx:ControlBar width="100%" horizontalAlign="center" verticalAlign="middle">
+					<button:PcButton label="关闭" click="close()"/>
+				</mx:ControlBar>
+			</mx:VBox>
+		</mx:ViewStack>
 	</mx:VBox>
-	
 </control:EscapeWindow>
