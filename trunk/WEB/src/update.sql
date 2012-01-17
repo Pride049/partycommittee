@@ -66,7 +66,7 @@ begin
   DECLARE status_qt tinyint(1) unsigned;	
   DECLARE rows int default 0;
   DECLARE row int default 0;
-	DECLARE s_cursor CURSOR FOR SELECT a.id, a.name, a.code_id, b.parent_id FROM  pc_agency as a left join pc_agency_relation as b on a.id = b.agency_id WHERE a. code_id = 10;
+	DECLARE s_cursor CURSOR FOR SELECT a.id, a.name, a.code_id, b.parent_id FROM  pc_agency as a left join pc_agency_relation as b on a.id = b.agency_id WHERE a. code_id = 10 and a.id = 4;
 	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done=1;
 	SET y = year(now());
 	SET q = quarter(now());
@@ -148,17 +148,17 @@ begin
 		open s_cursor; 
 		cursor_loop:loop
 		FETCH s_cursor into tmp_status;
-		
+			SELECT tmp_status;
 			IF tmp_status IS NULL THEN
 				SET status = 0;
-			ELSEIF status = 4 THEN
-		  	SET status = tmp_status;
+			ELSEIF tmp_status = 4 THEN
+				SET status = tmp_status;
 		  	leave cursor_loop;
-		  ELSEIF status = 1 THEN
-		  	SET status = tmp_status;
-		  	leave cursor_loop;
+			ELSEIF tmp_status = 1 THEN
+				SET status = tmp_status;
+				leave cursor_loop;
 		 	ELSE 
-		 	  SET status = tmp_status;
+				SET status = tmp_status;
 			END IF;
 			IF done1 = 1 THEN
 			  leave cursor_loop;
