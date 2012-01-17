@@ -6,14 +6,8 @@ ALTER TABLE  `pc_agency_relation` ADD INDEX (  `parent_id` ) ;
 ALTER TABLE  `pc_workplan` ADD INDEX (  `agency_id` ,  `type_id` ,  `year` ,  `quarter` ) ;
 ALTER TABLE  `pc_meeting` ADD INDEX (  `agency_id` ,  `year` ,  `quarter` ,  `type_id` ) ;
 
-explain SELECT a.id, a.name, a.code_id, b.parent_id FROM  `pc_agency` as a 
-left join pc_agency_relation as b on a.id = b.agency_id
-WHERE a. code_id =10
-
-
-explain SELECT a.id, b.parent_id FROM  `pc_agency` as a 
-left join pc_agency_relation as b on a.id = b.agency_id
-
+将pc_workplan status = 2 变成  status = 1  
+将pc_workplan status = 1 变成  status = 2
 
 DROP TABLE IF EXISTS `pc_remind`;
 CREATE TABLE IF NOT EXISTS `pc_remind` (
@@ -38,10 +32,6 @@ CREATE TABLE IF NOT EXISTS `pc_remind` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='党支部提醒统计表' AUTO_INCREMENT=1 ;
 
 
-
-
-
-
 delimiter //
 DROP procedure IF EXISTS stat_remind//
 CREATE PROCEDURE stat_remind()
@@ -55,129 +45,79 @@ begin
 	DECLARE y year(4);
 	DECLARE q tinyint(1) unsigned;
 
-  DECLARE status_year tinyint(1) unsigned;
-  DECLARE status_year_end tinyint(1) unsigned;
-  DECLARE status_quarter tinyint(1) unsigned;
-  DECLARE status_quarter_end tinyint(1) unsigned;
-  DECLARE status_dk tinyint(1) unsigned;
-  DECLARE status_dydh tinyint(1) unsigned;
-  DECLARE status_mzshh tinyint(1) unsigned;
-  DECLARE status_zbwyh tinyint(1) unsigned;
-  DECLARE status_qt tinyint(1) unsigned;	
   DECLARE rows int default 0;
   DECLARE row int default 0;
-	DECLARE s_cursor CURSOR FOR SELECT a.id, a.name, a.code_id, b.parent_id FROM  pc_agency as a left join pc_agency_relation as b on a.id = b.agency_id WHERE a. code_id = 10 and a.id = 4;
+  DECLARE i int;
+  DECLARE s tinyint;
+	DECLARE s_cursor CURSOR FOR SELECT a.id, a.name, a.code_id, b.parent_id FROM  pc_agency as a left join pc_agency_relation as b on a.id = b.agency_id WHERE a. code_id = 10;
 	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done=1;
-	SET y = year(now());
-	SET q = quarter(now());
-	open s_cursor; 
-  SELECT FOUND_ROWS() into rows;
-	cursor_loop:loop
-			FETCH s_cursor into id, name, code_id, parent_id;
-			
-			SET status_year = 0;
-			SET status_year_end = 0;
-			SET status_quarter = 0;
-			SET status_quarter_end = 0;
-			SET status_dk = 0;
-			SET status_dydh = 0;
-			SET status_mzshh = 0;
-			SET status_zbwyh = 0;
-			SET status_qt = 0;
-			if row > rows then
-				leave cursor_loop;
-			end if;			
-			
-			SELECT id;
-			
-			SELECT status_id into status_year FROM pc_workplan WHERE agency_id = id AND year = y AND quarter = q AND type_id = 1;
-			IF  status_year IS NULL THEN
-			   SET status_year = 0;
-			END IF;
-			
-			SELECT status_id into status_quarter FROM pc_workplan WHERE agency_id = id AND year = y AND quarter = q AND type_id = 2;
-			IF  status_quarter IS NULL THEN
-			   SET status_quarter = 0;
-			END IF;			
-			
-			
-			SELECT status_id into status_quarter_end FROM pc_workplan WHERE agency_id = id AND year = y AND quarter = q AND type_id = 3;
-			IF  status_quarter_end IS NULL THEN
-			   SET status_quarter_end = 0;
-			END IF;			
-			
-			SELECT status_id into status_year_end FROM pc_workplan WHERE agency_id = id AND year = y AND quarter = q AND type_id = 4;
-			IF  status_year_end IS NULL THEN
-			   SET status_year_end = 0;
-			END IF;			
-			
-			
-			CALL get_meeting_status(id, y, q, 5, status_dk);
-			CALL get_meeting_status(id, y, q, 6, status_dydh);
-			CALL get_meeting_status(id, y, q, 7, status_mzshh);
-			CALL get_meeting_status(id, y, q, 8, status_zbwyh);
-			CALL get_meeting_status(id, y, q, 9, status_qt);	
-			
-			
-			INSERT INTO  partycommittee.pc_remind (agency_id, name, code_id, parent_id, year, quarter, status_year, status_quarter, status_quarter_end, status_dk, status_dydh, status_mzshh, status_zbwyh, status_qt) 
-			VALUES (id, name, code_id, parent_id, y, q, status_year, status_quarter, status_quarter_end, status_dk, status_dydh, status_mzshh, status_zbwyh, status_qt) 			
-			ON DUPLICATE KEY UPDATE status_year = status_year, status_quarter = status_quarter, status_quarter_end = status_quarter_end, status_dk = status_dk, status_dydh = status_dydh, status_mzshh = status_mzshh, status_zbwyh = status_zbwyh, status_qt = status_qt;
-			
-			
-			SET row = row + 1;
-
-	
-	end loop cursor_loop;
-	close s_cursor;
-  SELECT rows, row;
-end;
-//
-delimiter ;
-
-
-
-delimiter //
-DROP procedure IF EXISTS get_meeting_status//
-CREATE PROCEDURE get_meeting_status(IN agency_id int(11), IN y year(4), IN q tinyint(1), IN type_id int(10), OUT status tinyint(1))
-begin
-		DECLARE done1 int default 0;
-		DECLARE tmp_status tinyint(1) unsigned DEFAULT NULL;
-		DECLARE s_cursor CURSOR FOR SELECT status_id FROM pc_meeting WHERE agency_id = agency_id AND year = y AND quarter = q AND type_id = type_id;
-		DECLARE CONTINUE HANDLER FOR NOT FOUND SET done1=1;
 		
+	SET y = year(now());
+	SET q = quarter(now());		
+	set i = 1;
+	while i < 9 do	
 		open s_cursor; 
+	  SELECT FOUND_ROWS() into rows;
+	  SET row = 0;
 		cursor_loop:loop
-		FETCH s_cursor into tmp_status;
-			SELECT tmp_status;
-			IF tmp_status IS NULL THEN
-				SET status = 0;
-			ELSEIF tmp_status = 4 THEN
-				SET status = tmp_status;
-		  	leave cursor_loop;
-			ELSEIF tmp_status = 1 THEN
-				SET status = tmp_status;
-				leave cursor_loop;
-		 	ELSE 
-				SET status = tmp_status;
-			END IF;
-			IF done1 = 1 THEN
-			  leave cursor_loop;
-			END IF;
+				FETCH s_cursor into id, name, code_id, parent_id;
+				SET s = 0;
+				if row >= rows then
+					leave cursor_loop;
+				end if;			
+				
+				IF i <= 4 THEN
+		   				SELECT status_id into s FROM pc_workplan WHERE agency_id = id AND year = y AND quarter = 0 AND type_id = i;
+		   				IF  s IS NULL THEN
+			   				SET s = 0;
+							END IF;
+							
+				ELSE 
+						 SELECT max(status_id) into s FROM pc_meeting WHERE agency_id = id AND year = y AND quarter = q AND type_id = i;
+						 IF  s IS NULL THEN
+			   				SET s = 0;
+							END IF;
+				END IF;				
+				
+				
+				IF i = 1 THEN
+				   SET q = 0;
+				ELSEIF i = 2 THEN
+				   SET q = 0;
+				END IF;
+				INSERT INTO  pc_remind (agency_id, name, code_id, parent_id, year, quarter, type_id, status) 
+				VALUES (id, name, code_id, parent_id, y, q, i, s) 			
+				ON DUPLICATE KEY UPDATE status = s;
+				
+				SET row = row + 1;
 		end loop cursor_loop;
 		close s_cursor;
-		
-		IF tmp_status IS NULL THEN
-		  SET status = 0;
-		END IF;
-		
+	  
+	  set i=i+1;
+	end while;  
+	
+	INSERT INTO pc_remind_stat as a (agency_id ,name ,code_id ,parent_id ,year ,quarter ,type_id ,status ,count)
+	SELECT T1.parent_id as agency_id, T2.name, T1.code_id, T3.parent_id, T1.year, T1.quarter, T1.type_id, T1.status, T1.nums FROM (SELECT code_id, parent_id, year ,quarter, type_id, status, count(*) as nums FROM pc_remind WHERE year = y GROUP BY code_id, parent_id, year ,quarter, type_id, status) as T1
+	LEFT JOIN pc_agency as T2 ON T1.parent_id = T2.id
+	LEFT JOIN pc_agency_relation as T3 ON T1.parent_id = T3.agency_id
+	ON DUPLICATE KEY UPDATE count = nums;
+	
 end;
 //
 delimiter ;
 
 
+
+INSERT INTO pc_remind_stat (agency_id ,name ,code_id ,parent_id ,year ,quarter ,type_id ,status ,count)
+SELECT T1.parent_id as agency_id, T2.name, T1.code_id, T3.parent_id, T1.year, T1.quarter, T1.type_id, T1.status, T1.nums FROM (SELECT code_id, parent_id, year ,quarter, type_id, status, count(*) as nums FROM pc_remind WHERE year = 2012 GROUP BY code_id, parent_id, year ,quarter, type_id, status) as T1
+LEFT JOIN pc_agency as T2 ON T1.parent_id = T2.id
+LEFT JOIN pc_agency_relation as T3 ON T1.parent_id = T3.agency_id
+ON DUPLICATE KEY UPDATE count = nums;
 
 call stat_remind();
 
 DECLARE status int default 0;
 call get_meeting_status(3, 2011, 1, 9, status);
 SELECT status;
+
+

@@ -118,7 +118,7 @@
 					workPlanStatusLbl = " (" + workPlanStatusLbl + ")";
 				}
 
-				if (workPlan.statusId == 0 || workPlan.statusId == 2) {
+				if (workPlan.statusId == 0 || workPlan.statusId == 1) {
 					yearwpViewStack.selectedChild = reportForm;
 					
 					if (workPlan.workPlanContent) {
@@ -189,7 +189,7 @@
 			private function doUpdate(isCommit:Boolean = false):void {
 				var workPlanEvt:PcWorkPlanEvent = new PcWorkPlanEvent(CRUDEventType.UPDATE);
 				var updateWorkPlan:PcWorkPlanVo = getUpdateWorkPlan();
-				updateWorkPlan.statusId = isCommit ? 1 : 2;
+				updateWorkPlan.statusId = isCommit ? 2 : 1;
 				workPlanEvt.workPlan = updateWorkPlan;
 				workPlanEvt.successCallback = onWorkPlanUpdateSuccess;
 				workPlanEvt.failureCallback = onWorkPlanUpdateFailure;
@@ -200,7 +200,7 @@
 			private function doCreate(isCommit:Boolean = false):void {
 				var workPlanEvt:PcWorkPlanEvent = new PcWorkPlanEvent(CRUDEventType.CREATE);
 				var newWorkPlan:PcWorkPlanVo = getNewWorkPlan();
-				newWorkPlan.statusId = isCommit ? 1 : 2;
+				newWorkPlan.statusId = isCommit ? 2 : 1;
 				workPlanEvt.workPlan = newWorkPlan;
 				workPlanEvt.successCallback = onWorkPlanCreateSuccess;
 				workPlanEvt.failureCallback = onWorkPlanCreateFailure;
@@ -276,23 +276,23 @@
 	
 				
 
-				<richtexttoolbar:PopupRichTextToolBar width="100%" target="{textArea}" visible="{!workPlan || workPlan.statusId == 2}"/>
+				<richtexttoolbar:PopupRichTextToolBar width="100%" target="{textArea}" visible="{!workPlan || workPlan.statusId == 1}"/>
 				<mx:TextArea id="textArea" width="100%" height="100%"
-							 editable="{!workPlan || workPlan.statusId == 2}"/>
+							 editable="{!workPlan || workPlan.statusId == 1}"/>
 				
 				<mx:HBox horizontalAlign="left" width="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off">
 					<mx:Label text="填写人："/>
 					<mx:TextInput id="personTxt" width="200"
-								  editable="{!workPlan || workPlan.statusId == 2}"/>
+								  editable="{!workPlan || workPlan.statusId == 1}"/>
 				</mx:HBox>	
 
 			
 				<mx:ControlBar width="100%" horizontalAlign="center" verticalAlign="middle"
 							   visible="{!browseMode}" includeInLayout="{!browseMode}">
 					<button:PcButton label="暂存" click="onSaveWithoutSubmit()"
-									 visible="{!workPlan || workPlan.statusId == 2}"/>
+									 visible="{!workPlan || workPlan.statusId == 1}"/>
 					<button:PcButton label="上报" click="onSaveAndCommit()"
-									 visible="{!workPlan || workPlan.statusId == 2}"/>
+									 visible="{!workPlan || workPlan.statusId == 1}"/>
 					<button:PcButton label="查看审批"
 									 visible="{workPlan &amp;&amp; workPlan.statusId == 3}"
 									 click="onBrowseApproval()"/>
@@ -318,7 +318,7 @@
 					
 					<mx:VBox width="100%" height="100%">
 						<mx:TextArea id="b_textArea" width="100%" height="100%"
-									 editable="{!workPlan || workPlan.statusId == 2}"/>
+									 editable="{!workPlan || workPlan.statusId == 1}"/>
 						<mx:Label id="b_personTxt" text="填写人："/>
 					</mx:VBox>
 				</mx:HBox>					
@@ -334,8 +334,11 @@
 					<mx:VBox width="100%" height="100%">
 						<mx:TextArea id="b_textArea_app" width="100%" height="100%"
 									 editable="false"/>
-						<mx:Label id="b_personTxt_app" text="审批人："/>
-						<mx:Label id="dateTxt"/>
+						<mx:HBox  horizontalCenter="0" width="100%">
+							<mx:Label left="0"   id="dateTxt"/>
+							<mx:Spacer width="100%"/>
+							<mx:Label right="0" id="b_personTxt_app" text="审批人："/>
+						</mx:HBox>						
 					</mx:VBox>
 				</mx:HBox>				
 
