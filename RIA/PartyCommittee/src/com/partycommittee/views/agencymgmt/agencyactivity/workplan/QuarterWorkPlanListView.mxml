@@ -223,56 +223,12 @@
 										
 									]]>
 								</fx:Script>								
-								<button:PcButton id="editBtn" label="{ ( (data as PcWorkPlanVo).statusId == 1 || (data as PcWorkPlanVo).statusId == 3 || (data as PcWorkPlanVo).statusId == 4 ) ? '查看' : ( ModelLocator.getInstance().loginUser.enableReport == 1 ? (  (data as PcWorkPlanVo).id == 0 ? '填报' : '修改' ) : '查看' ) }" click="editBtnClick()"
+								<button:PcButton id="editBtn" label="{ ( (data as PcWorkPlanVo).statusId >=2 ) ? '查看' : ( ModelLocator.getInstance().loginUser.enableReport == 1 ? (  (data as PcWorkPlanVo).id == 0 ? '填报' : '修改' ) : '查看' ) }" click="editBtnClick()"
 												 />								
 							</mx:Box>
 						</fx:Component>
 					</mx:itemRenderer>
 				</mx:AdvancedDataGridColumn>
-				
-				<!--
-				<mx:AdvancedDataGridColumn headerText="上报">
-					<mx:itemRenderer>
-						<fx:Component>
-							<mx:Box horizontalAlign="center" verticalAlign="middle"
-									horizontalScrollPolicy="off" verticalScrollPolicy="off">
-								<fx:Script>
-									<![CDATA[
-										import com.partycommittee.vo.PcWorkPlanVo;
-										
-										protected function submitBtnClick():void {
-											outerDocument.submitWorkPlan(data as PcWorkPlanVo);
-										}
-									]]>
-								</fx:Script>
-								<button:PcButton id="submitBtn" label="上报" click="submitBtnClick()"
-												 enabled="{(data as PcWorkPlanVo).statusId == 2 &amp;&amp; (data as PcWorkPlanVo).id &amp;&amp; !outerDocument.browseMode}"/>
-							</mx:Box>
-						</fx:Component>
-					</mx:itemRenderer>
-				</mx:AdvancedDataGridColumn>
-				<mx:AdvancedDataGridColumn headerText="查看">
-					<mx:itemRenderer>
-						<fx:Component>
-							<mx:Box horizontalAlign="center" verticalAlign="middle"
-									horizontalScrollPolicy="off" verticalScrollPolicy="off">
-								<fx:Script>
-									<![CDATA[
-										import com.partycommittee.vo.PcWorkPlanVo;
-										
-										protected function detailBtnClick():void {
-											outerDocument.browseWorkPlan(data as PcWorkPlanVo);
-										}
-									]]>
-								</fx:Script>
-								<button:PcButton id="submitBtn" label="查看" click="detailBtnClick()"
-												 enabled="{(data as PcWorkPlanVo).id != 0}"/>
-							</mx:Box>
-						</fx:Component>
-					</mx:itemRenderer>
-				</mx:AdvancedDataGridColumn>
-			
-			-->
 			</mx:columns>
 		</mx:AdvancedDataGrid>
 	</mx:VBox>

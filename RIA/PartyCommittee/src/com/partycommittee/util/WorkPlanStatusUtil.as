@@ -10,9 +10,9 @@ package com.partycommittee.util
 				case 0:
 					return "";
 				case 1:
-					return "已上报";
-				case 2:
 					return "未上报";
+				case 2:
+					return "已上报";
 				case 3:
 					return "已审批";
 				case 4:
