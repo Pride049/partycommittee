@@ -96,28 +96,59 @@ begin
 	  set i=i+1;
 	end while;  
 	
-	INSERT INTO pc_remind_stat as a (agency_id ,name ,code_id ,parent_id ,year ,quarter ,type_id ,status ,count)
-	SELECT T1.parent_id as agency_id, T2.name, T1.code_id, T3.parent_id, T1.year, T1.quarter, T1.type_id, T1.status, T1.nums FROM (SELECT code_id, parent_id, year ,quarter, type_id, status, count(*) as nums FROM pc_remind WHERE year = y GROUP BY code_id, parent_id, year ,quarter, type_id, status) as T1
-	LEFT JOIN pc_agency as T2 ON T1.parent_id = T2.id
-	LEFT JOIN pc_agency_relation as T3 ON T1.parent_id = T3.agency_id
-	ON DUPLICATE KEY UPDATE count = nums;
-	
 end;
 //
 delimiter ;
 
 
+delimiter //
+DROP procedure IF EXISTS stat_remind_stat//
+CREATE PROCEDURE stat_remind_stat()
+begin
 
-INSERT INTO pc_remind_stat (agency_id ,name ,code_id ,parent_id ,year ,quarter ,type_id ,status ,count)
-SELECT T1.parent_id as agency_id, T2.name, T1.code_id, T3.parent_id, T1.year, T1.quarter, T1.type_id, T1.status, T1.nums FROM (SELECT code_id, parent_id, year ,quarter, type_id, status, count(*) as nums FROM pc_remind WHERE year = 2012 GROUP BY code_id, parent_id, year ,quarter, type_id, status) as T1
-LEFT JOIN pc_agency as T2 ON T1.parent_id = T2.id
-LEFT JOIN pc_agency_relation as T3 ON T1.parent_id = T3.agency_id
-ON DUPLICATE KEY UPDATE count = nums;
+	DECLARE y year(4);
 
-call stat_remind();
+	SET y = year(now());
 
-DECLARE status int default 0;
-call get_meeting_status(3, 2011, 1, 9, status);
-SELECT status;
+	INSERT INTO pc_remind_stat (agency_id ,name ,code_id ,parent_id ,year ,quarter ,type_id ,status ,c)
+	SELECT T1.parent_id as agency_id, T2.name, T1.code_id, T3.parent_id, T1.year, T1.quarter, T1.type_id, T1.status, T1.c FROM (SELECT code_id, parent_id, year ,quarter, type_id, status, count(*) as c FROM pc_remind WHERE year = y GROUP BY code_id, parent_id, year ,quarter, type_id, status) as T1
+	LEFT JOIN pc_agency as T2 ON T1.parent_id = T2.id
+	LEFT JOIN pc_agency_relation as T3 ON T1.parent_id = T3.agency_id
+	ON DUPLICATE KEY UPDATE c = T1.c;
 
+end;
+//
+delimiter ;
+
+
+delimiter //
+DROP PROCEDURE IF EXISTS `stats_process`//
+CREATE PROCEDURE `stats_process`()
+BEGIN
+    SELECT IS_FREE_LOCK('event_stats_lock') INTO @event_stats_lock_isfree;
+    IF (@event_stats_lock_isfree = 1) THEN
+        SELECT GET_LOCK('event_stats_lock_isfree', 10) INTO @event_stats_lock_isfree;
+        IF (@event_stats_lock_isfree = 1) THEN
+            CALL stat_remind();
+            CALL stat_remind_stat();
+        END IF;
+        SELECT RELEASE_LOCK('event_stats_lock_isfree');
+    END IF;
+END //
+delimiter ;
+
+
+delimiter //
+SET GLOBAL event_scheduler = OFF //
+DROP EVENT IF EXISTS `event_stats`//
+CREATE EVENT IF NOT EXISTS `event_stats`
+ON SCHEDULE EVERY 600 SECOND
+ON COMPLETION PRESERVE
+DO
+   BEGIN
+       call stats_process;
+   END //
+delimiter ;
+
+SET GLOBAL event_scheduler = ON;
 

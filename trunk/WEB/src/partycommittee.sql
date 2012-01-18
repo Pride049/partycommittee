@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2012 年 01 月 17 日 18:42
+-- 生成日期: 2012 年 01 月 18 日 11:08
 -- 服务器版本: 5.5.8
 -- PHP 版本: 5.3.5
 
@@ -25,7 +25,6 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 -- 表的结构 `pc_agency`
 --
 
-DROP TABLE IF EXISTS `pc_agency`;
 CREATE TABLE IF NOT EXISTS `pc_agency` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL COMMENT '党支部名称',
@@ -2203,7 +2202,6 @@ INSERT INTO `pc_agency` (`id`, `name`, `code_id`, `code`, `setup_datetime`, `num
 -- 表的结构 `pc_agency_code`
 --
 
-DROP TABLE IF EXISTS `pc_agency_code`;
 CREATE TABLE IF NOT EXISTS `pc_agency_code` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `code` varchar(20) DEFAULT NULL,
@@ -2237,7 +2235,6 @@ INSERT INTO `pc_agency_code` (`id`, `code`, `description`) VALUES
 -- 表的结构 `pc_agency_mapping`
 --
 
-DROP TABLE IF EXISTS `pc_agency_mapping`;
 CREATE TABLE IF NOT EXISTS `pc_agency_mapping` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) DEFAULT NULL,
@@ -6357,7 +6354,6 @@ INSERT INTO `pc_agency_mapping` (`id`, `user_id`, `agency_id`, `comment`) VALUES
 -- 表的结构 `pc_agency_relation`
 --
 
-DROP TABLE IF EXISTS `pc_agency_relation`;
 CREATE TABLE IF NOT EXISTS `pc_agency_relation` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `agency_id` int(11) DEFAULT NULL,
@@ -8509,7 +8505,6 @@ INSERT INTO `pc_agency_relation` (`id`, `agency_id`, `parent_id`, `comment`) VAL
 -- 表的结构 `pc_duty_code`
 --
 
-DROP TABLE IF EXISTS `pc_duty_code`;
 CREATE TABLE IF NOT EXISTS `pc_duty_code` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `code` varchar(20) DEFAULT NULL,
@@ -8542,7 +8537,6 @@ INSERT INTO `pc_duty_code` (`id`, `code`, `description`) VALUES
 -- 表的结构 `pc_edu_code`
 --
 
-DROP TABLE IF EXISTS `pc_edu_code`;
 CREATE TABLE IF NOT EXISTS `pc_edu_code` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `code` varchar(20) DEFAULT NULL,
@@ -8588,7 +8582,6 @@ INSERT INTO `pc_edu_code` (`id`, `code`, `description`) VALUES
 -- 表的结构 `pc_meeting`
 --
 
-DROP TABLE IF EXISTS `pc_meeting`;
 CREATE TABLE IF NOT EXISTS `pc_meeting` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `agency_id` int(10) unsigned NOT NULL COMMENT '党支部ID',
@@ -8620,7 +8613,6 @@ CREATE TABLE IF NOT EXISTS `pc_meeting` (
 -- 表的结构 `pc_meeting_asence`
 --
 
-DROP TABLE IF EXISTS `pc_meeting_asence`;
 CREATE TABLE IF NOT EXISTS `pc_meeting_asence` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `meeting_id` int(10) unsigned NOT NULL COMMENT '会议ID',
@@ -8640,7 +8632,6 @@ CREATE TABLE IF NOT EXISTS `pc_meeting_asence` (
 -- 表的结构 `pc_meeting_content`
 --
 
-DROP TABLE IF EXISTS `pc_meeting_content`;
 CREATE TABLE IF NOT EXISTS `pc_meeting_content` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `meeting_id` int(10) unsigned NOT NULL COMMENT '会议ID',
@@ -8663,7 +8654,6 @@ CREATE TABLE IF NOT EXISTS `pc_meeting_content` (
 -- 表的结构 `pc_member`
 --
 
-DROP TABLE IF EXISTS `pc_member`;
 CREATE TABLE IF NOT EXISTS `pc_member` (
   `id` int(10) NOT NULL AUTO_INCREMENT COMMENT '党员ID',
   `agency_id` int(10) NOT NULL COMMENT '党支部ID',
@@ -8742,7 +8732,6 @@ INSERT INTO `pc_member` (`id`, `agency_id`, `post_id`, `name`, `sex_id`, `nation
 -- 表的结构 `pc_operation_type`
 --
 
-DROP TABLE IF EXISTS `pc_operation_type`;
 CREATE TABLE IF NOT EXISTS `pc_operation_type` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `type` varchar(50) DEFAULT NULL,
@@ -8771,7 +8760,6 @@ INSERT INTO `pc_operation_type` (`id`, `type`) VALUES
 -- 表的结构 `pc_remind`
 --
 
-DROP TABLE IF EXISTS `pc_remind`;
 CREATE TABLE IF NOT EXISTS `pc_remind` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `agency_id` int(11) unsigned NOT NULL COMMENT '党支部ID',
@@ -24438,7 +24426,6 @@ INSERT INTO `pc_remind` (`id`, `agency_id`, `name`, `code_id`, `parent_id`, `yea
 -- 表的结构 `pc_remind_config`
 --
 
-DROP TABLE IF EXISTS `pc_remind_config`;
 CREATE TABLE IF NOT EXISTS `pc_remind_config` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `type_id` int(11) DEFAULT NULL,
@@ -24457,7 +24444,6 @@ CREATE TABLE IF NOT EXISTS `pc_remind_config` (
 -- 表的结构 `pc_remind_stat`
 --
 
-DROP TABLE IF EXISTS `pc_remind_stat`;
 CREATE TABLE IF NOT EXISTS `pc_remind_stat` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `agency_id` int(11) unsigned NOT NULL COMMENT '党支部ID',
@@ -24468,7 +24454,7 @@ CREATE TABLE IF NOT EXISTS `pc_remind_stat` (
   `quarter` tinyint(1) unsigned NOT NULL COMMENT '季度',
   `type_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '年度计划状态',
   `status` smallint(5) unsigned NOT NULL,
-  `count` int(10) unsigned NOT NULL COMMENT '季度执行计划状态',
+  `c` int(10) unsigned NOT NULL COMMENT '季度执行计划状态',
   `ext` varchar(255) DEFAULT 'beijing' COMMENT 'saas扩展字段',
   PRIMARY KEY (`id`),
   UNIQUE KEY `agency_id` (`agency_id`,`code_id`,`parent_id`,`year`,`quarter`,`type_id`,`status`)
@@ -24478,7 +24464,7 @@ CREATE TABLE IF NOT EXISTS `pc_remind_stat` (
 -- 转存表中的数据 `pc_remind_stat`
 --
 
-INSERT INTO `pc_remind_stat` (`id`, `agency_id`, `name`, `code_id`, `parent_id`, `year`, `quarter`, `type_id`, `status`, `count`, `ext`) VALUES
+INSERT INTO `pc_remind_stat` (`id`, `agency_id`, `name`, `code_id`, `parent_id`, `year`, `quarter`, `type_id`, `status`, `c`, `ext`) VALUES
 (1, 2, '办公室党委', 10, 1, 2012, 0, 1, 0, 7, 'beijing'),
 (2, 2, '办公室党委', 10, 1, 2012, 0, 1, 1, 1, 'beijing'),
 (3, 2, '办公室党委', 10, 1, 2012, 0, 2, 0, 8, 'beijing'),
@@ -25174,7 +25160,7 @@ INSERT INTO `pc_remind_stat` (`id`, `agency_id`, `name`, `code_id`, `parent_id`,
 (693, 740, '网安总队党委', 10, 1, 2012, 0, 4, 0, 12, 'beijing'),
 (694, 740, '网安总队党委', 10, 1, 2012, 0, 5, 0, 12, 'beijing'),
 (695, 740, '网安总队党委', 10, 1, 2012, 0, 6, 0, 12, 'beijing');
-INSERT INTO `pc_remind_stat` (`id`, `agency_id`, `name`, `code_id`, `parent_id`, `year`, `quarter`, `type_id`, `status`, `count`, `ext`) VALUES
+INSERT INTO `pc_remind_stat` (`id`, `agency_id`, `name`, `code_id`, `parent_id`, `year`, `quarter`, `type_id`, `status`, `c`, `ext`) VALUES
 (696, 740, '网安总队党委', 10, 1, 2012, 0, 7, 0, 12, 'beijing'),
 (697, 740, '网安总队党委', 10, 1, 2012, 0, 8, 0, 12, 'beijing'),
 (698, 753, '文保总队党委', 10, 1, 2012, 0, 1, 0, 13, 'beijing'),
@@ -25846,7 +25832,7 @@ INSERT INTO `pc_remind_stat` (`id`, `agency_id`, `name`, `code_id`, `parent_id`,
 (1364, 1904, '巡警支队党总支', 10, 1869, 2012, 0, 3, 0, 4, 'beijing'),
 (1365, 1904, '巡警支队党总支', 10, 1869, 2012, 0, 4, 0, 4, 'beijing'),
 (1366, 1904, '巡警支队党总支', 10, 1869, 2012, 0, 5, 0, 4, 'beijing');
-INSERT INTO `pc_remind_stat` (`id`, `agency_id`, `name`, `code_id`, `parent_id`, `year`, `quarter`, `type_id`, `status`, `count`, `ext`) VALUES
+INSERT INTO `pc_remind_stat` (`id`, `agency_id`, `name`, `code_id`, `parent_id`, `year`, `quarter`, `type_id`, `status`, `c`, `ext`) VALUES
 (1367, 1904, '巡警支队党总支', 10, 1869, 2012, 0, 6, 0, 4, 'beijing'),
 (1368, 1904, '巡警支队党总支', 10, 1869, 2012, 0, 7, 0, 4, 'beijing'),
 (1369, 1904, '巡警支队党总支', 10, 1869, 2012, 0, 8, 0, 4, 'beijing'),
@@ -25937,7 +25923,6 @@ INSERT INTO `pc_remind_stat` (`id`, `agency_id`, `name`, `code_id`, `parent_id`,
 -- 表的结构 `pc_remind_type`
 --
 
-DROP TABLE IF EXISTS `pc_remind_type`;
 CREATE TABLE IF NOT EXISTS `pc_remind_type` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `type` varchar(50) DEFAULT NULL,
@@ -25964,7 +25949,6 @@ INSERT INTO `pc_remind_type` (`id`, `type`) VALUES
 -- 表的结构 `pc_sex_code`
 --
 
-DROP TABLE IF EXISTS `pc_sex_code`;
 CREATE TABLE IF NOT EXISTS `pc_sex_code` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `code` varchar(20) DEFAULT NULL,
@@ -25986,7 +25970,6 @@ INSERT INTO `pc_sex_code` (`id`, `code`, `description`) VALUES
 -- 表的结构 `pc_status`
 --
 
-DROP TABLE IF EXISTS `pc_status`;
 CREATE TABLE IF NOT EXISTS `pc_status` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL COMMENT '状态',
@@ -26011,7 +25994,6 @@ INSERT INTO `pc_status` (`id`, `name`, `active`) VALUES
 -- 表的结构 `pc_sys_conf`
 --
 
-DROP TABLE IF EXISTS `pc_sys_conf`;
 CREATE TABLE IF NOT EXISTS `pc_sys_conf` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `config` int(11) NOT NULL COMMENT '配置参数',
@@ -26031,7 +26013,6 @@ CREATE TABLE IF NOT EXISTS `pc_sys_conf` (
 -- 表的结构 `pc_sys_log`
 --
 
-DROP TABLE IF EXISTS `pc_sys_log`;
 CREATE TABLE IF NOT EXISTS `pc_sys_log` (
   `id` int(11) NOT NULL,
   `entity_type_id` int(11) DEFAULT NULL,
@@ -26053,7 +26034,6 @@ CREATE TABLE IF NOT EXISTS `pc_sys_log` (
 -- 表的结构 `pc_user`
 --
 
-DROP TABLE IF EXISTS `pc_user`;
 CREATE TABLE IF NOT EXISTS `pc_user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(50) DEFAULT NULL,
@@ -30186,7 +30166,6 @@ INSERT INTO `pc_user` (`id`, `username`, `password`, `email`, `phone`, `status`,
 -- 表的结构 `pc_workplan`
 --
 
-DROP TABLE IF EXISTS `pc_workplan`;
 CREATE TABLE IF NOT EXISTS `pc_workplan` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `agency_id` int(10) unsigned NOT NULL COMMENT '党支部id',
@@ -30211,7 +30190,6 @@ INSERT INTO `pc_workplan` (`id`, `agency_id`, `type_id`, `year`, `quarter`, `sta
 -- 表的结构 `pc_workplan_content`
 --
 
-DROP TABLE IF EXISTS `pc_workplan_content`;
 CREATE TABLE IF NOT EXISTS `pc_workplan_content` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `workplan_id` int(10) unsigned NOT NULL COMMENT '工作计划id',
@@ -30236,7 +30214,6 @@ INSERT INTO `pc_workplan_content` (`id`, `workplan_id`, `type`, `member_id`, `co
 -- 表的结构 `pc_workplan_type`
 --
 
-DROP TABLE IF EXISTS `pc_workplan_type`;
 CREATE TABLE IF NOT EXISTS `pc_workplan_type` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '会议类型ID',
   `name` varchar(255) NOT NULL COMMENT '会议名称',
