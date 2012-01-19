@@ -22,13 +22,13 @@ public class PcRemindRemoteService {
 	}
 	
 	@RemotingInclude
-	public PcRemindVo getItemById(Integer id, Integer year) {
-		return pcRemindService.getItemById(id, year);
+	public List<PcRemindVo> getListRemindById(Integer id, Integer year, Integer q) {
+		return pcRemindService.getListRemindById(id, year, q);
 	}	
 	
 	@RemotingInclude
-	public List<PcRemindVo> getItemByParentId(Integer id, Integer year) {
-		return pcRemindService.getItemByParentId(id, year);
-	}		
+	public List<PcRemindVo> getListRemindByParentId(Integer id, Integer year, Integer q) {
+		return pcRemindService.getListRemindByParentId(id, year, q);
+	}
 
 }

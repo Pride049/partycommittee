@@ -159,7 +159,7 @@ public class PcWorkPlanService {
 			pcWorkPlan.setQuarter(i);
 			pcWorkPlan.setTypeId(typeId);
 			pcWorkPlan.setAgencyId(agencyId);
-			pcWorkPlan.setStatusId(2);
+			pcWorkPlan.setStatusId(1);
 			list.add(pcWorkPlan);
 		}
 		return list;
