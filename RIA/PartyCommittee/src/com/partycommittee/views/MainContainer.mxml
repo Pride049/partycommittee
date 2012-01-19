@@ -181,6 +181,7 @@
 					if (model.isLeafUser && model.loginUser.enableReport != 1) orgView.editEnable = false;	
 				}
 			}
+
 		]]>
 	</fx:Script>
 	

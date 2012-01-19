@@ -20,6 +20,11 @@ public class PcRemindRemoteService {
 	public void setPcRemindService(PcRemindService pcRemindService) {
 		this.pcRemindService = pcRemindService;
 	}
+
+	@RemotingInclude
+	public List<PcRemindVo> getRealRemindById(Integer id, Integer year, Integer q) {
+		return pcRemindService.getRealRemindById(id, year, q);
+	}		
 	
 	@RemotingInclude
 	public List<PcRemindVo> getListRemindById(Integer id, Integer year, Integer q) {

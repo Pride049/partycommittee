@@ -8,58 +8,58 @@ import com.partycommittee.persistence.po.PcRemindStat;
 public class PcRemindStatVo implements Serializable {
 	private static final long serialVersionUID = -1190776206070964606L;
 
-	private int id;
+	private Integer id;
 
-	private int agency_id;
+	private Integer agencyId;
 
-	private int c;
+	private Integer c;
 
-	private int code_id;
+	private Integer codeId;
 
 	private String ext;
 
 	private String name;
 
-	private int parent_id;
+	private Integer parentId;
 
-	private byte quarter;
+	private Integer quarter;
 
-	private int status;
+	private Integer statusId;
 
-	private int type_id;
+	private Integer typeId;
 
 	private Integer year;	
 	
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
-	public int getAgency_id() {
-		return agency_id;
+	public Integer getAgencyId() {
+		return agencyId;
 	}
 
-	public void setAgency_id(int agencyId) {
-		agency_id = agencyId;
+	public void setAgencyId(Integer agencyId) {
+		this.agencyId = agencyId;
 	}
 
-	public int getC() {
+	public Integer getC() {
 		return c;
 	}
 
-	public void setC(int c) {
+	public void setC(Integer c) {
 		this.c = c;
 	}
 
-	public int getCode_id() {
-		return code_id;
+	public Integer getCodeId() {
+		return codeId;
 	}
 
-	public void setCode_id(int codeId) {
-		code_id = codeId;
+	public void setCodeId(Integer codeId) {
+		this.codeId = codeId;
 	}
 
 	public String getExt() {
@@ -78,36 +78,36 @@ public class PcRemindStatVo implements Serializable {
 		this.name = name;
 	}
 
-	public int getParent_id() {
-		return parent_id;
+	public Integer getParentId() {
+		return parentId;
 	}
 
-	public void setParent_id(int parentId) {
-		parent_id = parentId;
+	public void setParentId(Integer parentId) {
+		this.parentId = parentId;
 	}
 
-	public byte getQuarter() {
+	public Integer getQuarter() {
 		return quarter;
 	}
 
-	public void setQuarter(byte quarter) {
+	public void setQuarter(Integer quarter) {
 		this.quarter = quarter;
 	}
 
-	public int getStatus() {
-		return status;
+	public Integer getStatusId() {
+		return statusId;
 	}
 
-	public void setStatus(int status) {
-		this.status = status;
+	public void setStatusId(Integer statusId) {
+		this.statusId = statusId;
 	}
 
-	public int getType_id() {
-		return type_id;
+	public Integer getTypeId() {
+		return typeId;
 	}
 
-	public void setType_id(int typeId) {
-		type_id = typeId;
+	public void setTypeId(Integer typeId) {
+		this.typeId = typeId;
 	}
 
 	public Integer getYear() {
@@ -120,16 +120,16 @@ public class PcRemindStatVo implements Serializable {
 
 	public static PcRemindStatVo fromPcRemind(PcRemindStat pevo) {
 		PcRemindStatVo vo = new PcRemindStatVo();
-		vo.setAgency_id(pevo.getAgency_id());
+		vo.setAgencyId(pevo.getAgencyId());
 		vo.setC(pevo.getC());
-		vo.setCode_id(pevo.getCode_id());
+		vo.setCodeId(pevo.getCodeId());
 		vo.setExt(pevo.getExt());
 		vo.setId(pevo.getId());
 		vo.setName(pevo.getName());
-		vo.setParent_id(pevo.getParent_id());
+		vo.setParentId(pevo.getParentId());
 		vo.setQuarter(pevo.getQuarter());
-		vo.setStatus(pevo.getStatus());
-		vo.setType_id(pevo.getType_id());
+		vo.setStatusId(pevo.getStatusId());
+		vo.setTypeId(pevo.getTypeId());
 		vo.setYear(pevo.getYear());
 
 		return vo;
@@ -137,16 +137,16 @@ public class PcRemindStatVo implements Serializable {
 	
 	public static PcRemindStat toPcRemind(PcRemindStatVo pevo) {
 		PcRemindStat vo = new PcRemindStat();
-		vo.setAgency_id(pevo.getAgency_id());
+		vo.setAgencyId(pevo.getAgencyId());
 		vo.setC(pevo.getC());
-		vo.setCode_id(pevo.getCode_id());
+		vo.setCodeId(pevo.getCodeId());
 		vo.setExt(pevo.getExt());
 		vo.setId(pevo.getId());
 		vo.setName(pevo.getName());
-		vo.setParent_id(pevo.getParent_id());
+		vo.setParentId(pevo.getParentId());
 		vo.setQuarter(pevo.getQuarter());
-		vo.setStatus(pevo.getStatus());
-		vo.setType_id(pevo.getType_id());
+		vo.setStatusId(pevo.getStatusId());
+		vo.setTypeId(pevo.getTypeId());
 		vo.setYear(pevo.getYear());
 		return vo;
 	}
