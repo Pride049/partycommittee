@@ -81,6 +81,9 @@
 	<mx:RemoteObject id="pcMeeting"
 					 destination="PcMeetingRo"
 					 channelSet="{channelSet}"/>
+	<mx:RemoteObject id="pcRemind"
+					 destination="PcRemindRo"
+					 channelSet="{channelSet}"/>	
 	
     <!-- HTTPService example
 	<mx:HTTPService

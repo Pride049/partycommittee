@@ -2,6 +2,7 @@ package com.partycommittee.persistence.po;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
 import java.sql.Date;
 
 
@@ -12,57 +13,62 @@ import java.sql.Date;
 @Entity
 @Table(name="pc_remind")
 public class PcRemind implements Serializable {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 485572770621967497L;
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private int id;
 
-	private int agency_id;
+	private Integer id;
 
-	private int code_id;
+	private Integer agencyId;
+
+	private Integer codeId;
 
 	private String ext;
 
 	private String name;
 
-	private int parent_id;
+	private Integer parentId;
 
-	private byte quarter;
+	private Integer quarter;
 
-	private int status;
+	private Integer statusId;
 
-	private int type_id;
+	private Integer typeId;
 
 	private Integer year;
 
     public PcRemind() {
     }
 
-	public int getId() {
+	@Id
+	@Column(name = "id", unique = true, nullable = false)
+	@GeneratedValue(strategy=GenerationType.AUTO)	    
+	public Integer getId() {
 		return this.id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
-
-	public int getAgency_id() {
-		return this.agency_id;
+	
+	@Column(name = "agency_id")
+	public Integer getAgencyId() {
+		return this.agencyId;
 	}
 
-	public void setAgency_id(int agency_id) {
-		this.agency_id = agency_id;
+	public void setAgencyId(Integer agencyId) {
+		this.agencyId = agencyId;
 	}
 
-	public int getCode_id() {
-		return this.code_id;
+	@Column(name = "code_id")
+	public Integer getCodeId() {
+		return this.codeId;
 	}
 
-	public void setCode_id(int code_id) {
-		this.code_id = code_id;
+	public void setCodeId(Integer codeId) {
+		this.codeId = codeId;
 	}
 
+	@Column(name = "ext")
 	public String getExt() {
 		return this.ext;
 	}
@@ -71,6 +77,7 @@ public class PcRemind implements Serializable {
 		this.ext = ext;
 	}
 
+	@Column(name = "name")
 	public String getName() {
 		return this.name;
 	}
@@ -79,38 +86,43 @@ public class PcRemind implements Serializable {
 		this.name = name;
 	}
 
-	public int getParent_id() {
-		return this.parent_id;
+	@Column(name = "parent_id")
+	public Integer getParentId() {
+		return this.parentId;
 	}
 
-	public void setParent_id(int parent_id) {
-		this.parent_id = parent_id;
+	public void setParentId(Integer parentId) {
+		this.parentId = parentId;
 	}
 
-	public byte getQuarter() {
+	@Column(name = "quarter")
+	public Integer getQuarter() {
 		return this.quarter;
 	}
 
-	public void setQuarter(byte quarter) {
+	public void setQuarter(Integer quarter) {
 		this.quarter = quarter;
 	}
 
-	public int getStatus() {
-		return this.status;
+	@Column(name = "status")
+	public Integer getStatusId() {
+		return this.statusId;
 	}
 
-	public void setStatus(int status) {
-		this.status = status;
+	public void setStatusId(Integer statusId) {
+		this.statusId = statusId;
 	}
 
-	public int getType_id() {
-		return this.type_id;
+	@Column(name = "type_id")
+	public Integer getTypeId() {
+		return this.typeId;
 	}
 
-	public void setType_id(int type_id) {
-		this.type_id = type_id;
+	public void setTypeId(Integer typeId) {
+		this.typeId = typeId;
 	}
 
+	@Column(name = "year")
 	public Integer getYear() {
 		return this.year;
 	}

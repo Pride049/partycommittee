@@ -23,9 +23,6 @@ package com.partycommittee.renderers
 						htmlText = '<u><font color="#0000ff"><a href="event:nowp">未填写</a></font></u>';
 					}
 					break;
-				case 2:
-					htmlText  = "已上报";
-					break;
 				case 1:
 					if (model.loginUser.enableReport != 1) {
 						htmlText = "未上报";
@@ -33,6 +30,9 @@ package com.partycommittee.renderers
 						htmlText = '<u><font color="#0000ff"><a href="event:nowp">未上报</a></font></u>';	
 					}
 					break;
+				case 2:
+					htmlText  = "已上报";
+					break;				
 				case 3:
 					htmlText  = "已审批";
 					break;

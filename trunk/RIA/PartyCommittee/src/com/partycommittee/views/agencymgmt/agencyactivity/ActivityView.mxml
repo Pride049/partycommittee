@@ -11,6 +11,7 @@
 	<fx:Script>
 		<![CDATA[
 			import com.partycommittee.model.ModelLocator;
+			import com.partycommittee.views.MainContainer;
 			
 			import mx.events.PropertyChangeEvent;
 			
@@ -18,8 +19,11 @@
 			private var model:ModelLocator = ModelLocator.getInstance();
 			
 			private function onCreationCompleted():void {
-				model.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, onModelChanged);
-//				updateData();		
+				
+//				var obj:Object = this.parent.parent.parent.parent as MainContainer;
+//				if (obj.mainViewStack  &&  obj.mainViewStack.selectedChild == "activityView") {
+//					onNavigateIn();
+//				}	
 			}
 			
 			private function onModelChanged(event:PropertyChangeEvent):void {
@@ -27,6 +31,11 @@
 					updateData();
 				}
 			}
+			
+			override protected function onNavigateIn():void {
+				model.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, onModelChanged);
+				updateData();
+			}			
 			
 			override protected function onNavigateOut():void {
 				model.removeEventListener(PropertyChangeEvent.PROPERTY_CHANGE, onModelChanged);
@@ -57,11 +66,7 @@
 				}
 
 			}			
-			
-			
-//			override protected function onNavigateIn():void {
-//				browseView.enterView();
-//			}
+
 		]]>
 	</fx:Script>
 	<fx:Declarations>

@@ -14,8 +14,9 @@
 	<fx:Script>
 		<![CDATA[
 			import com.partycommittee.model.ModelLocator;
+			import com.partycommittee.views.MainContainer;
 			import com.partycommittee.vo.PcAgencyVo;
-
+			
 			import mx.events.PropertyChangeEvent;
 			
 			private var _editEnable:Boolean = true;
@@ -40,7 +41,11 @@
 			private var model:ModelLocator = ModelLocator.getInstance();
 			
 			private function onCreationCompleted():void {
-				onNavigateIn();
+//				var obj:Object = this.parent.parent.parent.parent as MainContainer;
+//				if (obj.mainViewStack  && obj.mainViewStack.selectedChild == "orgView") {
+//					onNavigateIn();
+//				}
+				
 			}
 			
 			override protected function onNavigateIn():void {

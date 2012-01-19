@@ -3,6 +3,7 @@ package com.partycommittee.util
 	import com.partycommittee.vo.PcAgencyVo;
 	import com.partycommittee.vo.PcMeetingVo;
 	import com.partycommittee.vo.PcMemberVo;
+	import com.partycommittee.vo.PcRemindVo;
 	import com.partycommittee.vo.PcUserVo;
 	import com.partycommittee.vo.PcWorkPlanVo;
 	
@@ -93,6 +94,8 @@ package com.partycommittee.util
 				typeId = (item as PcWorkPlanVo).typeId;
 			} else if (item is PcMeetingVo) {
 				typeId = (item as PcMeetingVo).typeId;
+			} else if (item is Object) {
+				typeId = (item as Object).typeId;
 			}
 			switch (typeId) {
 				case PCConst.WORKPLAN_TYPE_YEARLY:
