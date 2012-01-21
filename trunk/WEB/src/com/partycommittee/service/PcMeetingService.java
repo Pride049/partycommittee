@@ -292,6 +292,10 @@ public class PcMeetingService {
 		}
 	}
 	
+	public void updateMeetingStatus(Integer meetingId, Integer statusId) {
+		pcMeetingDaoImpl.updateMeetingStatus(meetingId, statusId);
+	}	
+	
 	public void evaluateMeeting(Integer meetingId, PcMeetingContentVo contentVo) {
 		contentVo.setMeetingId(meetingId);
 		contentVo.setType(3);

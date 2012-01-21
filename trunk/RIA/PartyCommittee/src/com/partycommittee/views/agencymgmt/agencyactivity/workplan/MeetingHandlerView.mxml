@@ -202,6 +202,28 @@
 				contentVo.content = handleTextArea.htmlText;
 				return contentVo;
 			}
+			
+			private function onReturn():void {
+				meeting.statusId = 1;
+				var evt:PcMeetingEvent = new PcMeetingEvent(PcMeetingEvent.RETURN_MEETING, agency);
+				evt.meeting = meeting;
+				evt.successCallback = onReturnSuccess;
+				evt.failureCallback = onReturnFailure;
+				this.enabled = false;
+				evt.dispatch();
+			}
+			
+			private function onReturnSuccess(data:Object, evt:PcMeetingEvent):void {
+				Alert.show("驳回成功！");
+				this.enabled = true;
+				parentView.refreshData();
+				this.close();
+			}
+			
+			private function onReturnFailure(data:Object, evt:PcMeetingEvent):void {
+				this.enabled = true;
+				Alert.show("驳回失败！");
+			}					
 		]]>
 	</fx:Script>
 	<fx:Declarations>
@@ -272,6 +294,7 @@
 		</mx:HBox>
 		
 		<mx:ControlBar width="100%" horizontalAlign="center" verticalAlign="middle">
+			<button:PcButton id="returnBtn" label="驳回" click="onReturn()" />
 			<button:PcButton label="评价" click="onHandle()" visible="{!hasHandle}" includeInLayout="{!hasHandle}"/>
 			<button:PcButton label="关闭" click="close()"/>
 		</mx:ControlBar>

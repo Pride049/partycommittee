@@ -252,7 +252,7 @@
 			private function doUpdate(isCommit:Boolean = false):void {
 				var meetingEvt:PcMeetingEvent = new PcMeetingEvent(CRUDEventType.UPDATE);
 				meeting = getUpdateMeeting();
-				meeting.statusId = isCommit ? 1 : 2;
+				meeting.statusId = isCommit ? 2 : 1;
 				meetingEvt.meeting = meeting;
 				meetingEvt.successCallback = onMeetingUpdateSuccess;
 				meetingEvt.failureCallback = onMeetingUpdateFailure;
@@ -263,7 +263,7 @@
 			private function doCreate(isCommit:Boolean = false):void {
 				var meetingEvt:PcMeetingEvent = new PcMeetingEvent(CRUDEventType.CREATE);
 				var newMeeting:PcMeetingVo = getNewMeeting();
-				newMeeting.statusId = isCommit ? 1 : 2;
+				newMeeting.statusId = isCommit ? 2 : 1;
 				meetingEvt.meeting = newMeeting;
 				meetingEvt.successCallback = onMeetingCreateSuccess;
 				meetingEvt.failureCallback = onMeetingCreateFailure;

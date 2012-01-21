@@ -65,6 +65,9 @@ package com.partycommittee.commands
 				case PcWorkPlanEvent.GET_WORKPLAN_COMMENT:
 					proxy.getWorkplanComment(pcWorkPlanEvt.workPlan);
 					break;
+				case PcWorkPlanEvent.RETURN_WORKPLAN:
+					proxy.updateWorkPlanStatus(pcWorkPlanEvt.workPlan.id, pcWorkPlanEvt.workPlan.statusId);
+					break;			
 				default :
 					break;
 			}

@@ -58,6 +58,10 @@ public class PcWorkPlanService {
 		}
 	}
 	
+	public void updateWorkPlanStatus(Integer workPlanId, Integer StatusId) {
+		pcWorkPlanDaoImpl.updateWorkPlanStatus(workPlanId, StatusId);
+	}
+	
 	public PcWorkPlanVo getWorkPlayYearly(Integer agencyId, Integer year) {
 		PcWorkPlan workPlan = pcWorkPlanDaoImpl.getWorkPlanYearlyByAgencyId(agencyId, year);
 		if (workPlan == null) {
