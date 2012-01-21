@@ -4,6 +4,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceException;
+
+import org.springframework.orm.jpa.JpaCallback;
 import org.springframework.stereotype.Repository;
 
 import com.partycommittee.persistence.dao.PcWorkPlanDao;
@@ -75,6 +79,22 @@ public class PcWorkPlanDaoImpl extends JpaDaoBase implements PcWorkPlanDao {
 			e.printStackTrace();
 		}
 	}
+	
+	@SuppressWarnings("unchecked")
+	public void updateWorkPlanStatus(Integer workPlanId, Integer StatusId) {
+		try {
+			final String sql = "update PcWorkPlan set status_id = " + StatusId 
+					+ " where id = " + workPlanId;
+			this.getJpaTemplate().execute(new JpaCallback<Object>(){
+				public Object doInJpa(EntityManager em)throws PersistenceException {
+					int size = em.createQuery(sql).executeUpdate();
+					return size;
+				}
+	 		 });
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}	
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -96,7 +116,7 @@ public class PcWorkPlanDaoImpl extends JpaDaoBase implements PcWorkPlanDao {
 				calendar.setTime(new Date()); 
 				year = calendar.get(Calendar.YEAR);
 			}
-			return super.find("from PcWorkPlan where agency_id in (" + ids + ") AND year = " + year + " AND status_id <> 2 Order by agency_id ASC ");
+			return super.find("from PcWorkPlan where agency_id in (" + ids + ") AND year = " + year + " AND status_id > 1 Order by agency_id ASC ");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

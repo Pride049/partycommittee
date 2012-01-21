@@ -63,6 +63,9 @@ package com.partycommittee.commands
 				case PcMeetingEvent.GET_MEETING_COMMENT:
 					proxy.getMeetingComment(pcMeetingEvt.meeting);
 					break;
+				case PcMeetingEvent.RETURN_MEETING:
+					proxy.updateMeetingStatus(pcMeetingEvt.meeting.id, pcMeetingEvt.meeting.statusId);
+					break;				
 				default :
 					break;
 			}

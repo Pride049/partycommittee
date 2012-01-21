@@ -20,6 +20,7 @@ package com.partycommittee.events
 		public static const GET_EVALUATE_INFO:String = "getEvaluateInfo";
 		public static const APPROVAL_WORKPLAN:String = "approvalWorkPlan";
 		public static const EVALUATE_WORKPLAN:String = "valuateWorkPlan";
+		public static const RETURN_WORKPLAN:String = "returnWorkPlan";
 		
 		public static const GET_WORKPLAN_COMMENT:String = "getWorkPlanComment";
 		public static const GET_ALERT_INFO:String = "getAlertInfo";

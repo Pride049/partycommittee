@@ -70,5 +70,9 @@ package com.partycommittee.proxy
 			service.getMeetingComment(meeting);
 		}
 		
+		public function updateMeetingStatus(meetingId:Number, statusId:Number):void {
+			service.updateMeetingStatus(meetingId, statusId);
+		}		
+		
 	}
 }

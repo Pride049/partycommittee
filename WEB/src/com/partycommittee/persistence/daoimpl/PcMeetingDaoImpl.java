@@ -5,6 +5,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceException;
+
+import org.springframework.orm.jpa.JpaCallback;
 import org.springframework.stereotype.Repository;
 
 import com.partycommittee.persistence.dao.PcMeetingDao;
@@ -51,6 +55,22 @@ public class PcMeetingDaoImpl extends JpaDaoBase implements PcMeetingDao {
 			e.printStackTrace();
 		}
 	}
+	
+	@SuppressWarnings("unchecked")
+	public void updateMeetingStatus(Integer meetingId, Integer StatusId) {
+		try {
+			final String sql = "update PcMeeting set status_id = " + StatusId 
+					+ " where id = " + meetingId;
+			this.getJpaTemplate().execute(new JpaCallback<Object>(){
+				public Object doInJpa(EntityManager em)throws PersistenceException {
+					int size = em.createQuery(sql).executeUpdate();
+					return size;
+				}
+	 		 });
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}		
 
 	@SuppressWarnings("unchecked")
 	public List<PcMeeting> getCommitMeetingListByAgencyIds(
@@ -72,7 +92,7 @@ public class PcMeetingDaoImpl extends JpaDaoBase implements PcMeetingDao {
 				calendar.setTime(new Date()); 
 				year = calendar.get(Calendar.YEAR);
 			}			
-			return super.find("from PcMeeting where agency_id in (" + ids + ") AND year = " + year + " AND status_id <> 2 Order by agency_id ASC, quarter ASC, id DESC");
+			return super.find("from PcMeeting where agency_id in (" + ids + ") AND year = " + year + " AND status_id > 1 Order by agency_id ASC, quarter ASC, id DESC");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

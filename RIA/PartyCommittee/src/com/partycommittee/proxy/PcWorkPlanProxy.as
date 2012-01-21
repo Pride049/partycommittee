@@ -86,5 +86,9 @@ package com.partycommittee.proxy
 			service.getWorkplanComment(workplan);
 		}
 		
+		public function updateWorkPlanStatus(workPlanId:Number, statusId:Number):void {
+			service.updateWorkPlanStatus(workPlanId, statusId);
+		}		
+		
 	}
 }

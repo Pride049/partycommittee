@@ -213,6 +213,28 @@
 				Alert.show(info.toString());
 			}
 			
+			private function onReturn():void {
+				workPlan.statusId = 1;
+				var evt:PcWorkPlanEvent = new PcWorkPlanEvent(PcWorkPlanEvent.RETURN_WORKPLAN, agency);
+				evt.workPlan = workPlan;
+				evt.successCallback = onReturnSuccess;
+				evt.failureCallback = onReturnFailure;
+				this.enabled = false;
+				evt.dispatch();
+			}
+			
+			private function onReturnSuccess(data:Object, evt:PcWorkPlanEvent):void {
+				Alert.show("驳回成功！");
+				this.enabled = true;
+				parentView.refreshData();
+				this.close();
+			}
+			
+			private function onReturnFailure(data:Object, evt:PcWorkPlanEvent):void {
+				this.enabled = true;
+				Alert.show("驳回失败！");
+			}			
+			
 			private function onHandle():void {
 				if (isApproval) {
 					doApproval();
@@ -312,13 +334,14 @@
 					<mx:TextInput id="handlePersonTxt" width="200"
 								  editable="{!hasHandle}"/>
 				</mx:HBox>
-				<richtexttoolbar:PopupRichTextToolBar width="100%" target="{handleTextArea}"/>
+				
 				<mx:TextArea id="handleTextArea" width="100%" height="100%"
 							 editable="{!hasHandle}"/>
 			</mx:VBox>
 		</mx:HBox>
 		
 		<mx:ControlBar width="100%" horizontalAlign="center" verticalAlign="middle">
+			<button:PcButton id="returnBtn" label="驳回" click="onReturn()" />
 			<button:PcButton id="handleBtn" click="onHandle()" visible="{!hasHandle}" includeInLayout="{!hasHandle}"/>
 			<button:PcButton label="关闭" click="close()"/>
 		</mx:ControlBar>

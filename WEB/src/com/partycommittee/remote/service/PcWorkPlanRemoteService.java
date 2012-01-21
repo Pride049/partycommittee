@@ -37,6 +37,11 @@ public class PcWorkPlanRemoteService {
 	}
 	
 	@RemotingInclude
+	public void updateWorkPlanStatus(Integer workPlanId, Integer StatusId) {
+		pcWorkPlanService.updateWorkPlanStatus(workPlanId, StatusId);
+	}	
+	
+	@RemotingInclude
 	public PcWorkPlanVo getWorkPlanYearly(Integer agencyId, Integer year) {
 		return pcWorkPlanService.getWorkPlayYearly(agencyId, year);
 	}
