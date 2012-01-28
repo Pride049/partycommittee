@@ -15,6 +15,7 @@ package com.partycommittee.renderers
 
 			var datas:Object = data;
 			var statusId:Number = datas.q;
+			var model:ModelLocator = ModelLocator.getInstance();
 			switch (statusId) {
 				case 0:
 					htmlText = "未报";
@@ -23,7 +24,11 @@ package com.partycommittee.renderers
 					htmlText = "未报";
 					break;
 				case 2:
-					htmlText  = "未审";
+					if (datas.parentId == model.loginUser.privilege) {
+						htmlText = '<u><font color="#0000ff"><a href="event:approval&quarterplan&'+datas.agencyId+'">未审</a></font></u>';
+					} else {
+						htmlText = '未审';
+					}		
 					break;				
 				case 3:
 					htmlText  = "已审";

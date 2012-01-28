@@ -23,7 +23,7 @@ package com.partycommittee.renderers
 					htmlText = "未报";
 					break;
 				case 2:
-					htmlText  = "未审";
+					htmlText  = "未评";
 					break;				
 				case 3:
 					htmlText  = "已审";

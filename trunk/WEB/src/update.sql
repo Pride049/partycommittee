@@ -65,9 +65,14 @@ begin
 				if row >= rows then
 					leave cursor_loop;
 				end if;			
-				
+				SET q = quarter(now());
+				IF i = 1 THEN
+				   SET q = 0;
+				ELSEIF i = 4 THEN
+				   SET q = 0;
+				END IF;				
 				IF i <= 4 THEN
-		   				SELECT status_id into s FROM pc_workplan WHERE agency_id = id AND year = y AND quarter = 0 AND type_id = i;
+		   				SELECT status_id into s FROM pc_workplan WHERE agency_id = id AND year = y AND quarter = q AND type_id = i;
 		   				IF  s IS NULL THEN
 			   				SET s = 0;
 							END IF;
@@ -79,10 +84,8 @@ begin
 							END IF;
 				END IF;				
 				
-				SET q = quarter(now());
-				IF i = 1 THEN
-				   SET q = 0;
-				END IF;
+				
+
 				INSERT INTO  pc_remind (agency_id, name, code_id, parent_id, year, quarter, type_id, status) 
 				VALUES (id, name, code_id, parent_id, y, q, i, s) 			
 				ON DUPLICATE KEY UPDATE status = s;

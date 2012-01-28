@@ -11,10 +11,12 @@
 			import com.partycommittee.events.PcMeetingEvent;
 			import com.partycommittee.events.PcRemindEvent;
 			import com.partycommittee.events.PcWorkPlanEvent;
+			import com.partycommittee.manager.popup.PopupMgr;
 			import com.partycommittee.model.ModelLocator;
-			import com.partycommittee.renderers.RemindDKStatusRenderer;
+
 			import com.partycommittee.util.LblFunctionHelper;
 			import com.partycommittee.views.MainContainer;
+			import com.partycommittee.views.agencymgmt.agencyactivity.workplan.WorkPlanHandlerView;
 			import com.partycommittee.vo.PcAgencyVo;
 			import com.partycommittee.vo.PcMeetingVo;
 			import com.partycommittee.vo.PcUserVo;
@@ -51,6 +53,7 @@
 				
 				model.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, onPropertyChanged);
 				dg.addEventListener(TextEvent.LINK, onEventTextLink, false , 0, true); 				
+				remindDg.addEventListener(TextEvent.LINK, onEventTextLink, false , 0, true);
 				dp = new ArrayCollection();
 				if (model.focusAgencyVo && model.focusAgencyVo.codeId == 10) {
 					RemindViewStack.selectedChild = AGrid;
@@ -71,6 +74,7 @@
 							pcRemindEvt.quarter = getQuarter();
 							pcRemindEvt.successCallback = onGetRemindStatSuccess;
 							pcRemindEvt.failureCallback = onGetRemindStatFailure;
+							this.enabled = false;
 							pcRemindEvt.dispatch();
 						} else {
 							var pcRemindEvt:PcRemindEvent = new PcRemindEvent(PcRemindEvent.GET_REMIND_STAT_BY_PARENTID_FOR_OTHER);
@@ -79,6 +83,7 @@
 							pcRemindEvt.quarter = getQuarter();
 							pcRemindEvt.successCallback = onGetRemindForOtherSuccess;
 							pcRemindEvt.failureCallback = onGetRemindStatFailure;
+							this.enabled = false;
 							pcRemindEvt.dispatch();							
 						}
 					}
@@ -96,10 +101,11 @@
 			}
 			
 			private function onGetRemindFailure(info:Object, evt:PcRemindEvent):void {
-				Alert.show(info.toString());
+				this.enabled = true;
 			}
 			
 			private function onGetRemindForOtherSuccess(data:Object, evt:PcRemindEvent):void {
+				this.enabled = true;
 				initColumnsForOther();
 				initDpForOther(data as ArrayCollection);
 			}			
@@ -256,7 +262,6 @@
 					vo.name = dp.getItemAt(i).name;
 					vo.agencyId = tmpId;
 					vo.parentId = dp.getItemAt(i).parentId;
-					vo.typeId = dp.getItemAt(i).typeId;
 					//年度计划
 					if (dp.getItemAt(i).typeId == 1) {
 						vo.y = dp.getItemAt(i).statusId;
@@ -324,12 +329,13 @@
 			}
 			
 			private function onGetRemindStatSuccess(data:Object, evt:PcRemindEvent):void {
+				this.enabled = true;
 				initColumnsForAdmin();
 				initDpForAdmin(data as ArrayCollection);
 			}
 			
 			private function onGetRemindStatFailure(info:Object, evt:PcRemindEvent):void {
-				Alert.show(info.toString());
+				this.enabled = true;
 			}			
 						
 			public function initDpForAdmin(dp:ArrayCollection):void {
@@ -824,9 +830,10 @@
 			}
 			
 			protected function onEventTextLink(event:TextEvent):void {
-				var item:Object = dg.selectedItem;
+				
 				var eventText:String = event.text;
 				if (eventText == 'nowp') {
+					var item:Object = dg.selectedItem;
 					if (this.parent.parent.parent.parent is MainContainer) {
 						var obj:Object = this.parent.parent.parent.parent as MainContainer;
 						(obj.mainViewStack as ViewStack).selectedIndex = 2;
@@ -880,8 +887,103 @@
 						}
 					}
 				}
+				
+				if (eventText.indexOf('approval') >= 0 ) {
+					var textAry:Array = new Array();
+					textAry = eventText.split('&');
+					if (eventText.indexOf('yearplan') >=0 ) {
+						if (textAry.length > 1) {
+							var agency:PcAgencyVo = new PcAgencyVo();
+							agency.id = textAry[2];
+							
+							var workPlanEvt:PcWorkPlanEvent = new PcWorkPlanEvent(PcWorkPlanEvent.GET_WORKPLAN_YEARLY, agency);
+							workPlanEvt.year = new Date().getFullYear();
+							workPlanEvt.successCallback = onGetWorkPlanSuccess;
+							workPlanEvt.failureCallback = onGetWorkPlanFailure;
+							this.enabled = false;
+							workPlanEvt.dispatch();				
+						}
+					} else if (eventText.indexOf('quarterplan') >=0 ) {
+						if (textAry.length > 1) {
+							var agency:PcAgencyVo = new PcAgencyVo();
+							agency.id = textAry[2];		
+							var workPlanEvt:PcWorkPlanEvent = new PcWorkPlanEvent(PcWorkPlanEvent.GET_WORKPLAN_QUARTER, agency);
+							workPlanEvt.year = new Date().getFullYear();
+							workPlanEvt.quarter = getQuarter();
+							workPlanEvt.successCallback = onGetWorkPlanSuccess;
+							workPlanEvt.failureCallback = onGetWorkPlanFailure;
+							this.enabled = false;
+							workPlanEvt.dispatch();				
+						}						
+					}
+				}
+				
+				if (eventText.indexOf('evaluate') >= 0 ) {
+					var textAry:Array = new Array();
+					textAry = eventText.split('&');
+					if (eventText.indexOf('lyearendplan') >=0 ) {
+						var agency:PcAgencyVo = new PcAgencyVo();
+						agency.id = textAry[2];							
+						var workPlanEvt:PcWorkPlanEvent = new PcWorkPlanEvent(PcWorkPlanEvent.GET_WORKPLAN_YEARLY_SUMMARY, agency);
+						workPlanEvt.year = new Date().getFullYear() - 1;
+						workPlanEvt.successCallback = onGetWorkPlanEvaSuccess;
+						workPlanEvt.failureCallback = onGetWorkPlanFailure;
+						this.enabled = false;
+						workPlanEvt.dispatch();						
+					}
+				}				
 			}			
 			
+			
+			private function onGetWorkPlanSuccess(data:Object, workPlanEvt:PcWorkPlanEvent):void {
+				this.enabled = true;
+				if (!data) {
+					return;
+				}
+				var workPlan:PcWorkPlanVo = data as PcWorkPlanVo;
+				if (!workPlan) {
+					return;
+				}
+				
+				var agency:PcAgencyVo = new PcAgencyVo();
+				agency.id = workPlan.agencyId;
+				var win:WorkPlanHandlerView = new WorkPlanHandlerView();
+				win.agency = agency;
+				win.workPlan = workPlan;
+				win.parentView = this;
+				win.type = PCConst.WORKFLOW_TYPE_APPROVAL;
+				PopupMgr.instance.popupWindow(win);				
+
+			}	
+			
+			private function onGetWorkPlanEvaSuccess(data:Object, workPlanEvt:PcWorkPlanEvent):void {
+				this.enabled = true;
+				if (!data) {
+					return;
+				}
+				var workPlan:PcWorkPlanVo = data as PcWorkPlanVo;
+				if (!workPlan) {
+					return;
+				}
+				
+				var agency:PcAgencyVo = new PcAgencyVo();
+				agency.id = workPlan.agencyId;
+				var win:WorkPlanHandlerView = new WorkPlanHandlerView();
+				win.agency = agency;
+				win.workPlan = workPlan;
+				win.parentView = this;
+				win.type = PCConst.WORKFLOW_TYPE_EVALUATE;
+				PopupMgr.instance.popupWindow(win);
+			}				
+			
+
+			private function onGetWorkPlanFailure():void {
+				this.enabled = true;
+			}		
+			
+			public function refreshData():void {
+				onNavigateIn();
+			}
 			
 
 		]]>
