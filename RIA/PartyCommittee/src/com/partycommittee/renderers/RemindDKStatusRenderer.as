@@ -14,7 +14,7 @@ package com.partycommittee.renderers
 		override public function set text(txt:String):void {
 
 			var datas:Object = data;
-			var statusId:Number = datas.dk;
+			var statusId:Number = datas.dydh;
 			switch (statusId) {
 				case 0:
 					htmlText = "未报";
@@ -23,7 +23,7 @@ package com.partycommittee.renderers
 					htmlText = "未报";
 					break;
 				case 2:
-					htmlText  = "未审";
+					htmlText  = "未评";
 					break;				
 				case 3:
 					htmlText  = "已审";

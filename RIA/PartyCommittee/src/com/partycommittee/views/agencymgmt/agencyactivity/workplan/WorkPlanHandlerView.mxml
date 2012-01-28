@@ -14,11 +14,13 @@
 	<fx:Script>
 		<![CDATA[
 			import com.partycommittee.events.PcWorkPlanEvent;
+			import com.partycommittee.manager.navigation.NavigationView;
 			import com.partycommittee.manager.popup.PopupMgr;
 			import com.partycommittee.util.CRUDEventType;
 			import com.partycommittee.util.DataproviderFactory;
 			import com.partycommittee.util.WorkPlanCodeUtil;
 			import com.partycommittee.views.agencymgmt.agencyactivity.BrowseWorkplanView;
+			import com.partycommittee.views.mainview.MainView;
 			import com.partycommittee.vo.PcAgencyVo;
 			import com.partycommittee.vo.PcWorkPlanContentVo;
 			import com.partycommittee.vo.PcWorkPlanVo;
@@ -70,12 +72,12 @@
 				this._agency = value;
 			}
 			
-			private var _parentView:BrowseWorkplanView;
+			private var _parentView:NavigationView;
 			[Bindable]
-			public function get parentView():BrowseWorkplanView {
+			public function get parentView():NavigationView {
 				return this._parentView;
 			}
-			public function set parentView(value:BrowseWorkplanView):void {
+			public function set parentView(value:NavigationView):void {
 				this._parentView = value;
 			}
 			
@@ -226,7 +228,11 @@
 			private function onReturnSuccess(data:Object, evt:PcWorkPlanEvent):void {
 				Alert.show("驳回成功！");
 				this.enabled = true;
-				parentView.refreshData();
+				if (parentView is BrowseWorkplanView) {
+					(parentView as BrowseWorkplanView).refreshData();
+				} else if (parentView is MainView) {
+					(parentView as MainView).refreshData();
+				}
 				this.close();
 			}
 			
@@ -255,7 +261,12 @@
 			
 			private function onApprovalSuccess(data:Object, evt:PcWorkPlanEvent):void {
 				this.enabled = true;
-				parentView.refreshData();
+//				parentView.refreshData();
+				if (parentView is BrowseWorkplanView) {
+					(parentView as BrowseWorkplanView).refreshData();
+				} else if (parentView is MainView) {
+					(parentView as MainView).refreshData();
+				}
 				this.close();
 			}
 			
@@ -276,7 +287,12 @@
 			
 			private function onEvaluateSuccess(data:Object, workPlanEvt:PcWorkPlanEvent):void {
 				this.enabled = true;
-				parentView.refreshData();
+//				parentView.refreshData();
+				if (parentView is BrowseWorkplanView) {
+					(parentView as BrowseWorkplanView).refreshData();
+				} else if (parentView is MainView) {
+					(parentView as MainView).refreshData();
+				}
 				this.close();
 			}
 			
