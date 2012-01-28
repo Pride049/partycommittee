@@ -13,9 +13,9 @@ import com.partycommittee.persistence.po.PcRemind;;
 public class PcRemindDaoImpl extends JpaDaoBase implements PcRemindDao {
 	
 	@SuppressWarnings("unchecked")
-	public List<PcRemind> getWorkPlanById(Integer id, Integer year, Integer q) {
+	public List<PcRemind> getWorkPlanById(Integer id, Integer year, Integer q, Integer s) {
 		try {
-			List<PcRemind> list = super.find("from pc_remind where agency_id = ? and year = ?", id, year);
+			List<PcRemind> list = super.find("from PcRemind where agency_id = ? and year = ? and type_id = ?", id, year, s);
 			if (list != null && list.size() > 0) {
 				return list;
 			}
@@ -28,7 +28,7 @@ public class PcRemindDaoImpl extends JpaDaoBase implements PcRemindDao {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<PcRemind> getListWorkPlanByParentId(Integer id, Integer year, Integer q) {
+	public List<PcRemind> getListWorkPlanByParentId(Integer id, Integer year, Integer q, Integer s) {
 		try {
 			if (id == null) {
 				return null;
@@ -39,7 +39,7 @@ public class PcRemindDaoImpl extends JpaDaoBase implements PcRemindDao {
 				calendar.setTime(new Date()); 
 				year = calendar.get(Calendar.YEAR);
 			}
-			return super.find("from pc_remind where parent_id = " + id + " AND year = " + year + " Order by agency_id ASC ");
+			return super.find("from PcRemind where parent_id = " + id + " AND year = " + year + " AND type_id = " + s + " Order by agency_id ASC ");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -47,9 +47,9 @@ public class PcRemindDaoImpl extends JpaDaoBase implements PcRemindDao {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<PcRemind> getMeetingById(Integer id, Integer year, Integer q) {
+	public List<PcRemind> getMeetingById(Integer id, Integer year, Integer q, Integer s) {
 		try {
-			List<PcRemind> list = super.find("from pc_remind where agency_id = ? and year = ? and quarter", id, year, q);
+			List<PcRemind> list = super.find("from PcRemind where agency_id = ? and year = ? and quarter = ? and type_id = ?", id, year, q, s);
 			if (list != null && list.size() > 0) {
 				return list;
 			}
@@ -62,7 +62,7 @@ public class PcRemindDaoImpl extends JpaDaoBase implements PcRemindDao {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<PcRemind> getListMeetingByParentId(Integer id, Integer year, Integer q) {
+	public List<PcRemind> getListMeetingByParentId(Integer id, Integer year, Integer q, Integer s) {
 		try {
 			if (id == null) {
 				return null;
@@ -73,7 +73,7 @@ public class PcRemindDaoImpl extends JpaDaoBase implements PcRemindDao {
 				calendar.setTime(new Date()); 
 				year = calendar.get(Calendar.YEAR);
 			}
-			return super.find("from pc_remind where parent_id = " + id + " AND year = " + year + " AND quarter = " + q + " Order by agency_id ASC ");
+			return super.find("from PcRemind where parent_id = " + id + " AND year = " + year + " AND quarter = " + q + " AND type_id = " + s + " Order by agency_id ASC ");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

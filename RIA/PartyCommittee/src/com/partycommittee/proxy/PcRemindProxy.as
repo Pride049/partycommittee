@@ -18,6 +18,18 @@ package com.partycommittee.proxy
 		public function getRealRemindById(agencyId:Number, year:Number, quarter:Number):void {
 			service.getRealRemindById(agencyId, year, quarter);
 		}
+		
+		public function getListRemindStatByParentId(agencyId:Number, year:Number, quarter:Number):void {
+			service.getListRemindStatByParentId(agencyId, year, quarter);
+		}
+		
+		public function getListRemindStatByParentIdForAdmin(agencyId:Number, year:Number, quarter:Number):void {
+			service.getListRemindStatByParentIdForAdmin(agencyId, year, quarter);
+		}		
+		
+		public function getListRemindByParentIdForOther(agencyId:Number, year:Number, quarter:Number):void {
+			service.getListRemindByParentIdForOther(agencyId, year, quarter);
+		}		
 
 	}
 }
