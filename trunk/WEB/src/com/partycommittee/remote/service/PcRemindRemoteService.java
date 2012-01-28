@@ -8,6 +8,7 @@ import org.springframework.flex.remoting.RemotingDestination;
 import org.springframework.flex.remoting.RemotingInclude;
 import org.springframework.stereotype.Service;
 
+import com.partycommittee.remote.vo.PcRemindStatVo;
 import com.partycommittee.remote.vo.PcRemindVo;
 import com.partycommittee.service.PcRemindService;;
 
@@ -22,18 +23,13 @@ public class PcRemindRemoteService {
 	}
 
 	@RemotingInclude
-	public List<PcRemindVo> getRealRemindById(Integer id, Integer year, Integer q) {
-		return pcRemindService.getRealRemindById(id, year, q);
-	}		
+	public List<PcRemindVo> getListRemindByParentIdForOther(Integer id, Integer year, Integer q) {
+		return pcRemindService.getListRemindStatByParentIdForOther(id, year, q);
+	}
 	
 	@RemotingInclude
-	public List<PcRemindVo> getListRemindById(Integer id, Integer year, Integer q) {
-		return pcRemindService.getListRemindById(id, year, q);
-	}	
-	
-	@RemotingInclude
-	public List<PcRemindVo> getListRemindByParentId(Integer id, Integer year, Integer q) {
-		return pcRemindService.getListRemindByParentId(id, year, q);
+	public List<PcRemindStatVo> getListRemindStatByParentIdForAdmin(Integer id, Integer year, Integer q) {
+		return pcRemindService.getListRemindStatByParentIdForAdmin(id, year, q);
 	}
 
 }

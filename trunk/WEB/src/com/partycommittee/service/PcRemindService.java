@@ -10,12 +10,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.partycommittee.persistence.daoimpl.PcMeetingDaoImpl;
 import com.partycommittee.persistence.daoimpl.PcRemindDaoImpl;
+import com.partycommittee.persistence.daoimpl.PcRemindStatDaoImpl;
 import com.partycommittee.persistence.daoimpl.PcWorkPlanDaoImpl;
 import com.partycommittee.remote.vo.PcMeetingVo;
+import com.partycommittee.remote.vo.PcRemindStatVo;
 import com.partycommittee.remote.vo.PcRemindVo;
 import com.partycommittee.remote.vo.PcWorkPlanVo;
 import com.partycommittee.persistence.po.PcMeeting;
 import com.partycommittee.persistence.po.PcRemind;
+import com.partycommittee.persistence.po.PcRemindStat;
 import com.partycommittee.persistence.po.PcWorkPlan;
 
 
@@ -27,6 +30,12 @@ public class PcRemindService {
 	private PcRemindDaoImpl PcRemindDaoImpl;
 	public void setPcRemindDaoImpl(PcRemindDaoImpl PcRemindDaoImpl) {
 		this.PcRemindDaoImpl = PcRemindDaoImpl;
+	}
+	
+	@Resource(name="PcRemindStatDaoImpl")
+	private PcRemindStatDaoImpl PcRemindStatDaoImpl;
+	public void setPcRemindStatDaoImpl(PcRemindStatDaoImpl PcRemindDaoStatImpl) {
+		this.PcRemindStatDaoImpl = PcRemindStatDaoImpl;
 	}
 	
 	@Resource(name="PcWorkPlanDaoImpl")
@@ -41,34 +50,162 @@ public class PcRemindService {
 		this.pcMeetingDaoImpl = pcMeetingDaoImpl;
 	}	
 	
-	public List<PcRemindVo> getListRemindById(Integer id, Integer year, Integer q) {
-		List<PcRemindVo> list = new ArrayList<PcRemindVo>();
-		List<PcRemind> workplan = PcRemindDaoImpl.getWorkPlanById(id, year, q);
-		List<PcRemind> meeting = PcRemindDaoImpl.getWorkPlanById(id, year, q);
-		for (PcRemind item : workplan) {
-			list.add(PcRemindVo.fromPcRemind(item));
+	public List<PcRemindStatVo> getListRemindStatById(Integer id, Integer year, Integer q) {
+		List<PcRemindStatVo> list = new ArrayList<PcRemindStatVo>();
+		
+		//年度计划
+		List<PcRemindStat> y = PcRemindStatDaoImpl.getWorkPlanById(id, year, q, 1);
+		for (PcRemindStat item : y) {
+			list.add(PcRemindStatVo.fromPcRemind(item));
 		}
 		
-		for (PcRemind item : meeting) {
-			list.add(PcRemindVo.fromPcRemind(item));
+		List<PcRemindStat> last_q;
+		if (q == 1) {
+			Integer last_year = year - 1;
+			
+			// 去年第四季度执行情况
+			last_q = PcRemindStatDaoImpl.getWorkPlanById(id, last_year, 4, 3);
+			for (PcRemindStat item : last_q) {
+				list.add(PcRemindStatVo.fromPcRemind(item));
+			}
+			
+			// 去年年终工作总结
+			List<PcRemindStat> last_year_end = PcRemindStatDaoImpl.getWorkPlanById(id, last_year, 0, 3);
+			for (PcRemindStat item : last_year_end) {
+				list.add(PcRemindStatVo.fromPcRemind(item));
+			}			
+		} else {
+			// 上季度执行情况
+			Integer last_qu = q - 1;
+			last_q = PcRemindStatDaoImpl.getWorkPlanById(id, year, last_qu, 3);
+			for (PcRemindStat item : last_q) {
+				list.add(PcRemindStatVo.fromPcRemind(item));
+			}			
+		}
+		
+		// 本季度工作安排
+		List<PcRemindStat> q_plan = PcRemindStatDaoImpl.getWorkPlanById(id, year, q, 2);
+		for (PcRemindStat item : q_plan) {
+			list.add(PcRemindStatVo.fromPcRemind(item));
+		}		
+
+		List<PcRemindStat> meeting;
+		for(int i=5; i<=9; i++) {
+			meeting = null;
+			meeting = PcRemindStatDaoImpl.getMeetingById(id, year, q, i);
+
+			for (PcRemindStat item : meeting) {
+				list.add(PcRemindStatVo.fromPcRemind(item));
+			}
 		}
 		return list;
 	}
 
-	public List<PcRemindVo> getListRemindByParentId(Integer id, Integer year, Integer q) {
-		List<PcRemindVo> list = new ArrayList<PcRemindVo>();
-		List<PcRemind> workplan = PcRemindDaoImpl.getListWorkPlanByParentId(id, year, q);
-		List<PcRemind> meeting = PcRemindDaoImpl.getListMeetingByParentId(id, year, q);
 
-		for (PcRemind item : workplan) {
+	public List<PcRemindVo> getListRemindStatByParentIdForOther(Integer id, Integer year, Integer q) {
+		List<PcRemindVo> list = new ArrayList<PcRemindVo>();
+	
+		//年度计划
+		List<PcRemind> y = PcRemindDaoImpl.getListWorkPlanByParentId(id, year, 0, 1);
+		for (PcRemind item : y) {
 			list.add(PcRemindVo.fromPcRemind(item));
 		}
 		
-		for (PcRemind item : meeting) {
+		List<PcRemind> last_q;
+		if (q == 1) {
+			Integer last_year = year - 1;
+			
+			// 去年第四季度执行情况
+			last_q = PcRemindDaoImpl.getListWorkPlanByParentId(id, last_year, 4, 3);
+			for (PcRemind item : last_q) {
+				list.add(PcRemindVo.fromPcRemind(item));
+			}
+			
+			// 去年年终工作总结
+			List<PcRemind> last_year_end = PcRemindDaoImpl.getListWorkPlanByParentId(id, last_year, 0, 3);
+			for (PcRemind item : last_year_end) {
+				list.add(PcRemindVo.fromPcRemind(item));
+			}			
+		} else {
+			// 上季度执行情况
+			Integer last_qu = q - 1;
+			last_q = PcRemindDaoImpl.getListWorkPlanByParentId(id, year, last_qu, 3);
+			for (PcRemind item : last_q) {
+				list.add(PcRemindVo.fromPcRemind(item));
+			}			
+		}
+		
+		// 本季度工作安排
+		List<PcRemind> q_plan = PcRemindDaoImpl.getListWorkPlanByParentId(id, year, q, 2);
+		for (PcRemind item : q_plan) {
 			list.add(PcRemindVo.fromPcRemind(item));
+		}			
+		
+		List<PcRemind> meeting;
+		for(int i=5; i<=9; i++) {
+		// 党课
+			meeting = null;
+			meeting = PcRemindDaoImpl.getListMeetingByParentId(id, year, q, i);
+	
+			for (PcRemind item : meeting) {
+				list.add(PcRemindVo.fromPcRemind(item));
+			}
 		}
 		return list;
-	}
+	}	
+	
+	public List<PcRemindStatVo> getListRemindStatByParentIdForAdmin(Integer id, Integer year, Integer q) {
+		List<PcRemindStatVo> list = new ArrayList<PcRemindStatVo>();
+	
+		//年度计划
+		List<PcRemindStat> y = PcRemindStatDaoImpl.getListWorkPlanByParentId(id, year, 0, 1);
+		for (PcRemindStat item : y) {
+			list.add(PcRemindStatVo.fromPcRemind(item));
+		}
+		
+		List<PcRemindStat> last_q;
+		if (q == 1) {
+			Integer last_year = year - 1;
+			
+			// 去年第四季度执行情况
+			last_q = PcRemindStatDaoImpl.getListWorkPlanByParentId(id, last_year, 4, 3);
+			for (PcRemindStat item : last_q) {
+				list.add(PcRemindStatVo.fromPcRemind(item));
+			}
+			
+			// 去年年终工作总结
+			List<PcRemindStat> last_year_end = PcRemindStatDaoImpl.getListWorkPlanByParentId(id, last_year, 0, 3);
+			for (PcRemindStat item : last_year_end) {
+				list.add(PcRemindStatVo.fromPcRemind(item));
+			}			
+		} else {
+			// 上季度执行情况
+			Integer last_qu = q - 1;
+			last_q = PcRemindStatDaoImpl.getListWorkPlanByParentId(id, year, last_qu, 3);
+			for (PcRemindStat item : last_q) {
+				list.add(PcRemindStatVo.fromPcRemind(item));
+			}			
+		}
+		
+		// 本季度工作安排
+		List<PcRemindStat> q_plan = PcRemindStatDaoImpl.getListWorkPlanByParentId(id, year, q, 2);
+		for (PcRemindStat item : q_plan) {
+			list.add(PcRemindStatVo.fromPcRemind(item));
+		}			
+		
+		List<PcRemindStat> meeting;
+		for(int i=5; i<=9; i++) {
+		// 党课
+			meeting = null;
+			meeting = PcRemindStatDaoImpl.getListMeetingByParentId(id, year, q, i);
+	
+			for (PcRemindStat item : meeting) {
+				list.add(PcRemindStatVo.fromPcRemind(item));
+			}
+		}
+		return list;
+	}		
+	
 	
 	public List<PcRemindVo> getRealRemindById(Integer agencyId, Integer year,
 			Integer quarter) {

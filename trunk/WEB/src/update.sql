@@ -55,7 +55,7 @@ begin
 	SET y = year(now());
 	SET q = quarter(now());		
 	set i = 1;
-	while i < 9 do	
+	while i < 10 do	
 		open s_cursor; 
 	  SELECT FOUND_ROWS() into rows;
 	  SET row = 0;
@@ -79,10 +79,8 @@ begin
 							END IF;
 				END IF;				
 				
-				
+				SET q = quarter(now());
 				IF i = 1 THEN
-				   SET q = 0;
-				ELSEIF i = 2 THEN
 				   SET q = 0;
 				END IF;
 				INSERT INTO  pc_remind (agency_id, name, code_id, parent_id, year, quarter, type_id, status) 
