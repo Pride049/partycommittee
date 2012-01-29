@@ -302,7 +302,15 @@ public class PcMeetingService {
 		PcMeeting pcMeeting = pcMeetingDaoImpl.getMeetingById(meetingId);
 		pcMeeting.setStatusId(4);
 		pcMeetingDaoImpl.updateMeeting(pcMeeting);
-		pcMeetingContentDaoImpl.createContent(PcMeetingContentVo.toPcMeetingContent(contentVo));
+		
+		PcMeetingContent pcMeetingContent = pcMeetingContentDaoImpl.getContentBymeetingIdAndType(meetingId, 3);
+		if (pcMeetingContent == null) {
+			pcMeetingContentDaoImpl.createContent(PcMeetingContentVo.toPcMeetingContent(contentVo));
+		} else {
+			pcMeetingContent.setContent(contentVo.getContent());
+			pcMeetingContent.setMemberName(contentVo.getMemberName());
+			pcMeetingContentDaoImpl.upateContent(pcMeetingContent);
+		}
 	}
 
 	public List<PcMeetingVo> getCommitChildrenMeeting(Integer agencyId, Integer year) {

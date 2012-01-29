@@ -10,6 +10,7 @@ package com.partycommittee.events
 		public static const GET_WORKPLAN_YEARLY:String = "getWorkPlanYearly";
 		public static const GET_WORKPLAN_YEARLY_SUMMARY:String = "getWorkPlanYearlySummary";
 		public static const GET_WORKPLAN_QUARTER:String = "getWorkPlanQuarter";
+		public static const GET_WORKPLAN_QUARTER_SUMMARY = "getWorkPlanQuarterSummary";
 		public static const GET_WORKPLAN_QUARTER_LIST:String = "getWorkPlanQuarterList";
 		public static const GET_WORKPLAN_QUARTER_RESULT_LIST:String = "getWorkPlanQuarterResultList";
 		public static const GET_COMMIT_CHILDREN_WORKPLAN:String = "getCommitChildrenWorkplan";

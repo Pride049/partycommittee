@@ -57,6 +57,11 @@ public class PcWorkPlanRemoteService {
 	}
 	
 	@RemotingInclude
+	public PcWorkPlanVo getWorkPlanQuarterSummary(Integer agencyId, Integer year, Integer quarter) {
+		return pcWorkPlanService.getWorkPlanQuarterSummary(agencyId, year, quarter);
+	}	
+	
+	@RemotingInclude
 	public List<PcWorkPlanVo> getCommitWorkplanListByParentId(Integer agencyId, Integer year) {
 		return pcWorkPlanService.getCommitWorkplanListByParentId(agencyId, year);
 	}

@@ -935,11 +935,25 @@
 						var agency:PcAgencyVo = new PcAgencyVo();
 						agency.id = textAry[2];							
 						var workPlanEvt:PcWorkPlanEvent = new PcWorkPlanEvent(PcWorkPlanEvent.GET_WORKPLAN_YEARLY_SUMMARY, agency);
-						workPlanEvt.year = new Date().getFullYear() - 1;
+						workPlanEvt.year = (yearCmb.selectedItem as Number) - 1;
 						workPlanEvt.successCallback = onGetWorkPlanEvaSuccess;
 						workPlanEvt.failureCallback = onGetWorkPlanFailure;
 						this.enabled = false;
 						workPlanEvt.dispatch();						
+					}
+					
+					if (eventText.indexOf('lquarterplan') >= 0) {
+						var agency:PcAgencyVo = new PcAgencyVo();
+						agency.id = textAry[2];							
+						var workPlanEvt:PcWorkPlanEvent = new PcWorkPlanEvent(PcWorkPlanEvent.GET_WORKPLAN_QUARTER_SUMMARY, agency);
+						workPlanEvt.year = yearCmb.selectedItem as Number;
+						var q:Number = (quarterCmb.selectedItem as Number) -1;
+						if ( q == 0 ) q = 4;
+						workPlanEvt.quarter = q;
+						workPlanEvt.successCallback = onGetWorkPlanEvaSuccess;
+						workPlanEvt.failureCallback = onGetWorkPlanFailure;
+						this.enabled = false;
+						workPlanEvt.dispatch();							
 					}
 				}				
 			}			
@@ -987,7 +1001,7 @@
 			}				
 			
 
-			private function onGetWorkPlanFailure():void {
+			private function onGetWorkPlanFailure(data:Object, workPlanEvt:PcWorkPlanEvent):void {
 				this.enabled = true;
 			}		
 			

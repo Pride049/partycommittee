@@ -16,5 +16,8 @@ public interface PcWorkPlanDao {
 	
 	public PcWorkPlan getWorkPlanQuarterByAgencyId(Integer agencyId,
 			Integer year, Integer quarter);
+	
+	public PcWorkPlan getWorkPlanQuarterByTypeId(Integer agencyId,
+			Integer year, Integer quarter, Integer typeId);	
 
 }
