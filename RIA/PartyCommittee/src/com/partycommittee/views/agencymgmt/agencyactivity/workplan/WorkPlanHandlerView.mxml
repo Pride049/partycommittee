@@ -356,8 +356,8 @@
 		</mx:HBox>
 		
 		<mx:ControlBar width="100%" horizontalAlign="center" verticalAlign="middle">
-			<button:PcButton id="returnBtn" label="驳回" click="onReturn()" visible="{!hasHandle}" />
-			<button:PcButton id="handleBtn" click="onHandle()" visible="{!hasHandle}" includeInLayout="{!hasHandle}"/>
+			<button:PcButton id="returnBtn" label="驳回" click="onReturn()" visible="{workPlan.statusId == 2}"/>
+			<button:PcButton id="handleBtn" click="onHandle()" visible="{workPlan.statusId == 2}" includeInLayout="{!hasHandle}"/>
 			<button:PcButton label="关闭" click="close()"/>
 		</mx:ControlBar>
 	</mx:VBox>

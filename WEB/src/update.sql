@@ -9,6 +9,12 @@ ALTER TABLE  `pc_meeting` ADD INDEX (  `agency_id` ,  `year` ,  `quarter` ,  `ty
 将pc_workplan status = 2 变成  status = 1  
 将pc_workplan status = 1 变成  status = 2
 
+设置my.ini
+event_scheduler=ON
+
+
+
+
 DROP TABLE IF EXISTS `pc_remind`;
 CREATE TABLE IF NOT EXISTS `pc_remind` (
   `id` int(10) NOT NULL AUTO_INCREMENT,

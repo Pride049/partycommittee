@@ -113,7 +113,15 @@ public class PcWorkPlanService {
 		PcWorkPlan workPlan = pcWorkPlanDaoImpl.getWorkPlanById(workPlanId);
 		workPlan.setStatusId(3);
 		pcWorkPlanDaoImpl.updateWorkPlan(workPlan);
-		pcWorkPlanContentDaoImpl.createContent(PcWorkPlanContentVo.toPcWorkPlanContent(contentVo));
+		
+		PcWorkPlanContent workPlanContent = pcWorkPlanContentDaoImpl.getContentByWorkPlanIdAndType(workPlanId, 2);
+		if (workPlanContent == null) {
+			pcWorkPlanContentDaoImpl.createContent(PcWorkPlanContentVo.toPcWorkPlanContent(contentVo));
+		} else {
+			workPlanContent.setContent(contentVo.getContent());
+			workPlanContent.setMemberName(contentVo.getMemberName());
+			pcWorkPlanContentDaoImpl.upateContent(workPlanContent);
+		}
 	}
 	
 	public void evaluateWrokplan(Integer workPlanId, PcWorkPlanContentVo contentVo) {
@@ -122,7 +130,14 @@ public class PcWorkPlanService {
 		PcWorkPlan workPlan = pcWorkPlanDaoImpl.getWorkPlanById(workPlanId);
 		workPlan.setStatusId(4);
 		pcWorkPlanDaoImpl.updateWorkPlan(workPlan);
-		pcWorkPlanContentDaoImpl.createContent(PcWorkPlanContentVo.toPcWorkPlanContent(contentVo));
+		PcWorkPlanContent workPlanContent = pcWorkPlanContentDaoImpl.getContentByWorkPlanIdAndType(workPlanId, 3);
+		if (workPlanContent == null) {
+			pcWorkPlanContentDaoImpl.createContent(PcWorkPlanContentVo.toPcWorkPlanContent(contentVo));
+		} else {
+			workPlanContent.setContent(contentVo.getContent());
+			workPlanContent.setMemberName(contentVo.getMemberName());
+			pcWorkPlanContentDaoImpl.upateContent(workPlanContent);
+		}
 	}
 
 	public PcWorkPlanVo getWorkPlanQuarter(Integer agencyId, Integer year,
@@ -136,6 +151,18 @@ public class PcWorkPlanService {
 		workPlanVo.setWorkPlanContent(PcWorkPlanContentVo.fromPcWorkPlanContent(workPlanContent));
 		return workPlanVo;
 	}
+	
+	public PcWorkPlanVo getWorkPlanQuarterSummary(Integer agencyId, Integer year,
+			Integer quarter) {
+		PcWorkPlan workPlan = pcWorkPlanDaoImpl.getWorkPlanQuarterByTypeId(agencyId, year, quarter, 3);
+		if (workPlan == null) {
+			return null;
+		}
+		PcWorkPlanContent workPlanContent = pcWorkPlanContentDaoImpl.getContentByWorkPlanId(workPlan.getId());
+		PcWorkPlanVo workPlanVo = PcWorkPlanVo.fromPcWorkPlan(workPlan);
+		workPlanVo.setWorkPlanContent(PcWorkPlanContentVo.fromPcWorkPlanContent(workPlanContent));
+		return workPlanVo;
+	}	
 
 	public List<PcWorkPlanVo> getWorkPlanListQuarter(Integer agencyId, Integer year) {
 		List<PcWorkPlanVo> list = createOriginalQuarterWorkPlanList(agencyId, year, 2);

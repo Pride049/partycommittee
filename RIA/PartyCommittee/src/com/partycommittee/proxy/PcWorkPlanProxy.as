@@ -42,6 +42,10 @@ package com.partycommittee.proxy
 			service.getWorkPlanQuarter(agencyId, year, quarter);
 		}
 		
+		public function getWorkPlanQuarterSummary(agencyId:Number, year:Number, quarter:Number):void {
+			service.getWorkPlanQuarterSummary(agencyId, year, quarter);
+		}		
+		
 		public function getWorkPlanListQuarter(agencyId:Number, year:Number):void {
 			service.getWorkPlanListQuarter(agencyId, year);
 		}

@@ -14,8 +14,8 @@
 			import com.lnczx.debug.DebugTracer;
 			import com.lnczx.debug.Debugger;
 			private function onCreationCompleted():void {
-				Debugger.enabled = true;
-				DebugTracer.initalize();
+//				Debugger.enabled = true;
+//				DebugTracer.initalize();
 				this.service.init();
 			}
 		]]>

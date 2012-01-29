@@ -157,7 +157,7 @@
 			private function onGetEvaluateInfoSuccess(data:Object, evt:PcMeetingEvent):void {
 				this.enabled = true;
 				if (data as PcMeetingContentVo) {
-					this.hasHandle = true;
+//					this.hasHandle = true;
 					var contentVo:PcMeetingContentVo = data as PcMeetingContentVo;
 					this.handlePersonTxt.text = contentVo.memberName;
 					this.handleTextArea.htmlText = contentVo.content;
@@ -294,8 +294,8 @@
 		</mx:HBox>
 		
 		<mx:ControlBar width="100%" horizontalAlign="center" verticalAlign="middle">
-			<button:PcButton id="returnBtn" label="驳回" click="onReturn()" />
-			<button:PcButton label="评价" click="onHandle()" visible="{!hasHandle}" includeInLayout="{!hasHandle}"/>
+			<button:PcButton id="returnBtn" label="驳回" click="onReturn()" visible="{meeting.statusId == 2}" />
+			<button:PcButton label="评价" click="onHandle()" visible="{meeting.statusId == 2}" includeInLayout="{!hasHandle}"/>
 			<button:PcButton label="关闭" click="close()"/>
 		</mx:ControlBar>
 	</mx:VBox>

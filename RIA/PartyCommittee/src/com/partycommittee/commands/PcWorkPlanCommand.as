@@ -35,6 +35,9 @@ package com.partycommittee.commands
 				case PcWorkPlanEvent.GET_WORKPLAN_QUARTER:
 					proxy.getWorkPlanQuarter(pcWorkPlanEvt.agency.id, pcWorkPlanEvt.year, pcWorkPlanEvt.quarter);
 					break;
+				case PcWorkPlanEvent.GET_WORKPLAN_QUARTER_SUMMARY:
+					proxy.getWorkPlanQuarterSummary(pcWorkPlanEvt.agency.id, pcWorkPlanEvt.year, pcWorkPlanEvt.quarter);
+					break;				
 				case PcWorkPlanEvent.GET_WORKPLAN_QUARTER_LIST:
 					proxy.getWorkPlanListQuarter(pcWorkPlanEvt.agency.id, pcWorkPlanEvt.year);
 					break;
