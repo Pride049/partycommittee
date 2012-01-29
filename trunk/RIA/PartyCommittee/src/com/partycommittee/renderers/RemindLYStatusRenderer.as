@@ -24,11 +24,11 @@ package com.partycommittee.renderers
 					htmlText = "未报";
 					break;
 				case 2:
-					if (datas.parentId == model.loginUser.privilege) {
-						htmlText = '<u><font color="#0000ff"><a href="event:evaluate&lyearendplan&'+datas.agencyId+'">未评</a></font></u>';
-					} else {
+//					if (datas.parentId == model.loginUser.privilege) {
+//						htmlText = '<u><font color="#0000ff"><a href="event:evaluate&lyearendplan&'+datas.agencyId+'">未评</a></font></u>';
+//					} else {
 						htmlText = '未评';
-					}			
+//					}			
 				case 3:
 					htmlText  = "已审";
 					break;
