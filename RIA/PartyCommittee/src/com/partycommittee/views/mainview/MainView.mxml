@@ -13,7 +13,7 @@
 			import com.partycommittee.events.PcWorkPlanEvent;
 			import com.partycommittee.manager.popup.PopupMgr;
 			import com.partycommittee.model.ModelLocator;
-
+			import com.partycommittee.util.DataproviderFactory;
 			import com.partycommittee.util.LblFunctionHelper;
 			import com.partycommittee.views.MainContainer;
 			import com.partycommittee.views.agencymgmt.agencyactivity.workplan.WorkPlanHandlerView;
@@ -40,6 +40,16 @@
 						
 			private function onCreationCompleted():void {
 					onNavigateIn();
+					if (yearCmb) {
+						yearCmb.dataProvider = DataproviderFactory.getRangeYearForReport();
+						yearCmb.selectedItem = model.reportYear = new Date().getFullYear();
+						//yearCmb.addEventListener(Event.CHANGE, onYearCmbChanged);
+					}	
+					
+					if (quarterCmb) {
+						quarterCmb.dataProvider = DataproviderFactory.createQuarterDp();
+						quarterCmb.selectedItem = getQuarter();
+					}					
 			}
 			
 			private function onPropertyChanged(event:PropertyChangeEvent):void {
@@ -50,7 +60,7 @@
 			}
 			
 			override protected function onNavigateIn():void {
-				
+
 				model.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, onPropertyChanged);
 				dg.addEventListener(TextEvent.LINK, onEventTextLink, false , 0, true); 				
 				remindDg.addEventListener(TextEvent.LINK, onEventTextLink, false , 0, true);
@@ -59,8 +69,8 @@
 					RemindViewStack.selectedChild = AGrid;
 					var pcRemindEvt:PcRemindEvent = new PcRemindEvent(PcRemindEvent.GET_REAL_REMIND_BY_ID);
 					pcRemindEvt.agencyId = model.focusAgencyVo.id;
-					pcRemindEvt.year = new Date().getFullYear();
-					pcRemindEvt.quarter = getQuarter();
+					pcRemindEvt.year = yearCmb.selectedItem as Number;
+					pcRemindEvt.quarter = quarterCmb.selectedItem as Number;
 					pcRemindEvt.successCallback = onGetRemindSuccess;
 					pcRemindEvt.failureCallback = onGetRemindFailure;
 					pcRemindEvt.dispatch();
@@ -70,8 +80,8 @@
 						if (model.focusAgencyVo.id == 1) {
 							var pcRemindEvt:PcRemindEvent = new PcRemindEvent(PcRemindEvent.GET_REMIND_STAT_BY_PARENTID_FOR_ADMIN);
 							pcRemindEvt.agencyId = model.focusAgencyVo.id;
-							pcRemindEvt.year = new Date().getFullYear();
-							pcRemindEvt.quarter = getQuarter();
+							pcRemindEvt.year = yearCmb.selectedItem as Number;
+							pcRemindEvt.quarter = quarterCmb.selectedItem as Number;
 							pcRemindEvt.successCallback = onGetRemindStatSuccess;
 							pcRemindEvt.failureCallback = onGetRemindStatFailure;
 							this.enabled = false;
@@ -79,8 +89,8 @@
 						} else {
 							var pcRemindEvt:PcRemindEvent = new PcRemindEvent(PcRemindEvent.GET_REMIND_STAT_BY_PARENTID_FOR_OTHER);
 							pcRemindEvt.agencyId = model.focusAgencyVo.id;
-							pcRemindEvt.year = new Date().getFullYear();
-							pcRemindEvt.quarter = getQuarter();
+							pcRemindEvt.year = yearCmb.selectedItem as Number;
+							pcRemindEvt.quarter = quarterCmb.selectedItem as Number;
 							pcRemindEvt.successCallback = onGetRemindForOtherSuccess;
 							pcRemindEvt.failureCallback = onGetRemindStatFailure;
 							this.enabled = false;
@@ -112,8 +122,8 @@
 			
 			public function initColumnsForOther():void {
 
-				var year:Number = new Date().getFullYear();
-				var q:Number = getQuarter();
+				var year:Number = yearCmb.selectedItem as Number;
+				var q:Number = quarterCmb.selectedItem as Number;
 				var dateGridColumnArray :Array = new Array();
 				var c1:AdvancedDataGridColumn = new AdvancedDataGridColumn();
 				c1.dataField = "name";
@@ -154,7 +164,7 @@
 					
 					// 上季度执行情况
 					var c_last_q:AdvancedDataGridColumn = new AdvancedDataGridColumn();
-					c_last_q.headerText =String(year - 1) + "第" + String(q -1 ) +"季度执行情况";
+					c_last_q.headerText = "第" + String(q -1 ) +"季度执行情况";
 					c_last_q.dataField = "lq";
 					c_last_q.width = 130;
 					c_last_q.itemRenderer = new ClassFactory(com.partycommittee.renderers.RemindLQStatusRenderer);
@@ -534,8 +544,8 @@
 			
 			public function initColumnsForAdmin():void {
 				
-				var year:Number = new Date().getFullYear();
-				var q:Number = getQuarter();
+				var year:Number = yearCmb.selectedItem as Number;
+				var q:Number = quarterCmb.selectedItem as Number;
 				
 				
 				
@@ -646,7 +656,7 @@
 					
 					// 上季度执行情况
 					var c_last_q:AdvancedDataGridColumnGroup = new AdvancedDataGridColumnGroup();
-					c_last_q.headerText =String(year - 1) + "第" + String(q -1 ) +"季度执行情况";
+					c_last_q.headerText = "第" + String(q -1 ) +"季度执行情况";
 					
 					
 					var c_last_q_ChildArray:Array = new Array();
@@ -897,7 +907,7 @@
 							agency.id = textAry[2];
 							
 							var workPlanEvt:PcWorkPlanEvent = new PcWorkPlanEvent(PcWorkPlanEvent.GET_WORKPLAN_YEARLY, agency);
-							workPlanEvt.year = new Date().getFullYear();
+							workPlanEvt.year = yearCmb.selectedItem as Number;
 							workPlanEvt.successCallback = onGetWorkPlanSuccess;
 							workPlanEvt.failureCallback = onGetWorkPlanFailure;
 							this.enabled = false;
@@ -908,8 +918,8 @@
 							var agency:PcAgencyVo = new PcAgencyVo();
 							agency.id = textAry[2];		
 							var workPlanEvt:PcWorkPlanEvent = new PcWorkPlanEvent(PcWorkPlanEvent.GET_WORKPLAN_QUARTER, agency);
-							workPlanEvt.year = new Date().getFullYear();
-							workPlanEvt.quarter = getQuarter();
+							workPlanEvt.year = yearCmb.selectedItem as Number;
+							workPlanEvt.quarter = quarterCmb.selectedItem as Number;
 							workPlanEvt.successCallback = onGetWorkPlanSuccess;
 							workPlanEvt.failureCallback = onGetWorkPlanFailure;
 							this.enabled = false;
@@ -944,7 +954,7 @@
 				if (!workPlan) {
 					return;
 				}
-				
+				workPlan.workPlanContent = null;
 				var agency:PcAgencyVo = new PcAgencyVo();
 				agency.id = workPlan.agencyId;
 				var win:WorkPlanHandlerView = new WorkPlanHandlerView();
@@ -965,7 +975,7 @@
 				if (!workPlan) {
 					return;
 				}
-				
+				workPlan.workPlanContent = null;
 				var agency:PcAgencyVo = new PcAgencyVo();
 				agency.id = workPlan.agencyId;
 				var win:WorkPlanHandlerView = new WorkPlanHandlerView();
@@ -1010,7 +1020,13 @@
 		<mx:VBox id="MecGrid" width="100%" height="100%"
 				 left="6" right="6" top="6" bottom="6"
 				 horizontalScrollPolicy="auto" verticalScrollPolicy="auto">
-			
+			<mx:HBox>
+				<mx:Label text="选择年份:"/>
+				<mx:ComboBox id="yearCmb"/>
+				<mx:Label text="季度:"/>
+				<mx:ComboBox id="quarterCmb" />
+				<mx:Button label="更新" click="refreshData()"/>
+			</mx:HBox>
 			<mx:AdvancedDataGrid id="remindDg" 
 								 width="100%" height="100%" 
 								 variableRowHeight="true"
