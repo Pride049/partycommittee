@@ -99,7 +99,7 @@
 					if (workPlan.statusId == 0 || workPlan.statusId == 1) {
 						QuearterViewStack.selectedChild = reportForm;
 						if (workPlan.workPlanContent) {
-							personTxt.text = "填报人:" + workPlan.workPlanContent.memberName;
+							personTxt.text =  workPlan.workPlanContent.memberName;
 							textArea.htmlText = workPlan.workPlanContent.content;
 						} else {
 							loadWorkPlanContent();
@@ -107,7 +107,7 @@
 					} else {
 						QuearterViewStack.selectedChild = browseForm;
 						if (workPlan.workPlanContent) {
-							b_personTxt.text = "填报人:" + workPlan.workPlanContent.memberName;
+							b_personTxt.text =  workPlan.workPlanContent.memberName;
 							b_textArea.htmlText = workPlan.workPlanContent.content;
 							if (workPlan.statusId == 3) {
 								getWorkPlanComment(workPlan);
@@ -136,10 +136,10 @@
 				workPlan.workPlanContent = data as PcWorkPlanContentVo;
 				
 				if (workPlan.statusId == 0 || workPlan.statusId == 1) {
-					personTxt.text = "填报人:" + workPlan.workPlanContent.memberName;
+					personTxt.text = workPlan.workPlanContent.memberName;
 					textArea.htmlText = workPlan.workPlanContent.content;
 				} else {
-					b_personTxt.text = "填报人:" + workPlan.workPlanContent.memberName;
+					b_personTxt.text = workPlan.workPlanContent.memberName;
 					b_textArea.htmlText = workPlan.workPlanContent.content;
 					
 					if (workPlan.statusId == 3) {
@@ -309,7 +309,7 @@
 				<mx:TextArea id="textArea" width="100%" height="100%"
 							 editable="{!workPlan || workPlan.statusId == 1}"/>
 				<mx:HBox width="100%" horizontalAlign="left" horizontalScrollPolicy="off" verticalScrollPolicy="off">
-					<mx:Label text="填写人："/>
+					<mx:Label text="填报人："/>
 					<mx:TextInput id="personTxt" width="200"
 								  editable="{!workPlan || workPlan.statusId == 1}"/>
 				</mx:HBox>
