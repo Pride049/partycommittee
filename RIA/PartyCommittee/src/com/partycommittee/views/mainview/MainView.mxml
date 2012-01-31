@@ -853,15 +853,18 @@
 					var item:Object = dg.selectedItem;
 					if (this.parent.parent.parent.parent is MainContainer) {
 						var obj:Object = this.parent.parent.parent.parent as MainContainer;
-						(obj.mainViewStack as ViewStack).selectedIndex = 2;
+
 						var nobj:Object = (obj.mainViewStack as ViewStack).getChildByName('activityView');
-						
+						nobj.updateData();
 						var sobj:Object = (nobj as NavigationView).getChildByName('tab');
-						sobj.selectedIndex = 0;
+						
 						
 						var tobj:Object = (sobj as TabNavigator).getChildAt(0);
-						
+						sobj.selectedIndex = 0;
 						var fobj:Object = (tobj as NavigationView).getChildByName('tab');
+						(obj.mainViewStack as ViewStack).selectedIndex = 2;
+						
+//						tobj.onCreationCompleted();
 //						fobj.selectedIndex = 2;
 						
 						var typeId:Number;
@@ -869,37 +872,48 @@
 							typeId = (item as PcWorkPlanVo).typeId;
 						} else if (item is PcMeetingVo) {
 							typeId = (item as PcMeetingVo).typeId;
+						} else {
+							typeId = item.typeId;
 						}
 						switch (typeId) {
 							case PCConst.WORKPLAN_TYPE_YEARLY:
-								fobj.selectedIndex = 0;
+//								fobj.selectedIndex = 0;
+								nobj.si = 0;
 								break;
 							case PCConst.WORKPLAN_TYPE_YEARLY_SUMMARY:
-								fobj.selectedIndex = 8;
+//								fobj.selectedIndex = 8;
+								nobj.si = 8;
 								break;
 							case PCConst.WORKPLAN_TYPE_QUARTER:
-								fobj.selectedIndex = 1;
+//								fobj.selectedIndex = 1;
+								nobj.si = 1;
 								break;
 							case PCConst.WORKPLAN_TYPE_QUARTER_SUMMARY:
-								fobj.selectedIndex = 2;
+//								fobj.selectedIndex = 2;
+								nobj.si = 2;
 								break;
 							case PCConst.WORKPLAN_TYPE_CLASS:
-								fobj.selectedIndex = 3;
+//								fobj.selectedIndex = 3;
+								nobj.si = 3;
 								break;
 							case PCConst.WORKPLAN_TYPE_MEETING_BRANCH_COMMITTEE:
-								fobj.selectedIndex = 5;
+//								fobj.selectedIndex = 5;
+								nobj.si = 5;
 								break;
 							case PCConst.WORKPLAN_TYPE_MEETING_BRANCH_MEMBER:
-								fobj.selectedIndex = 4;
+//								fobj.selectedIndex = 4;
+								nobj.si = 4;
 								break;
 							case PCConst.WORKPLAN_TYPE_MEETING_BRANCH_LIFE:
-								fobj.selectedIndex = 6;
+//								fobj.selectedIndex = 6;
+								nobj.si = 6;
 								break;
 //							case PCConst.WORKPLAN_TYPE_MEETING_TEAM:
 //								Alert.show("党小组会");
 //								break;
 							case PCConst.WORKPLAN_TYPE_MEETING_OTHER:
-								fobj.selectedIndex = 7;
+//								fobj.selectedIndex = 7;
+								nobj.si = 7;
 								break;
 						}
 					}

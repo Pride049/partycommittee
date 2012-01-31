@@ -39,7 +39,7 @@ public class PcRemindDaoImpl extends JpaDaoBase implements PcRemindDao {
 				calendar.setTime(new Date()); 
 				year = calendar.get(Calendar.YEAR);
 			}
-			return super.find("from PcRemind where parent_id = " + id + " AND year = " + year + " AND type_id = " + s + " Order by agency_id ASC ");
+			return super.find("from PcRemind where parent_id = " + id + " AND year = " + year + " and quarter = " + q + " AND type_id = " + s + " Order by agency_id ASC ");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
