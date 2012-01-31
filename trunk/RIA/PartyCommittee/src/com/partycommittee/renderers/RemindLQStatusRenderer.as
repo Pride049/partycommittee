@@ -34,7 +34,8 @@ package com.partycommittee.renderers
 					htmlText  = "已审";
 					break;
 				case 4:
-					htmlText  = "已评";		
+					//htmlText  = "已评";	
+					htmlText = '<u><font color="#0000ff"><a href="event:evaluate&lquarterplan&'+datas.agencyId+'">已评</a></font></u>';
 					break;
 			}
 		}

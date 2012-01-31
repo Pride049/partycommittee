@@ -224,8 +224,15 @@
 			private function onLoadContentSuccess(data:Object, evt:PcMeetingEvent):void {
 				this.enabled = true;
 				meeting.content = data as PcMeetingContentVo;
+				
 				personTxt.text = meeting.content.memberName;
-				textArea.htmlText = meeting.content.content;
+
+				if (meetingViewStack.selectedChild == reportForm) {
+					textArea.htmlText = meeting.content.content;
+				}
+				if (meetingViewStack.selectedChild == browseForm) {
+					b_textArea.htmlText = meeting.content.content;
+				}
 			}
 			
 			private function onLoadContentFailure(info:Object, evt:PcMeetingEvent):void {

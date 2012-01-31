@@ -31,10 +31,11 @@ package com.partycommittee.renderers
 					}
 					break;				
 				case 3:
-					htmlText  = "已审";
+//					htmlText  = "已审";
+					htmlText = '<u><font color="#0000ff"><a href="event:approval&yearplan&'+datas.agencyId+'">已审</a></font></u>';
 					break;
 				case 4:
-					htmlText  = "已评";		
+					htmlText  = "已评";
 					break;
 			}
 		}
