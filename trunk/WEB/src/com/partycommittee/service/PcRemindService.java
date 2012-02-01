@@ -54,7 +54,7 @@ public class PcRemindService {
 		List<PcRemindStatVo> list = new ArrayList<PcRemindStatVo>();
 		
 		//年度计划
-		List<PcRemindStat> y = PcRemindStatDaoImpl.getWorkPlanById(id, year, q, 1);
+		List<PcRemindStat> y = PcRemindStatDaoImpl.getListWorkPlanById(id, year, 0, 1);
 		for (PcRemindStat item : y) {
 			list.add(PcRemindStatVo.fromPcRemind(item));
 		}
@@ -64,44 +64,44 @@ public class PcRemindService {
 			Integer last_year = year - 1;
 			
 			// 去年第四季度执行情况
-			last_q = PcRemindStatDaoImpl.getWorkPlanById(id, last_year, 4, 3);
+			last_q = PcRemindStatDaoImpl.getListWorkPlanById(id, last_year, 4, 3);
 			for (PcRemindStat item : last_q) {
 				list.add(PcRemindStatVo.fromPcRemind(item));
 			}
 			
 			// 去年年终工作总结
-			List<PcRemindStat> last_year_end = PcRemindStatDaoImpl.getWorkPlanById(id, last_year, 0, 3);
+			List<PcRemindStat> last_year_end = PcRemindStatDaoImpl.getListWorkPlanById(id, last_year, 0, 3);
 			for (PcRemindStat item : last_year_end) {
 				list.add(PcRemindStatVo.fromPcRemind(item));
 			}			
 		} else {
 			// 上季度执行情况
 			Integer last_qu = q - 1;
-			last_q = PcRemindStatDaoImpl.getWorkPlanById(id, year, last_qu, 3);
+			last_q = PcRemindStatDaoImpl.getListWorkPlanById(id, year, last_qu, 3);
 			for (PcRemindStat item : last_q) {
 				list.add(PcRemindStatVo.fromPcRemind(item));
 			}			
 		}
 		
 		// 本季度工作安排
-		List<PcRemindStat> q_plan = PcRemindStatDaoImpl.getWorkPlanById(id, year, q, 2);
+		List<PcRemindStat> q_plan = PcRemindStatDaoImpl.getListWorkPlanById(id, year, q, 2);
 		for (PcRemindStat item : q_plan) {
 			list.add(PcRemindStatVo.fromPcRemind(item));
-		}		
-
+		}			
+		
 		List<PcRemindStat> meeting;
 		for(int i=5; i<=9; i++) {
+		// 党课
 			meeting = null;
-			meeting = PcRemindStatDaoImpl.getMeetingById(id, year, q, i);
-
+			meeting = PcRemindStatDaoImpl.getListMeetingByParentId(id, year, q, i);
+	
 			for (PcRemindStat item : meeting) {
 				list.add(PcRemindStatVo.fromPcRemind(item));
 			}
 		}
 		return list;
 	}
-
-
+	
 	public List<PcRemindVo> getListRemindStatByParentIdForOther(Integer id, Integer year, Integer q) {
 		List<PcRemindVo> list = new ArrayList<PcRemindVo>();
 	
@@ -204,9 +204,8 @@ public class PcRemindService {
 			}
 		}
 		return list;
-	}		
-	
-	
+	}	
+
 	public List<PcRemindVo> getRealRemindById(Integer agencyId, Integer year,
 			Integer quarter) {
 		List<PcRemindVo> list = new ArrayList<PcRemindVo>();

@@ -6,11 +6,11 @@ import com.partycommittee.persistence.po.PcRemindStat;;
 
 public interface PcRemindStatDao {
 
-	public List<PcRemindStat> getWorkPlanById(Integer id, Integer year, Integer q, Integer s);
+	public List<PcRemindStat> getListWorkPlanById(Integer id, Integer year, Integer q, Integer s);
 		
 	public List<PcRemindStat> getListWorkPlanByParentId(Integer id, Integer year, Integer q, Integer s);
 
-	public List<PcRemindStat> getMeetingById(Integer id, Integer year, Integer q, Integer s);
+	public List<PcRemindStat> getListMeetingById(Integer id, Integer year, Integer q, Integer s);
 	
 	public List<PcRemindStat> getListMeetingByParentId(Integer id, Integer year, Integer q, Integer s);	
 }
