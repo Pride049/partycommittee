@@ -28,6 +28,11 @@ public class PcRemindRemoteService {
 	}		
 	
 	@RemotingInclude
+	public List<PcRemindStatVo> getListRemindStatById(Integer id, Integer year, Integer q) {
+		return pcRemindService.getListRemindStatById(id, year, q);
+	}	
+	
+	@RemotingInclude
 	public List<PcRemindVo> getListRemindByParentIdForOther(Integer id, Integer year, Integer q) {
 		return pcRemindService.getListRemindStatByParentIdForOther(id, year, q);
 	}

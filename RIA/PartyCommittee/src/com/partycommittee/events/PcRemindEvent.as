@@ -6,6 +6,7 @@ package com.partycommittee.events
 		public static const PCREMIND_EVENT:String = "com.partycommittee.events.PcRemindEvent";
 		
 		public static const GET_REAL_REMIND_BY_ID:String = "getRealRemindById";
+		public static const GET_REMIND_STAT_BY_ID:String = "getRemindStatById";
 		public static const GET_REMIND_STAT_BY_PARENTID:String = "getRemindStatByParentId";
 		public static const GET_REMIND_STAT_BY_PARENTID_FOR_ADMIN:String = "getRemindStatByParentIdForAdmin";
 		public static const GET_REMIND_STAT_BY_PARENTID_FOR_OTHER:String = "getRemindStatByParentIdForOTHER";

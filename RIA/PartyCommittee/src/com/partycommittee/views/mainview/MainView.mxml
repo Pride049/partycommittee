@@ -43,6 +43,9 @@
 			
 			[Bindable]
 			private var dp:ArrayCollection = new ArrayCollection();
+			
+			[Bindable]
+			private var agencyId:Number;
 						
 			private function onCreationCompleted():void {
 					onNavigateIn();
@@ -70,6 +73,14 @@
 				model.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, onPropertyChanged);
 				dg.addEventListener(TextEvent.LINK, onEventTextLink, false , 0, true); 				
 				remindDg.addEventListener(TextEvent.LINK, onEventTextLink, false , 0, true);
+				updateData();
+			}
+			
+			override protected function onNavigateOut():void {
+				model.removeEventListener(PropertyChangeEvent.PROPERTY_CHANGE, onPropertyChanged);
+			}
+			
+			public function updateData():void {
 				dp = new ArrayCollection();
 				if (model.focusAgencyVo && model.focusAgencyVo.codeId == 10) {
 					RemindViewStack.selectedChild = AGrid;
@@ -82,32 +93,24 @@
 					pcRemindEvt.dispatch();
 				} else {
 					RemindViewStack.selectedChild = MecGrid;
+					
 					if (model.focusAgencyVo) {
+						var eventType:String = PcRemindEvent.GET_REMIND_STAT_BY_PARENTID_FOR_ADMIN;
 						if (model.focusAgencyVo.id == 1) {
-							var pcRemindEvt:PcRemindEvent = new PcRemindEvent(PcRemindEvent.GET_REMIND_STAT_BY_PARENTID_FOR_ADMIN);
-							pcRemindEvt.agencyId = model.focusAgencyVo.id;
-							pcRemindEvt.year = yearCmb.selectedItem as Number;
-							pcRemindEvt.quarter = quarterCmb.selectedItem as Number;
-							pcRemindEvt.successCallback = onGetRemindStatSuccess;
-							pcRemindEvt.failureCallback = onGetRemindStatFailure;
-							this.enabled = false;
-							pcRemindEvt.dispatch();
+							eventType = PcRemindEvent.GET_REMIND_STAT_BY_PARENTID_FOR_ADMIN;
 						} else {
-							var pcRemindEvt:PcRemindEvent = new PcRemindEvent(PcRemindEvent.GET_REMIND_STAT_BY_PARENTID_FOR_OTHER);
-							pcRemindEvt.agencyId = model.focusAgencyVo.id;
-							pcRemindEvt.year = yearCmb.selectedItem as Number;
-							pcRemindEvt.quarter = quarterCmb.selectedItem as Number;
-							pcRemindEvt.successCallback = onGetRemindForOtherSuccess;
-							pcRemindEvt.failureCallback = onGetRemindStatFailure;
-							this.enabled = false;
-							pcRemindEvt.dispatch();							
+							eventType = PcRemindEvent.GET_REMIND_STAT_BY_ID;					
 						}
+						var pcRemindEvt:PcRemindEvent = new PcRemindEvent(eventType);
+						pcRemindEvt.agencyId = model.focusAgencyVo.id;
+						pcRemindEvt.year = yearCmb.selectedItem as Number;
+						pcRemindEvt.quarter = quarterCmb.selectedItem as Number;
+						pcRemindEvt.successCallback = onGetRemindStatSuccess;
+						pcRemindEvt.failureCallback = onGetRemindStatFailure;
+						this.enabled = false;
+						pcRemindEvt.dispatch();
 					}
-				}
-			}
-			
-			override protected function onNavigateOut():void {
-				model.removeEventListener(PropertyChangeEvent.PROPERTY_CHANGE, onPropertyChanged);
+				}				
 			}
 			
 			private function onGetRemindSuccess(data:Object, evt:PcRemindEvent):void {

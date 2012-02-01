@@ -13,12 +13,13 @@ import com.partycommittee.persistence.po.PcRemindStat;;
 public class PcRemindStatDaoImpl extends JpaDaoBase implements PcRemindStatDao {
 	
 	@SuppressWarnings("unchecked")
-	public List<PcRemindStat> getWorkPlanById(Integer id, Integer year, Integer q, Integer s) {
+	public List<PcRemindStat> getListWorkPlanById(Integer id, Integer year, Integer q, Integer s) {
+	
 		try {
-			List<PcRemindStat> list = super.find("from PcRemindStat where agency_id = ? and year = ?  and type_id = ?", id, year, s);
-			if (list != null && list.size() > 0) {
-				return list;
-			}
+			if (id == null) {
+				return null;
+			}				
+			return super.find("from PcRemindStat where agency_id = ? and year = ? and quarter = ? and type_id = ?", id, year, q, s);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -47,12 +48,12 @@ public class PcRemindStatDaoImpl extends JpaDaoBase implements PcRemindStatDao {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<PcRemindStat> getMeetingById(Integer id, Integer year, Integer q, Integer s) {
+	public List<PcRemindStat> getListMeetingById(Integer id, Integer year, Integer q, Integer s) {
 		try {
-			List<PcRemindStat> list = super.find("from PcRemindStat where agency_id = ? and year = ? and quarter = ? and type_id = ?", id, year, q, s);
-			if (list != null && list.size() > 0) {
-				return list;
-			}
+			if (id == null) {
+				return null;
+			}			
+			return super.find("from PcRemindStat where agency_id = ? and year = ? and quarter = ? and type_id = ?", id, year, q, s);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

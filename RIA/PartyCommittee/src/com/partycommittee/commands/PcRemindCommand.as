@@ -20,6 +20,9 @@ package com.partycommittee.commands
 				case PcRemindEvent.GET_REAL_REMIND_BY_ID :
 					proxy.getRealRemindById(pcRemindEvt.agencyId, pcRemindEvt.year, pcRemindEvt.quarter);
 					break;
+				case PcRemindEvent.GET_REMIND_STAT_BY_ID : 
+					proxy.getListRemindStatById(pcRemindEvt.agencyId, pcRemindEvt.year, pcRemindEvt.quarter);
+					break;				
 				case PcRemindEvent.GET_REMIND_STAT_BY_PARENTID : 
 					proxy.getListRemindStatByParentId(pcRemindEvt.agencyId, pcRemindEvt.year, pcRemindEvt.quarter);
 					break;
