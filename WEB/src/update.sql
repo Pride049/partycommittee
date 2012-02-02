@@ -6,6 +6,13 @@ ALTER TABLE  `pc_agency_relation` ADD INDEX (  `parent_id` ) ;
 ALTER TABLE  `pc_workplan` ADD INDEX (  `agency_id` ,  `type_id` ,  `year` ,  `quarter` ) ;
 ALTER TABLE  `pc_meeting` ADD INDEX (  `agency_id` ,  `year` ,  `quarter` ,  `type_id` ) ;
 
+ALTER TABLE  `pc_remind_config` ADD  `start_year` TINYINT( 1 ) NOT NULL ,
+ADD  `start_month` SMALLINT( 5 ) UNSIGNED NOT NULL ,
+ADD  `start_day` SMALLINT( 5 ) UNSIGNED NOT NULL ,
+ADD  `end_year` TINYINT( 1 ) NOT NULL ,
+ADD  `end_month` SMALLINT( 5 ) UNSIGNED NOT NULL ,
+ADD  `end_day` SMALLINT( 5 ) UNSIGNED NOT NULL
+
 将pc_workplan status = 2 变成  status = 1  
 将pc_workplan status = 1 变成  status = 2
 
@@ -61,7 +68,8 @@ begin
 	SET y = year(now());
 	SET q = quarter(now());		
 	set i = 1;
-	while i < 10 do	
+	
+	while i < 9 do	
 		open s_cursor; 
 	  SELECT FOUND_ROWS() into rows;
 	  SET row = 0;
@@ -76,20 +84,25 @@ begin
 				   SET q = 0;
 				ELSEIF i = 4 THEN
 				   SET q = 0;
-				END IF;				
+				END IF;
+
+				if i = 4 THEN
+				
 				IF i <= 4 THEN
 		   				SELECT status_id into s FROM pc_workplan WHERE agency_id = id AND year = y AND quarter = q AND type_id = i;
 		   				IF  s IS NULL THEN
 			   				SET s = 0;
 							END IF;
-							
+						
 				ELSE 
 						 SELECT max(status_id) into s FROM pc_meeting WHERE agency_id = id AND year = y AND quarter = q AND type_id = i;
 						 IF  s IS NULL THEN
 			   				SET s = 0;
 							END IF;
 				END IF;				
-				
+				IF s = 0 THEN
+					CALL set_remind_status(i, s);
+				END IF;
 				
 
 				INSERT INTO  pc_remind (agency_id, name, code_id, parent_id, year, quarter, type_id, status) 
@@ -127,6 +140,50 @@ end;
 //
 delimiter ;
 
+
+delimiter //
+DROP procedure IF EXISTS set_remind_status//
+CREATE PROCEDURE set_remind_status(t_id int, OUT status tinyint(1))
+begin
+	DECLARE y year(4);
+	DECLARE e_y tinyint(1);
+	DECLARE e_q tinyint(1) unsigned;
+	DECLARE e_m smallint(5) unsigned;
+	DECLARE e_d smallint(5) unsigned;
+	DECLARE e_t varchar(20);
+	SET y = year(now());
+	SELECT end_year, end_quarter, end_month, end_day into e_y, e_q, e_m, e_d FROM pc_remind_config WHERE type_id = t_id;
+	SELECT CONCAT(e_y, '-', e_q, '-', e_m, '-', e_d);
+	
+	IF t_id <=4 THEN
+		SET e_t = CONCAT(y + e_y, '-', e_m, '-', e_d, ' 23:59:59');
+		
+	
+	END IF;
+	
+	IF t_id > 4 AND t_id < 8 THEN
+		SET e_t = CONCAT(LAST_DAY(MAKEDATE(EXTRACT(YEAR FROM CURDATE()),1) + interval QUARTER(CURDATE())*3-1 month), ' 23:59:59');
+	END IF;
+	
+	IF t_id = 8 THEN
+		SET e_t = CONCAT(LAST_DAY(now()), ' 23:59:59');
+	END IF;
+	SELECT e_t;
+	IF unix_timestamp(now()) > unix_timestamp(e_t) THEN
+		SELECT ">>>>";
+		SET status = 9;
+	ELSE 
+		SET status = 0;
+	END IF;
+end;
+//
+delimiter ;
+
+
+
+SELECT  
+CAST(CONCAT(IF(MONTH(NOW())+1=13,YEAR(NOW())+1,YEAR(NOW())),'-',IF(MONTH(NOW())+1=13,'01',MONTH(NOW())+1),'-01 23:59:59')  
+AS DATETIME) - INTERVAL 1 DAY AS NN;
 
 delimiter //
 DROP PROCEDURE IF EXISTS `stats_process`//
