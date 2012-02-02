@@ -7,9 +7,11 @@ ALTER TABLE  `pc_workplan` ADD INDEX (  `agency_id` ,  `type_id` ,  `year` ,  `q
 ALTER TABLE  `pc_meeting` ADD INDEX (  `agency_id` ,  `year` ,  `quarter` ,  `type_id` ) ;
 
 ALTER TABLE  `pc_remind_config` ADD  `start_year` TINYINT( 1 ) NOT NULL ,
+ADD  `start_quarter` TINYINT( 1 ) UNSIGNED NOT NULL ,
 ADD  `start_month` SMALLINT( 5 ) UNSIGNED NOT NULL ,
 ADD  `start_day` SMALLINT( 5 ) UNSIGNED NOT NULL ,
 ADD  `end_year` TINYINT( 1 ) NOT NULL ,
+ADD  `end_quarter` TINYINT( 1 ) UNSIGNED NOT NULL ,
 ADD  `end_month` SMALLINT( 5 ) UNSIGNED NOT NULL ,
 ADD  `end_day` SMALLINT( 5 ) UNSIGNED NOT NULL
 
@@ -86,8 +88,6 @@ begin
 				   SET q = 0;
 				END IF;
 
-				if i = 4 THEN
-				
 				IF i <= 4 THEN
 		   				SELECT status_id into s FROM pc_workplan WHERE agency_id = id AND year = y AND quarter = q AND type_id = i;
 		   				IF  s IS NULL THEN
@@ -99,12 +99,7 @@ begin
 						 IF  s IS NULL THEN
 			   				SET s = 0;
 							END IF;
-				END IF;				
-				IF s = 0 THEN
-					CALL set_remind_status(i, s);
-				END IF;
-				
-
+				END IF;	
 				INSERT INTO  pc_remind (agency_id, name, code_id, parent_id, year, quarter, type_id, status) 
 				VALUES (id, name, code_id, parent_id, y, q, i, s) 			
 				ON DUPLICATE KEY UPDATE status = s;
@@ -142,6 +137,227 @@ delimiter ;
 
 
 delimiter //
+DROP procedure IF EXISTS check_remind_lock//
+CREATE PROCEDURE check_remind_lock()
+begin
+	DECLARE id int(11) unsigned;
+	DECLARE parent_id int(11) unsigned;
+	DECLARE name VARCHAR(255);
+	DECLARE code_id int(11) unsigned;
+	DECLARE done int default 0;
+	
+	DECLARE y year(4);
+	DECLARE q tinyint(1) unsigned;
+
+  DECLARE rows int default 0;
+  DECLARE row int default 0;
+  DECLARE i int;
+  DECLARE s tinyint;
+	DECLARE s_cursor CURSOR FOR SELECT a.id, a.name, a.code_id, b.parent_id FROM  pc_agency as a left join pc_agency_relation as b on a.id = b.agency_id WHERE a. code_id = 10;
+	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done=1;
+		
+	SET y = year(now());
+	SET q = quarter(now());		
+	set i = 1;
+	
+	while i < 9 do	
+		open s_cursor; 
+	  SELECT FOUND_ROWS() into rows;
+	  SET row = 0;
+		cursor_loop:loop
+				FETCH s_cursor into id, name, code_id, parent_id;
+				SET s = 0;
+				if row >= rows then
+					leave cursor_loop;
+				end if;			
+				SET q = quarter(now());
+				
+				if q = 1 THEN
+				
+					if i = 1 THEN
+						SELECT status_id into s FROM pc_workplan WHERE agency_id = id AND year = y AND quarter = 0 AND type_id = i;
+						IF  s IS NULL THEN
+				   			SET s = 0;
+						END IF;
+						if s < 2 THEN
+							CALL set_remind_status(i, s);
+							if s = 9 THEN
+								INSERT INTO  pc_remind_lock (agency_id, name, code_id, parent_id, year, quarter, month, type_id, status) 
+								VALUES (id, name, code_id, parent_id, y  , 0, 0, i, s)	ON DUPLICATE KEY UPDATE agency_id = id;
+							END IF;
+						END IF;
+						
+					END if;
+					
+					if i = 2 THEN
+					  SELECT status_id into s FROM pc_workplan WHERE agency_id = id AND year = y - 1 AND quarter = QUARTER(DATE_SUB(now(),interval 1 QUARTER)) AND type_id = i;
+
+						
+						IF  s IS NULL THEN
+				   			SET s = 0;
+						END IF;
+						if s < 2 THEN
+							CALL set_remind_status(i, s);
+							if s = 9 THEN
+								INSERT INTO  pc_remind_lock (agency_id, name, code_id, parent_id, year, quarter, month, type_id, status) 
+								VALUES (id, name, code_id, parent_id, y - 1 , QUARTER(DATE_SUB(now(),interval 1 QUARTER)), 0, i, s)	ON DUPLICATE KEY UPDATE agency_id = id;
+							END IF;		
+						END IF;
+															  
+					END IF;
+					
+					if i = 3 THEN
+						SELECT status_id into s FROM pc_workplan WHERE agency_id = id AND year = y - 1 AND quarter = QUARTER(DATE_SUB(now(),interval 1 QUARTER)) AND type_id = i;
+						
+						IF  s IS NULL THEN
+				   			SET s = 0;
+						END IF;
+						if s < 2 THEN
+							CALL set_remind_status(i, s);
+							if s = 9 THEN
+								INSERT INTO  pc_remind_lock (agency_id, name, code_id, parent_id, year, quarter, month, type_id, status) 
+								VALUES (id, name, code_id, parent_id, y - 1 , QUARTER(DATE_SUB(now(),interval 1 QUARTER)), 0, i, s)	ON DUPLICATE KEY UPDATE agency_id = id;
+							END IF;
+						END IF;
+																		
+					END IF;
+					
+				  IF i = 4 THEN
+						SELECT status_id into s FROM pc_workplan WHERE agency_id = id AND year = y - 1 AND quarter = 0 AND type_id = i;
+						IF  s IS NULL THEN
+				   			SET s = 0;
+						END IF;
+						if s < 2 THEN
+							CALL set_remind_status(i, s);
+							IF s = 9 THEN
+								INSERT INTO  pc_remind_lock (agency_id, name, code_id, parent_id, year, quarter, month, type_id, status) 
+								VALUES (id, name, code_id, parent_id, y -1, 0, 0, i, s)	ON DUPLICATE KEY UPDATE agency_id = id;						
+							END IF;
+						END IF;						
+						
+					END IF;
+					
+					IF i > 4 and i < 8 THEN
+					
+						SELECT max(status_id) into s FROM pc_meeting WHERE agency_id = id AND year = y -1  AND quarter = QUARTER(DATE_SUB(now(),interval 1 QUARTER)) AND type_id = i;
+						
+						IF  s IS NULL THEN
+				   			SET s = 0;
+						END IF;
+						if s < 2 THEN
+							CALL set_remind_status(i, s);
+							if s = 9 THEN
+								INSERT INTO  pc_remind_lock (agency_id, name, code_id, parent_id, year, quarter, month, type_id, status) 
+								VALUES (id, name, code_id, parent_id, y-1 , QUARTER(DATE_SUB(now(),interval 1 QUARTER)), 0, i, s)	ON DUPLICATE KEY UPDATE agency_id = id;
+							END IF;					
+						END IF;
+												
+					END IF;
+					
+
+					
+				ELSE
+
+					
+					if i = 2 THEN
+					  SELECT status_id into s FROM pc_workplan WHERE agency_id = id AND year = y AND quarter = QUARTER(DATE_SUB(now(),interval 1 QUARTER)) AND type_id = i;
+					  
+						IF  s IS NULL THEN
+				   			SET s = 0;
+						END IF;
+						if s < 2 THEN
+							CALL set_remind_status(i, s);
+							if s = 9 THEN
+								INSERT INTO  pc_remind_lock (agency_id, name, code_id, parent_id, year, quarter, month, type_id, status) 
+								VALUES (id, name, code_id, parent_id, y , QUARTER(DATE_SUB(now(),interval 1 QUARTER)), 0, i, s)	ON DUPLICATE KEY UPDATE agency_id = id;
+							END IF;					  
+						END IF;					  
+					END IF;
+					
+					if i = 3 THEN
+						SELECT status_id into s FROM pc_workplan WHERE agency_id = id AND year = y AND quarter = QUARTER(DATE_SUB(now(),interval 1 QUARTER)) AND type_id = i;
+						
+						IF  s IS NULL THEN
+				   			SET s = 0;
+						END IF;
+						if s < 2 THEN
+							CALL set_remind_status(i, s);
+							if s = 9 THEN
+								INSERT INTO  pc_remind_lock (agency_id, name, code_id, parent_id, year, quarter, month, type_id, status) 
+								VALUES (id, name, code_id, parent_id, y , QUARTER(DATE_SUB(now(),interval 1 QUARTER)), 0, i, s)	ON DUPLICATE KEY UPDATE agency_id = id;
+							END IF;
+						END IF;
+																		
+					END IF;
+										
+					IF i > 4 AND i < 8 THEN
+						SELECT max(status_id) into s FROM pc_meeting WHERE agency_id = id AND year = y  AND quarter = QUARTER(DATE_SUB(now(),interval 1 QUARTER)) AND type_id = i;
+						
+						IF  s IS NULL THEN
+				   			SET s = 0;
+						END IF;
+						if s < 2 THEN
+							CALL set_remind_status(i, s);
+							if s = 9 THEN
+								INSERT INTO  pc_remind_lock (agency_id, name, code_id, parent_id, year, quarter, month, type_id, status) 
+								VALUES (id, name, code_id, parent_id, y , QUARTER(DATE_SUB(now(),interval 1 QUARTER)), 0, i, s)	ON DUPLICATE KEY UPDATE agency_id = id;
+							END IF;	
+						END IF;
+												
+					END IF;	
+				END IF;
+				
+				
+				if i = 8 THEN
+					if month(now()) = 1 THEN
+				
+						SELECT max(status_id) into s FROM pc_meeting WHERE agency_id = id AND year = y -1  AND month = LAST_DAY(now() - interval 1 month) AND type_id = i;
+						
+						IF  s IS NULL THEN
+				   			SET s = 0;
+						END IF;
+						if s < 2 THEN
+							CALL set_remind_status(i, s);
+							if s = 9 THEN
+								INSERT INTO  pc_remind_lock (agency_id, name, code_id, parent_id, year, quarter, month, type_id, status) 
+								VALUES (id, name, code_id, parent_id, y -1 , 0, LAST_DAY(now() - interval 1 month), i, s)	ON DUPLICATE KEY UPDATE agency_id = id;
+							END IF;		
+						END IF;
+																	
+					ELSE
+						
+						SELECT max(status_id) into s FROM pc_meeting WHERE agency_id = id AND year = y  AND month = LAST_DAY(now() - interval 1 month) AND type_id = i;
+						
+						IF  s IS NULL THEN
+				   			SET s = 0;
+						END IF;
+						if s < 2 THEN
+							CALL set_remind_status(i, s);
+							if s = 9 THEN
+								INSERT INTO  pc_remind_lock (agency_id, name, code_id, parent_id, year, quarter, month, type_id, status) 
+								VALUES (id, name, code_id, parent_id, y , 0, LAST_DAY(now() - interval 1 month), i, s)	ON DUPLICATE KEY UPDATE agency_id = id;
+							END IF;							
+						END IF;						
+						
+					END IF;				
+				
+			  END IF;
+				
+				
+				SET row = row + 1;
+		end loop cursor_loop;
+		close s_cursor;
+	  
+	  set i=i+1;
+	end while;  
+	
+end;
+//
+delimiter ;
+
+
+
+delimiter //
 DROP procedure IF EXISTS set_remind_status//
 CREATE PROCEDURE set_remind_status(t_id int, OUT status tinyint(1))
 begin
@@ -153,37 +369,142 @@ begin
 	DECLARE e_t varchar(20);
 	SET y = year(now());
 	SELECT end_year, end_quarter, end_month, end_day into e_y, e_q, e_m, e_d FROM pc_remind_config WHERE type_id = t_id;
-	SELECT CONCAT(e_y, '-', e_q, '-', e_m, '-', e_d);
+
 	
-	IF t_id <=4 THEN
-		SET e_t = CONCAT(y + e_y, '-', e_m, '-', e_d, ' 23:59:59');
-		
-	
+	IF t_id  = 1  THEN SET e_t = CONCAT(y, '-', e_m, '-', e_d, ' 23:59:59');
+	ELSEIF t_id = 4 THEN SET e_t = CONCAT(y, '-', e_m, '-', e_d, ' 23:59:59');
 	END IF;
 	
+	IF t_id = 2 THEN SET e_t = concat(date_format(LAST_DAY(MAKEDATE(EXTRACT(YEAR FROM CURDATE()),1) + interval QUARTER(CURDATE())*3-3 month),'%Y-%m-'), e_d, ' 23:59:59');
+	ELSEIF t_id = 3 THEN SET e_t = concat(date_format(LAST_DAY(MAKEDATE(EXTRACT(YEAR FROM CURDATE()),1) + interval QUARTER(CURDATE())*3-3 month),'%Y-%m-'), e_d, ' 23:59:59');
+  END IF;
+  
 	IF t_id > 4 AND t_id < 8 THEN
-		SET e_t = CONCAT(LAST_DAY(MAKEDATE(EXTRACT(YEAR FROM CURDATE()),1) + interval QUARTER(CURDATE())*3-1 month), ' 23:59:59');
+		SET e_t = CONCAT(LAST_DAY(MAKEDATE(EXTRACT(YEAR FROM CURDATE()),1) + interval QUARTER(CURDATE())*3-4 month), ' 23:59:59');
 	END IF;
 	
 	IF t_id = 8 THEN
-		SET e_t = CONCAT(LAST_DAY(now()), ' 23:59:59');
+		SET e_t = CONCAT(LAST_DAY(now() - interval 1 month), ' 23:59:59');
 	END IF;
-	SELECT e_t;
+	
 	IF unix_timestamp(now()) > unix_timestamp(e_t) THEN
-		SELECT ">>>>";
 		SET status = 9;
 	ELSE 
 		SET status = 0;
 	END IF;
+	
+end;
+//
+delimiter ;
+
+delimiter //
+DROP procedure IF EXISTS test_remind_status//
+CREATE PROCEDURE test_remind_status(t_id int)
+begin
+	DECLARE y year(4);
+	DECLARE e_y tinyint(1);
+	DECLARE e_q tinyint(1) unsigned;
+	DECLARE e_m smallint(5) unsigned;
+	DECLARE e_d smallint(5) unsigned;
+	DECLARE e_t varchar(20);
+	SET y = year(now());
+	SELECT end_year, end_quarter, end_month, end_day into e_y, e_q, e_m, e_d FROM pc_remind_config WHERE type_id = t_id;
+	SELECT CONCAT(e_y, '-', e_q, '-', e_m, '-', e_d);
+	
+	IF t_id  = 1  THEN SET e_t = CONCAT(y, '-', e_m, '-', e_d, ' 23:59:59');
+	ELSEIF t_id = 4 THEN SET e_t = CONCAT(y, '-', e_m, '-', e_d, ' 23:59:59');
+	END IF;
+	
+	IF t_id = 2 THEN SET e_t = concat(date_format(LAST_DAY(MAKEDATE(EXTRACT(YEAR FROM CURDATE()),1) + interval QUARTER(CURDATE())*3-3 month),'%Y-%m-'), e_d, ' 23:59:59');
+	ELSEIF t_id = 3 THEN SET e_t = concat(date_format(LAST_DAY(MAKEDATE(EXTRACT(YEAR FROM CURDATE()),1) + interval QUARTER(CURDATE())*3-3 month),'%Y-%m-'), e_d, ' 23:59:59');
+  END IF;
+  
+	IF t_id > 4 AND t_id < 8 THEN
+		SET e_t = CONCAT(LAST_DAY(MAKEDATE(EXTRACT(YEAR FROM CURDATE()),1) + interval QUARTER(CURDATE())*3-4 month), ' 23:59:59');
+	END IF;
+	
+	IF t_id = 8 THEN
+		SET e_t = CONCAT(LAST_DAY(now() - interval 1 month), ' 23:59:59');
+	END IF;
+	SELECT e_t;
+	IF unix_timestamp(now()) > unix_timestamp(e_t) THEN
+		SELECT '>>>>>';
+	ELSE 
+		SELECT '<<<<<';
+	END IF;
+	
+end;
+//
+delimiter ;
+
+delimiter //
+DROP procedure IF EXISTS test_remind_lock//
+CREATE PROCEDURE test_remind_lock()
+begin
+	DECLARE id int(11) unsigned;
+	DECLARE parent_id int(11) unsigned;
+	DECLARE name VARCHAR(255);
+	DECLARE code_id int(11) unsigned;
+	DECLARE done int default 0;
+	
+	DECLARE y year(4);
+	DECLARE q tinyint(1) unsigned;
+
+  DECLARE rows int default 0;
+  DECLARE row int default 0;
+  DECLARE i int;
+  DECLARE s tinyint;
+	DECLARE s_cursor CURSOR FOR SELECT a.id, a.name, a.code_id, b.parent_id FROM  pc_agency as a left join pc_agency_relation as b on a.id = b.agency_id WHERE a. code_id = 10 and a.id = 3;
+	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done=1;
+		
+	SET y = year(now());
+	SET q = quarter(now());		
+	set i = 1;
+	
+	while i < 9 do	
+		open s_cursor; 
+	  SELECT FOUND_ROWS() into rows;
+	  SET row = 0;
+		cursor_loop:loop
+				FETCH s_cursor into id, name, code_id, parent_id;
+				SET s = 0;
+				if row >= rows then
+					leave cursor_loop;
+				end if;			
+				SET q = quarter(now());
+				
+					if i = 1 THEN
+						SELECT status_id into s FROM pc_workplan WHERE agency_id = id AND year = y AND quarter = 0 AND type_id = i;
+						SELECT CONCAT('s=', s);
+						IF  s IS NULL THEN
+				   			SET s = 0;
+						END IF;
+						if s < 2 THEN
+							CALL set_remind_status(i, s);
+							SELECT CONCAT('s=', s);
+							if s = 9 THEN
+								INSERT INTO  pc_remind_lock (agency_id, name, code_id, parent_id, year, quarter, month, type_id, status) 
+								VALUES (id, name, code_id, parent_id, y  , 0, 0, i, s)	ON DUPLICATE KEY UPDATE agency_id = id;
+							END IF;
+						END IF;
+						
+					END if;
+					
+
+				SET row = row + 1;
+		end loop cursor_loop;
+		close s_cursor;
+	  
+	  set i=i+1;
+	end while;  
+	
 end;
 //
 delimiter ;
 
 
 
-SELECT  
-CAST(CONCAT(IF(MONTH(NOW())+1=13,YEAR(NOW())+1,YEAR(NOW())),'-',IF(MONTH(NOW())+1=13,'01',MONTH(NOW())+1),'-01 23:59:59')  
-AS DATETIME) - INTERVAL 1 DAY AS NN;
+
 
 delimiter //
 DROP PROCEDURE IF EXISTS `stats_process`//
@@ -201,6 +522,21 @@ BEGIN
 END //
 delimiter ;
 
+delimiter //
+DROP PROCEDURE IF EXISTS `remind_lock_process`//
+CREATE PROCEDURE `remind_lock_process`()
+BEGIN
+    SELECT IS_FREE_LOCK('event_remind_lock_lock') INTO @event_remind_lock_lock_isfree;
+    IF (@event_remind_lock_lock_isfree = 1) THEN
+        SELECT GET_LOCK('event_remind_lock_lock', 10) INTO @event_remind_lock_lock_isfree;
+        IF (@event_remind_lock_lock_isfree = 1) THEN
+            CALL check_remind_lock();
+        END IF;
+        SELECT RELEASE_LOCK('event_remind_lock_lock');
+    END IF;
+END //
+delimiter ;
+
 
 delimiter //
 SET GLOBAL event_scheduler = OFF //
@@ -211,6 +547,21 @@ ON COMPLETION PRESERVE
 DO
    BEGIN
        call stats_process;
+   END //
+delimiter ;
+
+SET GLOBAL event_scheduler = ON;
+
+
+delimiter //
+SET GLOBAL event_scheduler = OFF //
+DROP EVENT IF EXISTS `event_stats`//
+CREATE EVENT IF NOT EXISTS `event_stats`
+on schedule every 1 day starts date_add(date(curdate() + 1),interval 3 hour)
+ON COMPLETION PRESERVE
+DO
+   BEGIN
+       call remind_lock_process;
    END //
 delimiter ;
 
