@@ -19,6 +19,7 @@
 			import com.partycommittee.events.PcWorkPlanEvent;
 			import com.partycommittee.manager.popup.PopupMgr;
 			import com.partycommittee.model.ModelLocator;
+			import com.partycommittee.renderers.RemindStatRenderer;
 			import com.partycommittee.util.DataproviderFactory;
 			import com.partycommittee.util.LblFunctionHelper;
 			import com.partycommittee.views.MainContainer;
@@ -46,23 +47,29 @@
 			
 			[Bindable]
 			private var agencyId:Number;
-						
+			
+			private var c_y:Number;
+			
+			private var c_q:Number;
+			
 			private function onCreationCompleted():void {
 					onNavigateIn();
-					if (yearCmb) {
-						yearCmb.dataProvider = DataproviderFactory.getRangeYearForReport();
-						yearCmb.selectedItem = model.reportYear = new Date().getFullYear();
-						//yearCmb.addEventListener(Event.CHANGE, onYearCmbChanged);
-					}	
-					
-					if (quarterCmb) {
-						quarterCmb.dataProvider = DataproviderFactory.createQuarterDp();
-						quarterCmb.selectedItem = getQuarter();
-					}					
+//					if (yearCmb) {
+//						yearCmb.dataProvider = DataproviderFactory.getRangeYearForReport();
+//						yearCmb.selectedItem = model.reportYear = new Date().getFullYear();
+//						//yearCmb.addEventListener(Event.CHANGE, onYearCmbChanged);
+//					}	
+//					
+//					if (quarterCmb) {
+//						quarterCmb.dataProvider = DataproviderFactory.createQuarterDp();
+//						quarterCmb.selectedItem = getQuarter();
+//					}			
+					c_y = new Date().getFullYear();
+					c_q = getQuarter();
 			}
 			
 			private function onPropertyChanged(event:PropertyChangeEvent):void {
-				if (event.property == "focusAgencyVo") {
+				if (event.property == "focusAgencyVo" ) {
 					//model.removeEventListener(PropertyChangeEvent.PROPERTY_CHANGE, onPropertyChanged);
 					onNavigateIn();
 				} 
@@ -86,8 +93,8 @@
 					RemindViewStack.selectedChild = AGrid;
 					var pcRemindEvt:PcRemindEvent = new PcRemindEvent(PcRemindEvent.GET_REAL_REMIND_BY_ID);
 					pcRemindEvt.agencyId = model.focusAgencyVo.id;
-					pcRemindEvt.year = yearCmb.selectedItem as Number;
-					pcRemindEvt.quarter = quarterCmb.selectedItem as Number;
+					pcRemindEvt.year = c_y;
+					pcRemindEvt.quarter = c_q;
 					pcRemindEvt.successCallback = onGetRemindSuccess;
 					pcRemindEvt.failureCallback = onGetRemindFailure;
 					pcRemindEvt.dispatch();
@@ -103,8 +110,8 @@
 						}
 						var pcRemindEvt:PcRemindEvent = new PcRemindEvent(eventType);
 						pcRemindEvt.agencyId = model.focusAgencyVo.id;
-						pcRemindEvt.year = yearCmb.selectedItem as Number;
-						pcRemindEvt.quarter = quarterCmb.selectedItem as Number;
+						pcRemindEvt.year = c_y;
+						pcRemindEvt.quarter = c_q;
 						pcRemindEvt.successCallback = onGetRemindStatSuccess;
 						pcRemindEvt.failureCallback = onGetRemindStatFailure;
 						this.enabled = false;
@@ -131,8 +138,8 @@
 			
 			public function initColumnsForOther():void {
 
-				var year:Number = yearCmb.selectedItem as Number;
-				var q:Number = quarterCmb.selectedItem as Number;
+				var year:Number = c_y;
+				var q:Number = c_q;
 				var dateGridColumnArray :Array = new Array();
 				var c1:AdvancedDataGridColumn = new AdvancedDataGridColumn();
 				c1.dataField = "name";
@@ -351,6 +358,7 @@
 				this.enabled = true;
 				initColumnsForAdmin();
 				initDpForAdmin(data as ArrayCollection);
+				StatsViewStack.selectedChild = stats;
 			}
 			
 			private function onGetRemindStatFailure(info:Object, evt:PcRemindEvent):void {
@@ -552,16 +560,10 @@
 			}
 			
 			public function initColumnsForAdmin():void {
-				
-//				var styleName:String = "." + remindDg.getStyle("headerStyleName");
-//				var cssDecl:CSSStyleDeclaration = StyleManager.getStyleDeclaration(styleName);
-//				cssDecl.setStyle("textAlign", "center");				
-				
-				var year:Number = yearCmb.selectedItem as Number;
-				var q:Number = quarterCmb.selectedItem as Number;
-				
-				
-				
+
+				var year:Number = c_y;
+				var q:Number = c_q;
+
 				var dateGridColumnArray :Array = new Array();
 				var c1:AdvancedDataGridColumn = new AdvancedDataGridColumn();
 				c1.dataField = "name";
@@ -569,9 +571,7 @@
 				//c1.wordWrap = true;
 				c1.width = 120;
 				dateGridColumnArray.push(c1);
-				
-				
-				
+
 				// 年度计划
 				var c_y:AdvancedDataGridColumnGroup = new AdvancedDataGridColumnGroup();
 				c_y.headerText = String(year) + "年度计划";
@@ -582,6 +582,7 @@
 				c_y_1.dataField = "y1";
 				c_y_1.headerText = "未报";
 				c_y_1.width = 60;
+				c_y_1.itemRenderer = new ClassFactory(com.partycommittee.renderers.RemindStatRenderer);
 				
 				c_y_ChildArray.push(c_y_1);
 				
@@ -590,23 +591,13 @@
 				c_y_2.headerText = "未审";
 				c_y_2.width = 60;
 				c_y_ChildArray.push(c_y_2);
-				
-//				var c_y_3:AdvancedDataGridColumn = new AdvancedDataGridColumn();
-//				c_y_3.dataField = "y3";
-//				c_y_3.headerText = "已审";
-//				c_y_3.width = 50;
-//				c_y_ChildArray.push(c_y_3);				
-				
+
 				c_y.children = c_y_ChildArray;
 					
 				dateGridColumnArray.push(c_y);
-				
-				
-				
-				
+
 				if (q == 1) {
-					
-					
+
 					// 去年第四季度执行情况
 					var c_last_q:AdvancedDataGridColumnGroup = new AdvancedDataGridColumnGroup();
 					c_last_q.headerText =String(year - 1) + "第4季度执行情况";
@@ -624,13 +615,7 @@
 					c_last_q_2.headerText = "未审";
 					c_last_q_2.width = 80;
 					c_last_q_ChildArray.push(c_last_q_2);
-					
-//					var c_last_q_3:AdvancedDataGridColumn = new AdvancedDataGridColumn();
-//					c_last_q_3.dataField = "lq3";
-//					c_last_q_3.headerText = "已审";
-//					c_last_q_3.width = 50;
-//					c_last_q_ChildArray.push(c_last_q_3);				
-					
+
 					c_last_q.children = c_last_q_ChildArray;
 					
 					dateGridColumnArray.push(c_last_q);
@@ -653,13 +638,7 @@
 					c_last_y_2.headerText = "未审";
 					c_last_y_2.width = 80;
 					c_last_y_ChildArray.push(c_last_y_2);
-					
-//					var c_last_y_3:AdvancedDataGridColumn = new AdvancedDataGridColumn();
-//					c_last_y_3.dataField = "ly3";
-//					c_last_y_3.headerText = "已审";
-//					c_last_y_3.width = 50;
-//					c_last_y_ChildArray.push(c_last_y_3);				
-					
+
 					c_last_y.children = c_last_y_ChildArray;
 					
 					dateGridColumnArray.push(c_last_y);					
@@ -683,13 +662,7 @@
 					c_last_q_2.headerText = "未审";
 					c_last_q_2.width = 80;
 					c_last_q_ChildArray.push(c_last_q_2);
-					
-//					var c_last_q_3:AdvancedDataGridColumn = new AdvancedDataGridColumn();
-//					c_last_q_3.dataField = "lq3";
-//					c_last_q_3.headerText = "已审";
-//					c_last_q_3.width = 50;
-//					c_last_q_ChildArray.push(c_last_q_3);				
-					
+
 					c_last_q.children = c_last_q_ChildArray;
 					
 					dateGridColumnArray.push(c_last_q);					
@@ -712,13 +685,7 @@
 				c_q_2.headerText = "未审";
 				c_q_2.width = 70;
 				c_q_ChildArray.push(c_q_2);
-				
-//				var c_q_3:AdvancedDataGridColumn = new AdvancedDataGridColumn();
-//				c_q_3.dataField = "q3";
-//				c_q_3.headerText = "已审";
-//				c_q_3.width = 50;
-//				c_q_ChildArray.push(c_q_3);				
-				
+
 				c_q.children = c_q_ChildArray;
 				
 				dateGridColumnArray.push(c_q);						
@@ -809,29 +776,7 @@
 				c_mzshh.children = c_mzshh_ChildArray;
 				
 				dateGridColumnArray.push(c_mzshh);	
-				
-				//其他会议。
-//				var c_qt:AdvancedDataGridColumnGroup = new AdvancedDataGridColumnGroup();
-//				c_qt.headerText = "其他会议";
-//				
-//				var c_qt_ChildArray:Array = new Array();
-//				var c_qt_1:AdvancedDataGridColumn = new AdvancedDataGridColumn();
-//				c_qt_1.dataField = "qt1";
-//				c_qt_1.headerText = "未报";
-//				c_qt_1.width = 50;
-//				c_qt_ChildArray.push(c_qt_1);
-//				
-//				var c_qt_2:AdvancedDataGridColumn = new AdvancedDataGridColumn();
-//				c_qt_2.dataField = "qt2";
-//				c_qt_2.headerText = "已报";
-//				c_qt_2.width = 50;
-//				c_qt_ChildArray.push(c_qt_2);
-//
-//				c_qt.children = c_qt_ChildArray;
-//				
-//				dateGridColumnArray.push(c_qt);					
-				
-				
+
 				remindDg.groupedColumns = 		dateGridColumnArray;			
 				
 			}
@@ -860,16 +805,12 @@
 						var nobj:Object = (obj.mainViewStack as ViewStack).getChildByName('activityView');
 						nobj.updateData();
 						var sobj:Object = (nobj as NavigationView).getChildByName('tab');
-						
-						
+
 						var tobj:Object = (sobj as TabNavigator).getChildAt(0);
 						sobj.selectedIndex = 0;
 						var fobj:Object = (tobj as NavigationView).getChildByName('tab');
 						(obj.mainViewStack as ViewStack).selectedIndex = 2;
-						
-//						tobj.onCreationCompleted();
-//						fobj.selectedIndex = 2;
-						
+
 						var typeId:Number;
 						if (item is PcWorkPlanVo) {
 							typeId = (item as PcWorkPlanVo).typeId;
@@ -931,7 +872,7 @@
 							agency.id = textAry[2];
 							
 							var workPlanEvt:PcWorkPlanEvent = new PcWorkPlanEvent(PcWorkPlanEvent.GET_WORKPLAN_YEARLY, agency);
-							workPlanEvt.year = yearCmb.selectedItem as Number;
+							workPlanEvt.year = c_y;
 							workPlanEvt.successCallback = onGetWorkPlanSuccess;
 							workPlanEvt.failureCallback = onGetWorkPlanFailure;
 							this.enabled = false;
@@ -942,8 +883,8 @@
 							var agency:PcAgencyVo = new PcAgencyVo();
 							agency.id = textAry[2];		
 							var workPlanEvt:PcWorkPlanEvent = new PcWorkPlanEvent(PcWorkPlanEvent.GET_WORKPLAN_QUARTER, agency);
-							workPlanEvt.year = yearCmb.selectedItem as Number;
-							workPlanEvt.quarter = quarterCmb.selectedItem as Number;
+							workPlanEvt.year = c_y;
+							workPlanEvt.quarter = c_q;
 							workPlanEvt.successCallback = onGetWorkPlanSuccess;
 							workPlanEvt.failureCallback = onGetWorkPlanFailure;
 							this.enabled = false;
@@ -959,7 +900,7 @@
 						var agency:PcAgencyVo = new PcAgencyVo();
 						agency.id = textAry[2];							
 						var workPlanEvt:PcWorkPlanEvent = new PcWorkPlanEvent(PcWorkPlanEvent.GET_WORKPLAN_YEARLY_SUMMARY, agency);
-						workPlanEvt.year = (yearCmb.selectedItem as Number) - 1;
+						workPlanEvt.year = c_y - 1;
 						workPlanEvt.successCallback = onGetWorkPlanEvaSuccess;
 						workPlanEvt.failureCallback = onGetWorkPlanFailure;
 						this.enabled = false;
@@ -970,9 +911,15 @@
 						var agency:PcAgencyVo = new PcAgencyVo();
 						agency.id = textAry[2];							
 						var workPlanEvt:PcWorkPlanEvent = new PcWorkPlanEvent(PcWorkPlanEvent.GET_WORKPLAN_QUARTER_SUMMARY, agency);
-						workPlanEvt.year = yearCmb.selectedItem as Number;
-						var q:Number = (quarterCmb.selectedItem as Number) -1;
-						if ( q == 0 ) q = 4;
+						var y:Number = c_y;
+						
+						
+						var q:Number = c_q -1;
+						if ( q == 0 ) {
+							y = c_y -1;
+							q = 4;	
+						}
+						workPlanEvt.year = y;
 						workPlanEvt.quarter = q;
 						workPlanEvt.successCallback = onGetWorkPlanEvaSuccess;
 						workPlanEvt.failureCallback = onGetWorkPlanFailure;
@@ -1058,21 +1005,46 @@
 		<mx:VBox id="MecGrid" width="100%" height="100%"
 				 left="6" right="6" top="6" bottom="6"
 				 horizontalScrollPolicy="auto" verticalScrollPolicy="auto">
-			<mx:HBox>
-				<mx:Label text="选择年份:"/>
-				<mx:ComboBox id="yearCmb"/>
-				<mx:Label text="季度:"/>
-				<mx:ComboBox id="quarterCmb" />
-				<mx:Button label="更新" click="refreshData()"/>
-			</mx:HBox>
-			<mx:AdvancedDataGrid id="remindDg" 
-								 width="100%" height="100%" 
-								 variableRowHeight="true"
-								 headerSortSeparatorSkin="mx.skins.ProgrammaticSkin"
-								 horizontalScrollPolicy="on"
-								 lockedColumnCount="1"
-								 headerStyleName="centerAligned"
-								 sortableColumns="false"/>
+			<mx:ViewStack id="StatsViewStack" width="100%" height="100%" creationPolicy="all"
+						  left="6" right="6" top="6" bottom="6">
+				<mx:VBox id="stats" width="100%" height="100%"
+						 left="6" right="6" top="6" bottom="6"
+						 horizontalScrollPolicy="auto" verticalScrollPolicy="auto">		
+					<!--
+					<mx:HBox>
+						
+						<mx:Label text="选择年份:"/>
+						<mx:ComboBox id="yearCmb"/>
+						<mx:Label text="季度:"/>
+						<mx:ComboBox id="quarterCmb" />
+						<mx:Button label="更新" click="refreshData()"/>
+					</mx:HBox>
+					-->
+					<mx:AdvancedDataGrid id="remindDg" 
+										 width="100%" height="100%" 
+										 variableRowHeight="true"
+										 headerSortSeparatorSkin="mx.skins.ProgrammaticSkin"
+										 horizontalScrollPolicy="on"
+										 lockedColumnCount="1"
+										 headerStyleName="centerAligned"
+										 sortableColumns="false"/>
+				</mx:VBox>
+				
+				<mx:VBox id="detail" width="100%" height="100%"
+						 left="6" right="6" top="6" bottom="6"
+						 horizontalScrollPolicy="auto" verticalScrollPolicy="auto">				
+
+					<mx:AdvancedDataGrid id="detailDg" 
+										 width="100%" height="100%" 
+										 variableRowHeight="true"
+										 headerSortSeparatorSkin="mx.skins.ProgrammaticSkin"
+										 horizontalScrollPolicy="on"
+										 lockedColumnCount="1"
+										 headerStyleName="centerAligned"
+										 sortableColumns="false"/>
+				</mx:VBox>				
+				
+			</mx:ViewStack>	
 		</mx:VBox>
 	</mx:ViewStack>
 </navigation:NavigationView>
