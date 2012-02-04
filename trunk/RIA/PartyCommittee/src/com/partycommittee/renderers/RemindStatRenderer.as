@@ -7,6 +7,8 @@ package com.partycommittee.renderers
 	import mx.controls.dataGridClasses.DataGridListData;
 	import mx.controls.listClasses.BaseListData;
 	
+	import spark.components.mediaClasses.VolumeBar;
+	
 	public class RemindStatRenderer extends Text  {
 		
 		protected var _listData:DataGridListData;	
@@ -31,18 +33,43 @@ package com.partycommittee.renderers
 		
 		private function setIt(value:Object):void	{
 			if(value && _listData)	{
+				var datas:Object = value;
+				
+				if (datas.q == 1) {
 				if(_listData.columnIndex == 0)	{
-					
-				} else if(_listData.columnIndex == 1)	{
-					
-				} else	{
-					
+					//'<u><font color="#0000ff"><a href="event:getRemindList&typeId&statusId&'+datas.agencyId+'">'+datas.y1+'</a></font></u>';
+					} else if(_listData.columnIndex == 1)	{
+						if (datas.y1 > 0) {
+							htmlText = '<u><font color="#0000ff"><a href="event:getRemindList&1&1&'+datas.agencyId+'">'+datas.y1+'</a></font></u>';
+						} else {
+							htmlText = datas.y1;
+						}
+					} else if(_listData.columnIndex == 2)	{
+						if (datas.y2 > 0) {
+							htmlText = '<u><font color="#0000ff"><a href="event:getRemindList&2&4&'+datas.agencyId+'">'+datas.y2+'</a></font></u>';
+						} else {
+							htmlText = datas.y2;
+						}					
+					} else if(_listData.columnIndex == 3)	{
+						if (datas.lq1 > 0) {
+							htmlText = '<u><font color="#0000ff"><a href="event:getRemindList&2&3&'+datas.agencyId+'">'+datas.lq1+'</a></font></u>';
+						} else {
+							htmlText = datas.lq1;
+						}					
+					}
 				}
 			}
 		}		
 		
-		override public function set text(txt:String):void {
-
+		private function setValueQ1(value:Object):void {
+			
 		}
+		
+		private function setValueQ(value:Object):void {
+			
+		}
+		
+		
+		
 	}
 }

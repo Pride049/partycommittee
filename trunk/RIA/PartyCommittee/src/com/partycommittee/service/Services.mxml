@@ -84,6 +84,12 @@
 	<mx:RemoteObject id="pcRemind"
 					 destination="PcRemindRo"
 					 channelSet="{channelSet}"/>	
+	<mx:RemoteObject id="pcRemindConfig"
+					 destination="PcRemindConfigRo"
+					 channelSet="{channelSet}"/>	
+	<mx:RemoteObject id="pcRemindLock"
+					 destination="PcRemindLockRo"
+					 channelSet="{channelSet}"/>		
 	
     <!-- HTTPService example
 	<mx:HTTPService

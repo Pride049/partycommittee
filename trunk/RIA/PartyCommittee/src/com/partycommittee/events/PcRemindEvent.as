@@ -6,7 +6,10 @@ package com.partycommittee.events
 		public static const PCREMIND_EVENT:String = "com.partycommittee.events.PcRemindEvent";
 		
 		public static const GET_REAL_REMIND_BY_ID:String = "getRealRemindById";
+		
 		public static const GET_REMIND_STAT_BY_ID:String = "getRemindStatById";
+		public static const GET_REMIND_NOCOMMIT_BY_PARENTID:String = "getRemindNoCommitByParentId";
+		public static const GET_REMIND_BY_PARENTID:String = "getRemindByParentId";
 		public static const GET_REMIND_STAT_BY_PARENTID:String = "getRemindStatByParentId";
 		public static const GET_REMIND_STAT_BY_PARENTID_FOR_ADMIN:String = "getRemindStatByParentIdForAdmin";
 		public static const GET_REMIND_STAT_BY_PARENTID_FOR_OTHER:String = "getRemindStatByParentIdForOTHER";
@@ -18,7 +21,16 @@ package com.partycommittee.events
 		public function get agencyId():Number {
 			return this._agencyId;
 		}
-				
+		
+		private var _typeId:Number;
+		public function get typeId():Number	{
+			return _typeId;
+		}
+		
+		public function set typeId(value:Number):void {
+			_typeId = value;
+		}
+
 		private var _year:Number;
 		public function get year():Number {
 			return this._year;

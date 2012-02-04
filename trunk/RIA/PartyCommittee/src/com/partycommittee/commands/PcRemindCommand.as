@@ -22,16 +22,12 @@ package com.partycommittee.commands
 					break;
 				case PcRemindEvent.GET_REMIND_STAT_BY_ID : 
 					proxy.getListRemindStatById(pcRemindEvt.agencyId, pcRemindEvt.year, pcRemindEvt.quarter);
-					break;				
-				case PcRemindEvent.GET_REMIND_STAT_BY_PARENTID : 
-					proxy.getListRemindStatByParentId(pcRemindEvt.agencyId, pcRemindEvt.year, pcRemindEvt.quarter);
-					break;
+					break;		
 				case PcRemindEvent.GET_REMIND_STAT_BY_PARENTID_FOR_ADMIN : 
 					proxy.getListRemindStatByParentIdForAdmin(pcRemindEvt.agencyId, pcRemindEvt.year, pcRemindEvt.quarter);
 					break;
-				case PcRemindEvent.GET_REMIND_STAT_BY_PARENTID_FOR_OTHER : 
-					proxy.getListRemindByParentIdForOther(pcRemindEvt.agencyId, pcRemindEvt.year, pcRemindEvt.quarter);
-					break;						
+				case PcRemindEvent.GET_REMIND_NOCOMMIT_BY_PARENTID :
+					proxy.getListRemindNoCommitByParentId(pcRemindEvt.agencyId, pcRemindEvt.year, pcRemindEvt.quarter, pcRemindEvt.typeId);
 				default :
 					break;
 			}

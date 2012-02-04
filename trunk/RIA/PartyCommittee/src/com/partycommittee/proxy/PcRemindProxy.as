@@ -21,19 +21,21 @@ package com.partycommittee.proxy
 		
 		public function getListRemindStatById(agencyId:Number, year:Number, quarter:Number):void {
 			service.getListRemindStatById(agencyId, year, quarter);
-		}
-		
-		public function getListRemindStatByParentId(agencyId:Number, year:Number, quarter:Number):void {
-			service.getListRemindStatByParentId(agencyId, year, quarter);
-		}
+		}		
 		
 		public function getListRemindStatByParentIdForAdmin(agencyId:Number, year:Number, quarter:Number):void {
 			service.getListRemindStatByParentIdForAdmin(agencyId, year, quarter);
+		}	
+		
+		public function getListRemindNoCommitByParentId(agencyId:Number, year:Number, quarter:Number, tid:Number):void {
+			service.getListRemindNoCommitByParentId(agencyId, year, quarter, tid);
 		}		
 		
-		public function getListRemindByParentIdForOther(agencyId:Number, year:Number, quarter:Number):void {
-			service.getListRemindByParentIdForOther(agencyId, year, quarter);
+		public function getListRemindByParentId(agencyId:Number, year:Number, quarter:Number, tid:Number, sid:Number):void {
+			service.getListRemindByParentId(agencyId, year, quarter, tid, sid);
 		}		
+		
+	
 
 	}
 }

@@ -555,8 +555,8 @@ SET GLOBAL event_scheduler = ON;
 
 delimiter //
 SET GLOBAL event_scheduler = OFF //
-DROP EVENT IF EXISTS `event_stats`//
-CREATE EVENT IF NOT EXISTS `event_stats`
+DROP EVENT IF EXISTS `event_remind_lock`//
+CREATE EVENT IF NOT EXISTS `event_remind_lock`
 on schedule every 1 day starts date_add(date(curdate() + 1),interval 3 hour)
 ON COMPLETION PRESERVE
 DO

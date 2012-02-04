@@ -21,7 +21,7 @@ package com.partycommittee.commands
 					proxy.getRemindConfigLists();
 					break;
 				case PcRemindConfigEvent.UPDATE_REMIND_CONFIG : 
-					proxy.updateItems(evt.items.source);
+					proxy.updateItems(evt.items);
 					break;					
 				default :
 					break;

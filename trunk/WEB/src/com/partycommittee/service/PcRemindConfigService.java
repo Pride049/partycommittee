@@ -25,14 +25,20 @@ public class PcRemindConfigService {
 
 	public List<PcRemindConfigVo> getRemindConfigLists() {
 		List<PcRemindConfigVo> list = new ArrayList<PcRemindConfigVo>();
+		List<PcRemindConfig> polist = pcRemindConfigDaoImpl.getRemindConfigLists();
+		for(PcRemindConfig vo: polist) {
+			list.add(PcRemindConfigVo.fromPcRemindLock(vo));
+		}
 		return list;
 	}
 	
 
 	public List<PcRemindConfigVo> updateItems(List<PcRemindConfigVo> list) {
 		try {
-			for (PcRemindConfigVo vo: list) {
-				pcRemindConfigDaoImpl.updateRemindConfig(PcRemindConfigVo.toPcRemindLock(vo));
+			if (list != null && list.size() > 0) {
+				for (PcRemindConfigVo vo: list) {
+					pcRemindConfigDaoImpl.updateRemindConfig(PcRemindConfigVo.toPcRemindLock(vo));
+				}
 			}
 			
 			return this.getRemindConfigLists();
