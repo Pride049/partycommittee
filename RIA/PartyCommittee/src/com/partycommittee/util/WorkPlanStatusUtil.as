@@ -8,7 +8,7 @@ package com.partycommittee.util
 		public static function getWorkPlanStatusDes(statusId:Number):String {
 			switch (statusId) {
 				case 0:
-					return "";
+					return "未上报";
 				case 1:
 					return "未上报";
 				case 2:

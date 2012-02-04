@@ -26,16 +26,21 @@ public class PcRemindRemoteService {
 	public List<PcRemindVo> getRealRemindById(Integer id, Integer year, Integer q) {
 		return pcRemindService.getRealRemindById(id, year, q);
 	}		
+
+	@RemotingInclude
+	public List<PcRemindVo> getListRemindNoCommitByParentId(Integer id, Integer year, Integer q, Integer tid) {
+		return pcRemindService.getListRemindNoCommitByParentId(id, year, q, tid);
+	}	
+	
+	@RemotingInclude
+	public List<PcRemindVo> getListRemindByParentId(Integer id, Integer year, Integer q, Integer tid, Integer sid) {
+		return pcRemindService.getListRemindByParentId(id, year, q, tid, sid);
+	}		
 	
 	@RemotingInclude
 	public List<PcRemindStatVo> getListRemindStatById(Integer id, Integer year, Integer q) {
 		return pcRemindService.getListRemindStatById(id, year, q);
 	}	
-	
-	@RemotingInclude
-	public List<PcRemindVo> getListRemindByParentIdForOther(Integer id, Integer year, Integer q) {
-		return pcRemindService.getListRemindStatByParentIdForOther(id, year, q);
-	}
 	
 	@RemotingInclude
 	public List<PcRemindStatVo> getListRemindStatByParentIdForAdmin(Integer id, Integer year, Integer q) {

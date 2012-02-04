@@ -11,14 +11,14 @@ package com.partycommittee.events
 		public static const UPDATE_REMIND_CONFIG:String = "updateRemindConfig";
 
 		private var _kind:String;
-		private var _items:ArrayCollection;
+		private var _items:Array;
 		
-		public function get items():ArrayCollection
+		public function get items():Array
 		{
 			return _items;
 		}
 
-		public function set items(value:ArrayCollection):void
+		public function set items(value:Array):void
 		{
 			_items = value;
 		}

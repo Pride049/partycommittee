@@ -19,7 +19,18 @@ package com.partycommittee.model
 			}
 			instance = this;
 		}
-		 
+		
+		private var _remindConfigCollection:ArrayCollection;		 
+		public function get remindConfigCollection():ArrayCollection
+		{
+			return _remindConfigCollection;
+		}
+
+		public function set remindConfigCollection(value:ArrayCollection):void
+		{
+			_remindConfigCollection = value;
+		}
+
 		public static function getInstance():ModelLocator {
 			if (instance == null) {
 				instance = new ModelLocator(new Private());
@@ -34,6 +45,9 @@ package com.partycommittee.model
 		public function set treeCollection(value:ArrayCollection):void {
 			this._treeCollection = value;
 		}
+		
+
+		
 		
 		private var _tree:LoadingTree;
 		public function get tree():LoadingTree {

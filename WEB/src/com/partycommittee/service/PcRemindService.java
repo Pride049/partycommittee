@@ -102,54 +102,20 @@ public class PcRemindService {
 		return list;
 	}
 	
-	public List<PcRemindVo> getListRemindStatByParentIdForOther(Integer id, Integer year, Integer q) {
+	public List<PcRemindVo> getListRemindNoCommitByParentId(Integer id, Integer year, Integer q, Integer tid) {
 		List<PcRemindVo> list = new ArrayList<PcRemindVo>();
-	
-		//年度计划
-		List<PcRemind> y = PcRemindDaoImpl.getListWorkPlanByParentId(id, year, 0, 1);
-		for (PcRemind item : y) {
+		List<PcRemind> items = PcRemindDaoImpl.getListNoCommitByParentId(id, year, q, tid);
+		for (PcRemind item : items) {
 			list.add(PcRemindVo.fromPcRemind(item));
 		}
-		
-		List<PcRemind> last_q;
-		if (q == 1) {
-			Integer last_year = year - 1;
-			
-			// 去年第四季度执行情况
-			last_q = PcRemindDaoImpl.getListWorkPlanByParentId(id, last_year, 4, 3);
-			for (PcRemind item : last_q) {
-				list.add(PcRemindVo.fromPcRemind(item));
-			}
-			
-			// 去年年终工作总结
-			List<PcRemind> last_year_end = PcRemindDaoImpl.getListWorkPlanByParentId(id, last_year, 0, 3);
-			for (PcRemind item : last_year_end) {
-				list.add(PcRemindVo.fromPcRemind(item));
-			}			
-		} else {
-			// 上季度执行情况
-			Integer last_qu = q - 1;
-			last_q = PcRemindDaoImpl.getListWorkPlanByParentId(id, year, last_qu, 3);
-			for (PcRemind item : last_q) {
-				list.add(PcRemindVo.fromPcRemind(item));
-			}			
-		}
-		
-		// 本季度工作安排
-		List<PcRemind> q_plan = PcRemindDaoImpl.getListWorkPlanByParentId(id, year, q, 2);
-		for (PcRemind item : q_plan) {
-			list.add(PcRemindVo.fromPcRemind(item));
-		}			
-		
-		List<PcRemind> meeting;
-		for(int i=5; i<=9; i++) {
-		// 党课
-			meeting = null;
-			meeting = PcRemindDaoImpl.getListMeetingByParentId(id, year, q, i);
+		return list;
+	}
 	
-			for (PcRemind item : meeting) {
-				list.add(PcRemindVo.fromPcRemind(item));
-			}
+	public List<PcRemindVo> getListRemindByParentId(Integer id, Integer year, Integer q, Integer tid, Integer sid) {
+		List<PcRemindVo> list = new ArrayList<PcRemindVo>();
+		List<PcRemind> items = PcRemindDaoImpl.getListByParentId(id, year, q, tid, sid);
+		for (PcRemind item : items) {
+			list.add(PcRemindVo.fromPcRemind(item));
 		}
 		return list;
 	}	
