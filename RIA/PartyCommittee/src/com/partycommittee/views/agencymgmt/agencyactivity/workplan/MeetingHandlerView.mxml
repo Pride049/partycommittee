@@ -16,6 +16,7 @@
 		<![CDATA[
 			import com.partycommittee.events.PcMeetingEvent;
 			import com.partycommittee.manager.popup.PopupMgr;
+			import com.partycommittee.model.ModelLocator;
 			import com.partycommittee.views.agencymgmt.agencyactivity.BrowseMeetingView;
 			import com.partycommittee.vo.PcAgencyVo;
 			import com.partycommittee.vo.PcMeetingContentVo;
@@ -74,6 +75,9 @@
 			public function set parentView(value:BrowseMeetingView):void {
 				this._parentView = value;
 			}
+			
+			[Bindable]
+			private var model:ModelLocator = ModelLocator.getInstance();			
 			
 			private function onCreationCompleted():void {
 				updateData();
@@ -294,7 +298,7 @@
 		</mx:HBox>
 		
 		<mx:ControlBar width="100%" horizontalAlign="center" verticalAlign="middle">
-			<button:PcButton id="returnBtn" label="驳回" click="onReturn()" visible="{meeting.statusId == 2}" />
+			<button:PcButton id="returnBtn" label="驳回" click="onReturn()" visible="{parseFloat(model.loginUser.privilege) == 1}"/>
 			<button:PcButton label="评价" click="onHandle()" visible="{meeting.statusId == 2}" includeInLayout="{!hasHandle}"/>
 			<button:PcButton label="关闭" click="close()"/>
 		</mx:ControlBar>
