@@ -6,6 +6,7 @@ package com.partycommittee.controller
 	import com.partycommittee.commands.PcMemberCommand;
 	import com.partycommittee.commands.PcRemindCommand;
 	import com.partycommittee.commands.PcRemindConfigCommand;
+	import com.partycommittee.commands.PcRemindLockCommand;
 	import com.partycommittee.commands.PcUserCommand;
 	import com.partycommittee.commands.PcWorkPlanCommand;
 	import com.partycommittee.events.PcAgencyEvent;
@@ -30,7 +31,7 @@ package com.partycommittee.controller
 			addCommand(PcMeetingEvent.PCMEETING_EVENT, PcMeetingCommand);
 			addCommand(PcRemindEvent.PCREMIND_EVENT, PcRemindCommand);
 			addCommand(PcRemindConfigEvent.PCREMINDCONFIG_EVENT, PcRemindConfigCommand);
-			addCommand(PcRemindLockEvent.PCREMINDLOCK_EVENT, PcRemindConfigCommand);
+			addCommand(PcRemindLockEvent.PCREMINDLOCK_EVENT, PcRemindLockCommand);
 		}
 	}
    

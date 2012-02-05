@@ -1,6 +1,7 @@
 package com.partycommittee.events
 {
 	import com.partycommittee.vo.PcRemindLockVo;
+	import com.partycommittee.vo.page.PageHelperVo;
 	
 	import mx.collections.ArrayCollection;
 	
@@ -14,14 +15,22 @@ package com.partycommittee.events
 		
 		private var _pcRemindLockVo:PcRemindLockVo;
 		
-		private var _filters:ArrayCollection;
+		private var _filters:Array;
 		
-		public function get filters():ArrayCollection
+		private var _page:PageHelperVo;
+		public function get page():PageHelperVo {
+			return this._page;
+		}
+		public function set page(value:PageHelperVo):void {
+			this._page = value;
+		}		
+		
+		public function get filters():Array
 		{
 			return _filters;
 		}
 
-		public function set filters(value:ArrayCollection):void
+		public function set filters(value:Array):void
 		{
 			_filters = value;
 		}

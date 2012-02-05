@@ -39,6 +39,12 @@ package com.partycommittee.renderers
 				case 4:
 					htmlText  = "已评";		
 					break;
+				case 8:
+					htmlText = "已解锁";	
+					break;
+				case 9:
+					htmlText = "已锁定";
+					break;
 			}
 		}
 	}

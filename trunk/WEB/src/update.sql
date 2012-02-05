@@ -201,7 +201,7 @@ begin
 	SET y = year(now());
 	SET q = quarter(now());		
 	set i = 1;
-	truncate pc_remind_lock;
+
 	while i < 9 do	
 		open s_cursor; 
 	  SELECT FOUND_ROWS() into rows;

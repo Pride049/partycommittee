@@ -21,9 +21,9 @@ package com.partycommittee.vo
 		
 		public var year:Number;
 		
-		public var quarter:Number;
+		public var quarter:uint;
 		
-		public var month:Number;
+		public var month:uint;
 		
 		public var statusId:Number;
 		

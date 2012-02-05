@@ -2,7 +2,8 @@ package com.partycommittee.proxy
 {
 	import com.adobe.cairngorm.business.ServiceLocator;
 	import com.partycommittee.vo.PcRemindLockVo;
-
+	import com.partycommittee.vo.page.PageHelperVo;
+	
 	import mx.collections.ArrayCollection;
 	import mx.rpc.IResponder;
 	
@@ -14,12 +15,12 @@ package com.partycommittee.proxy
 			this.responder = responder;
 		}
 
-		public function getRemindLockByFilters(filters:ArrayCollection):void {
-			service.getRemindLockByFilters();
+		public function getRemindLockByFilters(filters:Array, page:PageHelperVo):void {
+			service.getRemindLockByFilters(filters, page);
 		}
 		
-		public function updateRemindLock(item:PcRemindLockVo):void {
-			service.updateItems(item);
+		public function updateItem(item:PcRemindLockVo):void {
+			service.updateRemindLock(item);
 		}		
 
 	}

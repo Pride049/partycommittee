@@ -18,10 +18,10 @@ package com.partycommittee.commands
 			var proxy:PcRemindLockProxy = getProxy();
 			switch (evt.kind) {
 				case PcRemindLockEvent.GET_REMIND_LOCK_BY_FILTERS :
-					proxy.getRemindLockByFilters(evt.filters);
+					proxy.getRemindLockByFilters(evt.filters, evt.page);
 					break;
 				case PcRemindLockEvent.UPDATE_REMIND_LOCK : 
-					proxy.updateItems(evt.pcRemindLockVo);
+					proxy.updateItem(evt.pcRemindLockVo);
 					break;					
 				default :
 					break;

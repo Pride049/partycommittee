@@ -8,8 +8,11 @@ import org.springframework.flex.remoting.RemotingDestination;
 import org.springframework.flex.remoting.RemotingInclude;
 import org.springframework.stereotype.Service;
 
+import com.partycommittee.remote.vo.FilterVo;
 import com.partycommittee.remote.vo.PcAgencyVo;
 import com.partycommittee.remote.vo.PcRemindLockVo;
+import com.partycommittee.remote.vo.helper.PageHelperVo;
+import com.partycommittee.remote.vo.helper.PageResultVo;
 import com.partycommittee.service.PcRemindLockService;;
 
 @Service("PcRemindLockRo")
@@ -23,8 +26,8 @@ public class PcRemindLockRemoteService {
 	}
 
 	@RemotingInclude
-	public List<PcRemindLockVo> getRemindLockByFilters(List<Object> filters) {
-		return pcRemindLockService.getRemindLockByFilters(filters);
+	public PageResultVo<PcRemindLockVo> getRemindLockByFilters(List<FilterVo> filters, PageHelperVo page) {
+		return pcRemindLockService.getRemindLockByFilters(filters, page);
 	}		
 		
 	@RemotingInclude
