@@ -9,8 +9,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.partycommittee.persistence.daoimpl.PcRemindLockDaoImpl;
+import com.partycommittee.persistence.po.PcMember;
 import com.partycommittee.persistence.po.PcRemindLock;
+import com.partycommittee.remote.vo.FilterVo;
+import com.partycommittee.remote.vo.PcMemberVo;
 import com.partycommittee.remote.vo.PcRemindLockVo;
+import com.partycommittee.remote.vo.helper.PageHelperVo;
+import com.partycommittee.remote.vo.helper.PageResultVo;
 
 
 @Transactional
@@ -23,10 +28,22 @@ public class PcRemindLockService {
 		this.pcRemindLockDaoImpl = pcRemindLockDaoImpl;
 	}
 
-	public List<PcRemindLockVo> getRemindLockByFilters(List<Object> filters) {
+	public PageResultVo<PcRemindLockVo> getRemindLockByFilters(List<FilterVo> filters, PageHelperVo page) {
+		PageResultVo<PcRemindLockVo> result = new PageResultVo<PcRemindLockVo>();
 		List<PcRemindLockVo> list = new ArrayList<PcRemindLockVo>();
-
-		return list;
+		PageResultVo<PcRemindLock> pageResult = pcRemindLockDaoImpl.getRemindLockByFilters(filters, page);
+		if (pageResult == null) {
+			return null;
+		}
+		result.setPageHelper(pageResult.getPageHelper());
+		if (pageResult.getList() != null && pageResult.getList().size() > 0) {
+			for (PcRemindLock item : pageResult.getList()) {
+				list.add(PcRemindLockVo.fromPcRemindLock(item));
+			}
+		}
+		result.setList(list);
+		return result;		
+		
 	}
 	
 	public void updateRemindLock(PcRemindLockVo pevo) {

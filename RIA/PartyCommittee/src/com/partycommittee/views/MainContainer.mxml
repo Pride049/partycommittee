@@ -101,6 +101,7 @@
 				if (!isRootUser()) {
 					mainViewStack.removeChild(accountView);
 					mainViewStack.removeChild(remindconfigView);
+					mainViewStack.removeChild(remindLockView);
 				}
 				
 				if (orgView && model.focusAgencyVo) {
@@ -197,7 +198,8 @@
 			
 			private function viewStackChange(event:Event) {
 				if (mainViewStack.selectedChild == remindconfigView ||
-					mainViewStack.selectedChild == mainView) {
+					mainViewStack.selectedChild == mainView 
+					) {
 					unExpandTree();
 				} else {
 					expandTree();
@@ -238,7 +240,10 @@
 											   viewStack="{mainViewStack}"/>
 				<systemviews:RemindConfigView id="remindconfigView" width="100%" height="100%" 
 											   label="提醒设定"
-											   viewStack="{mainViewStack}"/>				
+											   viewStack="{mainViewStack}"/>
+				<systemviews:RemindLockView id="remindLockView" width="100%" height="100%" 
+											  label="解锁"
+											  viewStack="{mainViewStack}"/>				
 			</mx:ViewStack>
 		</mx:HDividedBox>
 	</mx:Canvas>

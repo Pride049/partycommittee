@@ -58,5 +58,20 @@ package com.partycommittee.util
 			}
 			return yearCollection;
 		}
+		
+		public static function createTypeDp():Array {
+			var typeCollection:Array = new Array(
+									 {typeId:1, label:'年度计划'},
+									 {typeId:2, label:'季度计划'},
+									 {typeId:3, label:'季度执行情况'},
+									 {typeId:4, label:'年终总结'},
+									 {typeId:5, label:'党课'},
+									 {typeId:6, label:'党员大会'},
+									 {typeId:7, label:'民主生活会'},
+									 {typeId:8, label:'支部委员会'},
+									 {typeId:9, label:'其他'}
+									);
+			return typeCollection;
+		}		
 	}
 }
