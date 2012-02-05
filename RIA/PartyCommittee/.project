@@ -3,6 +3,7 @@
 	<name>FlexPartyCommittee</name>
 	<comment></comment>
 	<projects>
+		<project>MiniDebugTracer</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

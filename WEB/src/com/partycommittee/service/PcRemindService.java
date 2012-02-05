@@ -70,7 +70,7 @@ public class PcRemindService {
 			}
 			
 			// 去年年终工作总结
-			List<PcRemindStat> last_year_end = PcRemindStatDaoImpl.getListWorkPlanById(id, last_year, 0, 3);
+			List<PcRemindStat> last_year_end = PcRemindStatDaoImpl.getListWorkPlanById(id, last_year, 0, 4);
 			for (PcRemindStat item : last_year_end) {
 				list.add(PcRemindStatVo.fromPcRemind(item));
 			}			
@@ -80,7 +80,7 @@ public class PcRemindService {
 			last_q = PcRemindStatDaoImpl.getListWorkPlanById(id, year, last_qu, 3);
 			for (PcRemindStat item : last_q) {
 				list.add(PcRemindStatVo.fromPcRemind(item));
-			}			
+			}
 		}
 		
 		// 本季度工作安排
@@ -111,6 +111,15 @@ public class PcRemindService {
 		return list;
 	}
 	
+	public List<PcRemindVo> getListRemindCommitByParentId(Integer id, Integer year, Integer q, Integer tid, Integer sid) {
+		List<PcRemindVo> list = new ArrayList<PcRemindVo>();
+		List<PcRemind> items = PcRemindDaoImpl.getListByParentId(id, year, q, tid, sid);
+		for (PcRemind item : items) {
+			list.add(PcRemindVo.fromPcRemind(item));
+		}
+		return list;
+	}	
+	
 	public List<PcRemindVo> getListRemindByParentId(Integer id, Integer year, Integer q, Integer tid, Integer sid) {
 		List<PcRemindVo> list = new ArrayList<PcRemindVo>();
 		List<PcRemind> items = PcRemindDaoImpl.getListByParentId(id, year, q, tid, sid);
@@ -140,7 +149,7 @@ public class PcRemindService {
 			}
 			
 			// 去年年终工作总结
-			List<PcRemindStat> last_year_end = PcRemindStatDaoImpl.getListWorkPlanByParentId(id, last_year, 0, 3);
+			List<PcRemindStat> last_year_end = PcRemindStatDaoImpl.getListWorkPlanByParentId(id, last_year, 0, 4);
 			for (PcRemindStat item : last_year_end) {
 				list.add(PcRemindStatVo.fromPcRemind(item));
 			}			
@@ -175,74 +184,116 @@ public class PcRemindService {
 	public List<PcRemindVo> getRealRemindById(Integer agencyId, Integer year,
 			Integer quarter) {
 		List<PcRemindVo> list = new ArrayList<PcRemindVo>();
-		// Year work plan.
-		
-		
-		// 计划类
+
+		 //年度计划
 		PcWorkPlan yearWorkPlan = pcWorkPlanDaoImpl.getWorkPlanYearlyByAgencyId(agencyId, year);
 		
 		if (yearWorkPlan != null) {
 			
 			PcWorkPlanVo vo = PcWorkPlanVo.fromPcWorkPlan(yearWorkPlan);
 			PcRemindVo remindvo = new PcRemindVo();
+			remindvo.setYear(vo.getYear());
+			remindvo.setQuarter(0);
 			remindvo.setAgencyId(vo.getAgencyId());
 			remindvo.setStatusId(vo.getStatusId());
 			remindvo.setTypeId(vo.getTypeId());
 			list.add(remindvo);
 		} else {
 			PcRemindVo remindvo = new PcRemindVo();
+			remindvo.setYear(year);
+			remindvo.setQuarter(0);		
 			remindvo.setStatusId(0);
 			remindvo.setTypeId(1);			
 			list.add(remindvo);
+		}		
+
+		// 计划类
+		if (quarter == 1) {
+		    // 去年年终总结
+			PcWorkPlan yearResultWorkPlan = pcWorkPlanDaoImpl.getWorkPlanYearlySummaryByAgencyId(agencyId, year - 1);
+			if (yearResultWorkPlan != null) {	
+				PcWorkPlanVo vo = PcWorkPlanVo.fromPcWorkPlan(yearResultWorkPlan);
+				PcRemindVo remindvo = new PcRemindVo();
+				remindvo.setYear(vo.getYear());
+				remindvo.setQuarter(0);						
+				remindvo.setAgencyId(vo.getAgencyId());
+				remindvo.setStatusId(vo.getStatusId());
+				remindvo.setTypeId(vo.getTypeId());
+				list.add(remindvo);	
+
+			} else {
+				PcRemindVo remindvo = new PcRemindVo();
+				remindvo.setYear(year - 1);
+				remindvo.setQuarter(0);						
+				remindvo.setStatusId(0);
+				remindvo.setTypeId(4);			
+				list.add(remindvo);
+			}
+			
+			// 上季度执行情况
+			PcWorkPlan quarterResultWorkPlan = pcWorkPlanDaoImpl.getResultQuarterByAgencyId(agencyId, year - 1, 4);
+			if (quarterResultWorkPlan != null) {
+				PcWorkPlanVo vo = PcWorkPlanVo.fromPcWorkPlan(quarterResultWorkPlan);
+				PcRemindVo remindvo = new PcRemindVo();
+				remindvo.setYear(vo.getYear());
+				remindvo.setQuarter(4);		
+				remindvo.setAgencyId(vo.getAgencyId());
+				remindvo.setStatusId(vo.getStatusId());
+				remindvo.setTypeId(vo.getTypeId());
+				list.add(remindvo);			
+
+			} else {
+				PcRemindVo remindvo = new PcRemindVo();
+				remindvo.setYear(year - 1);
+				remindvo.setQuarter(4);						
+				remindvo.setStatusId(0);
+				remindvo.setTypeId(3);			
+				list.add(remindvo);
+			}			
+		} else {
+			// 上季度执行情况
+			PcWorkPlan quarterResultWorkPlan = pcWorkPlanDaoImpl.getResultQuarterByAgencyId(agencyId, year, quarter -1);
+			if (quarterResultWorkPlan != null) {
+				PcWorkPlanVo vo = PcWorkPlanVo.fromPcWorkPlan(quarterResultWorkPlan);
+				PcRemindVo remindvo = new PcRemindVo();
+				remindvo.setYear(year);
+				remindvo.setQuarter(quarter -1);				
+				remindvo.setAgencyId(vo.getAgencyId());
+				remindvo.setStatusId(vo.getStatusId());
+				remindvo.setTypeId(vo.getTypeId());
+				list.add(remindvo);			
+
+			} else {
+				PcRemindVo remindvo = new PcRemindVo();
+				remindvo.setYear(year);
+				remindvo.setQuarter(quarter -1);				
+				remindvo.setStatusId(0);
+				remindvo.setTypeId(3);			
+				list.add(remindvo);
+			}				
 		}
+
 		// Quarter work plan.
 		PcWorkPlan quarterWorkPlan = pcWorkPlanDaoImpl.getWorkPlanQuarterByAgencyId(agencyId, year, quarter);
 		if (quarterWorkPlan != null) {
 			PcWorkPlanVo vo = PcWorkPlanVo.fromPcWorkPlan(quarterWorkPlan);
 			PcRemindVo remindvo = new PcRemindVo();
+			remindvo.setYear(year);
+			remindvo.setQuarter(quarter);			
 			remindvo.setAgencyId(vo.getAgencyId());
 			remindvo.setStatusId(vo.getStatusId());
 			remindvo.setTypeId(vo.getTypeId());
 			list.add(remindvo);
 		} else {
 			PcRemindVo remindvo = new PcRemindVo();
+			remindvo.setYear(year);
+			remindvo.setQuarter(quarter);				
 			remindvo.setStatusId(0);
 			remindvo.setTypeId(2);			
 			list.add(remindvo);
 		}
-		// Quarter result.
-		PcWorkPlan quarterResultWorkPlan = pcWorkPlanDaoImpl.getResultQuarterByAgencyId(agencyId, year, quarter);
-		if (quarterResultWorkPlan != null) {
-			PcWorkPlanVo vo = PcWorkPlanVo.fromPcWorkPlan(quarterResultWorkPlan);
-			PcRemindVo remindvo = new PcRemindVo();
-			remindvo.setAgencyId(vo.getAgencyId());
-			remindvo.setStatusId(vo.getStatusId());
-			remindvo.setTypeId(vo.getTypeId());
-			list.add(remindvo);			
 
-		} else {
-			PcRemindVo remindvo = new PcRemindVo();
-			remindvo.setStatusId(0);
-			remindvo.setTypeId(3);			
-			list.add(remindvo);
-		}
-		// Year result.
-		PcWorkPlan yearResultWorkPlan = pcWorkPlanDaoImpl.getWorkPlanYearlySummaryByAgencyId(agencyId, year);
-		if (yearResultWorkPlan != null) {
-			
-			PcWorkPlanVo vo = PcWorkPlanVo.fromPcWorkPlan(yearResultWorkPlan);
-			PcRemindVo remindvo = new PcRemindVo();
-			remindvo.setAgencyId(vo.getAgencyId());
-			remindvo.setStatusId(vo.getStatusId());
-			remindvo.setTypeId(vo.getTypeId());
-			list.add(remindvo);	
 
-		} else {
-			PcRemindVo remindvo = new PcRemindVo();
-			remindvo.setStatusId(0);
-			remindvo.setTypeId(4);			
-			list.add(remindvo);
-		}
 		
 		// 会议类
 		PcMeeting classMeeting = pcMeetingDaoImpl.getMeeting(agencyId, year, quarter, 5);
@@ -250,6 +301,8 @@ public class PcRemindService {
 			
 			PcMeetingVo vo = PcMeetingVo.fromPcMeeting(classMeeting);
 			PcRemindVo remindvo = new PcRemindVo();
+			remindvo.setYear(year);
+			remindvo.setQuarter(quarter);				
 			remindvo.setAgencyId(vo.getAgencyId());
 			remindvo.setStatusId(vo.getStatusId());
 			remindvo.setTypeId(vo.getTypeId());
@@ -257,6 +310,8 @@ public class PcRemindService {
 
 		} else {
 			PcRemindVo remindvo = new PcRemindVo();
+			remindvo.setYear(year);
+			remindvo.setQuarter(quarter);				
 			remindvo.setStatusId(0);
 			remindvo.setTypeId(5);			
 			list.add(remindvo);
@@ -266,12 +321,16 @@ public class PcRemindService {
 		if (branchMemberMeeting != null) {
 			PcMeetingVo vo = PcMeetingVo.fromPcMeeting(branchMemberMeeting);
 			PcRemindVo remindvo = new PcRemindVo();
+			remindvo.setYear(year);
+			remindvo.setQuarter(quarter);				
 			remindvo.setAgencyId(vo.getAgencyId());
 			remindvo.setStatusId(vo.getStatusId());
 			remindvo.setTypeId(vo.getTypeId());
 			list.add(remindvo);		
 		} else {
 			PcRemindVo remindvo = new PcRemindVo();
+			remindvo.setYear(year);
+			remindvo.setQuarter(quarter);				
 			remindvo.setStatusId(0);
 			remindvo.setTypeId(6);			
 			list.add(remindvo);
@@ -282,12 +341,16 @@ public class PcRemindService {
 		if (branchLifeMeeting != null) {
 			PcMeetingVo vo = PcMeetingVo.fromPcMeeting(branchLifeMeeting);
 			PcRemindVo remindvo = new PcRemindVo();
+			remindvo.setYear(year);
+			remindvo.setQuarter(quarter);				
 			remindvo.setAgencyId(vo.getAgencyId());
 			remindvo.setStatusId(vo.getStatusId());
 			remindvo.setTypeId(vo.getTypeId());
 			list.add(remindvo);		
 		} else {
 			PcRemindVo remindvo = new PcRemindVo();
+			remindvo.setYear(year);
+			remindvo.setQuarter(quarter);				
 			remindvo.setStatusId(0);
 			remindvo.setTypeId(7);			
 			list.add(remindvo);
@@ -298,12 +361,16 @@ public class PcRemindService {
 		if (branchCommitteeMeeting != null) {
 			PcMeetingVo vo = PcMeetingVo.fromPcMeeting(branchCommitteeMeeting);
 			PcRemindVo remindvo = new PcRemindVo();
+			remindvo.setYear(year);
+			remindvo.setQuarter(quarter);				
 			remindvo.setAgencyId(vo.getAgencyId());
 			remindvo.setStatusId(vo.getStatusId());
 			remindvo.setTypeId(vo.getTypeId());
 			list.add(remindvo);		
 		} else {
 			PcRemindVo remindvo = new PcRemindVo();
+			remindvo.setYear(year);
+			remindvo.setQuarter(quarter);				
 			remindvo.setStatusId(0);
 			remindvo.setTypeId(8);			
 			list.add(remindvo);

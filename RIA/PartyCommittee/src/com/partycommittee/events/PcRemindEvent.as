@@ -15,6 +15,7 @@ package com.partycommittee.events
 		public static const GET_REMIND_STAT_BY_PARENTID_FOR_OTHER:String = "getRemindStatByParentIdForOTHER";
 
 		private var _agencyId:Number;
+		
 		public function set agencyId(value:Number):void {
 			this._agencyId = value;
 		}
@@ -23,9 +24,23 @@ package com.partycommittee.events
 		}
 		
 		private var _typeId:Number;
+		
 		public function get typeId():Number	{
 			return _typeId;
 		}
+		
+		private var _statusId:Number;
+		
+		public function get statusId():Number
+		{
+			return _statusId;
+		}
+		
+		public function set statusId(value:Number):void
+		{
+			_statusId = value;
+		}
+		
 		
 		public function set typeId(value:Number):void {
 			_typeId = value;

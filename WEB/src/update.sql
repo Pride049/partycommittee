@@ -108,6 +108,42 @@ begin
 		end loop cursor_loop;
 		close s_cursor;
 	  
+	  
+	  if q = 1 THEN
+			open s_cursor; 
+		  SELECT FOUND_ROWS() into rows;
+		  SELECT rows;
+		  SET row = 0;
+			cursor_loop:loop	  
+				FETCH s_cursor into id, name, code_id, parent_id;
+				SET s = 0;
+				if row >= rows then
+					leave cursor_loop;
+				end if;	  
+		  	SELECT status_id into s FROM pc_workplan WHERE agency_id = id AND year = y -1 AND quarter = 4 AND type_id = 3;
+				IF  s IS NULL THEN
+	 				SET s = 0;
+				END IF;	 
+				
+				INSERT INTO  pc_remind (agency_id, name, code_id, parent_id, year, quarter, type_id, status) 
+				VALUES (id, name, code_id, parent_id, y -1, 4, 3, s) 			
+				ON DUPLICATE KEY UPDATE status = s;				
+				
+		  	SELECT status_id into s FROM pc_workplan WHERE agency_id = id AND year = y -1 AND quarter = 0 AND type_id = 4;
+				IF  s IS NULL THEN
+	 				SET s = 0;
+				END IF;	 
+				
+				INSERT INTO  pc_remind (agency_id, name, code_id, parent_id, year, quarter, type_id, status) 
+				VALUES (id, name, code_id, parent_id, y -1, 0, 4, s) 			
+				ON DUPLICATE KEY UPDATE status = s;					
+
+			SET row = row + 1;
+			end loop cursor_loop;
+			close s_cursor;			
+	 	
+	  END IF;
+	  
 	  set i=i+1;
 	end while;  
 	
@@ -130,6 +166,12 @@ begin
 	LEFT JOIN pc_agency as T2 ON T1.parent_id = T2.id
 	LEFT JOIN pc_agency_relation as T3 ON T1.parent_id = T3.agency_id
 	ON DUPLICATE KEY UPDATE c = T1.c;
+	
+	INSERT INTO pc_remind_stat (agency_id ,name ,code_id ,parent_id ,year ,quarter ,type_id ,status ,c)
+	SELECT T1.parent_id as agency_id, T2.name, T1.code_id, T3.parent_id, T1.year, T1.quarter, T1.type_id, T1.status, T1.c FROM (SELECT code_id, parent_id, year ,quarter, type_id, status, count(*) as c FROM pc_remind WHERE year = y -1 GROUP BY code_id, parent_id, year ,quarter, type_id, status) as T1
+	LEFT JOIN pc_agency as T2 ON T1.parent_id = T2.id
+	LEFT JOIN pc_agency_relation as T3 ON T1.parent_id = T3.agency_id
+	ON DUPLICATE KEY UPDATE c = T1.c;	
 
 end;
 //
@@ -159,7 +201,7 @@ begin
 	SET y = year(now());
 	SET q = quarter(now());		
 	set i = 1;
-	
+	truncate pc_remind_lock;
 	while i < 9 do	
 		open s_cursor; 
 	  SELECT FOUND_ROWS() into rows;
@@ -542,7 +584,7 @@ delimiter //
 SET GLOBAL event_scheduler = OFF //
 DROP EVENT IF EXISTS `event_stats`//
 CREATE EVENT IF NOT EXISTS `event_stats`
-ON SCHEDULE EVERY 60 SECOND
+ON SCHEDULE EVERY 120 SECOND
 ON COMPLETION PRESERVE
 DO
    BEGIN
