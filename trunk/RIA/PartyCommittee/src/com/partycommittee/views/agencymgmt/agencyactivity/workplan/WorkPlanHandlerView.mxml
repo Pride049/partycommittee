@@ -16,6 +16,7 @@
 			import com.partycommittee.events.PcWorkPlanEvent;
 			import com.partycommittee.manager.navigation.NavigationView;
 			import com.partycommittee.manager.popup.PopupMgr;
+			import com.partycommittee.model.ModelLocator;
 			import com.partycommittee.util.CRUDEventType;
 			import com.partycommittee.util.DataproviderFactory;
 			import com.partycommittee.util.WorkPlanCodeUtil;
@@ -80,6 +81,9 @@
 			public function set parentView(value:NavigationView):void {
 				this._parentView = value;
 			}
+			
+			[Bindable]
+			private var model:ModelLocator = ModelLocator.getInstance();
 			
 			private function onCreationCompleted():void {
 				updateData();
@@ -356,7 +360,7 @@
 		</mx:HBox>
 		
 		<mx:ControlBar width="100%" horizontalAlign="center" verticalAlign="middle">
-			<button:PcButton id="returnBtn" label="驳回" click="onReturn()" visible="{workPlan.statusId == 2}"/>
+			<button:PcButton id="returnBtn" label="驳回" click="onReturn()" visible="{parseFloat(model.loginUser.privilege) == 1}"/>
 			<button:PcButton id="handleBtn" click="onHandle()" visible="{workPlan.statusId == 2}" includeInLayout="{!hasHandle}"/>
 			<button:PcButton label="关闭" click="close()"/>
 		</mx:ControlBar>
