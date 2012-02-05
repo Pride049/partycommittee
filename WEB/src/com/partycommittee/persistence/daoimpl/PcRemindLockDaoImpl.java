@@ -91,5 +91,19 @@ public class PcRemindLockDaoImpl extends JpaDaoBase implements PcRemindLockDao {
 		}
 		return null;
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public PcRemindLock getRemindLockById(Integer id, Integer year, Integer q, Integer m, Integer tId) {
+		try {
+			List<PcRemindLock> list =  super.find("from PcRemindLock where agency_id = " + id + " AND year = " + year + " and quarter = " + q + " and month = " + m + "  AND type_id = " + tId + " ");
+			if (list != null && list.size() > 0) {
+				return list.get(0);
+			}			
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return null;
+	}	
 
 }

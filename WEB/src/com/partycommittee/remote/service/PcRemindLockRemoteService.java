@@ -34,5 +34,10 @@ public class PcRemindLockRemoteService {
 	public void updateRemindLock(PcRemindLockVo vo) {
 		pcRemindLockService.updateRemindLock(vo);
 	}	
+	
+	@RemotingInclude
+	public PcRemindLockVo getRemindLockById(Integer id, Integer year, Integer q, Integer m, Integer tId) {
+		return pcRemindLockService.getRemindLockById(id, year, q, m, tId);
+	}
 
 }
