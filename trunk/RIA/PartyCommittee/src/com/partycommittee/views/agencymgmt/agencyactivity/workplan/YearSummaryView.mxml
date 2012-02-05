@@ -10,6 +10,8 @@
 		   xmlns:richtexttoolbar="com.partycommittee.control.richtexttoolbar.*">
 	<fx:Script>
 		<![CDATA[
+			import com.lnczx.utils.DateUtilExt;
+			import com.partycommittee.events.PcRemindLockEvent;
 			import com.partycommittee.events.PcWorkPlanEvent;
 			import com.partycommittee.manager.popup.PopupMgr;
 			import com.partycommittee.model.ModelLocator;
@@ -19,6 +21,8 @@
 			import com.partycommittee.util.WorkPlanCodeUtil;
 			import com.partycommittee.util.WorkPlanStatusUtil;
 			import com.partycommittee.vo.PcAgencyVo;
+			import com.partycommittee.vo.PcRemindConfigVo;
+			import com.partycommittee.vo.PcRemindLockVo;
 			import com.partycommittee.vo.PcWorkPlanContentVo;
 			import com.partycommittee.vo.PcWorkPlanVo;
 			
@@ -84,6 +88,62 @@
 				}
 			}
 			
+			private function initRemindLock():void {
+				var remindLockEvt:PcRemindLockEvent = new PcRemindLockEvent(PcRemindLockEvent.GET_REMIND_LOCK_BY_ID);
+				remindLockEvt.agencyId = agency.id;
+				remindLockEvt.year = model.reportYear;
+				remindLockEvt.quarter = 0;
+				remindLockEvt.month = 0;
+				remindLockEvt.typeId = 4;
+				remindLockEvt.successCallback = getRemindLockSuccess;
+				remindLockEvt.failureCallback = getRemindLockFailure
+				remindLockEvt.dispatch();				
+			}
+			
+			private function setRemindLock():void {
+				var vo:PcRemindConfigVo = getRemindVo(4);
+				var y:Number = new Date().getFullYear();
+				var cur_date = new Date();
+				
+				if (vo) {
+					var endDate:Date = new Date((model.reportYear + vo.endYear).toString(), vo.endMonth - 1, vo.endDay, 23, 59, 59 );
+					if (DateUtilExt.after(cur_date, endDate)) {
+						btn_commit.label ="已锁定";
+						btn_commit.enabled = false;
+					}
+				}
+			}	
+			
+			private function getRemindLockSuccess(data:Object, evt:PcRemindLockEvent):void {
+				if (data) {
+					var vo:PcRemindLockVo = data as PcRemindLockVo;
+					if (vo.statusId == 9) {
+						setRemindLock();
+					} else {
+						btn_commit.label ="上报";
+						btn_commit.enabled = true;
+					}
+				}
+			}
+			
+			private function getRemindLockFailure(data:Object, evt:PcRemindLockEvent):void {
+				if (btn_commit.label == "已锁定") {
+					btn_commit.label ="上报";
+					btn_commit.enabled = true;
+				}				
+			}		
+			
+			public function getRemindVo(typeId:Number):PcRemindConfigVo {
+				var model:ModelLocator = ModelLocator.getInstance();
+				var dd:ArrayCollection = model.remindConfigCollection;
+				for(var i = 0; i < dd.length; i++ ) {
+					if ( (dd.getItemAt(i) as PcRemindConfigVo).typeId == typeId) {
+						return dd.getItemAt(i) as PcRemindConfigVo
+					}
+				}
+				return null;
+			}				
+			
 			private function resetData():void {
 				workPlan = null;
 				personTxt.text = "";
@@ -104,6 +164,7 @@
 				this.enabled = true;
 				if (!data) {
 					resetData();
+					initRemindLock();
 					return;
 				}
 				workPlan = data as PcWorkPlanVo;
@@ -120,6 +181,7 @@
 						personTxt.text = workPlan.workPlanContent.memberName;
 						textArea.htmlText = workPlan.workPlanContent.content;
 					}
+					initRemindLock();
 				} else {
 					yearwpViewStack.selectedChild = browseForm;
 					
@@ -287,7 +349,7 @@
 								   visible="{!browseMode}" includeInLayout="{!browseMode}">
 						<button:PcButton label="暂存" click="onSaveWithoutSubmit()"
 										 visible="{!workPlan || workPlan.statusId == 1}"/>
-						<button:PcButton label="上报" click="onSaveAndCommit()"
+						<button:PcButton label="上报" id="btn_commit" click="onSaveAndCommit()"
 										 visible="{!workPlan || workPlan.statusId == 1}"/>
 						<button:PcButton label="查看评价"
 										 visible="{workPlan &amp;&amp; workPlan.statusId == 4}"

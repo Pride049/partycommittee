@@ -13,6 +13,9 @@
 					  xmlns:richtexttoolbar="com.partycommittee.control.richtexttoolbar.*">
 	<fx:Script>
 		<![CDATA[
+			import com.partycommittee.model.ModelLocator;
+			import com.lnczx.utils.DateUtilExt;
+			import com.partycommittee.events.PcRemindLockEvent;
 			import com.partycommittee.events.PcWorkPlanEvent;
 			import com.partycommittee.manager.popup.PopupMgr;
 			import com.partycommittee.util.CRUDEventType;
@@ -21,6 +24,8 @@
 			import com.partycommittee.util.WorkPlanCodeUtil;
 			import com.partycommittee.util.WorkPlanStatusUtil;
 			import com.partycommittee.vo.PcAgencyVo;
+			import com.partycommittee.vo.PcRemindConfigVo;
+			import com.partycommittee.vo.PcRemindLockVo;
 			import com.partycommittee.vo.PcWorkPlanContentVo;
 			import com.partycommittee.vo.PcWorkPlanVo;
 			
@@ -83,6 +88,7 @@
 			
 			private function updateData():void {
 				if (!agency || !workPlan) {
+					initRemindLock();
 					return;
 				}
 				
@@ -105,6 +111,7 @@
 						} else {
 							loadWorkPlanContent();
 						}
+						initRemindLock();
 					} else {
 						QuearterViewStack.selectedChild = browseForm;
 						if (workPlan.workPlanContent) {
@@ -120,6 +127,7 @@
 				} else {
 					QuearterViewStack.selectedChild = reportForm;
 					isNew = true;
+					initRemindLock();
 				}
 			}
 			
@@ -273,6 +281,63 @@
 				commentView.workPlan = workPlan;
 				PopupMgr.instance.popupWindow(commentView);
 			}
+			
+			private function initRemindLock():void {
+				var remindLockEvt:PcRemindLockEvent = new PcRemindLockEvent(PcRemindLockEvent.GET_REMIND_LOCK_BY_ID);
+				remindLockEvt.agencyId = agency.id;
+				remindLockEvt.year = year;
+				remindLockEvt.quarter = quarter;
+				remindLockEvt.month = 0;
+				remindLockEvt.typeId = 3;
+				remindLockEvt.successCallback = getRemindLockSuccess;
+				remindLockEvt.failureCallback = getRemindLockFailure
+				remindLockEvt.dispatch();				
+			}
+			
+			private function setRemindLock():void {
+				var vo:PcRemindConfigVo = getRemindVo(3);
+				var y:Number = new Date().getFullYear();
+				var cur_date = new Date();
+				
+				if (vo) {
+					var endDate:Date = DateUtilExt.endOfQuarter(year, quarter);
+					endDate = DateUtilExt.nextSomeDay(endDate, vo.endDay);
+					if (DateUtilExt.after(cur_date, endDate)) {
+						btn_commit.label ="已锁定";
+						btn_commit.enabled = false;
+					} else {
+						btn_commit.label ="上报";
+						btn_commit.enabled = true;
+					}
+				}
+			}	
+			
+			private function getRemindLockSuccess(data:Object, evt:PcRemindLockEvent):void {
+				if (data) {
+					var vo:PcRemindLockVo = data as PcRemindLockVo;
+					if (vo.statusId == 9) {
+						setRemindLock();
+					}
+				}
+			}
+			
+			private function getRemindLockFailure(data:Object, evt:PcRemindLockEvent):void {
+				if (btn_commit.label == "已锁定") {
+					btn_commit.label ="上报";
+					btn_commit.enabled = true;
+				}
+			}		
+			
+			public function getRemindVo(typeId:Number):PcRemindConfigVo {
+				var model:ModelLocator = ModelLocator.getInstance();
+				var dd:ArrayCollection = model.remindConfigCollection;
+				for(var i = 0; i < dd.length; i++ ) {
+					if ( (dd.getItemAt(i) as PcRemindConfigVo).typeId == typeId) {
+						return dd.getItemAt(i) as PcRemindConfigVo
+					}
+				}
+				return null;
+			}								
 		]]>
 	</fx:Script>
 	<fx:Declarations>
@@ -312,7 +377,7 @@
 					<button:PcButton label="暂存" click="onSaveWithoutSubmit()"
 									 visible="{!workPlan || workPlan.statusId == 1}"
 									 includeInLayout="{!detailMode}"/>
-					<button:PcButton label="上报" click="onSaveAndCommit()"
+					<button:PcButton label="上报" id="btn_commit" click="onSaveAndCommit()"
 									 visible="{!workPlan || workPlan.statusId == 1}"
 									 includeInLayout="{!detailMode}"/>
 					<button:PcButton label="关闭" click="close()"/>

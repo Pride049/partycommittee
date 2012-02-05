@@ -22,6 +22,9 @@ package com.partycommittee.proxy
 		public function updateItem(item:PcRemindLockVo):void {
 			service.updateRemindLock(item);
 		}		
-
+		
+		public function getRemindLockById(agencyId:Number, year:Number, quarter:Number, month:Number, typeId:Number):void {
+			service.getRemindLockById(agencyId, year, quarter, month, typeId);
+		}
 	}
 }

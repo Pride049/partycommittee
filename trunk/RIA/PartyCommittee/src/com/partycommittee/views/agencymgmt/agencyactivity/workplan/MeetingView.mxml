@@ -13,9 +13,12 @@
 					  xmlns:component="com.partycommittee.views.agencymgmt.agencyactivity.workplan.component.*">
 	<fx:Script>
 		<![CDATA[
+			import com.lnczx.utils.DateUtilExt;
 			import com.partycommittee.events.PcMeetingEvent;
+			import com.partycommittee.events.PcRemindLockEvent;
 			import com.partycommittee.events.PcWorkPlanEvent;
 			import com.partycommittee.manager.popup.PopupMgr;
+			import com.partycommittee.model.ModelLocator;
 			import com.partycommittee.util.CRUDEventType;
 			import com.partycommittee.util.DataproviderFactory;
 			import com.partycommittee.util.DateUtil;
@@ -24,6 +27,8 @@
 			import com.partycommittee.vo.PcAgencyVo;
 			import com.partycommittee.vo.PcMeetingContentVo;
 			import com.partycommittee.vo.PcMeetingVo;
+			import com.partycommittee.vo.PcRemindConfigVo;
+			import com.partycommittee.vo.PcRemindLockVo;
 			import com.partycommittee.vo.PcWorkPlanContentVo;
 			import com.partycommittee.vo.PcWorkPlanVo;
 			
@@ -159,6 +164,8 @@
 						} else {
 							loadMeetingContent();
 						}
+						initRemindLock();
+						
 					} else {
 						meetingViewStack.selectedChild = browseForm;
 						if (meeting.content) {
@@ -184,7 +191,10 @@
 						monthCmb.selectedItem = month = 1;
 						quarterCmb.selectedItem = quarter = 1;
 					}
+					initRemindLock();
 				}
+				
+				
 			}
 			
 			private function getMeetingComment():void {
@@ -343,14 +353,17 @@
 			
 			private function onYearCmbChanged():void {
 				year = yearCmb.selectedItem as Number;
+				initRemindLock();
 			}
 			
 			private function onQuarterCmbChanged():void {
 				quarter = quarterCmb.selectedItem as Number;
+				initRemindLock();
 			}
 			
 			private function onMonthCmbChanged():void {
 				month = monthCmb.selectedItem as Number;
+				initRemindLock();
 			}
 			
 			private function onBrowseEvaluate():void {
@@ -358,6 +371,68 @@
 				commentView.meeting = meeting;
 				PopupMgr.instance.popupWindow(commentView);
 			}
+			
+			
+			private function initRemindLock():void {
+				var remindLockEvt:PcRemindLockEvent = new PcRemindLockEvent(PcRemindLockEvent.GET_REMIND_LOCK_BY_ID);
+				remindLockEvt.agencyId = agency.id;
+				remindLockEvt.year = year;
+				remindLockEvt.quarter = quarter;
+				if (meetingType == 8) {
+					remindLockEvt.month = month;
+					remindLockEvt.quarter = 0;
+				} else {
+					remindLockEvt.month = 0;
+				}
+				remindLockEvt.typeId = meetingType;
+				remindLockEvt.successCallback = getRemindLockSuccess;
+				remindLockEvt.failureCallback = getRemindLockFailure
+				remindLockEvt.dispatch();				
+			}
+			
+			private function setRemindLock():void {
+				var vo:PcRemindConfigVo = getRemindVo(meetingType);
+				var y:Number = new Date().getFullYear();
+				var cur_date = new Date();
+				
+				if (vo) {
+					var endDate:Date = DateUtilExt.beginOfQuarter(year, quarter);
+					if (DateUtilExt.after(cur_date, endDate)) {
+						btn_commit.label ="已锁定";
+						btn_commit.enabled = false;
+					} else {
+						btn_commit.label ="上报";
+						btn_commit.enabled = true;
+					}
+				}
+			}	
+			
+			private function getRemindLockSuccess(data:Object, evt:PcRemindLockEvent):void {
+				if (data) {
+					var vo:PcRemindLockVo = data as PcRemindLockVo;
+					if (vo.statusId == 9) {
+						setRemindLock();
+					}
+				}
+			}
+			
+			private function getRemindLockFailure(data:Object, evt:PcRemindLockEvent):void {
+				if (btn_commit.label == "已锁定") {
+					btn_commit.label ="上报";
+					btn_commit.enabled = true;
+				}
+			}		
+			
+			public function getRemindVo(typeId:Number):PcRemindConfigVo {
+				var model:ModelLocator = ModelLocator.getInstance();
+				var dd:ArrayCollection = model.remindConfigCollection;
+				for(var i = 0; i < dd.length; i++ ) {
+					if ( (dd.getItemAt(i) as PcRemindConfigVo).typeId == typeId) {
+						return dd.getItemAt(i) as PcRemindConfigVo
+					}
+				}
+				return null;
+			}				
 		]]>
 	</fx:Script>
 	<fx:Declarations>
@@ -441,7 +516,7 @@
 					<button:PcButton label="暂存" click="onSaveWithoutSubmit()"
 									 visible="{!meeting || meeting.statusId == 1}"
 									 includeInLayout="{!detailMode}"/>
-					<button:PcButton label="上报" click="onSaveAndCommit()"
+					<button:PcButton label="上报" id="btn_commit" click="onSaveAndCommit()"
 									 visible="{!meeting || meeting.statusId == 1 || meeting.statusId == 0}"
 									 includeInLayout="{!detailMode}"/>
 					<button:PcButton label="关闭" click="close()"/>

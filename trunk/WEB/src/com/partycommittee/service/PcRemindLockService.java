@@ -51,5 +51,11 @@ public class PcRemindLockService {
 		pcRemindLockDaoImpl.updateRemindLock(vo);
 	}
 	
+	public PcRemindLockVo getRemindLockById(Integer id, Integer year, Integer q, Integer m, Integer tId) {
+		PcRemindLockVo vo = new PcRemindLockVo();
+		PcRemindLock pevo = pcRemindLockDaoImpl.getRemindLockById(id, year, q, m, tId);
+		return vo.fromPcRemindLock(pevo);
+	}
+	
 
 }

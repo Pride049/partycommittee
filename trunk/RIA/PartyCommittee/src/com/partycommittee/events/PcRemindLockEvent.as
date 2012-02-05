@@ -10,6 +10,13 @@ package com.partycommittee.events
 		
 		public static const GET_REMIND_LOCK_BY_FILTERS:String = "getRemindLockByFilters";
 		public static const UPDATE_REMIND_LOCK:String = "updateRemindLock";
+		public static const GET_REMIND_LOCK_BY_ID:String = "getRemindLockById";
+		
+		private var _agencyId:Number;
+		private var _year:Number;
+		private var _quarter:Number;
+		private var _month:Number;
+		private var _typeId:Number
 		
 		private var _kind:String;
 		
@@ -18,6 +25,57 @@ package com.partycommittee.events
 		private var _filters:Array;
 		
 		private var _page:PageHelperVo;
+
+		public function get typeId():Number
+		{
+			return _typeId;
+		}
+
+		public function set typeId(value:Number):void
+		{
+			_typeId = value;
+		}
+
+		public function get month():Number
+		{
+			return _month;
+		}
+
+		public function set month(value:Number):void
+		{
+			_month = value;
+		}
+
+		public function get quarter():Number
+		{
+			return _quarter;
+		}
+
+		public function set quarter(value:Number):void
+		{
+			_quarter = value;
+		}
+
+		public function get year():Number
+		{
+			return _year;
+		}
+
+		public function set year(value:Number):void
+		{
+			_year = value;
+		}
+
+		public function get agencyId():Number
+		{
+			return _agencyId;
+		}
+
+		public function set agencyId(value:Number):void
+		{
+			_agencyId = value;
+		}
+
 		public function get page():PageHelperVo {
 			return this._page;
 		}

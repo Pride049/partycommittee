@@ -353,7 +353,7 @@ begin
 				if i = 8 THEN
 					if month(now()) = 1 THEN
 				
-						SELECT max(status_id) into s FROM pc_meeting WHERE agency_id = id AND year = y -1  AND month = LAST_DAY(now() - interval 1 month) AND type_id = i;
+						SELECT max(status_id) into s FROM pc_meeting WHERE agency_id = id AND year = y -1  AND month = 12 AND type_id = i;
 						
 						IF  s IS NULL THEN
 				   			SET s = 0;
@@ -362,13 +362,13 @@ begin
 							CALL set_remind_status(i, s);
 							if s = 9 THEN
 								INSERT INTO  pc_remind_lock (agency_id, name, code_id, parent_id, year, quarter, month, type_id, status) 
-								VALUES (id, name, code_id, parent_id, y -1 , 0, LAST_DAY(now() - interval 1 month), i, s)	ON DUPLICATE KEY UPDATE agency_id = id;
+								VALUES (id, name, code_id, parent_id, y -1 , 0, 12, i, s)	ON DUPLICATE KEY UPDATE agency_id = id;
 							END IF;		
 						END IF;
 																	
 					ELSE
 						
-						SELECT max(status_id) into s FROM pc_meeting WHERE agency_id = id AND year = y  AND month = LAST_DAY(now() - interval 1 month) AND type_id = i;
+						SELECT max(status_id) into s FROM pc_meeting WHERE agency_id = id AND year = y  AND month = month(now()) -1  AND type_id = i;
 						
 						IF  s IS NULL THEN
 				   			SET s = 0;
@@ -377,7 +377,7 @@ begin
 							CALL set_remind_status(i, s);
 							if s = 9 THEN
 								INSERT INTO  pc_remind_lock (agency_id, name, code_id, parent_id, year, quarter, month, type_id, status) 
-								VALUES (id, name, code_id, parent_id, y , 0, LAST_DAY(now() - interval 1 month), i, s)	ON DUPLICATE KEY UPDATE agency_id = id;
+								VALUES (id, name, code_id, parent_id, y , 0, month(now()) -1 , i, s)	ON DUPLICATE KEY UPDATE agency_id = id;
 							END IF;							
 						END IF;						
 						

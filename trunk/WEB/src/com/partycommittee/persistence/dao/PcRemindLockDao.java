@@ -13,4 +13,6 @@ public interface PcRemindLockDao {
 	
 	public void updateRemindLock(PcRemindLock vo);
 	
+	public PcRemindLock getRemindLockById(Integer id, Integer year, Integer q, Integer m, Integer tId);
+	
 }

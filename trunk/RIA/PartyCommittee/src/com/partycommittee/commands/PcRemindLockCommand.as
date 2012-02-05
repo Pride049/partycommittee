@@ -22,7 +22,10 @@ package com.partycommittee.commands
 					break;
 				case PcRemindLockEvent.UPDATE_REMIND_LOCK : 
 					proxy.updateItem(evt.pcRemindLockVo);
-					break;					
+					break;
+				case PcRemindLockEvent.GET_REMIND_LOCK_BY_ID :
+					proxy.getRemindLockById(evt.agencyId, evt.year, evt.quarter, evt.month, evt.typeId);
+					break;
 				default :
 					break;
 			}

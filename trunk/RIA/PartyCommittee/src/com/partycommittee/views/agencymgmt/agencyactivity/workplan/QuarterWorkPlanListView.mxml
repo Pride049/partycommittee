@@ -59,6 +59,7 @@
 				model.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, onPropertyChanged);
 				addEventListener(FlexEvent.SHOW, onViewShow);
 				this.year = model.reportYear;
+				updateData();
 			}
 			
 			private function onPropertyChanged(event:PropertyChangeEvent):void {
