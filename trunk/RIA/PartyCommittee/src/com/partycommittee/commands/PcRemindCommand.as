@@ -14,20 +14,24 @@ package com.partycommittee.commands
 		
 		override public function execute(event:CairngormEvent):void {
 			super.execute(event);
-			var pcRemindEvt:PcRemindEvent = event as PcRemindEvent;
+			var evt:PcRemindEvent = event as PcRemindEvent;
 			var proxy:PcRemindProxy = getProxy();
-			switch (pcRemindEvt.kind) {
+			switch (evt.kind) {
 				case PcRemindEvent.GET_REAL_REMIND_BY_ID :
-					proxy.getRealRemindById(pcRemindEvt.agencyId, pcRemindEvt.year, pcRemindEvt.quarter);
+					proxy.getRealRemindById(evt.agencyId, evt.year, evt.quarter);
 					break;
 				case PcRemindEvent.GET_REMIND_STAT_BY_ID : 
-					proxy.getListRemindStatById(pcRemindEvt.agencyId, pcRemindEvt.year, pcRemindEvt.quarter);
+					proxy.getListRemindStatById(evt.agencyId, evt.year, evt.quarter);
 					break;		
 				case PcRemindEvent.GET_REMIND_STAT_BY_PARENTID_FOR_ADMIN : 
-					proxy.getListRemindStatByParentIdForAdmin(pcRemindEvt.agencyId, pcRemindEvt.year, pcRemindEvt.quarter);
+					proxy.getListRemindStatByParentIdForAdmin(evt.agencyId, evt.year, evt.quarter);
 					break;
 				case PcRemindEvent.GET_REMIND_NOCOMMIT_BY_PARENTID :
-					proxy.getListRemindNoCommitByParentId(pcRemindEvt.agencyId, pcRemindEvt.year, pcRemindEvt.quarter, pcRemindEvt.typeId);
+					proxy.getListRemindNoCommitByParentId(evt.agencyId, evt.year, evt.quarter, evt.typeId);
+					break;
+				case PcRemindEvent.GET_REMIND_BY_PARENTID :
+					proxy.getListRemindByParentId(evt.agencyId, evt.year, evt.quarter, evt.typeId, evt.statusId);
+					break;				
 				default :
 					break;
 			}

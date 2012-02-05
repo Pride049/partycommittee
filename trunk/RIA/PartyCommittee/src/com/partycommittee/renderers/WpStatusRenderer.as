@@ -18,26 +18,26 @@ package com.partycommittee.renderers
 			switch (statusId) {
 				case 0:
 					if (model.loginUser.enableReport != 1) {
-						htmlText = "未填写";
+						htmlText = "未填";
 					} else {
-						htmlText = '<u><font color="#0000ff"><a href="event:nowp">未填写</a></font></u>';
+						htmlText = '<u><font color="#0000ff"><a href="event:nowp">未填</a></font></u>';
 					}
 					break;
 				case 1:
 					if (model.loginUser.enableReport != 1) {
-						htmlText = "未上报";
+						htmlText = "未报";
 					} else {
-						htmlText = '<u><font color="#0000ff"><a href="event:nowp">未上报</a></font></u>';	
+						htmlText = '<u><font color="#0000ff"><a href="event:nowp">未报</a></font></u>';	
 					}
 					break;
 				case 2:
-					htmlText  = "已上报";
+					htmlText  = "已报";
 					break;				
 				case 3:
-					htmlText  = "已审批";
+					htmlText  = "已审";
 					break;
 				case 4:
-					htmlText  = "已评价";		
+					htmlText  = "已评";		
 					break;
 			}
 		}
