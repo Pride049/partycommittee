@@ -121,7 +121,7 @@
 						title = "支部党员大会";
 						break;
 					case PCConst.WORKPLAN_TYPE_MEETING_OTHER:
-						title = "其他会议";
+						title = "其他";
 						break;
 //					case PCConst.WORKPLAN_TYPE_MEETING_TEAM:
 //						break;

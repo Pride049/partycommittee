@@ -124,7 +124,7 @@
 //				tab.addChild(teamMeeting);
 				
 				var otherMeeting:MeetingListView = new MeetingListView();
-				otherMeeting.label = "其他会议";
+				otherMeeting.label = "其他";
 				otherMeeting.type = PCConst.WORKPLAN_TYPE_MEETING_OTHER;
 				otherMeeting.agency = agency;
 				otherMeeting.percentHeight = 100;

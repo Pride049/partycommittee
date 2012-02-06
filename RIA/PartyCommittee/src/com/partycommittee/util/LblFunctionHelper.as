@@ -117,7 +117,7 @@ package com.partycommittee.util
 				case PCConst.WORKPLAN_TYPE_MEETING_TEAM:
 					return "党小组会";
 				case PCConst.WORKPLAN_TYPE_MEETING_OTHER:
-					return "其他会议";
+					return "其他";
 			}
 			return "";
 		}

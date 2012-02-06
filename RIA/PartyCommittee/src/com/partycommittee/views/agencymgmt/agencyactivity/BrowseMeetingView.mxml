@@ -169,7 +169,7 @@
 							 doubleClickEnabled="true"
 							 doubleClick="onItemDoubleClick()">
 			<mx:columns>
-				<mx:AdvancedDataGridColumn headerText="序号" dataField="id"/>
+				<!--<mx:AdvancedDataGridColumn headerText="序号" dataField="id"/>-->
 				<mx:AdvancedDataGridColumn headerText="会议类型" dataField="typeId"
 										   labelFunction="typeLblFunc"/>
 				<mx:AdvancedDataGridColumn headerText="党组织" dataField="agencyId"
