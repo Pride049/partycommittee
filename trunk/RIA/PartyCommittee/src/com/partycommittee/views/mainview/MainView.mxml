@@ -224,7 +224,7 @@
 					//党课
 					if (dp.getItemAt(i).typeId == 5) {
 						if (dp.getItemAt(i).statusId == 0 || dp.getItemAt(i).statusId == 1) {
-							vo.dk1 = parseInt(vo.lq1) + parseInt(dp.getItemAt(i).c);
+							vo.dk1 = parseInt(vo.dk1) + parseInt(dp.getItemAt(i).c);
 						} 
 						
 						if (dp.getItemAt(i).statusId == 2 || dp.getItemAt(i).statusId == 3 || dp.getItemAt(i).statusId == 4) {

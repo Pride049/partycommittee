@@ -114,7 +114,7 @@
 					} else {
 						QuearterViewStack.selectedChild = browseForm;
 						if (workPlan.workPlanContent) {
-							b_personTxt.text =  workPlan.workPlanContent.memberName;
+							b_personTxt.text = "填报人:" +  workPlan.workPlanContent.memberName;
 							b_textArea.htmlText = workPlan.workPlanContent.content;
 							if (workPlan.statusId == 3) {
 								getWorkPlanComment(workPlan);
@@ -148,7 +148,7 @@
 					personTxt.text = workPlan.workPlanContent.memberName;
 					textArea.htmlText = workPlan.workPlanContent.content;
 				} else {
-					b_personTxt.text = workPlan.workPlanContent.memberName;
+					b_personTxt.text = "填报人:" + workPlan.workPlanContent.memberName;
 					b_textArea.htmlText = workPlan.workPlanContent.content;
 					
 					if (workPlan.statusId == 3) {

@@ -31,13 +31,25 @@ package com.partycommittee.renderers
 					}
 					break;
 				case 2:
-					htmlText  = "已报";
+					if (model.loginUser.enableReport != 1) {
+						htmlText = "已报";
+					} else {
+						htmlText = '<u><font color="#0000ff"><a href="event:nowp">已报</a></font></u>';	
+					}
 					break;				
 				case 3:
-					htmlText  = "已审";
+					if (model.loginUser.enableReport != 1) {
+						htmlText = "已审";
+					} else {
+						htmlText = '<u><font color="#0000ff"><a href="event:nowp">已审</a></font></u>';	
+					}
 					break;
 				case 4:
-					htmlText  = "已评";		
+					if (model.loginUser.enableReport != 1) {
+						htmlText = "已评";
+					} else {
+						htmlText = '<u><font color="#0000ff"><a href="event:nowp">已评</a></font></u>';	
+					}	
 					break;
 				case 8:
 					htmlText = "已解锁";	
