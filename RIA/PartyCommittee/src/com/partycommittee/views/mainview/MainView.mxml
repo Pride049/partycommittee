@@ -180,7 +180,8 @@
 						} 
 						
 						if (dp.getItemAt(i).statusId == 2) {
-							vo.y2 = dp.getItemAt(i).c;
+							vo.y2 = parseInt(vo.y2) + parseInt(dp.getItemAt(i).c);
+//							vo.y2 = dp.getItemAt(i).c;
 						} 
 
 					}
@@ -192,7 +193,8 @@
 						} 
 						
 						if (dp.getItemAt(i).statusId == 2) {
-							vo.q2 = dp.getItemAt(i).c;
+							vo.q2 = parseInt(vo.q2) + parseInt(dp.getItemAt(i).c);
+//							vo.q2 = dp.getItemAt(i).c;
 						} 
 
 					}		
@@ -204,7 +206,8 @@
 						} 
 						
 						if (dp.getItemAt(i).statusId == 2) {
-							vo.lq2 = dp.getItemAt(i).c;
+//							vo.lq2 = dp.getItemAt(i).c;
+							vo.lq2 = parseInt(vo.lq2) + parseInt(dp.getItemAt(i).c);
 						} 
 
 					}
@@ -216,7 +219,8 @@
 						} 
 						
 						if (dp.getItemAt(i).statusId == 2) {
-							vo.ly2 = dp.getItemAt(i).c;
+							vo.ly2 = parseInt(vo.ly2) + parseInt(dp.getItemAt(i).c);
+//							vo.ly2 = dp.getItemAt(i).c;
 						} 
 
 					}	
@@ -227,7 +231,7 @@
 							vo.dk1 = parseInt(vo.dk1) + parseInt(dp.getItemAt(i).c);
 						} 
 						
-						if (dp.getItemAt(i).statusId == 2 || dp.getItemAt(i).statusId == 3 || dp.getItemAt(i).statusId == 4) {
+						if (dp.getItemAt(i).statusId == 2) {
 							vo.dk2 = parseInt(vo.dk2) + parseInt(dp.getItemAt(i).c);
 						}
 					}
@@ -238,7 +242,7 @@
 							vo.dydh1 = parseInt(vo.dydh1) + parseInt(dp.getItemAt(i).c);
 						} 
 						
-						if (dp.getItemAt(i).statusId == 2 || dp.getItemAt(i).statusId == 3 || dp.getItemAt(i).statusId == 4) {
+						if (dp.getItemAt(i).statusId == 2) {
 							vo.dydh2 = parseInt(vo.dydh2) + parseInt(dp.getItemAt(i).c);
 						}
 					}	
@@ -249,7 +253,7 @@
 							vo.mzshh1 = parseInt(vo.mzshh1) + parseInt(dp.getItemAt(i).c);
 						} 
 						
-						if (dp.getItemAt(i).statusId == 2 || dp.getItemAt(i).statusId == 3 || dp.getItemAt(i).statusId == 4) {
+						if (dp.getItemAt(i).statusId == 2) {
 							vo.mzshh2 = parseInt(vo.mzshh2) + parseInt(dp.getItemAt(i).c);
 						}
 					}	
@@ -260,7 +264,7 @@
 							vo.zbwyh1 = parseInt(vo.zbwyh1) + parseInt(dp.getItemAt(i).c);
 						} 
 						
-						if (dp.getItemAt(i).statusId == 2 || dp.getItemAt(i).statusId == 3 || dp.getItemAt(i).statusId == 4) {
+						if (dp.getItemAt(i).statusId == 2) {
 							vo.zbwyh2 = parseInt(vo.zbwyh2) + parseInt(dp.getItemAt(i).c);
 						}
 					}					
@@ -522,15 +526,16 @@
 				var c_dk_1:AdvancedDataGridColumn = new AdvancedDataGridColumn();
 				c_dk_1.dataField = "dk1";
 				c_dk_1.headerText = "未报";
-//				c_dk_1.width = 50;
+				c_dk_1.width = 50;
 				c_dk_1.itemRenderer = new ClassFactory(com.partycommittee.renderers.RemindStatRenderer);
 				c_dk_ChildArray.push(c_dk_1);
 				
-//				var c_dk_2:AdvancedDataGridColumn = new AdvancedDataGridColumn();
-//				c_dk_2.dataField = "dk2";
-//				c_dk_2.headerText = "已报";
-//				c_dk_2.width = 50;
-//				c_dk_ChildArray.push(c_dk_2);
+				var c_dk_2:AdvancedDataGridColumn = new AdvancedDataGridColumn();
+				c_dk_2.dataField = "dk2";
+				c_dk_2.headerText = "未评";
+				c_dk_2.width = 50;
+				c_dk_2.itemRenderer = new ClassFactory(com.partycommittee.renderers.RemindStatRenderer);
+				c_dk_ChildArray.push(c_dk_2);
 			
 				
 				c_dk.children = c_dk_ChildArray;
@@ -545,15 +550,16 @@
 				var c_dydh_1:AdvancedDataGridColumn = new AdvancedDataGridColumn();
 				c_dydh_1.dataField = "dydh1";
 				c_dydh_1.headerText = "未报";
-//				c_dydh_1.width = 50;
+				c_dydh_1.width = 50;
 				c_dydh_1.itemRenderer = new ClassFactory(com.partycommittee.renderers.RemindStatRenderer);
 				c_dydh_ChildArray.push(c_dydh_1);
 				
-//				var c_dydh_2:AdvancedDataGridColumn = new AdvancedDataGridColumn();
-//				c_dydh_2.dataField = "dydh2";
-//				c_dydh_2.headerText = "已报";
-//				c_dydh_2.width = 50;
-//				c_dydh_ChildArray.push(c_dydh_2);
+				var c_dydh_2:AdvancedDataGridColumn = new AdvancedDataGridColumn();
+				c_dydh_2.dataField = "dydh2";
+				c_dydh_2.headerText = "未评";
+				c_dydh_2.width = 50;
+				c_dydh_2.itemRenderer = new ClassFactory(com.partycommittee.renderers.RemindStatRenderer);
+				c_dydh_ChildArray.push(c_dydh_2);
 			
 				
 				c_dydh.children = c_dydh_ChildArray;
@@ -569,10 +575,20 @@
 				var c_mzshh_1:AdvancedDataGridColumn = new AdvancedDataGridColumn();
 				c_mzshh_1.dataField = "mzshh1";
 				c_mzshh_1.headerText = "未报";
-				//				c_mzshh_1.width = 50;
+				c_mzshh_1.width = 50;
 				c_mzshh_1.itemRenderer = new ClassFactory(com.partycommittee.renderers.RemindStatRenderer);
-				c_mzshh_ChildArray.push(c_mzshh_1);				
+				c_mzshh_ChildArray.push(c_mzshh_1);	
 				
+				var c_mzshh_2:AdvancedDataGridColumn = new AdvancedDataGridColumn();
+				c_mzshh_2.dataField = "mzshh1";
+				c_mzshh_2.headerText = "未评";
+				c_mzshh_1.width = 50;
+				c_mzshh_2.itemRenderer = new ClassFactory(com.partycommittee.renderers.RemindStatRenderer);
+				c_mzshh_2.itemRenderer = new ClassFactory(com.partycommittee.renderers.RemindStatRenderer);
+				c_mzshh_ChildArray.push(c_mzshh_2);					
+				
+				
+				dateGridColumnArray.push(c_mzshh);	
 				//支部委员会，
 				var c_zbwyh:AdvancedDataGridColumnGroup = new AdvancedDataGridColumnGroup();
 				c_zbwyh.headerText = "支部委员会";
@@ -581,32 +597,25 @@
 				var c_zbwyh_1:AdvancedDataGridColumn = new AdvancedDataGridColumn();
 				c_zbwyh_1.dataField = "zbwyh1";
 				c_zbwyh_1.headerText = "未报";
-//				c_zbwyh_1.width = 50;
+				c_zbwyh_1.width = 50;
 				c_zbwyh_1.itemRenderer = new ClassFactory(com.partycommittee.renderers.RemindStatRenderer);
 				c_zbwyh_ChildArray.push(c_zbwyh_1);
 				
-//				var c_zbwyh_2:AdvancedDataGridColumn = new AdvancedDataGridColumn();
-//				c_zbwyh_2.dataField = "zbwyh2";
-//				c_zbwyh_2.headerText = "已报";
-//				c_zbwyh_2.width = 50;
-//				c_zbwyh_ChildArray.push(c_zbwyh_2);
+				var c_zbwyh_2:AdvancedDataGridColumn = new AdvancedDataGridColumn();
+				c_zbwyh_2.dataField = "zbwyh2";
+				c_zbwyh_2.headerText = "未评";
+				c_zbwyh_2.width = 50;
+				c_zbwyh_2.itemRenderer = new ClassFactory(com.partycommittee.renderers.RemindStatRenderer);
+				c_zbwyh_ChildArray.push(c_zbwyh_2);
 		
 				
 				c_zbwyh.children = c_zbwyh_ChildArray;
 				
 				dateGridColumnArray.push(c_zbwyh);					
-				
-
-				
-//				var c_mzshh_2:AdvancedDataGridColumn = new AdvancedDataGridColumn();
-//				c_mzshh_2.dataField = "mzshh2";
-//				c_mzshh_2.headerText = "已报";
-//				c_mzshh_2.width = 50;
-//				c_mzshh_ChildArray.push(c_mzshh_2);
 
 				c_mzshh.children = c_mzshh_ChildArray;
 				
-				dateGridColumnArray.push(c_mzshh);	
+				
 
 				remindDg.groupedColumns = 		dateGridColumnArray;			
 				
@@ -723,7 +732,17 @@
 							evt.quarter = 0;
 						} else {
 							evt.quarter = c_q;
-						}							
+						}	
+						
+						if (c_q == 1) {
+							if (tId == 3) {
+								evt.year = c_y - 1;
+								evt.quarter = 4;
+							} else if (tId == 4) {
+								evt.year = c_y - 1;
+							}
+						}						
+						
 						evt.statusId = sId;
 						evt.successCallback = onGetRemindCommitSuccess;
 						evt.failureCallback = onGetRemindCommitFailure;

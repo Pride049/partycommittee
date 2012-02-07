@@ -207,7 +207,7 @@
 				</mx:FormItem>
 				-->
 				<mx:FormItem label="改选时间:" width="100%">
-					<mx:DateField id="setupDateField" selectedDate="{agency.setupDatetime}"  formatString="YYYY-MM-DD"/>
+					<mx:DateField id="setupDateField" selectedDate="{agency.setupDatetime}" change="agency.setupDatetime = setupDateField.selectedDate "  formatString="YYYY-MM-DD"/>
 				</mx:FormItem>
 				<mx:FormItem label="党小组数:" width="100%">
 					<mx:TextInput id="teamNumberTxt" text="{agency.pcount.toString()}" change="agency.pcount = Number(teamNumberTxt.text)"  width="100%" restrict="0-9" maxChars="5"  />
