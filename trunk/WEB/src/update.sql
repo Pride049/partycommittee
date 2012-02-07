@@ -22,31 +22,6 @@ ADD  `end_day` SMALLINT( 5 ) UNSIGNED NOT NULL
 event_scheduler=ON
 
 
-
-
-DROP TABLE IF EXISTS `pc_remind`;
-CREATE TABLE IF NOT EXISTS `pc_remind` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
-  `agency_id` int(11) unsigned NOT NULL COMMENT '党支部ID',
-  `name` varchar(255) NOT NULL COMMENT '党支部名称',
-  `code_id` int(11) DEFAULT NULL COMMENT '党支部类型',
-  `parent_id` int(11) unsigned NOT NULL COMMENT '上级党支部ID',
-  `year` year(4) NOT NULL COMMENT '年度',
-  `quarter` tinyint(1) unsigned NOT NULL COMMENT '季度',
-  `status_year` tinyint(1) unsigned NOT NULL COMMENT '年度计划状态',
-  `status_quarter` tinyint(1) unsigned NOT NULL COMMENT '季度计划状态',
-  `status_quarter_end` tinyint(1) unsigned NOT NULL COMMENT '季度执行计划状态',
-  `status_dk` tinyint(1) unsigned NOT NULL COMMENT '党课状态',
-  `status_dydh` tinyint(1) unsigned NOT NULL COMMENT '支部党员大会状态',
-  `status_mzshh` tinyint(1) unsigned NOT NULL COMMENT '支部民族生活会状态',
-  `status_zbwyh` tinyint(1) unsigned NOT NULL COMMENT '支部委员会状态',
-  `status_qt` tinyint(1) unsigned NOT NULL COMMENT '其他会议状态',
-  `ext` varchar(255) DEFAULT 'beijing' COMMENT 'saas扩展字段',
-  PRIMARY KEY (`id`),
-  KEY `agency_id` (`agency_id`,`parent_id`,`year`,`quarter`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='党支部提醒统计表' AUTO_INCREMENT=1 ;
-
-
 delimiter //
 DROP procedure IF EXISTS stat_remind//
 CREATE PROCEDURE stat_remind()
@@ -599,11 +574,12 @@ delimiter //
 SET GLOBAL event_scheduler = OFF //
 DROP EVENT IF EXISTS `event_remind_lock`//
 CREATE EVENT IF NOT EXISTS `event_remind_lock`
-on schedule every 1 day starts date_add(date(curdate() + 1),interval 3 hour)
+on schedule EVERY 1 DAY
+STARTS '2012-02-06 23:14:00' 
 ON COMPLETION PRESERVE
 DO
    BEGIN
-       call remind_lock_process;
+       call check_remind_lock();
    END //
 delimiter ;
 
