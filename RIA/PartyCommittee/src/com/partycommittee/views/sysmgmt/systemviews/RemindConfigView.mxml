@@ -407,7 +407,7 @@
 		
 				<components:GroupBox skinClass="com.lnczx.skins.GroupBoxSkin" title="支委会" cornerRadius="5" fontSize="14">
 				<mx:HBox>
-					<mx:Label text="  填报时限:  每季度结束前"/>
+					<mx:Label text="  填报时限:  每月结束前"/>
 					<mx:Label text="提示时间:截止前"/>
 					<mx:TextInput id="zwh_value" width="100%" restrict="0-9" maxChars="5"  />
 					<mx:Label text="日"/>

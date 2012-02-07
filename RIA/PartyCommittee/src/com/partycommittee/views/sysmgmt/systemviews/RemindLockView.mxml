@@ -117,7 +117,7 @@
 					
 					if (model.focusAgencyVo.codeId == 10) {
 						var vo:FilterVo = new FilterVo();
-						vo.id = 'agnecyId';
+						vo.id = 'agencyId';
 						vo.data = model.focusAgencyVo.id.toString();
 						filters.push(vo);
 					} else {
