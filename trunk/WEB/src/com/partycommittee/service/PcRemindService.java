@@ -93,7 +93,7 @@ public class PcRemindService {
 		for(int i=5; i<=9; i++) {
 		// 党课
 			meeting = null;
-			meeting = PcRemindStatDaoImpl.getListMeetingByParentId(id, year, q, i);
+			meeting = PcRemindStatDaoImpl.getListWorkPlanById(id, year, q, i);
 	
 			for (PcRemindStat item : meeting) {
 				list.add(PcRemindStatVo.fromPcRemind(item));

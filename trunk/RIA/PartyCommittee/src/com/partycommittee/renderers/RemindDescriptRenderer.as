@@ -38,8 +38,12 @@ package com.partycommittee.renderers
 				htmlText = '本季度末'+ vo.startDay +'日至次季度初'+ vo.endDay +'日';
 			}	
 			
-			if (tId > 4) {
+			if (tId > 4 && tId < 8) {
 				htmlText = '每季度结束前';
+			}
+			
+			if (tId == 8) {
+				htmlText = '每月结束前';
 			}
 			
 		}
