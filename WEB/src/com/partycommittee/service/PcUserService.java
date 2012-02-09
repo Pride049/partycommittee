@@ -86,6 +86,26 @@ public class PcUserService {
 		return result;
 	}
 	
+	public PageResultVo<PcUserVo> getUserListByPageAndParentId(PageHelperVo page, Integer agencyId) {
+		PageResultVo<PcUserVo> result = new PageResultVo<PcUserVo>();
+		List<PcUserVo> list = new ArrayList<PcUserVo>();
+		PageResultVo<PcUser> pageResult = new PageResultVo<PcUser>();
+		pageResult = pcUserDaoImpl.getUserListByPageAndParentId(page, agencyId);
+		if (pageResult == null) {
+			return null;
+		}
+		result.setPageHelper(pageResult.getPageHelper());
+		if (pageResult.getList() != null && pageResult.getList().size() > 0) {
+			for (PcUser user : pageResult.getList()) {
+				PcUserVo userVo = PcUserVo.fromPCUser(user);
+				getAgencyList(userVo);
+				list.add(userVo);
+			}
+		}
+		result.setList(list);
+		return result;
+	}	
+	
 	public void getAgencyList(PcUserVo userVo) {
 		String privilege = userVo.getPrivilege();
 		if (privilege != null && !privilege.equals("")) {

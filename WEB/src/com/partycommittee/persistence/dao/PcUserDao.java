@@ -29,6 +29,14 @@ public interface PcUserDao {
 	public PageResultVo<PcUser> getUserListByPage(PageHelperVo page);
 	
 	/**
+	 * Get user list by page.
+	 * @param page
+	 * @return PageResultVo<PcUser>
+	 */
+	public PageResultVo<PcUser> getUserListByPageAndParentId(PageHelperVo page, Integer angencyId);
+	
+	
+	/**
 	 * Get user list by conditions and page info.
 	 * @param user
 	 * @param pageHelper

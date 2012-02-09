@@ -37,11 +37,18 @@ package com.partycommittee.commands
 					break;
 				case CRUDEventType.READ:
 //					pcUserProxy.getPcUserList();
-					if (pcUserEvent.agency) {
-						pcUserProxy.getPcUserListByPage(pcUserEvent.page, pcUserEvent.agency.id);
-					} else {
+					if (pcUserEvent.agency.codeId == 6) {
 						pcUserProxy.getPcUserListByPage(pcUserEvent.page);
+					} else if (pcUserEvent.agency.codeId == 7) {
+						pcUserProxy.getPcUserListByPageAndParentId(pcUserEvent.page, pcUserEvent.agency.id);
+					} else {
+						pcUserProxy.getPcUserListByPage(pcUserEvent.page, pcUserEvent.agency.id);
 					}
+//					if (pcUserEvent.agency) {
+//						pcUserProxy.getPcUserListByPage(pcUserEvent.page, pcUserEvent.agency.id);
+//					} else {
+//						pcUserProxy.getPcUserListByPage(pcUserEvent.page);
+//					}
 					break;
 				case PcUserEvent.LOGIN:
 					pcUserProxy.login(pcUserEvent.user.username, pcUserEvent.user.password);

@@ -37,6 +37,10 @@ package com.partycommittee.proxy
 			service.getPcUserListByPage(page, agencyId);
 		}
 		
+		public function getPcUserListByPageAndParentId(page:PageHelperVo, agencyId:Number = 0):void {
+			service.getPcUserListByPageAndParentId(page, agencyId);
+		}
+		
 		public function login(username:String, password:String):void {
 			service.login(username, password);
 		}

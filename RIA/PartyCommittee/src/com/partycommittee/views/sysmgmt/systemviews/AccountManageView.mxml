@@ -64,9 +64,9 @@
 				if (event.property == "focusAgencyVo") {
 					if (agency != model.focusAgencyVo) {
 						agency = model.focusAgencyVo;
-						if (useFilterCk.selected) {
+//						if (useFilterCk.selected) {
 							refreshData();
-						}
+//						}
 					}
 				}
 			}
@@ -82,9 +82,9 @@
 			public function refreshData(evt:* = null):void {
 				var userEvt:PcUserEvent = new PcUserEvent();
 				userEvt.page = page;
-				if (useFilterCk.selected && agency) {
+//				if (useFilterCk.selected && agency) {
 					userEvt.agency = agency;
-				}
+//				}
 				userEvt.successCallback = onGetUsersSuccess;
 				userEvt.failureCallback = onGetUsersFailure;
 				userEvt.dispatch();
@@ -186,7 +186,7 @@
 	
 	<mx:VBox width="100%" top="mainRow:0" bottom="mainRow:0">
 		<mx:ControlBar width="100%" horizontalAlign="right">
-			<mx:CheckBox id="useFilterCk" label="根据选择组织过滤" change="refreshData()"/>
+			<!--<mx:CheckBox id="useFilterCk" label="根据选择组织过滤" change="refreshData()"/>-->
 			<s:Spacer width="100%"/>
 			<button:PcButton label="新增" click="addAccount()"/>
 			<button:PcButton label="修改" click="updateAccount()" enabled="{datagrid.selectedItem}"/>
