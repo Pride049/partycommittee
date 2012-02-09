@@ -64,6 +64,11 @@ public class PcUserRemoteService {
 	}
 	
 	@RemotingInclude
+	public PageResultVo<PcUserVo> getPcUserListByPageAndParentId(PageHelperVo page, Integer agencyId) {
+		return pCUserService.getUserListByPageAndParentId(page, agencyId);
+	}
+	
+	@RemotingInclude
 	public void createPcUser(PcUserVo userVo) {
 		pCUserService.createUser(userVo);
 	}

@@ -129,7 +129,9 @@
 					return null;	
 				}
 				updateUser.id = userVo.id;
-				updateUser.password = userVo.password;
+				if (updatePwCk.selected == false) {
+					updateUser.password = userVo.password;
+				}
 				return updateUser;
 			}
 			
