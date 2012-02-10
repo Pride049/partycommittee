@@ -116,13 +116,13 @@ begin
 	SET y = year(now());
 
 	INSERT INTO pc_remind_stat (agency_id ,name ,code_id ,parent_id ,year ,quarter ,type_id ,status ,c)
-	SELECT T1.parent_id as agency_id, T2.name, T1.code_id, T3.parent_id, T1.year, T1.quarter, T1.type_id, T1.status, T1.c FROM (SELECT code_id, parent_id, year ,quarter, type_id, status, count(*) as c FROM pc_remind WHERE year = y GROUP BY code_id, parent_id, year ,quarter, type_id, status) as T1
+	SELECT T1.parent_id as agency_id, T2.name, T2.code_id, T3.parent_id, T1.year, T1.quarter, T1.type_id, T1.status, T1.c FROM (SELECT code_id, parent_id, year ,quarter, type_id, status, count(*) as c FROM pc_remind WHERE year = y GROUP BY code_id, parent_id, year ,quarter, type_id, status) as T1
 	LEFT JOIN pc_agency as T2 ON T1.parent_id = T2.id
 	LEFT JOIN pc_agency_relation as T3 ON T1.parent_id = T3.agency_id
 	ON DUPLICATE KEY UPDATE c = T1.c;
 	
 	INSERT INTO pc_remind_stat (agency_id ,name ,code_id ,parent_id ,year ,quarter ,type_id ,status ,c)
-	SELECT T1.parent_id as agency_id, T2.name, T1.code_id, T3.parent_id, T1.year, T1.quarter, T1.type_id, T1.status, T1.c FROM (SELECT code_id, parent_id, year ,quarter, type_id, status, count(*) as c FROM pc_remind WHERE year = y -1 GROUP BY code_id, parent_id, year ,quarter, type_id, status) as T1
+	SELECT T1.parent_id as agency_id, T2.name, T2.code_id, T3.parent_id, T1.year, T1.quarter, T1.type_id, T1.status, T1.c FROM (SELECT code_id, parent_id, year ,quarter, type_id, status, count(*) as c FROM pc_remind WHERE year = y -1 GROUP BY code_id, parent_id, year ,quarter, type_id, status) as T1
 	LEFT JOIN pc_agency as T2 ON T1.parent_id = T2.id
 	LEFT JOIN pc_agency_relation as T3 ON T1.parent_id = T3.agency_id
 	ON DUPLICATE KEY UPDATE c = T1.c;	
@@ -514,6 +514,35 @@ begin
 end;
 //
 delimiter ;
+
+
+delimiter //
+DROP procedure IF EXISTS stat_agency_stat//
+CREATE PROCEDURE stat_agency_stat()
+begin
+
+	INSERT INTO pc_agency_stat (agency_id, name, code_id, parent_id, year, quarter, type_id, reported, delay, attend, asence, p_count, zb_num)
+	SELECT T1.parent_id as agency_id, T2.name, T2.code_id, T3.parent_id, T1.year, T1.quarter, T1.type_id, T1.reported, T1.delay, T1.attend, T1.asence, T1.p_count, T1.zb_num FROM 
+	(SELECT parent_id, YEAR, quarter, type_id, SUM(  reported ) as reported , SUM(  delay )  as delay , SUM(  attend ) as attend , SUM(  asence ) as asence , SUM(  p_count ) as p_count , 
+	SUM(  zb_num )  as zb_num FROM  pc_agency_stat GROUP BY parent_id, YEAR, quarter, type_id) as T1
+	LEFT JOIN pc_agency as T2 ON T1.parent_id = T2.id
+	LEFT JOIN pc_agency_relation as T3 ON T1.parent_id = T3.agency_id
+	ON DUPLICATE KEY UPDATE reported = T1.reported, delay= T1.delay, attend = T1.attend, asence = T1.asence, p_count = T1.p_count, zb_num = T1.zb_num;
+	
+	INSERT INTO pc_agency_stat (agency_id, name, code_id, parent_id, year, quarter, type_id, reported, delay, attend, asence, p_count, zb_num)
+	SELECT T1.parent_id as agency_id, T2.name, T2.code_id, T3.parent_id, T1.year, T1.quarter, T1.type_id, T1.reported, T1.delay, T1.attend, T1.asence, T1.p_count, T1.zb_num FROM 
+	(SELECT parent_id, YEAR, quarter, type_id, SUM(  reported ) as reported , SUM(  delay )  as delay , SUM(  attend ) as attend , SUM(  asence ) as asence , SUM(  p_count ) as p_count , 
+	SUM(  zb_num )  as zb_num FROM  pc_agency_stat WHERE parent_id <> 1 AND code_id = 7 GROUP BY parent_id, YEAR, quarter, type_id) as T1
+	LEFT JOIN pc_agency as T2 ON T1.parent_id = T2.id
+	LEFT JOIN pc_agency_relation as T3 ON T1.parent_id = T3.agency_id
+	ON DUPLICATE KEY UPDATE reported = T1.reported, delay= T1.delay, attend = T1.attend, asence = T1.asence, p_count = T1.p_count, zb_num = T1.zb_num;
+	
+end;
+//
+delimiter ;
+
+
+
 delimiter //
 DROP PROCEDURE IF EXISTS `stats_process`//
 CREATE PROCEDURE `stats_process`()
