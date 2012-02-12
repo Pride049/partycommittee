@@ -140,7 +140,7 @@ public class PcUserDaoImpl extends JpaDaoBase implements PcUserDao {
 			Integer agencyId) {
 		try {
 			PageResultVo<PcUser> pageResult = new PageResultVo<PcUser>();
-			String sql = "from PcUser where  privilege in (select id FROM PcAgencyRelation WHERE parent_id = '" + agencyId + "') order by agencyCodeId asc";
+			String sql = "from PcUser where  privilege in (select id FROM PcAgencyRelation WHERE parent_id = '" + agencyId + "') order by id asc";
 			String totalSql = "select count (*) from PcUser where privilege in (select id FROM PcAgencyRelation WHERE parent_id = '" + agencyId + "')";
 			List<Long> totalList = super.find(totalSql);
 			if (totalList != null) {

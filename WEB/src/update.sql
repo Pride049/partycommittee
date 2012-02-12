@@ -70,3 +70,11 @@ left join pc_sex_code` as T3 ON T1.sex_id = T3.id
 left join pc_nation_code as T4 on T1.nation_id = T4.id
  
 
+SELECT * FROM `pc_workplan` WHERE agency_id = 18 and type_id = 1
+
+SELECT * FROM
+(SELECT agency_id, YEAR, quarter, type_id, COUNT( * )  as c
+FROM  `pc_workplan` 
+WHERE type_id <=4
+GROUP BY agency_id, YEAR, quarter, type_id) as T
+where c > 1

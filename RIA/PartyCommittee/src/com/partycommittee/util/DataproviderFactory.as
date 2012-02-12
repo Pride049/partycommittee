@@ -72,6 +72,20 @@ package com.partycommittee.util
 									 {typeId:9, label:'其他'}
 									);
 			return typeCollection;
+		}	
+		
+		public static function createStatDateRange():Array {
+			var typeCollection:Array = new Array(
+				{data:0, label:'全部'},
+				{data:1, label:'第一季度'},
+				{data:2, label:'第二季度'},
+				{data:3, label:'第三季度'},
+				{data:4, label:'第四季度'},
+				{data:12, label:'上半年'},
+				{data:34, label:'下半年'}
+			);
+			return typeCollection;
 		}		
+		
 	}
 }

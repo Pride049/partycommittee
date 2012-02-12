@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation:NavigationView  xmlns:fx="http://ns.adobe.com/mxml/2009" 
+							xmlns:s="library://ns.adobe.com/flex/spark" 
+							xmlns:mx="library://ns.adobe.com/flex/mx"
+							styleName="mainCanvas"
+							width="100%" height="100%" 
+							xmlns:button="com.partycommittee.control.button.*" 
+							xmlns:datagrid="com.partycommittee.control.datagrid.*"
+							xmlns:navigation="com.partycommittee.manager.navigation.*" 
+							xmlns:pagebar="com.partycommittee.control.pagebar.*"
+							creationComplete="onCreationCompleted()">
+	
+	<fx:Script>
+		<![CDATA[
+			import com.partycommittee.events.PcParentStatEvent;
+			import com.partycommittee.manager.popup.PopupMgr;
+			import com.partycommittee.model.ModelLocator;
+			import com.partycommittee.util.CRUDEventType;
+			import com.partycommittee.util.DataproviderFactory;
+			import com.partycommittee.util.LblFunctionHelper;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.controls.DataGrid;
+			import mx.core.FlexGlobals;
+			import mx.events.CloseEvent;
+			import mx.events.PropertyChangeEvent;
+			import mx.managers.PopUpManager;
+			
+			[Bindable]
+			private var model:ModelLocator = ModelLocator.getInstance();
+			
+			[Bindable]
+			private var dp:ArrayCollection = new ArrayCollection();
+			
+
+
+			private function onCreationCompleted():void {
+				//				onNavigateIn();
+			}
+			
+			override protected function onNavigateIn():void {
+				if (yearCmb) {
+					yearCmb.dataProvider = DataproviderFactory.getRangeYearForReport();
+					yearCmb.selectedItem = model.reportYear = new Date().getFullYear();
+					//yearCmb.addEventListener(Event.CHANGE, onYearCmbChanged);
+				}
+				
+				if (quarterCmb) {
+					var q:Array =  DataproviderFactory.createStatDateRange();
+					quarterCmb.dataProvider = q; 
+					quarterCmb.selectedIndex = 0;
+				}					
+			}
+			
+			override protected function onNavigateOut():void {
+
+			}
+			
+			private function onModelChanged(event:PropertyChangeEvent):void {
+				if (event.property == "focusAgencyVo" ) {
+
+				} 
+			}		
+
+			
+			private function refreshData():void {
+			}
+			
+			private function onRefresh(data:Object, event:PcParentStatEvent):void {
+	
+			}
+
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<mx:VBox width="100%" height="100%"
+			 horizontalScrollPolicy="off" verticalScrollPolicy="off">
+		<mx:HBox >		
+			<mx:Label text="选择年份:"/>
+			<mx:ComboBox id="yearCmb"/>
+			<mx:Label text="时间范围:"/>
+			<mx:ComboBox id="quarterCmb" />		
+			<mx:Button label="重新统计" click="refreshData()"/>
+		</mx:HBox>		
+
+		<mx:AdvancedDataGrid id="myADG" designViewDataType="flat"   
+							 width="100%" height="100%" color="0x323232"  
+							 minWidth="640" minHeight="480"   
+							 dataProvider="{dp}" sortableColumns="false" sortExpertMode="true">  
+			<mx:groupedColumns>   
+				<mx:AdvancedDataGridColumn dataField="qczhs" headerText="序号" width="30" headerWordWrap="true"/>
+				<mx:AdvancedDataGridColumn dataField="qczhs" headerText="单位" width="100" headerWordWrap="true"/>
+				<mx:AdvancedDataGridColumn dataField="qczhs" headerText="党支部数量" width="30" headerWordWrap="true"/>
+				<mx:AdvancedDataGridColumn dataField="qczhs" headerText="党小组数量" width="30" headerWordWrap="true"/>
+				<mx:AdvancedDataGridColumn dataField="qczhs" headerText="党员总数" width="30" headerWordWrap="true"/>
+				<mx:AdvancedDataGridColumn dataField="qczhs" headerText="支部书记总数" width="30" headerWordWrap="true"/>
+
+				<mx:AdvancedDataGridColumnGroup headerText="支委会" headerWordWrap="true">  
+					<mx:AdvancedDataGridColumn dataField="qyqc" headerText="出席率" width="50" headerWordWrap="true"/>  
+					<mx:AdvancedDataGridColumn dataField="qybyzj" headerText="规范执行率" width="50" headerWordWrap="true"/>  
+					<mx:AdvancedDataGridColumn dataField="qybyjs" headerText="开会总次数" width="50" headerWordWrap="true"/>  
+					<mx:AdvancedDataGridColumn dataField="qyqmhs" headerText="上级评价率" width="50" headerWordWrap="true"/>  
+					<mx:AdvancedDataGridColumn dataField="qyqmhs" headerText="落实率百分之百的支部数" width="50" headerWordWrap="true"/>
+				</mx:AdvancedDataGridColumnGroup>  
+				<mx:AdvancedDataGridColumnGroup headerText="党员大会" headerWordWrap="true">  
+					<mx:AdvancedDataGridColumn dataField="qyqc" headerText="出席率" width="50" headerWordWrap="true"/>  
+					<mx:AdvancedDataGridColumn dataField="qybyjs" headerText="开会总次数" width="50" headerWordWrap="true"/>  
+				</mx:AdvancedDataGridColumnGroup>  
+				<mx:AdvancedDataGridColumnGroup headerText="党课" headerWordWrap="true">  
+					<mx:AdvancedDataGridColumn dataField="qyqc" headerText="出席率" width="50" headerWordWrap="true"/>  
+					<mx:AdvancedDataGridColumn dataField="qybyjs" headerText="开会总次数" width="50" headerWordWrap="true"/>  
+				</mx:AdvancedDataGridColumnGroup>
+				<mx:AdvancedDataGridColumnGroup headerText="其他组织活动" headerWordWrap="true">  
+					<mx:AdvancedDataGridColumn dataField="qyqc" headerText="出席率" width="55" headerWordWrap="true"/>  
+					<mx:AdvancedDataGridColumn dataField="qybyjs" headerText="开会总次数" width="55" headerWordWrap="true"/>  
+				</mx:AdvancedDataGridColumnGroup>  				
+				<mx:AdvancedDataGridColumnGroup headerText="年度计划" headerWordWrap="true">  
+					<mx:AdvancedDataGridColumn dataField="qybyzj" headerText="规范执行率" width="50" headerWordWrap="true"/>
+					<mx:AdvancedDataGridColumn dataField="qyqmhs" headerText="上级评价率" width="50" headerWordWrap="true"/>  
+					<mx:AdvancedDataGridColumn dataField="qyqmhs" headerText="落实率百分之百的支部数" width="50" headerWordWrap="true"/>
+				</mx:AdvancedDataGridColumnGroup>
+				<mx:AdvancedDataGridColumnGroup headerText="季度安排" headerWordWrap="true">  
+					<mx:AdvancedDataGridColumn dataField="qybyzj" headerText="规范执行率" width="50" headerWordWrap="true"/>
+					<mx:AdvancedDataGridColumn dataField="qyqmhs" headerText="上级评价率" width="50" headerWordWrap="true"/>  
+					<mx:AdvancedDataGridColumn dataField="qyqmhs" headerText="落实率百分之百的支部数" width="50" headerWordWrap="true"/>
+				</mx:AdvancedDataGridColumnGroup>
+			</mx:groupedColumns>  
+		</mx:AdvancedDataGrid>  		
+		
+		
+	</mx:VBox>
+	
+</navigation:NavigationView>
