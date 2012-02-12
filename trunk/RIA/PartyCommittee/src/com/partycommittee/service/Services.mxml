@@ -89,7 +89,10 @@
 					 channelSet="{channelSet}"/>	
 	<mx:RemoteObject id="pcRemindLock"
 					 destination="PcRemindLockRo"
-					 channelSet="{channelSet}"/>		
+					 channelSet="{channelSet}"/>	
+	<mx:RemoteObject id="pcParentStat"
+					 destination="PcParentStatRo"
+					 channelSet="{channelSet}"/>	
 	
     <!-- HTTPService example
 	<mx:HTTPService

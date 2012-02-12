@@ -234,6 +234,7 @@
 			}
 			
 			private function onSaveAndCommit():void {
+				
 				if (workPlan) {
 					doUpdate(true);
 				} else {
@@ -256,6 +257,14 @@
 				workPlanEvt.workPlan = updateWorkPlan;
 				workPlanEvt.successCallback = onWorkPlanUpdateSuccess;
 				workPlanEvt.failureCallback = onWorkPlanUpdateFailure;
+				
+				var workPlanEvt:PcWorkPlanEvent = new PcWorkPlanEvent(CRUDEventType.UPDATE);
+				var updateWorkPlan:PcWorkPlanVo = getUpdateWorkPlan();
+				updateWorkPlan.statusId = isCommit ? 2 : 1;
+				workPlanEvt.workPlan = updateWorkPlan;
+				workPlanEvt.successCallback = onWorkPlanUpdateSuccess;
+				workPlanEvt.failureCallback = onWorkPlanUpdateFailure;				
+				
 				this.enabled = false;
 				workPlanEvt.dispatch();
 			}
