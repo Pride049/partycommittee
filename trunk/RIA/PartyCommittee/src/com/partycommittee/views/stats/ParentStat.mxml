@@ -20,6 +20,8 @@
 			import com.partycommittee.util.LblFunctionHelper;
 			
 			import mx.collections.ArrayCollection;
+			import mx.collections.Sort;
+			import mx.collections.SortField;
 			import mx.controls.Alert;
 			import mx.controls.DataGrid;
 			import mx.core.FlexGlobals;
@@ -31,41 +33,164 @@
 			private var model:ModelLocator = ModelLocator.getInstance();
 			
 			[Bindable]
-			private var dp:ArrayCollection = new ArrayCollection();
-			
-
+			private var datas:ArrayCollection = new ArrayCollection();
 
 			private function onCreationCompleted():void {
-				//				onNavigateIn();
-			}
-			
-			override protected function onNavigateIn():void {
 				if (yearCmb) {
 					yearCmb.dataProvider = DataproviderFactory.getRangeYearForReport();
 					yearCmb.selectedItem = model.reportYear = new Date().getFullYear();
-					//yearCmb.addEventListener(Event.CHANGE, onYearCmbChanged);
 				}
 				
 				if (quarterCmb) {
-					var q:Array =  DataproviderFactory.createStatDateRange();
-					quarterCmb.dataProvider = q; 
+					quarterCmb.dataProvider = DataproviderFactory.createQuarterDp();
 					quarterCmb.selectedIndex = 0;
-				}					
+				}				
+//				onNavigateIn();
+			}
+			
+			override protected function onNavigateIn():void {
+				model.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, onModelChanged);
+				updateData();
 			}
 			
 			override protected function onNavigateOut():void {
-
+				model.removeEventListener(PropertyChangeEvent.PROPERTY_CHANGE, onModelChanged);
 			}
 			
 			private function onModelChanged(event:PropertyChangeEvent):void {
 				if (event.property == "focusAgencyVo" ) {
-
+					updateData();
 				} 
 			}		
 
 			
-			private function refreshData():void {
+			public function updateData():void {
+				
+				if (model.focusAgencyVo && model.focusAgencyVo.codeId == 10) {
+					// todo;
+				} else {
+					if (model.focusAgencyVo) {
+						var evt:PcParentStatEvent = new PcParentStatEvent(PcParentStatEvent.GET_LIST_STAT_BY_PARENT);
+						evt.agencyId = model.focusAgencyVo.id;
+						evt.year = yearCmb.selectedItem as Number;
+						evt.quarter = 1;
+						evt.successCallback = onGetParentStatSuccess;
+						evt.failureCallback = onGetParentStatFailure;
+						this.enabled = false;
+						evt.dispatch();
+					}
+				}		
 			}
+			
+			private function onGetParentStatSuccess(data:Object, evt:PcParentStatEvent):void {
+				if (!data) return;
+				var dp:ArrayCollection = data as ArrayCollection;
+				//var datas:ArrayCollection = new ArrayCollection();
+				datas = new ArrayCollection();
+				var numericDataSort:Sort = new Sort(); 
+				var dataSortField:SortField = new SortField(); 
+				dataSortField.name = "agencyId"; 
+				dataSortField.numeric = true;
+				numericDataSort.fields = [dataSortField];
+				dp.sort = numericDataSort;
+				dp.refresh();
+				
+				var tmpId:int = 0;
+				var vo:Object = new Object();
+				
+				var num:int = 1;
+				for(var i:int = 0; i<dp.length; i++) {
+					if (tmpId == 0 ) {
+						vo = initObjectForParentStat();
+						
+						tmpId = dp.getItemAt(i).agencyId;
+					} else	if  (tmpId != dp.getItemAt(i).agencyId) {
+						num = num + 1;
+						datas.addItem(vo);
+						vo = initObjectForParentStat();
+						tmpId = dp.getItemAt(i).agencyId;
+					}
+					vo.num = num;
+					vo.name = dp.getItemAt(i).name;
+					vo.agencyId = dp.getItemAt(i).agencyId;
+					vo.zbNum = dp.getItemAt(i).zbNum;
+					vo.pCount =  dp.getItemAt(i).pCount;
+					vo.agencyNum = dp.getItemAt(i).agencyNum;
+					vo.zbsjNum = dp.getItemAt(i).zbsjNum;
+					if (dp.getItemAt(i).typeId == 1) {
+						vo.y_reported_rate = dp.getItemAt(i).reportedRate;
+						vo.y_eva_rate = dp.getItemAt(i).evaRate;
+						vo.y_agency_goodjob = dp.getItemAt(i).agencyGoodjob;
+					}	
+					
+					if (dp.getItemAt(i).typeId == 2) {
+						vo.q_reported_rate = dp.getItemAt(i).reportedRate;
+						vo.q_eva_rate = dp.getItemAt(i).evaRate;
+						vo.q_agency_goodjob = dp.getItemAt(i).agencyGoodjob;
+					}	
+					
+					if (dp.getItemAt(i).typeId == 5) {
+						vo.dk_attend_rate = dp.getItemAt(i).attendRate;
+						vo.dk_total = dp.getItemAt(i).total;
+					}	
+					
+					if (dp.getItemAt(i).typeId == 6) {
+						vo.dydh_attend_rate = dp.getItemAt(i).attendRate;
+						vo.dydh_total = dp.getItemAt(i).total;
+					}
+					
+					if (dp.getItemAt(i).typeId == 8) {
+						vo.zwh_attend_rate = dp.getItemAt(i).attendRate;
+						vo.zwh_reported_rate = dp.getItemAt(i).reportedRate;
+						vo.zwh_total = dp.getItemAt(i).total;
+						vo.zwh_eva_rate = dp.getItemAt(i).evaRate;
+						vo.zwh_agency_goodjob = dp.getItemAt(i).agencyGoodjob;
+					}
+					
+					if (dp.getItemAt(i).typeId == 9) {
+						vo.qt_attend_rate = dp.getItemAt(i).attendRate;
+						vo.qt_total = dp.getItemAt(i).total;
+					}
+				}
+				
+				parentstatsDG.dataProvider = datas;
+				
+			}
+			
+			
+			public function initObjectForParentStat():Object {
+				var vo:Object = new Object();
+				vo.num = 0;
+				vo.name = "";
+				vo.zbNum = 0;
+				vo.pCount = 0;
+				vo.agencyNum = 0;
+				vo.zbsjNum = 0;
+				vo.zwh_attend_rate = 0;
+				vo.zwh_reported_rate = 0;
+				vo.zwh_total = 0;
+				vo.zwh_eva_rate = 0;
+				vo.zwh_agency_goodjob = 0;
+				vo.dydh_attend_rate = 0;
+				vo.dydh_total = 0;
+				vo.dk_attend_rate = 0;
+				vo.dk_total = 0;
+				vo.qt_attemd_rate = 0;
+				vo.qt_total = 0;
+				
+				vo.y_reported_rate = 0;
+				vo.y_eva_rate = 0;
+				vo.y_agency_goodjob = 0;
+				vo.q_reported_rate = 0;
+				vo.q_eva_rate = 0;
+				vo.q_agency_goodjob = 0;
+				
+				return vo;
+			}			
+			
+			private function onGetParentStatFailure(info:Object, evt:PcParentStatEvent):void {
+				this.enabled = true;
+			}			
 			
 			private function onRefresh(data:Object, event:PcParentStatEvent):void {
 	
@@ -85,49 +210,49 @@
 			<mx:ComboBox id="yearCmb"/>
 			<mx:Label text="时间范围:"/>
 			<mx:ComboBox id="quarterCmb" />		
-			<mx:Button label="重新统计" click="refreshData()"/>
+			<mx:Button label="重新统计" click="updateData()"/>
 		</mx:HBox>		
 
-		<mx:AdvancedDataGrid id="myADG" designViewDataType="flat"   
+		<mx:AdvancedDataGrid id="parentstatsDG" designViewDataType="flat"   
 							 width="100%" height="100%" color="0x323232"  
 							 minWidth="640" minHeight="480"   
-							 dataProvider="{dp}" sortableColumns="false" sortExpertMode="true">  
+							 sortableColumns="false" sortExpertMode="true">  
 			<mx:groupedColumns>   
-				<mx:AdvancedDataGridColumn dataField="qczhs" headerText="序号" width="30" headerWordWrap="true"/>
-				<mx:AdvancedDataGridColumn dataField="qczhs" headerText="单位" width="100" headerWordWrap="true"/>
-				<mx:AdvancedDataGridColumn dataField="qczhs" headerText="党支部数量" width="30" headerWordWrap="true"/>
-				<mx:AdvancedDataGridColumn dataField="qczhs" headerText="党小组数量" width="30" headerWordWrap="true"/>
-				<mx:AdvancedDataGridColumn dataField="qczhs" headerText="党员总数" width="30" headerWordWrap="true"/>
-				<mx:AdvancedDataGridColumn dataField="qczhs" headerText="支部书记总数" width="30" headerWordWrap="true"/>
+				<mx:AdvancedDataGridColumn dataField="num" headerText="序号" width="30" headerWordWrap="true" textAlign="center"/>
+				<mx:AdvancedDataGridColumn dataField="name" headerText="单位" width="100" headerWordWrap="true" textAlign="left"/>
+				<mx:AdvancedDataGridColumn dataField="zbNum" headerText="党支部数量" width="30" headerWordWrap="true" textAlign="right"/>
+				<mx:AdvancedDataGridColumn dataField="pCount" headerText="党小组数量" width="30" headerWordWrap="true" textAlign="right"/>
+				<mx:AdvancedDataGridColumn dataField="agencyNum" headerText="党员总数" width="30" headerWordWrap="true" textAlign="right"/>
+				<mx:AdvancedDataGridColumn dataField="zbsjNum" headerText="支部书记总数" width="30" headerWordWrap="true" textAlign="right"/>
 
 				<mx:AdvancedDataGridColumnGroup headerText="支委会" headerWordWrap="true">  
-					<mx:AdvancedDataGridColumn dataField="qyqc" headerText="出席率" width="50" headerWordWrap="true"/>  
-					<mx:AdvancedDataGridColumn dataField="qybyzj" headerText="规范执行率" width="50" headerWordWrap="true"/>  
-					<mx:AdvancedDataGridColumn dataField="qybyjs" headerText="开会总次数" width="50" headerWordWrap="true"/>  
-					<mx:AdvancedDataGridColumn dataField="qyqmhs" headerText="上级评价率" width="50" headerWordWrap="true"/>  
-					<mx:AdvancedDataGridColumn dataField="qyqmhs" headerText="落实率百分之百的支部数" width="50" headerWordWrap="true"/>
+					<mx:AdvancedDataGridColumn dataField="zwh_attend_rate" headerText="出席率" width="50" headerWordWrap="true" textAlign="right"/>  
+					<mx:AdvancedDataGridColumn dataField="zwh_reported_rate" headerText="规范执行率" width="50" headerWordWrap="true" textAlign="right"/>  
+					<mx:AdvancedDataGridColumn dataField="zwh_total" headerText="开会总次数" width="50" headerWordWrap="true" textAlign="right"/>  
+					<mx:AdvancedDataGridColumn dataField="zwh_eva_rate" headerText="上级评价率" width="50" headerWordWrap="true" textAlign="right"/>  
+					<mx:AdvancedDataGridColumn dataField="zwh_agency_goodjob" headerText="落实率百分之百的支部数" width="50" headerWordWrap="true" textAlign="right"/>
 				</mx:AdvancedDataGridColumnGroup>  
 				<mx:AdvancedDataGridColumnGroup headerText="党员大会" headerWordWrap="true">  
-					<mx:AdvancedDataGridColumn dataField="qyqc" headerText="出席率" width="50" headerWordWrap="true"/>  
-					<mx:AdvancedDataGridColumn dataField="qybyjs" headerText="开会总次数" width="50" headerWordWrap="true"/>  
+					<mx:AdvancedDataGridColumn dataField="dydh_attend_rate" headerText="出席率" width="50" headerWordWrap="true" textAlign="right"/>  
+					<mx:AdvancedDataGridColumn dataField="dydh_total" headerText="开会总次数" width="50" headerWordWrap="true" textAlign="right"/>  
 				</mx:AdvancedDataGridColumnGroup>  
 				<mx:AdvancedDataGridColumnGroup headerText="党课" headerWordWrap="true">  
-					<mx:AdvancedDataGridColumn dataField="qyqc" headerText="出席率" width="50" headerWordWrap="true"/>  
-					<mx:AdvancedDataGridColumn dataField="qybyjs" headerText="开会总次数" width="50" headerWordWrap="true"/>  
+					<mx:AdvancedDataGridColumn dataField="dk_attend_rate" headerText="出席率" width="50" headerWordWrap="true" textAlign="right"/>  
+					<mx:AdvancedDataGridColumn dataField="dk_total" headerText="开会总次数" width="50" headerWordWrap="true" textAlign="right"/>  
 				</mx:AdvancedDataGridColumnGroup>
 				<mx:AdvancedDataGridColumnGroup headerText="其他组织活动" headerWordWrap="true">  
-					<mx:AdvancedDataGridColumn dataField="qyqc" headerText="出席率" width="55" headerWordWrap="true"/>  
-					<mx:AdvancedDataGridColumn dataField="qybyjs" headerText="开会总次数" width="55" headerWordWrap="true"/>  
+					<mx:AdvancedDataGridColumn dataField="qt_attemd_rate" headerText="出席率" width="55" headerWordWrap="true" textAlign="right"/>  
+					<mx:AdvancedDataGridColumn dataField="qt_total" headerText="开会总次数" width="55" headerWordWrap="true" textAlign="right"/>  
 				</mx:AdvancedDataGridColumnGroup>  				
 				<mx:AdvancedDataGridColumnGroup headerText="年度计划" headerWordWrap="true">  
-					<mx:AdvancedDataGridColumn dataField="qybyzj" headerText="规范执行率" width="50" headerWordWrap="true"/>
-					<mx:AdvancedDataGridColumn dataField="qyqmhs" headerText="上级评价率" width="50" headerWordWrap="true"/>  
-					<mx:AdvancedDataGridColumn dataField="qyqmhs" headerText="落实率百分之百的支部数" width="50" headerWordWrap="true"/>
+					<mx:AdvancedDataGridColumn dataField="y_reported_rate" headerText="规范执行率" width="50" headerWordWrap="true" textAlign="right"/>
+					<mx:AdvancedDataGridColumn dataField="y_eva_rate" headerText="上级评价率" width="50" headerWordWrap="true" textAlign="right"/>  
+					<mx:AdvancedDataGridColumn dataField="y_agency_goodjob" headerText="落实率百分之百的支部数" width="50" headerWordWrap="true" textAlign="right"/>
 				</mx:AdvancedDataGridColumnGroup>
 				<mx:AdvancedDataGridColumnGroup headerText="季度安排" headerWordWrap="true">  
-					<mx:AdvancedDataGridColumn dataField="qybyzj" headerText="规范执行率" width="50" headerWordWrap="true"/>
-					<mx:AdvancedDataGridColumn dataField="qyqmhs" headerText="上级评价率" width="50" headerWordWrap="true"/>  
-					<mx:AdvancedDataGridColumn dataField="qyqmhs" headerText="落实率百分之百的支部数" width="50" headerWordWrap="true"/>
+					<mx:AdvancedDataGridColumn dataField="q_reported_rate" headerText="规范执行率" width="50" headerWordWrap="true" textAlign="right"/>
+					<mx:AdvancedDataGridColumn dataField="q_eva_rate" headerText="上级评价率" width="50" headerWordWrap="true" textAlign="right"/>  
+					<mx:AdvancedDataGridColumn dataField="q_agency_goodjob" headerText="落实率百分之百的支部数" width="50" headerWordWrap="true" textAlign="right"/>
 				</mx:AdvancedDataGridColumnGroup>
 			</mx:groupedColumns>  
 		</mx:AdvancedDataGrid>  		

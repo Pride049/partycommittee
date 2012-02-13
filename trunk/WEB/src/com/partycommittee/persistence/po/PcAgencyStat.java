@@ -29,8 +29,6 @@ public class PcAgencyStat implements Serializable {
 
 	private Integer quarter;
 
-	private Integer statusId;
-
 	private Integer typeId;
 
 	private Integer year;
@@ -114,15 +112,6 @@ public class PcAgencyStat implements Serializable {
 
 	public void setQuarter(Integer quarter) {
 		this.quarter = quarter;
-	}
-
-	@Column(name = "status")
-	public Integer getStatusId() {
-		return this.statusId;
-	}
-
-	public void setStatusId(Integer statusId) {
-		this.statusId = statusId;
 	}
 
 	@Column(name = "type_id")
