@@ -123,7 +123,15 @@ order by T2.p_id, T2.parent_id, T2.id asc
 
 
 
+验证:
 
+  党支部数：  SELECT count(*) FROM `pc_agency` WHERE id in (select agency_id from pc_agency_relation where parent_id = 2)
+  党小组树:   SELECT SUM(p_count) FROM `pc_agency` WHERE id in (select agency_id from pc_agency_relation where parent_id = 2) 
+  党员总数:   SELECT SUM(zb_num) FROM `pc_agency` WHERE id in (select agency_id from pc_agency_relation where parent_id = 2) 
+支部书记数:   SELECT count(*) FROM `pc_member` WHERE agency_id in (select agency_id from pc_agency_relation where parent_id = 2)  and duty_id = 1
+
+  支委会
+  出勤率  :   SELECT (SUM(attend) - SUM(asence) ) / SUM(attend) FROM `pc_meeting` WHERE agency_id in (select agency_id from pc_agency_relation where parent_id = 2) and status_id >=2
 truncate pc_agency_stat;
 truncate pc_parent_stat;
 truncate pc_remind;

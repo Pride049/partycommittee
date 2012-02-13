@@ -283,6 +283,7 @@
 			}
 			
 			private function initRemindLock():void {
+				return;
 				var remindLockEvt:PcRemindLockEvent = new PcRemindLockEvent(PcRemindLockEvent.GET_REMIND_LOCK_BY_ID);
 				remindLockEvt.agencyId = agency.id;
 				remindLockEvt.year = year;

@@ -327,9 +327,13 @@ public class PcMeetingService {
 		meetingList = pcMeetingDaoImpl.getCommitMeetingListByAgencyIds(agencyIds, year);
 		if (meetingList != null && meetingList.size() > 0) {
 			for (PcMeeting meeting : meetingList) {
-				list.add(PcMeetingVo.fromPcMeeting(meeting));
+				PcMeetingVo meetingVoItem = PcMeetingVo.fromPcMeeting(meeting);
+				String asenceMemberIds = pcMeetingAsenceDaoImpl.getMemberIdsByMeetingId(meetingVoItem.getId());
+				meetingVoItem.setAsenceMemberIds(asenceMemberIds);
+				list.add(meetingVoItem);
 			}
 		}
+
 		return list;
 	}
 

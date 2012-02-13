@@ -238,7 +238,7 @@ package com.lnczx.utils
 			u.data = variables;   
 			u.method = URLRequestMethod.POST;   
 			
-			navigateToURL(u,"_blank");
+			navigateToURL(u,"_self");
 			//"_self" 指定当前窗口中的当前帧。    
 			//"_blank" 指定一个新窗口。    
 			//"_parent" 指定当前帧的父级。    
