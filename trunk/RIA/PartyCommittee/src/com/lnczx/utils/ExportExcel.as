@@ -4,6 +4,7 @@ package com.lnczx.utils
 	import flash.errors.*;
 	import flash.events.*;
 	import flash.external.*;
+	import flash.net.URLLoader;
 	import flash.net.URLRequest;
 	import flash.net.URLRequestMethod;
 	import flash.net.URLVariables;
@@ -237,7 +238,7 @@ package com.lnczx.utils
 			u.data = variables;   
 			u.method = URLRequestMethod.POST;   
 			
-			navigateToURL(u,"_self");
+			navigateToURL(u,"_blank");
 			//"_self" 指定当前窗口中的当前帧。    
 			//"_blank" 指定一个新窗口。    
 			//"_parent" 指定当前帧的父级。    

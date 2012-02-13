@@ -198,7 +198,7 @@
 			}
 			
 			private function exportToExcel():void {
-				ExportExcel.loadDGInExcel(parentstatsDG,'excelExport.jsp', "");
+				ExportExcel.loadDGInExcel(parentstatsDG,'excelExport.jsp', "统计表");
 			}
 
 		]]>
@@ -222,42 +222,45 @@
 		<mx:AdvancedDataGrid id="parentstatsDG" designViewDataType="flat"   
 							 width="100%" height="100%" color="0x323232"  
 							 minWidth="640" minHeight="480"   
-							 sortableColumns="false" sortExpertMode="true">  
+							 sortableColumns="false" sortExpertMode="true"
+							 variableRowHeight="true"
+							 >  
 			<mx:groupedColumns>   
-				<mx:AdvancedDataGridColumn dataField="num" headerText="序号" width="30" headerWordWrap="true" textAlign="center"/>
-				<mx:AdvancedDataGridColumn dataField="name" headerText="单位" width="100" headerWordWrap="true" textAlign="left"/>
-				<mx:AdvancedDataGridColumn dataField="zbNum" headerText="党支部数量" width="30" headerWordWrap="true" textAlign="right"/>
+				<mx:AdvancedDataGridColumn dataField="num" headerText="序号" width="25" headerWordWrap="true" textAlign="center"/>
+				<mx:AdvancedDataGridColumn dataField="name" headerText="单位" width="100" textAlign="left" headerWordWrap="true" wordWrap="true"  />
+				<mx:AdvancedDataGridColumn dataField="agencyNum" headerText="党支部数量" width="30" headerWordWrap="true" textAlign="right"/>
 				<mx:AdvancedDataGridColumn dataField="pCount" headerText="党小组数量" width="30" headerWordWrap="true" textAlign="right"/>
-				<mx:AdvancedDataGridColumn dataField="agencyNum" headerText="党员总数" width="30" headerWordWrap="true" textAlign="right"/>
+				<mx:AdvancedDataGridColumn dataField="zbNum" headerText="党员总数" width="30" headerWordWrap="true" textAlign="right"/>
 				<mx:AdvancedDataGridColumn dataField="zbsjNum" headerText="支部书记总数" width="30" headerWordWrap="true" textAlign="right"/>
 
 				<mx:AdvancedDataGridColumnGroup headerText="支委会" headerWordWrap="true">  
-					<mx:AdvancedDataGridColumn dataField="zwh_attend_rate" headerText="出席率" width="50" headerWordWrap="true" textAlign="right"/>  
-					<mx:AdvancedDataGridColumn dataField="zwh_reported_rate" headerText="规范执行率" width="50" headerWordWrap="true" textAlign="right"/>  
-					<mx:AdvancedDataGridColumn dataField="zwh_total" headerText="开会总次数" width="50" headerWordWrap="true" textAlign="right"/>  
-					<mx:AdvancedDataGridColumn dataField="zwh_eva_rate" headerText="上级评价率" width="50" headerWordWrap="true" textAlign="right"/>  
+					<mx:AdvancedDataGridColumn dataField="zwh_attend_rate" headerText="出席率" width="50" headerWordWrap="true" textAlign="right" 
+											   itemRenderer="com.partycommittee.renderers.DataGridPercentRenderer"/>  
+					<mx:AdvancedDataGridColumn dataField="zwh_reported_rate" headerText="规范执行率" width="50" headerWordWrap="true" textAlign="right" itemRenderer="com.partycommittee.renderers.DataGridPercentRenderer"/>  
+					<mx:AdvancedDataGridColumn dataField="zwh_total" headerText="开会总次数" width="40" headerWordWrap="true" textAlign="right"/>  
+					<mx:AdvancedDataGridColumn dataField="zwh_eva_rate" headerText="上级评价率" width="50" headerWordWrap="true" textAlign="right" itemRenderer="com.partycommittee.renderers.DataGridPercentRenderer"/>  
 					<mx:AdvancedDataGridColumn dataField="zwh_agency_goodjob" headerText="落实率百分之百的支部数" width="50" headerWordWrap="true" textAlign="right"/>
 				</mx:AdvancedDataGridColumnGroup>  
 				<mx:AdvancedDataGridColumnGroup headerText="党员大会" headerWordWrap="true">  
-					<mx:AdvancedDataGridColumn dataField="dydh_attend_rate" headerText="出席率" width="50" headerWordWrap="true" textAlign="right"/>  
-					<mx:AdvancedDataGridColumn dataField="dydh_total" headerText="开会总次数" width="50" headerWordWrap="true" textAlign="right"/>  
+					<mx:AdvancedDataGridColumn dataField="dydh_attend_rate" headerText="出席率" width="50" headerWordWrap="true" textAlign="right" itemRenderer="com.partycommittee.renderers.DataGridPercentRenderer" />  
+					<mx:AdvancedDataGridColumn dataField="dydh_total" headerText="开会总次数" width="40" headerWordWrap="true" textAlign="right"/>  
 				</mx:AdvancedDataGridColumnGroup>  
 				<mx:AdvancedDataGridColumnGroup headerText="党课" headerWordWrap="true">  
-					<mx:AdvancedDataGridColumn dataField="dk_attend_rate" headerText="出席率" width="50" headerWordWrap="true" textAlign="right"/>  
-					<mx:AdvancedDataGridColumn dataField="dk_total" headerText="开会总次数" width="50" headerWordWrap="true" textAlign="right"/>  
+					<mx:AdvancedDataGridColumn dataField="dk_attend_rate" headerText="出席率" width="50" headerWordWrap="true" textAlign="right" itemRenderer="com.partycommittee.renderers.DataGridPercentRenderer"/>  
+					<mx:AdvancedDataGridColumn dataField="dk_total" headerText="开会总次数" width="40" headerWordWrap="true" textAlign="right"/>  
 				</mx:AdvancedDataGridColumnGroup>
 				<mx:AdvancedDataGridColumnGroup headerText="其他组织活动" headerWordWrap="true">  
-					<mx:AdvancedDataGridColumn dataField="qt_attemd_rate" headerText="出席率" width="55" headerWordWrap="true" textAlign="right"/>  
-					<mx:AdvancedDataGridColumn dataField="qt_total" headerText="开会总次数" width="55" headerWordWrap="true" textAlign="right"/>  
+					<mx:AdvancedDataGridColumn dataField="qt_attemd_rate" headerText="出席率" width="50" headerWordWrap="true" textAlign="right" itemRenderer="com.partycommittee.renderers.DataGridPercentRenderer"/>  
+					<mx:AdvancedDataGridColumn dataField="qt_total" headerText="开会总次数" width="40" headerWordWrap="true" textAlign="right"/>  
 				</mx:AdvancedDataGridColumnGroup>  				
 				<mx:AdvancedDataGridColumnGroup headerText="年度计划" headerWordWrap="true">  
-					<mx:AdvancedDataGridColumn dataField="y_reported_rate" headerText="规范执行率" width="50" headerWordWrap="true" textAlign="right"/>
-					<mx:AdvancedDataGridColumn dataField="y_eva_rate" headerText="上级评价率" width="50" headerWordWrap="true" textAlign="right"/>  
+					<mx:AdvancedDataGridColumn dataField="y_reported_rate" headerText="规范执行率" width="50" headerWordWrap="true" textAlign="right" itemRenderer="com.partycommittee.renderers.DataGridPercentRenderer"/>
+					<mx:AdvancedDataGridColumn dataField="y_eva_rate" headerText="上级评价率" width="50" headerWordWrap="true" textAlign="right" itemRenderer="com.partycommittee.renderers.DataGridPercentRenderer"/>  
 					<mx:AdvancedDataGridColumn dataField="y_agency_goodjob" headerText="落实率百分之百的支部数" width="50" headerWordWrap="true" textAlign="right"/>
 				</mx:AdvancedDataGridColumnGroup>
 				<mx:AdvancedDataGridColumnGroup headerText="季度安排" headerWordWrap="true">  
-					<mx:AdvancedDataGridColumn dataField="q_reported_rate" headerText="规范执行率" width="50" headerWordWrap="true" textAlign="right"/>
-					<mx:AdvancedDataGridColumn dataField="q_eva_rate" headerText="上级评价率" width="50" headerWordWrap="true" textAlign="right"/>  
+					<mx:AdvancedDataGridColumn dataField="q_reported_rate" headerText="规范执行率" width="50" headerWordWrap="true" textAlign="right" itemRenderer="com.partycommittee.renderers.DataGridPercentRenderer"/>
+					<mx:AdvancedDataGridColumn dataField="q_eva_rate" headerText="上级评价率" width="50" headerWordWrap="true" textAlign="right" itemRenderer="com.partycommittee.renderers.DataGridPercentRenderer"/>  
 					<mx:AdvancedDataGridColumn dataField="q_agency_goodjob" headerText="落实率百分之百的支部数" width="50" headerWordWrap="true" textAlign="right"/>
 				</mx:AdvancedDataGridColumnGroup>
 			</mx:groupedColumns>  

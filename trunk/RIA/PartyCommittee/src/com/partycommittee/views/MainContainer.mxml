@@ -103,6 +103,7 @@
 					mainViewStack.removeChild(accountView);
 					mainViewStack.removeChild(remindconfigView);
 					mainViewStack.removeChild(remindLockView);
+					mainViewStack.removeChild(statView);
 				}
 				
 				if (orgView && model.focusAgencyVo) {

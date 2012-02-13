@@ -121,3 +121,11 @@ LEFT JOIN  pc_edu_code as T5 on T1.edu_id = T5.id
 LEFT JOIN  pc_duty_code as T6 on T1.duty_id = T6.id
 order by T2.p_id, T2.parent_id, T2.id asc
 
+
+
+
+truncate pc_agency_stat;
+truncate pc_parent_stat;
+truncate pc_remind;
+truncate pc_remind_stat;
+truncate pc_remind_lock;
