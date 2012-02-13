@@ -451,7 +451,7 @@ begin
 	SET q = quarter(now());		
 	set i = 1;
 	
-	while i < 9 do	
+	while i <= 9 do	
 	  open s_cursor; 
 	  SELECT FOUND_ROWS() into rows;
 	  SET row = 0;
@@ -489,7 +489,7 @@ begin
 						END IF;
 					END IF; 
 					
-					IF (i = 2 OR i = 5 OR i = 6 OR i =7 )  THEN
+					IF (i = 2 OR i = 5 OR i = 6 OR i =7 OR i = 9 )  THEN
 								SELECT COUNT(*), sum(attend), sum(stat_asence) into stat_total, stat_attend, stat_asence FROM pc_meeting WHERE agency_id = id AND type_id = i AND year =y AND quarter = q AND status_id >= 2;
 								SELECT COUNT(*) into stat_delay FROM pc_remind_lock WHERE agency_id = id  AND year =y AND quarter = q AND type_id = i;						
 								SELECT COUNT(*) into stat_eva FROM pc_workplan WHERE agency_id = id AND type_id = i AND year =y AND quarter = q AND status_id = 4;		
@@ -505,6 +505,8 @@ begin
 								
 								IF stat_attend > stat_asence THEN
 									SELECT ROUND(  (stat_attend - stat_asence)/ stat_attend , 2) into stat_attend_rate;
+								ELSEIF stat_attend = 0 THEN
+									SET stat_attend_rate = 0;
 								ELSE 
 									SET stat_attend_rate = 1;
 								END IF;
@@ -534,6 +536,8 @@ begin
 								
 								IF stat_attend > stat_asence THEN
 									SELECT ROUND(  (stat_attend - stat_asence)/ stat_attend , 2) into stat_attend_rate;
+								ELSEIF stat_attend = 0 THEN
+									SET stat_attend_rate = 0;
 								ELSE 
 									SET stat_attend_rate = 1;
 								END IF;
@@ -552,7 +556,7 @@ begin
 					END IF;														
 
 
-					SELECT COUNT(*) into stat_zbsj_num FROM pc_member WHERE agency_id = id AND post_id = 1;
+					SELECT COUNT(*) into stat_zbsj_num FROM pc_member WHERE agency_id = id AND duty_id = 1;
 
 					INSERT INTO pc_agency_stat (agency_id, name, code_id, parent_id, year, quarter, type_id, total, reported, delay, reported_rate, eva, eva_rate,  attend, asence, attend_rate, p_count, zb_num, zbsj_num)
 					VALUES (id, name, code_id, parent_id, y, q, i, stat_total, stat_reported, stat_delay, stat_reported_rate, stat_eva, stat_eva_rate, stat_attend, stat_asence, stat_attend_rate, stat_p_count, stat_zb_num, stat_zbsj_num)	

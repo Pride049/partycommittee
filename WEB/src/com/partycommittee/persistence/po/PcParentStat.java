@@ -216,7 +216,7 @@ public class PcParentStat implements Serializable {
 	}
 
 	public void setAttendRate(Double attendRate) {
-		attendRate = attendRate;
+		this.attendRate = attendRate;
 	}
 	
 	@Column(name = "p_count")
@@ -235,7 +235,7 @@ public class PcParentStat implements Serializable {
 	}
 
 	public void setZbNum(Integer zbNum) {
-		zbNum = zbNum;
+		this.zbNum = zbNum;
 	}
 	
 	@Column(name = "agency_num")
