@@ -6,17 +6,8 @@ ALTER TABLE  `pc_agency_relation` ADD INDEX (  `parent_id` ) ;
 ALTER TABLE  `pc_workplan` ADD INDEX (  `agency_id` ,  `type_id` ,  `year` ,  `quarter` ) ;
 ALTER TABLE  `pc_meeting` ADD INDEX (  `agency_id` ,  `year` ,  `quarter` ,  `type_id` ) ;
 
-ALTER TABLE  `pc_remind_config` ADD  `start_year` TINYINT( 1 ) NOT NULL ,
-ADD  `start_quarter` TINYINT( 1 ) UNSIGNED NOT NULL ,
-ADD  `start_month` SMALLINT( 5 ) UNSIGNED NOT NULL ,
-ADD  `start_day` SMALLINT( 5 ) UNSIGNED NOT NULL ,
-ADD  `end_year` TINYINT( 1 ) NOT NULL ,
-ADD  `end_quarter` TINYINT( 1 ) UNSIGNED NOT NULL ,
-ADD  `end_month` SMALLINT( 5 ) UNSIGNED NOT NULL ,
-ADD  `end_day` SMALLINT( 5 ) UNSIGNED NOT NULL
+ALTER TABLE  `pc_member` ADD INDEX (  `agency_id` ,  `post_id` ) ;
 
-将pc_workplan status = 2 变成  status = 1  
-将pc_workplan status = 1 变成  status = 2
 
 设置my.ini
 event_scheduler=ON
@@ -88,6 +79,25 @@ CREATE TABLE IF NOT EXISTS `pc_parent_stat` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `agency_id` (`agency_id`,`code_id`,`parent_id`,`year`,`quarter`,`type_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='党支部统计表' AUTO_INCREMENT=1 ;
+
+
+DROP TABLE IF EXISTS `pc_remind_lock`;
+CREATE TABLE IF NOT EXISTS `pc_remind_lock` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `agency_id` int(11) unsigned NOT NULL COMMENT '党支部ID',
+  `name` varchar(255) NOT NULL COMMENT '党支部名称',
+  `code_id` int(11) NOT NULL DEFAULT '0' COMMENT '党支部类型',
+  `parent_id` int(11) unsigned NOT NULL COMMENT '上级党支部ID',
+  `year` year(4) NOT NULL COMMENT '年度',
+  `quarter` tinyint(1) unsigned NOT NULL COMMENT '季度',
+  `month` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `type_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '年度计划状态',
+  `status` smallint(5) unsigned NOT NULL,
+  `delay_date` varchar(20) NOT NULL,
+  `ext` varchar(255) DEFAULT 'beijing' COMMENT 'saas扩展字段',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `agency_id` (`agency_id`,`code_id`,`parent_id`,`year`,`quarter`,`month`,`type_id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='党支部提醒统计表' AUTO_INCREMENT=12326 ;
 
 
 
