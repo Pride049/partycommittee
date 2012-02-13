@@ -12,6 +12,7 @@
 	
 	<fx:Script>
 		<![CDATA[
+			import com.lnczx.utils.ExportExcel;
 			import com.partycommittee.events.PcParentStatEvent;
 			import com.partycommittee.manager.popup.PopupMgr;
 			import com.partycommittee.model.ModelLocator;
@@ -195,6 +196,10 @@
 			private function onRefresh(data:Object, event:PcParentStatEvent):void {
 	
 			}
+			
+			private function exportToExcel():void {
+				ExportExcel.loadDGInExcel(parentstatsDG,'excelExport.jsp', "");
+			}
 
 		]]>
 	</fx:Script>
@@ -211,6 +216,7 @@
 			<mx:Label text="时间范围:"/>
 			<mx:ComboBox id="quarterCmb" />		
 			<mx:Button label="重新统计" click="updateData()"/>
+			<mx:Button label="导出到Excel" click="exportToExcel()"/>
 		</mx:HBox>		
 
 		<mx:AdvancedDataGrid id="parentstatsDG" designViewDataType="flat"   
