@@ -251,7 +251,7 @@
 					<mx:AdvancedDataGridColumn dataField="dk_total" headerText="开会总次数" width="40" headerWordWrap="true" textAlign="right"/>  
 				</mx:AdvancedDataGridColumnGroup>
 				<mx:AdvancedDataGridColumnGroup headerText="其他组织活动" headerWordWrap="true">  
-					<mx:AdvancedDataGridColumn dataField="qt_attemd_rate" headerText="出席率" width="40" headerWordWrap="true" textAlign="right" itemRenderer="com.partycommittee.renderers.DataGridPercentRenderer"/>  
+					<mx:AdvancedDataGridColumn dataField="qt_attend_rate" headerText="出席率" width="40" headerWordWrap="true" textAlign="right" itemRenderer="com.partycommittee.renderers.DataGridPercentRenderer"/>  
 					<mx:AdvancedDataGridColumn dataField="qt_total" headerText="开会总次数" width="40" headerWordWrap="true" textAlign="right"/>  
 				</mx:AdvancedDataGridColumnGroup>  				
 				<mx:AdvancedDataGridColumnGroup headerText="年度计划" headerWordWrap="true">  
@@ -265,7 +265,7 @@
 					<mx:AdvancedDataGridColumn dataField="q_agency_goodjob" headerText="落实率百分之百的支部数" width="40" headerWordWrap="true" textAlign="right"/>
 				</mx:AdvancedDataGridColumnGroup>
 			</mx:groupedColumns>  
-		</mx:AdvancedDataGrid>  		
+		</mx:AdvancedDataGrid>
 		
 		
 	</mx:VBox>

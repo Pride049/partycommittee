@@ -485,20 +485,26 @@ begin
 								SELECT COUNT(*) into stat_total FROM pc_workplan WHERE agency_id = id AND type_id = i AND year =y AND quarter = 0 AND status_id >= 2;
 								SELECT COUNT(*) into stat_delay FROM pc_remind_lock WHERE agency_id = id  AND year =y AND quarter = 0 AND type_id = i;						
 								SELECT COUNT(*) into stat_eva FROM pc_workplan WHERE agency_id = id AND type_id = i AND year =y AND quarter = 0 AND status_id = 4;	
-							SELECT 1 - stat_delay, ROUND( (1 - stat_delay)/1 , 2), ROUND( stat_eva/ stat_total, 2) into stat_reported, stat_reported_rate, stat_eva_rate;
+								SELECT 1 - stat_delay, ROUND( (1 - stat_delay)/1 , 2), ROUND( stat_eva/ stat_total, 2) into stat_reported, stat_reported_rate, stat_eva_rate;
 						END IF;
 					END IF; 
 					
-					IF (i = 2 OR i = 5 OR i = 6 OR i =7 OR i = 9 )  THEN
+					
+					IF i = 2 THEN
+						SELECT COUNT(*) into stat_total FROM pc_workplan WHERE agency_id = id AND type_id = i AND year =y AND quarter = q AND status_id >= 2;
+						SELECT COUNT(*) into stat_delay FROM pc_remind_lock WHERE agency_id = id  AND year =y AND quarter = q AND type_id = i;
+						SELECT COUNT(*) into stat_eva FROM pc_workplan WHERE agency_id = id AND type_id = i AND year =y AND quarter = q AND status_id = 3;
+						SELECT 1 - stat_delay, ROUND( (1 - stat_delay)/1 , 2), ROUND( stat_eva/ stat_total, 2) into stat_reported, stat_reported_rate, stat_eva_rate;
+					END IF;
+					
+					
+					IF (i = 5 OR i = 6 OR i =7 OR i = 9 )  THEN
 								
-								SELECT COUNT(*), sum(attend), sum(stat_asence) into stat_total, stat_attend, stat_asence FROM pc_meeting WHERE agency_id = id AND type_id = i AND year =y AND quarter = q AND status_id >= 2;
+								SELECT COUNT(*), sum(attend), sum(asence) into stat_total, stat_attend, stat_asence FROM pc_meeting WHERE agency_id = id AND type_id = i AND year =y AND quarter = q AND status_id >= 2;
 								SELECT COUNT(*) into stat_delay FROM pc_remind_lock WHERE agency_id = id  AND year =y AND quarter = q AND type_id = i;						
 								
-								IF i = 2 THEN
-									SELECT COUNT(*) into stat_eva FROM pc_workplan WHERE agency_id = id AND type_id = i AND year =y AND quarter = q AND status_id = 3;		
-								ELSE
-									SELECT COUNT(*) into stat_eva FROM pc_workplan WHERE agency_id = id AND type_id = i AND year =y AND quarter = q AND status_id = 4;		
-								END IF;
+								SELECT COUNT(*) into stat_eva FROM pc_meeting WHERE agency_id = id AND type_id = i AND year =y AND quarter = q AND status_id = 4;		
+
 								SELECT 1 - stat_delay, ROUND( (1 - stat_delay)/1 , 2), ROUND( stat_eva/ stat_total, 2) into stat_reported, stat_reported_rate, stat_eva_rate;
 								
 								IF stat_attend is null THEN
@@ -520,10 +526,10 @@ begin
 					END IF;
 					
 					IF i = 8 THEN
-								SELECT COUNT(*), sum(attend), sum(stat_asence) into stat_total, stat_attend, stat_asence FROM pc_meeting WHERE agency_id = id AND type_id = i AND year =y AND quarter = q AND status_id >= 2;
+								SELECT COUNT(*), sum(attend), sum(asence) into stat_total, stat_attend, stat_asence FROM pc_meeting WHERE agency_id = id AND type_id = i AND year =y AND quarter = q AND status_id >= 2;
 								SELECT COUNT(*) into stat_delay FROM pc_remind_lock WHERE agency_id = id  AND year =y AND quarter = q AND type_id = i;
 								SELECT COUNT(*) into stat_reported FROM (SELECT agency_id, year ,quarter, month FROM pc_meeting WHERE agency_id = id AND type_id = i AND year =y AND quarter = q AND status_id >= 2 GROUP BY agency_id, year ,quarter, month) as T;
-								SELECT COUNT(*) into stat_eva FROM pc_workplan WHERE agency_id = id AND type_id = i AND year =y AND quarter = q AND status_id = 4;		
+								SELECT COUNT(*) into stat_eva FROM pc_meeting WHERE agency_id = id AND type_id = i AND year =y AND quarter = q AND status_id = 4;		
 								
 --								SELECT CONCAT('stat_delay = ', stat_delay, '  stat_reported =' , stat_reported);
 								IF stat_delay > 0 THEN
