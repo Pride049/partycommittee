@@ -6,7 +6,7 @@ import java.sql.Date;
 import com.partycommittee.persistence.po.PcParentStat;;
 
 public class PcParentStatVo implements Serializable {
-	private static final long serialVersionUID = -1190776206070964606L;
+	private static final long serialVersionUID = -1190776206070964607L;
 
 	private Integer id;
 
@@ -14,15 +14,11 @@ public class PcParentStatVo implements Serializable {
 
 	private Integer codeId;
 
-	private String ext;
-
 	private String name;
 
 	private Integer parentId;
 
 	private Integer quarter;
-
-	private Integer statusId;
 
 	private Integer typeId;
 
@@ -48,9 +44,13 @@ public class PcParentStatVo implements Serializable {
 	
 	private Integer pCount;
 	
-	private Integer zbNum;	
+	private Integer zbNum;
 	
+	private Integer zbsjNum;
+
 	private Integer agencyNum;
+	
+	private Integer agencyGoodjob;
 	
 	public Integer getId() {
 		return id;
@@ -76,14 +76,6 @@ public class PcParentStatVo implements Serializable {
 		this.codeId = codeId;
 	}
 
-	public String getExt() {
-		return ext;
-	}
-
-	public void setExt(String ext) {
-		this.ext = ext;
-	}
-
 	public String getName() {
 		return name;
 	}
@@ -106,14 +98,6 @@ public class PcParentStatVo implements Serializable {
 
 	public void setQuarter(Integer quarter) {
 		this.quarter = quarter;
-	}
-
-	public Integer getStatusId() {
-		return statusId;
-	}
-
-	public void setStatusId(Integer statusId) {
-		this.statusId = statusId;
 	}
 
 	public Integer getTypeId() {
@@ -228,18 +212,31 @@ public class PcParentStatVo implements Serializable {
 		this.agencyNum = agencyNum;
 	}
 	
+	public Integer getZbsjNum() {
+		return zbsjNum;
+	}
+
+	public void setZbsjNum(Integer zbsjNum) {
+		this.zbsjNum = zbsjNum;
+	}
+	
+	public Integer getAgencyGoodjob() {
+		return agencyGoodjob;
+	}
+
+	public void setAgencyGoodjob(Integer agencyGoodjob) {
+		this.agencyGoodjob = agencyGoodjob;
+	}
 	
 	
 	public static PcParentStatVo fromPcParentStat(PcParentStat pevo) {
 		PcParentStatVo vo = new PcParentStatVo();
 		vo.setAgencyId(pevo.getAgencyId());
 		vo.setCodeId(pevo.getCodeId());
-		vo.setExt(pevo.getExt());
 		vo.setId(pevo.getId());
 		vo.setName(pevo.getName());
 		vo.setParentId(pevo.getParentId());
 		vo.setQuarter(pevo.getQuarter());
-		vo.setStatusId(pevo.getStatusId());
 		vo.setTypeId(pevo.getTypeId());
 		vo.setYear(pevo.getYear());
 		vo.setTotal(pevo.getTotal());
@@ -253,19 +250,19 @@ public class PcParentStatVo implements Serializable {
 		vo.setAttendRate(pevo.getAttendRate());
 		vo.setpCount(pevo.getpCount());
 		vo.setZbNum(pevo.getZbNum());
+		vo.setZbsjNum(pevo.getZbsjNum());
 		vo.setAgencyNum(pevo.getAgencyNum());
+		vo.setAgencyGoodjob(pevo.getAgencyGoodjob());
 		return vo;
 	}
 	
 	public static PcParentStat toPcParentStat(PcParentStatVo pevo) {
 		PcParentStat vo = new PcParentStat();
 		vo.setCodeId(pevo.getCodeId());
-		vo.setExt(pevo.getExt());
 		vo.setId(pevo.getId());
 		vo.setName(pevo.getName());
 		vo.setParentId(pevo.getParentId());
 		vo.setQuarter(pevo.getQuarter());
-		vo.setStatusId(pevo.getStatusId());
 		vo.setTypeId(pevo.getTypeId());
 		vo.setYear(pevo.getYear());
 		vo.setTotal(pevo.getTotal());
@@ -279,7 +276,9 @@ public class PcParentStatVo implements Serializable {
 		vo.setAttendRate(pevo.getAttendRate());
 		vo.setpCount(pevo.getpCount());
 		vo.setZbNum(pevo.getZbNum());
+		vo.setZbsjNum(pevo.getZbsjNum());
 		vo.setAgencyNum(pevo.getAgencyNum());
+		vo.setAgencyGoodjob(pevo.getAgencyGoodjob());
 		return vo;
 	}
 }

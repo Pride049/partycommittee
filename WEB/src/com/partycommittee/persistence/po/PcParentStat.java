@@ -29,8 +29,6 @@ public class PcParentStat implements Serializable {
 
 	private Integer quarter;
 
-	private Integer statusId;
-
 	private Integer typeId;
 
 	private Integer year;
@@ -56,9 +54,13 @@ public class PcParentStat implements Serializable {
 	private Integer pCount;
 	
 	private Integer zbNum;
-	
-	private Integer agencyNum;
 
+	private Integer zbsjNum;
+
+	private Integer agencyNum;
+	
+	private Integer agencyGoodjob;
+	
 	public PcParentStat() {
     }
 
@@ -116,15 +118,6 @@ public class PcParentStat implements Serializable {
 
 	public void setQuarter(Integer quarter) {
 		this.quarter = quarter;
-	}
-
-	@Column(name = "status")
-	public Integer getStatusId() {
-		return this.statusId;
-	}
-
-	public void setStatusId(Integer statusId) {
-		this.statusId = statusId;
 	}
 
 	@Column(name = "type_id")
@@ -254,6 +247,22 @@ public class PcParentStat implements Serializable {
 		this.agencyNum = agencyNum;
 	}
 	
+	@Column(name = "agency_goodjob")
+	public Integer getAgencyGoodjob() {
+		return agencyGoodjob;
+	}
+
+	public void setAgencyGoodjob(Integer agencyGoodjob) {
+		this.agencyGoodjob = agencyGoodjob;
+	}
 	
+	@Column(name = "zbsj_num")
+	public Integer getZbsjNum() {
+		return zbsjNum;
+	}
+
+	public void setZbsjNum(Integer zbsjNum) {
+		this.zbsjNum = zbsjNum;
+	}
 
 }

@@ -22,8 +22,6 @@ public class PcAgencyStatVo implements Serializable {
 
 	private Integer quarter;
 
-	private Integer statusId;
-
 	private Integer typeId;
 
 	private Integer year;	
@@ -104,14 +102,6 @@ public class PcAgencyStatVo implements Serializable {
 
 	public void setQuarter(Integer quarter) {
 		this.quarter = quarter;
-	}
-
-	public Integer getStatusId() {
-		return statusId;
-	}
-
-	public void setStatusId(Integer statusId) {
-		this.statusId = statusId;
 	}
 
 	public Integer getTypeId() {
@@ -223,12 +213,10 @@ public class PcAgencyStatVo implements Serializable {
 		PcAgencyStatVo vo = new PcAgencyStatVo();
 		vo.setAgencyId(pevo.getAgencyId());
 		vo.setCodeId(pevo.getCodeId());
-		vo.setExt(pevo.getExt());
 		vo.setId(pevo.getId());
 		vo.setName(pevo.getName());
 		vo.setParentId(pevo.getParentId());
 		vo.setQuarter(pevo.getQuarter());
-		vo.setStatusId(pevo.getStatusId());
 		vo.setTypeId(pevo.getTypeId());
 		vo.setYear(pevo.getYear());
 		vo.setTotal(pevo.getTotal());
@@ -248,12 +236,10 @@ public class PcAgencyStatVo implements Serializable {
 	public static PcAgencyStat toPcRemind(PcAgencyStatVo pevo) {
 		PcAgencyStat vo = new PcAgencyStat();
 		vo.setCodeId(pevo.getCodeId());
-		vo.setExt(pevo.getExt());
 		vo.setId(pevo.getId());
 		vo.setName(pevo.getName());
 		vo.setParentId(pevo.getParentId());
 		vo.setQuarter(pevo.getQuarter());
-		vo.setStatusId(pevo.getStatusId());
 		vo.setTypeId(pevo.getTypeId());
 		vo.setYear(pevo.getYear());
 		vo.setTotal(pevo.getTotal());
