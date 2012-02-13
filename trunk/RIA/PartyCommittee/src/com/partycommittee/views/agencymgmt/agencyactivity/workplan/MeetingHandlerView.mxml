@@ -115,7 +115,8 @@
 					themeTxt.text = meeting.theme;
 					attendTxt.text = meeting.attend + "";
 					asenceTxt.text = meeting.asence + "";
-					asenceBox.meeting = meeting;
+					asenceMembersTxt.text = meeting.asenceMemberIds;
+//					asenceBox.meeting = meeting;
 					if (meeting.content) {
 						personTxt.text = meeting.content.memberName;
 						textArea.htmlText = meeting.content.content;
@@ -272,12 +273,13 @@
 							 horizontalScrollPolicy="off" verticalScrollPolicy="off">
 						<mx:Label text="缺席人数:" width="75"/>
 						<mx:TextInput id="asenceTxt" width="100%" editable="false"
-									  text="{asenceBox.asenceNumber + ''}"/>
+									  />
 					</mx:HBox>
 				</mx:HBox>
 				<mx:HBox width="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off">
 					<mx:Label text="缺席人名单:" width="75"/>
-					<component:ChooseAsenceBox id="asenceBox" width="100%" meeting="{meeting}" editable="false"/>
+					<!--<component:ChooseAsenceBox id="asenceBox" width="100%" meeting="{meeting}" editable="false"/>-->
+					<mx:TextInput id="asenceMembersTxt" width="100%"/>
 				</mx:HBox>
 				<richtexttoolbar:PopupRichTextToolBar width="100%" target="{textArea}"/>
 				<mx:TextArea id="textArea" width="100%" height="100%"
