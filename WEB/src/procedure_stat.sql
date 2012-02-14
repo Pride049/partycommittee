@@ -610,7 +610,7 @@ begin
 			 SUM(  p_count ) as p_count , 
 			 SUM(  zb_num )  as zb_num ,
 			 SUM(  zbsj_num )  as zbsj_num ,
-			 COUNT(select id from pc_agency where parent_id in (select agency_id from pc_agency_relation where parent_id = parent_id) ) as agency_num,
+			 COUNT(*) as agency_num,
 			 COUNT(CASE WHEN reported_rate = 1 THEN reported_rate END ) as agency_goodjob
 	FROM  pc_agency_stat GROUP BY parent_id, YEAR, quarter, type_id) as T1
 	LEFT JOIN pc_agency as T2 ON T1.parent_id = T2.id
@@ -638,8 +638,40 @@ begin
 	FROM  pc_parent_stat WHERE parent_id <> 1 AND code_id in (7, 8) GROUP BY parent_id, YEAR, quarter, type_id) as T1
 	LEFT JOIN pc_agency as T2 ON T1.parent_id = T2.id
 	LEFT JOIN pc_agency_relation as T3 ON T1.parent_id = T3.agency_id
-	ON DUPLICATE KEY UPDATE name = T2.name, total = T1.total, reported = T1.reported, delay= T1.delay, reported_rate = T1.reported_rate, eva = T1.eva, eva_rate = T1.eva_rate, attend = T1.attend, asence = T1.asence, attend_rate= T1.attend_rate, p_count = T1.p_count, zb_num = T1.zb_num, zbsj_num = T1.zbsj_num, agency_num = T1.agency_num, agency_goodjob = T1.agency_goodjob;
+	ON DUPLICATE KEY UPDATE name = T2.name, total = pc_parent_stat.total + T1.total, reported = pc_parent_stat.reported + T1.reported, 
+							delay= pc_parent_stat.delay + T1.delay, reported_rate = ROUND( (pc_parent_stat.reported_rate +  T1.reported_rate)/2, 2), 
+							eva = pc_parent_stat.eva + T1.eva, eva_rate = ROUND( (pc_parent_stat.eva_rate + T1.eva_rate)/2, 2), attend = pc_parent_stat.attend + T1.attend, 
+							asence = pc_parent_stat.asence +  T1.asence, attend_rate= ROUND( (pc_parent_stat.attend_rate + T1.attend_rate)/2, 2), p_count = pc_parent_stat.p_count + T1.p_count, zb_num = pc_parent_stat.zb_num +  T1.zb_num, 
+							zbsj_num = pc_parent_stat.zbsj_num + T1.zbsj_num, agency_num =  pc_parent_stat.agency_num + T1.agency_num, 
+							agency_goodjob = pc_parent_stat.agency_goodjob + T1.agency_goodjob;
 
+							
+	INSERT INTO pc_parent_stat (agency_id, name, code_id, parent_id, year, quarter, type_id, total, reported, delay, reported_rate, eva, eva_rate, attend, asence , attend_rate, p_count, zb_num, zbsj_num,  agency_num, agency_goodjob )
+	SELECT T1.parent_id as agency_id, T2.name, T2.code_id, 0 as parent_id, T1.year, T1.quarter, T1.type_id, T1.total, T1.reported, T1.delay, T1.reported_rate, T1.eva, T1.eva_rate, T1.attend, T1.asence, T1.attend_rate,  T1.p_count, T1.zb_num, T1.zbsj_num, T1.agency_num, T1.agency_goodjob FROM 
+	(SELECT parent_id, YEAR, quarter, type_id, 
+			 SUM(total) as total, 
+			 SUM(  reported ) as reported , 
+			 SUM(  delay )  as delay,  
+			 ROUND(SUM(reported_rate)/ count(*), 2) as reported_rate , 
+			 SUM(eva) as eva,
+			 ROUND(SUM(eva)/ count(*), 2) as eva_rate , 
+			 SUM(  attend ) as attend , 
+			 SUM(  asence ) as asence , 
+			 ROUND(SUM(attend_rate)/ count(*), 2) as attend_rate , 
+			 SUM(  p_count ) as p_count , 
+			 SUM(  zb_num )  as zb_num ,
+			 SUM(  zbsj_num )  as zbsj_num ,
+			 SUM(agency_num) as agency_num,
+			 SUM(agency_goodjob) as agency_goodjob
+	FROM  pc_parent_stat WHERE parent_id = 1 GROUP BY parent_id, YEAR, quarter, type_id) as T1
+	LEFT JOIN pc_agency as T2 ON T1.parent_id = T2.id
+	ON DUPLICATE KEY UPDATE name = T2.name, total = T1.total, reported = T1.reported, 
+							delay= T1.delay, reported_rate = T1.reported_rate, 
+							eva = T1.eva, eva_rate = T1.eva_rate, attend = T1.attend, 
+							asence = T1.asence, attend_rate= T1.attend_rate, p_count = T1.p_count, zb_num = T1.zb_num, 
+							zbsj_num = T1.zbsj_num, agency_num =  T1.agency_num, 
+							agency_goodjob = T1.agency_goodjob;							
+							
 end;
 //
 delimiter ;
@@ -671,7 +703,7 @@ delimiter //
 SET GLOBAL event_scheduler = OFF //
 DROP EVENT IF EXISTS `event_stats`//
 CREATE EVENT IF NOT EXISTS `event_stats`
-ON SCHEDULE EVERY 1 HOUR
+ON SCHEDULE EVERY 2 HOUR
 ON COMPLETION PRESERVE
 DO
    BEGIN
