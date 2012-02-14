@@ -137,3 +137,62 @@ truncate pc_parent_stat;
 truncate pc_remind;
 truncate pc_remind_stat;
 truncate pc_remind_lock;
+
+
+
+根据ID查找下属所有的党支部
+
+	SELECT distinct id FROM (
+		SELECT id FROM pc_agency  WHERE id IN ( SELECT agency_id FROM pc_agency_relation WHERE parent_id =82 ) AND code_id =10
+		UNION ALL 
+		SELECT agency_id AS id FROM pc_agency_relation WHERE parent_id IN ( SELECT agency_id FROM pc_agency_relation WHERE parent_id =82 )
+	) AS a
+
+
+
+	
+	
+
+查找二级党委:
+
+select agency_id,parent_id from pc_agency_relation  where parent_id in (select id from `pc_agency` where code_id = 7)
+
+
+select * from (select * from pc_agency where id in
+(select agency_id,parent_id from pc_agency_relation  where parent_id in (select id from `pc_agency` where code_id = 7)  ) ) as a 
+where code_id = 7
+
+
+
+select agency_id, parent_id from pc_agency_relation 
+left join 
+where parent_id = 82
+
+select * from pc_agency where id in (select agency_id from pc_agency_relation where parent_id = 82 ) and code_id  = 10
+Union
+select agency_id
+
+
+select * from pc_agency where id in (select agency_id from pc_agency_relation where parent_id = 82 ) and code_id in (7,8)
+Union ALL
+select * from pc_agency where id in (select agency_id from pc_agency_realtion where parent_id in ( select agency_id from pc_agency_ralation where parent_id = 82)    )
+
+
+SELECT * FROM pc_workplan WHERE agency_id IN ( SELECT id FROM  `pc_agency` WHERE code LIKE  '12%' AND code_id =10 ) AND YEAR =2012 AND type_id = 1  and status_id =2
+
+12
+
+SELECT * FROM pc_remind WHERE agency_id IN ( SELECT id FROM  `pc_agency` WHERE code LIKE  '12%' AND code_id =10 ) AND YEAR =2012 AND type_id = 1 AND status =2
+
+12
+
+select * from pc_remind_stat where agency_id = 180 AND YEAR =2012 AND type_id = 1 and status =2 
+
+select * from pc_remind_stat where parent_id =180   AND YEAR =2012 AND type_id = 1 and status =2 
+
+0
+
+
+
+select * from pc_remind_stat where agency_id IN ( SELECT id FROM  `pc_agency` WHERE code LIKE  '12%' AND code_id in (7, 8) ) AND YEAR =2012 AND type_id = 1 AND status =2
+
