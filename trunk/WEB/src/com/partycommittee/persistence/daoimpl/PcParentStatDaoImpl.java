@@ -26,4 +26,13 @@ public class PcParentStatDaoImpl extends JpaDaoBase implements PcParentStatDao {
 		return null;
 	}
 	
+	public List<PcParentStat> getListStatBytId(Integer id, Integer year, Integer q) {
+		try {		
+			return super.find("from PcParentStat where agency_id = " + id + " AND year = " + year + " AND quarter = " + q);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}	
+	
 }

@@ -153,6 +153,10 @@
 						vo.qt_attend_rate = dp.getItemAt(i).attendRate;
 						vo.qt_total = dp.getItemAt(i).total;
 					}
+					
+					if ( (i+1) == dp.length) {
+						datas.addItem(vo);
+					}					
 				}
 				
 				parentstatsDG.dataProvider = datas;
@@ -228,11 +232,11 @@
 							 >  
 			<mx:groupedColumns>   
 				<mx:AdvancedDataGridColumn dataField="num" headerText="序号" width="25" headerWordWrap="true" textAlign="center"/>
-				<mx:AdvancedDataGridColumn dataField="name" headerText="单位" width="100" textAlign="left" headerWordWrap="true" wordWrap="true"  />
-				<mx:AdvancedDataGridColumn dataField="agencyNum" headerText="党支部数量" width="30" headerWordWrap="true" textAlign="right"/>
-				<mx:AdvancedDataGridColumn dataField="pCount" headerText="党小组数量" width="30" headerWordWrap="true" textAlign="right"/>
-				<mx:AdvancedDataGridColumn dataField="zbNum" headerText="党员总数" width="30" headerWordWrap="true" textAlign="right"/>
-				<mx:AdvancedDataGridColumn dataField="zbsjNum" headerText="支部书记总数" width="30" headerWordWrap="true" textAlign="right"/>
+				<mx:AdvancedDataGridColumn dataField="name" headerText="单位" width="140" textAlign="left" headerWordWrap="true" wordWrap="true"/>
+				<mx:AdvancedDataGridColumn dataField="agencyNum" headerText="党支部数量" width="40" headerWordWrap="true" textAlign="right"/>
+				<mx:AdvancedDataGridColumn dataField="pCount" headerText="党小组数量" width="40" headerWordWrap="true" textAlign="right"/>
+				<mx:AdvancedDataGridColumn dataField="zbNum" headerText="党员总数" width="40" headerWordWrap="true" textAlign="right"/>
+				<mx:AdvancedDataGridColumn dataField="zbsjNum" headerText="支部书记总数" width="40" headerWordWrap="true" textAlign="right"/>
 
 				<mx:AdvancedDataGridColumnGroup headerText="支委会" headerWordWrap="true">  
 					<mx:AdvancedDataGridColumn dataField="zwh_attend_rate" headerText="出席率" width="40" headerWordWrap="true" textAlign="right" 

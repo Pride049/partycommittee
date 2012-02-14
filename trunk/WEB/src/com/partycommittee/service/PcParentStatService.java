@@ -24,13 +24,16 @@ public class PcParentStatService {
 	public List<PcParentStatVo> getListStatByParentId(Integer id, Integer year, Integer q) {
 		List<PcParentStatVo> list = new ArrayList<PcParentStatVo>();
 		
-		//年度计划
+		if (id == 1) {
+			List<PcParentStat> list_admin = pcParentStatDaoImpl.getListStatBytId(id, year, q);
+			for (PcParentStat item : list_admin) {
+				list.add(PcParentStatVo.fromPcParentStat(item));
+			}			
+		}
 		List<PcParentStat> y = pcParentStatDaoImpl.getListStatByParentId(id, year, q);
 		for (PcParentStat item : y) {
 			list.add(PcParentStatVo.fromPcParentStat(item));
 		}
 		return list;
-	}
-	
-	
+	}	
 }

@@ -386,7 +386,7 @@
 				var dateGridColumnArray :Array = new Array();
 				var c1:AdvancedDataGridColumn = new AdvancedDataGridColumn();
 				c1.dataField = "name";
-				c1.headerText = "支部名称"
+				c1.headerText = "支部名称";
 				//c1.wordWrap = true;
 				c1.width = 120;
 				dateGridColumnArray.push(c1);
@@ -929,7 +929,7 @@
 				  left="6" right="6" top="6" bottom="6">
 		<mx:VBox id="AGrid" width="100%" height="100%"
 				 left="6" right="6" top="6" bottom="6"
-				 horizontalScrollPolicy="off" verticalScrollPolicy="auto">
+				 horizontalScrollPolicy="off" verticalScrollPolicy="auto" >
 			<mx:AdvancedDataGrid id="dg" dataProvider="{dp}" width="100%" height="100%">
 				<mx:columns>
 					<mx:AdvancedDataGridColumn headerText="内容" dataField="typeId"
@@ -954,12 +954,12 @@
 
 					<mx:AdvancedDataGrid id="remindDg" 
 										 width="100%" height="100%" 
-										 variableRowHeight="true"
-										 headerSortSeparatorSkin="mx.skins.ProgrammaticSkin"
-										 horizontalScrollPolicy="on"
+										 headerSortSeparatorSkin="mx.skins.ProgrammaticSkin"										
 										 lockedColumnCount="1"
 										 headerStyleName="centerAligned"
-										 sortableColumns="false"/>
+										 sortableColumns="false" sortExpertMode="true"
+										 variableRowHeight="true"
+										 minWidth="640" minHeight="480" headerWordWrap="true"   />
 				</mx:VBox>
 				
 				<mx:VBox id="detail" width="100%" height="100%"
