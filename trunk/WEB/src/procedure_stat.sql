@@ -109,7 +109,7 @@ begin
 	DECLARE y year(4);
 
 	SET y = year(now());
-
+	truncate pc_remind_stat;
 	INSERT INTO pc_remind_stat (agency_id ,name ,code_id ,parent_id ,year ,quarter ,type_id ,status ,c)
 	SELECT T1.parent_id as agency_id, T2.name, T2.code_id, T3.parent_id, T1.year, T1.quarter, T1.type_id, T1.status, T1.c FROM (SELECT code_id, parent_id, year ,quarter, type_id, status, count(*) as c FROM pc_remind WHERE year = y GROUP BY code_id, parent_id, year ,quarter, type_id, status) as T1
 	LEFT JOIN pc_agency as T2 ON T1.parent_id = T2.id
@@ -123,8 +123,11 @@ begin
 	ON DUPLICATE KEY UPDATE c = T1.c, name = T2.name;	
 
 	INSERT INTO pc_remind_stat (agency_id ,name ,code_id ,parent_id ,year ,quarter ,type_id ,status ,c)
-	SELECT parent_id as agency_id, name, code_id, 1 as parent_id,  YEAR, quarter, type_id, status, SUM( c ) as c FROM  `pc_remind_stat` WHERE parent_id not in (1, 0) GROUP BY agency_id, name, code_id, parent_id,  YEAR, quarter, type_id, status
-	ON DUPLICATE KEY UPDATE c = c, name = name;	
+	SELECT T1.agency_id, T2.name, T2.code_id, T3.parent_id, T1.year, T1.quarter, T1.type_id, T1.status, T1.c FROM
+	(SELECT parent_id as agency_id, YEAR, quarter, type_id, status, SUM( c ) as c FROM  `pc_remind_stat` WHERE parent_id <>1 GROUP BY parent_id, YEAR, quarter, type_id, status) as T1
+	LEFT JOIN pc_agency as T2 ON T1.agency_id = T2.id
+	LEFT JOIN pc_agency_relation as T3 ON T1.agency_id = T3.agency_id
+	ON DUPLICATE KEY UPDATE c = pc_remind_stat.c + T1.c, name = T2.name;	
 end;
 //
 delimiter ;
@@ -591,7 +594,7 @@ delimiter //
 DROP procedure IF EXISTS stat_agency_stat//
 CREATE PROCEDURE stat_agency_stat()
 begin
-
+	truncate pc_parent_stat;
 	INSERT INTO pc_parent_stat (agency_id, name, code_id, parent_id, year, quarter, type_id, total, reported, delay, reported_rate, eva, eva_rate, attend, asence , attend_rate, p_count, zb_num, zbsj_num,  agency_num, agency_goodjob )
 	SELECT T1.parent_id as agency_id, T2.name, T2.code_id, T3.parent_id, T1.year, T1.quarter, T1.type_id, T1.total, T1.reported, T1.delay, T1.reported_rate, T1.eva, T1.eva_rate, T1.attend, T1.asence, T1.attend_rate,  T1.p_count, T1.zb_num, T1.zbsj_num, T1.agency_num, T1.agency_goodjob FROM 
 	(SELECT parent_id, YEAR, quarter, type_id, 
@@ -607,7 +610,7 @@ begin
 			 SUM(  p_count ) as p_count , 
 			 SUM(  zb_num )  as zb_num ,
 			 SUM(  zbsj_num )  as zbsj_num ,
-			 COUNT(*) as agency_num,
+			 COUNT(select id from pc_agency where parent_id in (select agency_id from pc_agency_relation where parent_id = parent_id) ) as agency_num,
 			 COUNT(CASE WHEN reported_rate = 1 THEN reported_rate END ) as agency_goodjob
 	FROM  pc_agency_stat GROUP BY parent_id, YEAR, quarter, type_id) as T1
 	LEFT JOIN pc_agency as T2 ON T1.parent_id = T2.id
@@ -632,7 +635,7 @@ begin
 			 SUM(  zbsj_num )  as zbsj_num ,
 			 SUM(agency_num) as agency_num,
 			 SUM(agency_goodjob) as agency_goodjob
-	FROM  pc_parent_stat WHERE parent_id <> 1 AND code_id = 7 GROUP BY parent_id, YEAR, quarter, type_id) as T1
+	FROM  pc_parent_stat WHERE parent_id <> 1 AND code_id in (7, 8) GROUP BY parent_id, YEAR, quarter, type_id) as T1
 	LEFT JOIN pc_agency as T2 ON T1.parent_id = T2.id
 	LEFT JOIN pc_agency_relation as T3 ON T1.parent_id = T3.agency_id
 	ON DUPLICATE KEY UPDATE name = T2.name, total = T1.total, reported = T1.reported, delay= T1.delay, reported_rate = T1.reported_rate, eva = T1.eva, eva_rate = T1.eva_rate, attend = T1.attend, asence = T1.asence, attend_rate= T1.attend_rate, p_count = T1.p_count, zb_num = T1.zb_num, zbsj_num = T1.zbsj_num, agency_num = T1.agency_num, agency_goodjob = T1.agency_goodjob;
