@@ -3,6 +3,9 @@ package com.partycommittee.persistence.daoimpl;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+
 import org.springframework.stereotype.Repository;
 
 import com.partycommittee.persistence.dao.PcAgencyDao;
@@ -74,5 +77,37 @@ public class PcAgencyDaoImpl extends JpaDaoBase implements PcAgencyDao {
 		}
 		return null;
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public String getMaxCodeByParentId(int parent_id) {
+		try {
+			
+			List<PcAgency> list = super.getJpaTemplate().find("from PcAgency where id = " + parent_id);
+			PcAgency  parentVo;
+			if (list != null && list.size() > 0) {
+				parentVo = list.get(0);
+				String parent_code = parentVo.getCode();
+				String sql = "";
+				if (parent_id == 1) {
+					sql = "SELECT (CASE WHEN max(code) IS NULL THEN  '01' ELSE LPAD(max(code) + 1, 2, 0) END) as maxcode from PcAgency where length(code) = 2 ";
+				} else {
+					sql = "SELECT (CASE WHEN max(code) IS NULL THEN  CONCAT('"+ parent_code + "','01') ELSE LPAD(max(code) + 1, length('"+ parent_code + "') + 2, 0) END) as maxcode from PcAgency where code like CONCAT ('"+ parent_code + "', '%') and length(code) = length('"+ parent_code + "') + 2 ";
+				}
+				
+				EntityManager em = super.getEntityManager();
+				Query q = em.createQuery(sql);
+				List<String> rs = q.getResultList();
+				if (rs!= null && rs.size() > 0) {
+					return rs.get(0);
+				}
+			}			
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return null;
+	}	
+	
 
 }

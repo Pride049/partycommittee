@@ -58,8 +58,8 @@
 //					TreeContextMenuMgr.getInstance().editEnable = false;
 //					treeControlBar.visible = treeControlBar.includeInLayout = false;
 //				} else {
-					TreeContextMenuMgr.getInstance().editEnable = false;
-					treeControlBar.visible = treeControlBar.includeInLayout = false;
+					TreeContextMenuMgr.getInstance().editEnable = true;
+					treeControlBar.visible = treeControlBar.includeInLayout = true;
 					unExpandTree();
 //				}				
 				

@@ -255,7 +255,7 @@
 					</mx:HBox>
 					<mx:HBox width="50%"
 							 horizontalScrollPolicy="off" verticalScrollPolicy="off">
-						<mx:Label text="授课人:" width="75"/>
+						<mx:Label text="主持人:" width="75"/>
 						<mx:TextInput id="personTxt" width="100%" editable="false"/>
 					</mx:HBox>
 				</mx:HBox>

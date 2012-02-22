@@ -17,4 +17,6 @@ public interface PcAgencyDao {
 	public void deleteAgency(PcAgency agency);
 
 	List<PcAgency> getAgencyListByIds(String privilege);
+	
+	public String getMaxCodeByParentId(int parent_id);
 }

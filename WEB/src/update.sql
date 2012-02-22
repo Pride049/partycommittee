@@ -164,35 +164,117 @@ where code_id = 7
 
 
 
-select agency_id, parent_id from pc_agency_relation 
-left join 
-where parent_id = 82
+delimiter //
+DROP procedure IF EXISTS update_agency_code//
+CREATE PROCEDURE update_agency_code()
+begin
+	DECLARE done int default 0;
+	DECLARE c_id int(11) unsigned;
+	DECLARE c_name VARCHAR(255);
+	DECLARE c_code VARCHAR(20);
+	DECLARE c_code_id int(11) unsigned;	
+	DECLARE c_parent_id int(11) unsigned;	
+	
+	DECLARE u_code VARCHAR(20);
+	
+	DECLARE y year(4);
+	DECLARE q tinyint(1) unsigned;
 
-select * from pc_agency where id in (select agency_id from pc_agency_relation where parent_id = 82 ) and code_id  = 10
-Union
-select agency_id
+	DECLARE rows int default 0;
+	DECLARE row int default 0;
+	DECLARE i int;
+	
+  DECLARE s_cursor CURSOR FOR SELECT a.id, a.name, a.code_id,b.parent_id FROM  pc_agency as a left join pc_agency_relation as b on a.id = b.agency_id WHERE a.code is null;
+	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done=1;
+
+  open s_cursor; 
+  SELECT FOUND_ROWS() into rows;
+  SELECT rows;
+  SET row = 0;
+	cursor_loop:loop
+			FETCH s_cursor into c_id, c_name, c_code_id, c_parent_id;
+				SELECT c_name, c_parent_id;
+				
+			IF row >= rows then
+				leave cursor_loop;
+			end if;
+				SET u_code = null;
+			
+				SELECT code into c_code FROM pc_agency where id = c_parent_id;
+				SELECT c_code;
+				SELECT max(code) into u_code from pc_agency where code like CONCAT (c_code, '%') and length(code) = length(c_code) + 2 ;
+				
+				IF u_code is null then
+					SET u_code = CONCAT(c_code, '01');
+				ELSE 
+					SET u_code = LPAD(u_code + 2, length(c_code) + 2, 0);
+			  END IF;
+			  
+			  SELECT u_code;
+			  update pc_agency set code = u_code where id = c_id;
+			SET row = row + 1;
+	end loop cursor_loop;
+	close s_cursor;
+	
+	
+end;
+//
+delimiter ;
 
 
-select * from pc_agency where id in (select agency_id from pc_agency_relation where parent_id = 82 ) and code_id in (7,8)
-Union ALL
-select * from pc_agency where id in (select agency_id from pc_agency_realtion where parent_id in ( select agency_id from pc_agency_ralation where parent_id = 82)    )
 
 
-SELECT * FROM pc_workplan WHERE agency_id IN ( SELECT id FROM  `pc_agency` WHERE code LIKE  '12%' AND code_id =10 ) AND YEAR =2012 AND type_id = 1  and status_id =2
+delimiter //
+DROP procedure IF EXISTS check_agency_code//
+CREATE PROCEDURE check_agency_code()
+begin
+	DECLARE done int default 0;
+	DECLARE c_id int(11) unsigned;
+	DECLARE c_name VARCHAR(255);
+	DECLARE c_code VARCHAR(20);
+	DECLARE c_code_id int(11) unsigned;	
+	DECLARE c_parent_id int(11) unsigned;	
+	
+	DECLARE c_parent_code VARCHAR(20);
+	
+	DECLARE y year(4);
+	DECLARE q tinyint(1) unsigned;
 
-12
+	DECLARE rows int default 0;
+	DECLARE row int default 0;
+	DECLARE i int;
+	
+  DECLARE s_cursor CURSOR FOR SELECT a.id, a.name, a.code, a.code_id,b.parent_id FROM  pc_agency as a left join pc_agency_relation as b on a.id = b.agency_id where a.code_id = 10;
+	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done=1;
 
-SELECT * FROM pc_remind WHERE agency_id IN ( SELECT id FROM  `pc_agency` WHERE code LIKE  '12%' AND code_id =10 ) AND YEAR =2012 AND type_id = 1 AND status =2
+  open s_cursor; 
+  SELECT FOUND_ROWS() into rows;
+  SELECT rows;
+  SET row = 0;
+	cursor_loop:loop
+			FETCH s_cursor into c_id, c_name, c_code, c_code_id, c_parent_id;
+--			SELECT c_id,c_name;
+				
+			IF row >= rows then
+				leave cursor_loop;
+			end if;
+			  if c_parent_id is not null then
+						select code into c_parent_code from pc_agency where id = c_parent_id;
+--						SELECT CONCAT(substring(c_code, 1, length(c_parent_code)), '----', c_parent_code);
+--						SELECT c_parent_code;
+						if substring(c_code, 1, length(c_parent_code)) <> c_parent_code THEN
+							SELECT c_code, c_id, c_name, c_parent_code;
+							SELECT CONCAT(substring(c_code, 1, length(c_parent_code)), '----', c_parent_code);
+						END IF;
+				END IF;
+			SET row = row + 1;
+	end loop cursor_loop;
+	close s_cursor;
+	
+	
+end;
+//
+delimiter ;
 
-12
 
-select * from pc_remind_stat where agency_id = 180 AND YEAR =2012 AND type_id = 1 and status =2 
-
-select * from pc_remind_stat where parent_id =180   AND YEAR =2012 AND type_id = 1 and status =2 
-
-0
-
-
-
-select * from pc_remind_stat where agency_id IN ( SELECT id FROM  `pc_agency` WHERE code LIKE  '12%' AND code_id in (7, 8) ) AND YEAR =2012 AND type_id = 1 AND status =2
 
