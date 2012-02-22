@@ -62,14 +62,15 @@
 				model.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, onPropertyChanged);
 				addEventListener(FlexEvent.SHOW, onViewShow);
 				this.year = model.reportYear;
+//				updateData();
 			}
 			
 			private function onPropertyChanged(event:PropertyChangeEvent):void {
 				if (event.property == "reportYear") {
 					this.year = model.reportYear;
-					if (this.tab && this.tab.selectedChild == this) {
+//					if (this.tab && this.tab.selectedChild == this) {
 						updateData();
-					}
+//					}
 				}
 			}
 			

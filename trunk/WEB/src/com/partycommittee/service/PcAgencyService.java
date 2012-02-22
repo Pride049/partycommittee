@@ -74,8 +74,13 @@ public class PcAgencyService {
 	}
 	
 	public void createAgency(PcAgencyVo agencyVo) {
-		PcAgency agency = PcAgencyVo.toPcAgency(agencyVo);
+		
 		// Create agency.
+		
+		// get MaxCode From parent_id;
+		String maxcode = pcAgencyDaoImpl.getMaxCodeByParentId(agencyVo.getParentId());
+		agencyVo.setCode(maxcode);
+		PcAgency agency = PcAgencyVo.toPcAgency(agencyVo);
 		pcAgencyDaoImpl.createAgency(agency);
 		// Create agency relation.
 		PcAgencyRelation agencyRelation = new PcAgencyRelation();

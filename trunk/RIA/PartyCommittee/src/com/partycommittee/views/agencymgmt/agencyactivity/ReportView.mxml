@@ -40,7 +40,7 @@
 				this._agency = value;
 			}
 			
-			public var si:int;
+//			public var si:int;
 
 			public function onCreationCompleted():void {
 				onNavigateIn();
@@ -184,19 +184,19 @@
 						break;
 				}
 				
-				if (si > 0) {
-					tab.selectedIndex = si;
-					si = 0;
-				}
+//				if (si > 0) {
+//					tab.selectedIndex = si;
+//					si = 0;
+//				}
 			}
 			
 			private function onYearCmbChanged(event:Event):void {
 				model.reportYear = yearCmb.selectedItem as Number;
 			}
 			
-			private function tabChange():void {
-				si = tab.selectedIndex;
-			}
+//			private function tabChange():void {
+//				si = tab.selectedIndex;
+//			}
 			
 		]]>
 	</fx:Script>
@@ -205,7 +205,7 @@
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
 	
-	<mx:TabNavigator id="tab" width="100%" height="100%" change="tabChange()">
+	<mx:TabNavigator id="tab" width="100%" height="100%">
 	</mx:TabNavigator>
 	
 </navigation:NavigationView>

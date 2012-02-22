@@ -11,6 +11,7 @@ public class PcAgencyVo implements Serializable {
 	private Integer id;
 	private Integer parentId;
 	private String name;
+	private String code;
 	private Integer codeId;
 	private Integer number;
 	private Integer memberId;
@@ -50,6 +51,12 @@ public class PcAgencyVo implements Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
+	public String getCode() {
+		return code;
+	}
+	public void setCode(String code) {
+		this.code = code;
+	}	
 	public Integer getCodeId() {
 		return this.codeId;
 	}
@@ -168,6 +175,7 @@ public class PcAgencyVo implements Serializable {
 		agency.setId(agencyVo.getId());
 		agency.setMemberId(agencyVo.getMemberId());
 		agency.setName(agencyVo.getName());
+		agency.setCode(agencyVo.getCode());
 		agency.setCodeId(agencyVo.getCodeId());
 		agency.setNumber(agencyVo.getNumber());
 		agency.setSetupDatetime(agencyVo.getSetupDatetime());
@@ -192,6 +200,7 @@ public class PcAgencyVo implements Serializable {
 		agencyVo.setId(agency.getId());
 		agencyVo.setMemberId(agency.getMemberId());
 		agencyVo.setName(agency.getName());
+		agencyVo.setCode(agency.getCode());
 		agencyVo.setCodeId(agency.getCodeId());
 		agencyVo.setNumber(agency.getNumber());
 		agencyVo.setSetupDatetime(agency.getSetupDatetime());

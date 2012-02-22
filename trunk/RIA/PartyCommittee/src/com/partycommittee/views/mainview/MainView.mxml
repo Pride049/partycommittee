@@ -641,53 +641,55 @@
 					var item:Object = dg.selectedItem;
 					if (this.parent.parent.parent.parent is MainContainer) {
 						var obj:Object = this.parent.parent.parent.parent as MainContainer;
+						(obj.mainViewStack as ViewStack).selectedIndex = 2;	
+//						var nobj:Object = (obj.mainViewStack as ViewStack).getChildByName('activityView');
+//						nobj.updateData();
+//						var sobj:Object = (nobj as NavigationView).getChildByName('tab');
+//						
+//						var tobj:Object = (sobj as TabNavigator).getChildAt(0);
+//						sobj.selectedIndex = 0;
+//						var fobj:Object = (tobj as NavigationView).getChildByName('tab');
+//
+//						var typeId:Number;
+//						if (item is PcWorkPlanVo) {
+//							typeId = (item as PcWorkPlanVo).typeId;
+//						} else if (item is PcMeetingVo) {
+//							typeId = (item as PcMeetingVo).typeId;
+//						} else {
+//							typeId = item.typeId;
+//						}
+//						switch (typeId) {
+//							case PCConst.WORKPLAN_TYPE_YEARLY:
+//								nobj.si = 0;
+//								break;
+//							case PCConst.WORKPLAN_TYPE_YEARLY_SUMMARY:
+//								nobj.si = 8;
+//								break;
+//							case PCConst.WORKPLAN_TYPE_QUARTER:
+//								nobj.si = 1;
+//								break;
+//							case PCConst.WORKPLAN_TYPE_QUARTER_SUMMARY:
+//								nobj.si = 2;
+//								break;
+//							case PCConst.WORKPLAN_TYPE_CLASS:
+//								nobj.si = 3;
+//								break;
+//							case PCConst.WORKPLAN_TYPE_MEETING_BRANCH_COMMITTEE:
+//								nobj.si = 5;
+//								break;
+//							case PCConst.WORKPLAN_TYPE_MEETING_BRANCH_MEMBER:
+//								nobj.si = 4;
+//								break;
+//							case PCConst.WORKPLAN_TYPE_MEETING_BRANCH_LIFE:
+//								nobj.si = 6;
+//								break;
+//							case PCConst.WORKPLAN_TYPE_MEETING_OTHER:
+//								nobj.si = 7;
+//								break;
+//						}
+						
 
-						var nobj:Object = (obj.mainViewStack as ViewStack).getChildByName('activityView');
-						nobj.updateData();
-						var sobj:Object = (nobj as NavigationView).getChildByName('tab');
-
-						var tobj:Object = (sobj as TabNavigator).getChildAt(0);
-						sobj.selectedIndex = 0;
-						var fobj:Object = (tobj as NavigationView).getChildByName('tab');
-						(obj.mainViewStack as ViewStack).selectedIndex = 2;
-
-						var typeId:Number;
-						if (item is PcWorkPlanVo) {
-							typeId = (item as PcWorkPlanVo).typeId;
-						} else if (item is PcMeetingVo) {
-							typeId = (item as PcMeetingVo).typeId;
-						} else {
-							typeId = item.typeId;
-						}
-						switch (typeId) {
-							case PCConst.WORKPLAN_TYPE_YEARLY:
-								nobj.si = 0;
-								break;
-							case PCConst.WORKPLAN_TYPE_YEARLY_SUMMARY:
-								nobj.si = 8;
-								break;
-							case PCConst.WORKPLAN_TYPE_QUARTER:
-								nobj.si = 1;
-								break;
-							case PCConst.WORKPLAN_TYPE_QUARTER_SUMMARY:
-								nobj.si = 2;
-								break;
-							case PCConst.WORKPLAN_TYPE_CLASS:
-								nobj.si = 3;
-								break;
-							case PCConst.WORKPLAN_TYPE_MEETING_BRANCH_COMMITTEE:
-								nobj.si = 5;
-								break;
-							case PCConst.WORKPLAN_TYPE_MEETING_BRANCH_MEMBER:
-								nobj.si = 4;
-								break;
-							case PCConst.WORKPLAN_TYPE_MEETING_BRANCH_LIFE:
-								nobj.si = 6;
-								break;
-							case PCConst.WORKPLAN_TYPE_MEETING_OTHER:
-								nobj.si = 7;
-								break;
-						}
+											
 					}
 				}
 				

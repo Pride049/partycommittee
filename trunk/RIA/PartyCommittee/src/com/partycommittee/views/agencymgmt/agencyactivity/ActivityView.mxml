@@ -18,7 +18,7 @@
 			[Bindable]
 			private var model:ModelLocator = ModelLocator.getInstance();
 			
-			public var si:int;
+//			public var si:int;
 			
 			private function onCreationCompleted():void {
 				
@@ -53,8 +53,8 @@
 					reportView.percentHeight = 100;
 					reportView.percentWidth = 100;
 					reportView.tab = this.tab;
-					reportView.si = si;
-					si = 0;
+//					reportView.si = si;
+//					si = 0;
 					tab.addChild(reportView);
 					if (model.loginUser.enableReport != 1) {
 						reportView.enableReport = false;				

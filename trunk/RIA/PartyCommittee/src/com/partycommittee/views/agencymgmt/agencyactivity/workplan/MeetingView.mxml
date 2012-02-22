@@ -127,11 +127,11 @@
 //						break;
 				}
 				
-				if (meetingType == PCConst.WORKPLAN_TYPE_CLASS) {
-					personLbl.text = "授课人:";
-				} else {
+//				if (meetingType == PCConst.WORKPLAN_TYPE_CLASS) {
+//					personLbl.text = "授课人:";
+//				} else {
 					personLbl.text = "主持人:";
-				}
+//				}
 				
 				if (meetingType == PCConst.WORKPLAN_TYPE_MEETING_OTHER) {
 					meetingTitleBox.visible = meetingTitleBox.includeInLayout = false;
