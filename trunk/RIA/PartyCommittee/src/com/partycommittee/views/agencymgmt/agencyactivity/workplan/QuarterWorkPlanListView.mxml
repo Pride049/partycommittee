@@ -59,21 +59,25 @@
 				model.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, onPropertyChanged);
 				addEventListener(FlexEvent.SHOW, onViewShow);
 				this.year = model.reportYear;
-				updateData();
-			}
-			
-			private function onPropertyChanged(event:PropertyChangeEvent):void {
-				if (event.property == "reportYear") {
-					this.year = model.reportYear;
-					if (this.tab && this.tab.selectedChild == this) {
-						updateData();
-					}
+				if (this.tab && this.tab.selectedChild == this) {
+					updateData();
 				}
 			}
 			
 			private function onViewShow(event:FlexEvent):void {
 				if (agency) {
-					updateData();
+					if (this.tab && this.tab.selectedChild == this) {
+						updateData();
+					}
+				}
+			}			
+			
+			private function onPropertyChanged(event:PropertyChangeEvent):void {
+				if (event.property == "reportYear" || event.property == "focusAgencyVo") {
+					this.year = model.reportYear;
+					if (this.tab && this.tab.selectedChild == this) {
+						updateData();
+					}
 				}
 			}
 			

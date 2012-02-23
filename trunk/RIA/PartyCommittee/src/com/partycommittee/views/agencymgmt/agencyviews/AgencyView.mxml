@@ -242,6 +242,9 @@
 				<mx:FormItem label="妇女委员:" width="100%">
 					<mx:TextInput id="womenMemberLbl" width="100%" text="{agency.fnwy}" change="agency.fnwy = womenMemberLbl.text" maxChars="50"/>
 				</mx:FormItem>
+				<mx:FormItem label="保密委员:" width="100%">
+					<mx:TextInput id="secretMemberLbl" width="100%" text="{agency.fnwy}" change="agency.fnwy = womenMemberLbl.text" maxChars="50"/>
+				</mx:FormItem>				
 			</mx:Form>
 		</mx:HBox>
 		<mx:ControlBar width="100%" horizontalAlign="center"

@@ -72,13 +72,15 @@
 				model.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, onPropertyChanged);
 				addEventListener(FlexEvent.SHOW, onViewShow);
 				year = model.reportYear;
-				if (year) {
+				if (this.tab && this.tab.selectedChild == this) {
 					refresh();
-				}
+				}	
 			}
 			
 			private function onViewShow(event:FlexEvent):void {
-				refresh();
+				if (this.tab && this.tab.selectedChild == this) {
+					refresh();
+				}
 			}
 			
 			private function resetData():void {
@@ -89,7 +91,7 @@
 			}
 			
 			private function onPropertyChanged(event:PropertyChangeEvent):void {
-				if (event.property == "reportYear") {
+				if (event.property == "reportYear"|| event.property == "focusAgencyVo") {
 					this.year = model.reportYear;
 					if (this.tab && this.tab.selectedChild == this) {
 						refresh();
@@ -141,13 +143,13 @@
 			private function refresh():void {
 				var workPlanEvt:PcWorkPlanEvent = new PcWorkPlanEvent(PcWorkPlanEvent.GET_WORKPLAN_YEARLY, agency);
 				workPlanEvt.year = year;
-				workPlanEvt.successCallback = onGetWorkPlanSuccess;
-				workPlanEvt.failureCallback = onGetWorkPlanFailure;
+				workPlanEvt.successCallback = onGetYearWorkPlanSuccess;
+				workPlanEvt.failureCallback = onGetYearWorkPlanFailure;
 				this.enabled = false;
 				workPlanEvt.dispatch();
 			}
 			
-			private function onGetWorkPlanSuccess(data:Object, workPlanEvt:PcWorkPlanEvent):void {
+			private function onGetYearWorkPlanSuccess(data:Object, workPlanEvt:PcWorkPlanEvent):void {
 				this.enabled = true;
 				if (!data) {
 					resetData();
@@ -230,7 +232,7 @@
 			}
 						
 			
-			private function onGetWorkPlanFailure():void {
+			private function onGetYearWorkPlanFailure():void {
 				this.enabled = true;
 			}
 			

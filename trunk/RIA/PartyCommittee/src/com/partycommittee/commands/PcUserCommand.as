@@ -39,7 +39,7 @@ package com.partycommittee.commands
 //					pcUserProxy.getPcUserList();
 					if (pcUserEvent.agency.codeId == 6) {
 						pcUserProxy.getPcUserListByPage(pcUserEvent.page);
-					} else if (pcUserEvent.agency.codeId == 7) {
+					} else if (pcUserEvent.agency.codeId == 7 || pcUserEvent.agency.codeId == 15) {
 						pcUserProxy.getPcUserListByPageAndParentId(pcUserEvent.page, pcUserEvent.agency.id);
 					} else {
 						pcUserProxy.getPcUserListByPage(pcUserEvent.page, pcUserEvent.agency.id);

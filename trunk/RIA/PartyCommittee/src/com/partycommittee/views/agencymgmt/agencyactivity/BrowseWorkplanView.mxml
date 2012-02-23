@@ -85,7 +85,9 @@
 			
 			private function onGetChildrenSuccess(data:Object, evt:PcAgencyEvent):void {
 				agency.children = data as ArrayCollection;
-				getCommitWorkPlan();
+				if (agency.children.length > 0) {
+					getCommitWorkPlan();
+				}
 			}
 			
 			private function onGetChildrenFailure(data:Object, evt:PcAgencyEvent):void {

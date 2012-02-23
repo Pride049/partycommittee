@@ -92,6 +92,7 @@
 //			private var createFirstBranchMenuItem:Object = {id:PCConst.AGENCY_CODE_FIRSTBRANCH, label:"建立第一党支部"};
 			private var createBasicMenuItem:Object = {id:PCConst.AGENCY_CODE_BASICCOMMITTEES, label:"建立基层党委"};
 			private var createBranchMenuItem:Object = {id:PCConst.AGENCY_CODE_BRANCH, label:"建立党支部"};
+			private var createEJDWMenuItem:Object = {id:PCConst.AGENCY_CODE_EJDW, label:"建立二级党委"};
 			private var createGaneralBranchMenuItem:Object = {id:PCConst.AGENCY_CODE_GANERALBRANCH, label:"建立党总支部"};
 			private var createTeamMenuItem:Object = {id:PCConst.AGENCY_CODE_TEAM, label:"建立党小组"};
 			private function createMenuItems():Array {
@@ -104,7 +105,10 @@
 						menuItems.push(createBasicMenuItem, createBranchMenuItem);
 						break;
 					case PCConst.AGENCY_CODE_BASICCOMMITTEES:
-						menuItems.push(createGaneralBranchMenuItem, createBranchMenuItem);
+						menuItems.push(createEJDWMenuItem, createGaneralBranchMenuItem, createBranchMenuItem);
+						break;
+					case PCConst.AGENCY_CODE_EJDW:
+						menuItems.push(createBranchMenuItem);
 						break;
 					case PCConst.AGENCY_CODE_BRANCH:
 //						menuItems.push(createTeamMenuItem);
