@@ -641,6 +641,7 @@ begin
 	DECLARE c_name VARCHAR(255);
 	DECLARE c_code VARCHAR(20);
 	DECLARE c_code_id int(11) unsigned;	
+	DECLARE c_parent_id int(11) unsigned;
 	
 	DECLARE y year(4);
 	DECLARE q tinyint(1) unsigned;
@@ -649,7 +650,7 @@ begin
 	DECLARE row int default 0;
 	DECLARE i int;
 	
-  DECLARE s_cursor CURSOR FOR SELECT a.id, a.name, a.code_id, a.code FROM  pc_agency as a left join pc_agency_relation as b on a.id = b.agency_id WHERE b.parent_id = 1;
+  DECLARE s_cursor CURSOR FOR SELECT a.id, a.name, a.code_id, a.code, b.parent_id FROM  pc_agency as a left join pc_agency_relation as b on a.id = b.agency_id WHERE a.code_id in (7,8,15);
 	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done=1;
 
   open s_cursor; 
@@ -657,15 +658,15 @@ begin
   SELECT rows;
   SET row = 0;
 	cursor_loop:loop
-			FETCH s_cursor into c_id, c_name, c_code_id, c_code;
+			FETCH s_cursor into c_id, c_name, c_code_id, c_code, c_parent_id;
 			SELECT c_id;
 			IF row >= rows then
 				leave cursor_loop;
 			end if;
 			
-			INSERT INTO pc_parent_stat (agency_id, name, code_id, parent_id, year, quarter, type_id, total, reported, delay, reported_rate, eva, eva_rate, attend, asence , attend_rate, p_count, zb_num, zbsj_num,  agency_num, agency_goodjob )
+			INSERT INTO pc_parent_stat (agency_id, name, code_id, code, parent_id, year, quarter, type_id, total, reported, delay, reported_rate, eva, eva_rate, attend, asence , attend_rate, p_count, zb_num, zbsj_num,  agency_num, agency_goodjob )
 			SELECT * FROM
-			(SELECT c_id as agency_id, c_name as name, c_code_id as code_id, 1 as parent_id, T1.year, T1.quarter, T1.type_id, T1.total, T1.reported, T1.delay, 
+			(SELECT c_id as agency_id, c_name as name, c_code_id as code_id, c_code as code, c_parent_id as parent_id, T1.year, T1.quarter, T1.type_id, T1.total, T1.reported, T1.delay, 
 		  (CASE WHEN T1.reported_rate is NULL THEN 0 ELSE T1.reported_rate END) as reported_rate, 
 		  T1.eva, 
 		  (CASE WHEN T1.eva_rate is NULL THEN 0 ELSE T1.eva_rate END) as eva_rate, 
@@ -687,18 +688,14 @@ begin
 					 SUM(  zbsj_num )  as zbsj_num ,
 					 COUNT(*) as agency_num,
 					 COUNT(CASE WHEN total > 0 THEN total END) as agency_goodjob
-			FROM  pc_agency_stat where type_id in (1, 2) AND agency_id in
-			(
-			  SELECT ID FROM pc_agency where code like CONCAT('\'', c_code, '%\'') and code_id = 10;		
-			
-			)
+			FROM  pc_agency_stat where type_id in (1, 2) AND code like CONCAT (c_code, '%') 
 			 GROUP BY YEAR, quarter, type_id )  as T1
 			) as T2
 			ON DUPLICATE KEY UPDATE name = c_name, total = T2.total, reported = T2.reported, delay= T2.delay, reported_rate = T2.reported_rate, eva = T2.eva, eva_rate = T2.eva_rate, attend = T2.attend, asence = T2.asence, attend_rate= T2.attend_rate, p_count = T2.p_count, zb_num = T2.zb_num, zbsj_num = T2.zbsj_num, agency_num = T2.agency_num, agency_goodjob = T2.agency_goodjob;
 
-			INSERT INTO pc_parent_stat (agency_id, name, code_id, parent_id, year, quarter, type_id, total, reported, delay, reported_rate, eva, eva_rate, attend, asence , attend_rate, p_count, zb_num, zbsj_num,  agency_num, agency_goodjob )
+			INSERT INTO pc_parent_stat (agency_id, name, code_id, code, parent_id, year, quarter, type_id, total, reported, delay, reported_rate, eva, eva_rate, attend, asence , attend_rate, p_count, zb_num, zbsj_num,  agency_num, agency_goodjob )
 			SELECT * FROM
-			(SELECT c_id as agency_id, c_name as name, c_code_id as code_id, 1 as parent_id, T1.year, T1.quarter, T1.type_id, T1.total, T1.reported, T1.delay, 
+			(SELECT c_id as agency_id, c_name as name, c_code_id as code_id, c_code as code, c_parent_id as parent_id, T1.year, T1.quarter, T1.type_id, T1.total, T1.reported, T1.delay, 
 		  (CASE WHEN T1.reported_rate is NULL THEN 0 ELSE T1.reported_rate END) as reported_rate, 
 		  T1.eva, 
 		  (CASE WHEN T1.eva_rate is NULL THEN 0 ELSE T1.eva_rate END) as eva_rate, 
@@ -720,15 +717,7 @@ begin
 					 SUM(  zbsj_num )  as zbsj_num ,
 					 COUNT(*) as agency_num,
 					 COUNT(CASE WHEN total > 0 THEN total END) as agency_goodjob
-			FROM  pc_agency_stat where type_id >=5 AND agency_id in
-			(
-			  SELECT DISTINCT id FROM (
-					SELECT id FROM pc_agency WHERE id	IN ( SELECT agency_id	FROM pc_agency_relation WHERE parent_id =c_id ) AND code_id =10
-					UNION ALL 
-					SELECT agency_id AS id FROM pc_agency_relation	WHERE parent_id	IN ( SELECT agency_id	FROM pc_agency_relation	WHERE parent_id =c_id	) 
-				) AS tt			
-			
-			)
+			FROM  pc_agency_stat where type_id >=5 AND code like CONCAT (c_code, '%') 
 			 GROUP BY YEAR, quarter, type_id )  as T1
 			) as T2
 			ON DUPLICATE KEY UPDATE name = c_name, total = T2.total, reported = T2.reported, delay= T2.delay, reported_rate = T2.reported_rate, eva = T2.eva, eva_rate = T2.eva_rate, attend = T2.attend, asence = T2.asence, attend_rate= T2.attend_rate, p_count = T2.p_count, zb_num = T2.zb_num, zbsj_num = T2.zbsj_num, agency_num = T2.agency_num, agency_goodjob = T2.agency_goodjob;

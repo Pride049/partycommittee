@@ -16,6 +16,7 @@ package
 		public static const AGENCY_CODE_FIRSTBRANCH:int = 9;
 		public static const AGENCY_CODE_BRANCH:int = 10;
 		public static const AGENCY_CODE_TEAM:int = 13;
+		public static const AGENCY_CODE_EJDW:int = 15;
 		
 		// Duty code define.
 		public static const dutyList:ArrayCollection = new ArrayCollection(

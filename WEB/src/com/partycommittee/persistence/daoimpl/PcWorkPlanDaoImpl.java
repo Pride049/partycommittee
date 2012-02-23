@@ -33,7 +33,7 @@ public class PcWorkPlanDaoImpl extends JpaDaoBase implements PcWorkPlanDao {
 	@Override
 	public PcWorkPlan getWorkPlanYearlyByAgencyId(Integer agencyId, Integer year) {
 		try {
-			List<PcWorkPlan> list = super.find("from PcWorkPlan where agency_id = ? and year = ? and typeId = ?"
+			List<PcWorkPlan> list = super.find("from PcWorkPlan where agency_id = ? and year = ? and typeId = ? order by id desc"
 					, agencyId, year, 1);
 			if (list != null && list.size() > 0) {
 				return list.get(0);
@@ -48,7 +48,7 @@ public class PcWorkPlanDaoImpl extends JpaDaoBase implements PcWorkPlanDao {
 	public PcWorkPlan getWorkPlanYearlySummaryByAgencyId(Integer agencyId,
 			Integer year) {
 		try {
-			List<PcWorkPlan> list = super.find("from PcWorkPlan where agency_id = ? and year = ? and typeId = ?"
+			List<PcWorkPlan> list = super.find("from PcWorkPlan where agency_id = ? and year = ? and typeId = ? order by id desc"
 					, agencyId, year, 4);
 			if (list != null && list.size() > 0) {
 				return list.get(0);
@@ -127,7 +127,7 @@ public class PcWorkPlanDaoImpl extends JpaDaoBase implements PcWorkPlanDao {
 	public PcWorkPlan getWorkPlanQuarterByAgencyId(Integer agencyId,
 			Integer year, Integer quarter) {
 		try {
-			List<PcWorkPlan> list = super.find("from PcWorkPlan where agency_id = ? and year = ? and quarter = ? and typeId = ?"
+			List<PcWorkPlan> list = super.find("from PcWorkPlan where agency_id = ? and year = ? and quarter = ? and typeId = ? order by id desc"
 					, agencyId, year, quarter, 2);
 			if (list != null && list.size() > 0) {
 				return list.get(0);
@@ -142,7 +142,7 @@ public class PcWorkPlanDaoImpl extends JpaDaoBase implements PcWorkPlanDao {
 	public PcWorkPlan getWorkPlanQuarterByTypeId(Integer agencyId,
 			Integer year, Integer quarter, Integer typeId) {
 		try {
-			List<PcWorkPlan> list = super.find("from PcWorkPlan where agency_id = ? and year = ? and quarter = ? and typeId = ?"
+			List<PcWorkPlan> list = super.find("from PcWorkPlan where agency_id = ? and year = ? and quarter = ? and typeId = ? order by id desc"
 					, agencyId, year, quarter, typeId);
 			if (list != null && list.size() > 0) {
 				return list.get(0);
@@ -156,7 +156,7 @@ public class PcWorkPlanDaoImpl extends JpaDaoBase implements PcWorkPlanDao {
 	@SuppressWarnings("unchecked")
 	public List<PcWorkPlan> getWorkPlanQuarterByYear(Integer agencyId, Integer year) {
 		try {
-			return super.find("from PcWorkPlan where agency_id = ? and year = ? and typeId = ?",
+			return super.find("from PcWorkPlan where agency_id = ? and year = ? and typeId = ? order by id desc",
 					agencyId, year, 2);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -168,7 +168,7 @@ public class PcWorkPlanDaoImpl extends JpaDaoBase implements PcWorkPlanDao {
 	public List<PcWorkPlan> getResultQuarterByYear(Integer agencyId,
 			Integer year) {
 		try {
-			return super.find("from PcWorkPlan where agency_id = ? and year = ? and typeId = ?",
+			return super.find("from PcWorkPlan where agency_id = ? and year = ? and typeId = ? order by id desc",
 					agencyId, year, 3);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -180,7 +180,7 @@ public class PcWorkPlanDaoImpl extends JpaDaoBase implements PcWorkPlanDao {
 	public PcWorkPlan getResultQuarterByAgencyId(Integer agencyId,
 			Integer year, Integer quarter) {
 		try {
-			List<PcWorkPlan> list = super.find("from PcWorkPlan where agency_id = ? and year = ? and quarter = ? and typeId = ?"
+			List<PcWorkPlan> list = super.find("from PcWorkPlan where agency_id = ? and year = ? and quarter = ? and typeId = ? order by id desc"
 					, agencyId, year, quarter, 3);
 			if (list != null && list.size() > 0) {
 				return list.get(0);

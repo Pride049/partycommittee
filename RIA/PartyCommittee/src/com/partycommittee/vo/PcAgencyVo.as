@@ -11,6 +11,7 @@ package com.partycommittee.vo
 		public var id:Number;
 		public var parentId:Number;
 		public var name:String;
+		public var code:String;
 		public var codeId:Number;
 		public var number:Number;
 		public var memberId:Number;
@@ -31,6 +32,5 @@ package com.partycommittee.vo
 		public var ext:String = 'beijing';//'saas扩展字段',
 		
 		public var children:ArrayCollection = new ArrayCollection();
-		
 	}
 }

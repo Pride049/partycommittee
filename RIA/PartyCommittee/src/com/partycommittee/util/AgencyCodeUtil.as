@@ -18,6 +18,8 @@ package com.partycommittee.util
 					return "党总支部";
 				case PCConst.AGENCY_CODE_TEAM:
 					return "党小组";
+				case PCConst.AGENCY_CODE_EJDW:
+					return "二级党委";
 				default:
 					return null;
 			}
