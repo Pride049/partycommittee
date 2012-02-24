@@ -191,6 +191,7 @@
 					
 					if (workPlan.workPlanContent) {
 						b_personTxt.text =  "填写人:" + workPlan.workPlanContent.memberName;
+						dateTxt.text = "填写时间:" + DateUtil.toISOString(workPlan.workPlanContent.updatetime);
 						b_textArea.htmlText = workPlan.workPlanContent.content;
 					}						
 					if (workPlan.statusId == 4) {
@@ -218,7 +219,7 @@
 				browseForm_approve.visible = "true";
 				b_textArea_app.htmlText = workplanContent.content;
 				b_personTxt_eva.text = "评价人:" + workplanContent.memberName;
-				dateTxt.text = "评价日期:" + DateUtil.toISOString(workplanContent.updatetime);
+				dateTxt_eva.text = "评价日期:" + DateUtil.toISOString(workplanContent.updatetime);
 			}
 			
 			private function onGetWorkplanCommentFailure(info:Object, evt:PcWorkPlanEvent):void {
@@ -229,19 +230,37 @@
 				this.enabled = true;
 			}
 			
+			private function formValidate():Boolean {
+				if (textArea.htmlText.length == 0) {
+					Alert.show("年终工作总结不能为空!");
+					return false;
+				}
+				
+				if (personTxt.text.length == 0) {
+					Alert.show("填写人不能为空!");
+					return false;
+				}
+				return true;
+			}			
+			
+			
 			private function onSaveAndCommit():void {
-				if (workPlan) {
-					doUpdate(true);
-				} else {
-					doCreate(true);
+				if (formValidate() == true) {	
+					if (workPlan) {
+						doUpdate(true);
+					} else {
+						doCreate(true);
+					}
 				}
 			}
 			
 			private function onSaveWithoutSubmit():void {
-				if (workPlan) {
-					doUpdate();
-				} else {
-					doCreate();
+				if (formValidate() == true) {
+					if (workPlan) {
+						doUpdate();
+					} else {
+						doCreate();
+					}
 				}
 			}
 			
@@ -379,7 +398,13 @@
 					<mx:VBox width="100%" height="100%">
 						<mx:TextArea id="b_textArea" width="100%" height="100%"
 									 editable="{!workPlan || workPlan.statusId == 1}"/>
-						<mx:Label id="b_personTxt" text="填写人："/>
+						<mx:HBox  horizontalCenter="0" width="100%">
+							<mx:Label id="dateTxt" text="填写时间："/>
+							<mx:Spacer width="100%"/>
+							<mx:Label id="b_personTxt" text="填写人："/>
+						</mx:HBox>							
+						
+						
 					</mx:VBox>
 				</mx:HBox>					
 				
@@ -393,7 +418,7 @@
 						<mx:TextArea id="b_textArea_app" width="100%" height="100%"
 									 editable="false"/>
 						<mx:HBox  horizontalCenter="0" width="100%">
-							<mx:Label left="0"   id="dateTxt"/>
+							<mx:Label left="0"   id="dateTxt_eva"/>
 							<mx:Spacer width="100%"/>
 							<mx:Label right="0" id="b_personTxt_eva"/>
 						</mx:HBox>						
