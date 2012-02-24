@@ -91,29 +91,9 @@
 			}
 			
 			private function onCreationCompleted():void {
-				model.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, onPropertyChanged);
-				if (this.tab && this.tab.selectedChild == this) {
-					updateData();
-				}
+				updateData();
 			}
-			
-			private function onPropertyChanged(event:PropertyChangeEvent):void {
-				if (event.property == "reportYear" || event.property == "focusAgencyVo") {
-					this.year = model.reportYear;
-					if (this.tab && this.tab.selectedChild == this) {
-						updateData();
-					}
-				}
-			}			
-			
-			private function onViewShow(event:FlexEvent):void {
-				if (agency) {
-					if (this.tab && this.tab.selectedChild == this) {
-						updateData();
-					}
-				}
-			}				
-			
+
 			private function updateData():void {
 				if (!agency || !workPlan) {
 					initRemindLock();

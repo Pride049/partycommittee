@@ -43,11 +43,28 @@ public class PcWorkPlanService {
 		if (workPlan == null) {
 			return;
 		}
-		PcWorkPlan pcWorkPlan = pcWorkPlanDaoImpl.createWorkPlan(PcWorkPlanVo.toPcWorkPlan(workPlan));
-		if (pcWorkPlan != null && workPlan.getWorkPlanContent() != null) {
-			PcWorkPlanContentVo content = workPlan.getWorkPlanContent();
-			content.setWorkplanId(pcWorkPlan.getId());
-			pcWorkPlanContentDaoImpl.createContent(PcWorkPlanContentVo.toPcWorkPlanContent(content));
+		
+		// 先检查唯一性
+		PcWorkPlan svo = pcWorkPlanDaoImpl.getWorkPlanQuarterByTypeId(workPlan.getAgencyId(), workPlan.getYear(), workPlan.getQuarter(), workPlan.getTypeId());
+		
+		if (svo == null) {
+		
+			PcWorkPlan pcWorkPlan = pcWorkPlanDaoImpl.createWorkPlan(PcWorkPlanVo.toPcWorkPlan(workPlan));
+			if (pcWorkPlan != null && workPlan.getWorkPlanContent() != null) {
+				PcWorkPlanContentVo content = workPlan.getWorkPlanContent();
+				content.setWorkplanId(pcWorkPlan.getId());
+				pcWorkPlanContentDaoImpl.createContent(PcWorkPlanContentVo.toPcWorkPlanContent(content));
+			}
+		} else {
+			workPlan.setId(svo.getId());
+			pcWorkPlanDaoImpl.updateWorkPlan(PcWorkPlanVo.toPcWorkPlan(workPlan));
+			if (workPlan.getWorkPlanContent() != null) {
+				PcWorkPlanContentVo content = workPlan.getWorkPlanContent();
+				PcWorkPlanContent workPlanContent = pcWorkPlanContentDaoImpl.getContentByWorkPlanId(workPlan.getId());
+				content.setWorkplanId(workPlan.getId());
+				content.setId(workPlanContent.getId());
+				pcWorkPlanContentDaoImpl.upateContent(PcWorkPlanContentVo.toPcWorkPlanContent(content));
+			}
 		}
 	}
 	

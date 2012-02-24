@@ -26,27 +26,26 @@ CREATE TABLE IF NOT EXISTS `pc_agency_stat` (
   `agency_id` int(11) unsigned NOT NULL COMMENT '党支部ID',
   `name` varchar(255) NOT NULL COMMENT '党支部名称',
   `code_id` int(11) NOT NULL DEFAULT '0' COMMENT '党支部类型',
+  `code` varchar(10) NOT NULL,
   `parent_id` int(11) unsigned NOT NULL COMMENT '上级党支部ID',
   `year` year(4) NOT NULL COMMENT '年度',
   `quarter` tinyint(1) unsigned NOT NULL COMMENT '季度',
   `type_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '会议类型',
   `reported` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '规范执行情况',
   `delay` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '补开补报情况',
-  `reported_rate` decimal(3,2) NOT NULL DEFAULT '0.00' COMMENT '规范执行率',
+  `reported_rate` decimal(6,4) NOT NULL DEFAULT '0.0000' COMMENT '规范执行率',
   `total` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '开会总次数',
   `eva` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '已评价数',
-  `eva_rate` decimal(3,2) NOT NULL DEFAULT '0.00' COMMENT '评价率',
+  `eva_rate` decimal(6,4) NOT NULL DEFAULT '0.0000' COMMENT '评价率',
   `attend` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '应出席人数',
   `asence` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '缺席人数',
-  `attend_rate` decimal(3,2) NOT NULL DEFAULT '0.00' COMMENT '出席率',
+  `attend_rate` decimal(6,4) NOT NULL DEFAULT '0.0000' COMMENT '出席率',
   `p_count` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '党小组数',
   `zb_num` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '支部人数',
   `zbsj_num` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '支部书记数',
   PRIMARY KEY (`id`),
   UNIQUE KEY `agency_id` (`agency_id`,`code_id`,`parent_id`,`year`,`quarter`,`type_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='党支部统计表' AUTO_INCREMENT=1 ;
-
-
 
 --
 -- 表的结构 `pc_parent_stat`
@@ -58,19 +57,20 @@ CREATE TABLE IF NOT EXISTS `pc_parent_stat` (
   `agency_id` int(11) unsigned NOT NULL COMMENT '党支部ID',
   `name` varchar(255) NOT NULL COMMENT '党支部名称',
   `code_id` int(11) NOT NULL DEFAULT '0' COMMENT '党支部类型',
+  `code` varchar(20) NOT NULL,
   `parent_id` int(11) unsigned NOT NULL COMMENT '上级党支部ID',
   `year` year(4) NOT NULL COMMENT '年度',
   `quarter` tinyint(1) unsigned NOT NULL COMMENT '季度',
   `type_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '会议类型',
   `reported` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '规范执行情况',
   `delay` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '补开补报情况',
-  `reported_rate` decimal(3,2) NOT NULL DEFAULT '0.00' COMMENT '规范执行率',
+  `reported_rate` decimal(6,4) NOT NULL DEFAULT '0.0000' COMMENT '规范执行率',
   `total` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '开会总次数',
   `eva` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '已评价数',
-  `eva_rate` decimal(3,2) NOT NULL DEFAULT '0.00' COMMENT '评价率',
+  `eva_rate` decimal(6,4) NOT NULL DEFAULT '0.0000' COMMENT '评价率',
   `attend` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '应出席人数',
   `asence` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '缺席人数',
-  `attend_rate` decimal(3,2) NOT NULL DEFAULT '0.00' COMMENT '出席率',
+  `attend_rate` decimal(6,4) NOT NULL DEFAULT '0.0000' COMMENT '出席率',
   `p_count` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '党小组数',
   `zb_num` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '支部人数',
   `zbsj_num` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '支部书记数',
@@ -79,7 +79,6 @@ CREATE TABLE IF NOT EXISTS `pc_parent_stat` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `agency_id` (`agency_id`,`code_id`,`parent_id`,`year`,`quarter`,`type_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='党支部统计表' AUTO_INCREMENT=1 ;
-
 
 DROP TABLE IF EXISTS `pc_remind_lock`;
 CREATE TABLE IF NOT EXISTS `pc_remind_lock` (
@@ -98,6 +97,43 @@ CREATE TABLE IF NOT EXISTS `pc_remind_lock` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `agency_id` (`agency_id`,`code_id`,`parent_id`,`year`,`quarter`,`month`,`type_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='党支部提醒统计表' AUTO_INCREMENT=12326 ;
+
+
+DROP TABLE IF EXISTS `pc_remind`;
+CREATE TABLE IF NOT EXISTS `pc_remind` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `agency_id` int(11) unsigned NOT NULL COMMENT '党支部ID',
+  `name` varchar(255) NOT NULL COMMENT '党支部名称',
+  `code_id` int(11) NOT NULL DEFAULT '0' COMMENT '党支部类型',
+  `code` varchar(20) NOT NULL,
+  `parent_id` int(11) unsigned NOT NULL COMMENT '上级党支部ID',
+  `year` year(4) NOT NULL COMMENT '年度',
+  `quarter` tinyint(1) unsigned NOT NULL COMMENT '季度',
+  `type_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '年度计划状态',
+  `status` smallint(5) unsigned NOT NULL,
+  `ext` varchar(255) DEFAULT 'beijing' COMMENT 'saas扩展字段',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `agency_id` (`agency_id`,`code_id`,`parent_id`,`year`,`quarter`,`type_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='党支部提醒统计表' AUTO_INCREMENT=1 ;
+
+
+DROP TABLE IF EXISTS `pc_remind_stat`;
+CREATE TABLE IF NOT EXISTS `pc_remind_stat` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `agency_id` int(11) unsigned NOT NULL COMMENT '党支部ID',
+  `name` varchar(255) NOT NULL COMMENT '党支部名称',
+  `code_id` int(11) DEFAULT NULL COMMENT '党支部类型',
+  `code` varchar(20) NOT NULL,
+  `parent_id` int(11) unsigned NOT NULL COMMENT '上级党支部ID',
+  `year` year(4) NOT NULL COMMENT '年度',
+  `quarter` tinyint(1) unsigned NOT NULL COMMENT '季度',
+  `type_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '年度计划状态',
+  `status` smallint(5) unsigned NOT NULL,
+  `c` int(10) unsigned NOT NULL COMMENT '季度执行计划状态',
+  `ext` varchar(255) DEFAULT 'beijing' COMMENT 'saas扩展字段',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `agency_id` (`agency_id`,`code_id`,`parent_id`,`year`,`quarter`,`type_id`,`status`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='党支部提醒统计表' AUTO_INCREMENT=1 ;
 
 
 
