@@ -156,9 +156,9 @@
 					personTxt.text = workPlan.workPlanContent.memberName;
 					textArea.htmlText = workPlan.workPlanContent.content;
 				} else {
-					b_personTxt.text = "填报人:" + workPlan.workPlanContent.memberName;
+					b_personTxt.text = "填写人:" + workPlan.workPlanContent.memberName;
 					b_textArea.htmlText = workPlan.workPlanContent.content;
-					
+					dateTxt.text = "填写时间:" + DateUtil.toISOString(workPlan.workPlanContent.updatetime);
 					if (workPlan.statusId == 3) {
 						getWorkPlanComment(workPlan);
 					}
@@ -195,7 +195,7 @@
 				browseForm_approve.visible = "true";
 				b_textArea_app.htmlText = workplanContent.content;
 				b_personTxt_app.text = "审批人:" + workplanContent.memberName;
-				dateTxt.text = "审批日期:" + DateUtil.toISOString(workplanContent.updatetime);
+				dateTxt_app.text = "审批日期:" + DateUtil.toISOString(workplanContent.updatetime);
 			}			
 			
 			
@@ -206,19 +206,36 @@
 				textArea.htmlText = "";
 			}
 			
+			private function formValidate():Boolean {
+				if (textArea.htmlText.length == 0) {
+					Alert.show("季度计划不能为空!");
+					return false;
+				}
+				
+				if (personTxt.text.length == 0) {
+					Alert.show("填写人不能为空!");
+					return false;
+				}
+				return true;
+			}			
+			
 			private function onSaveAndCommit():void {
-				if (!isNew) {
-					doUpdate(true);
-				} else {
-					doCreate(true);
+				if (formValidate() == true) {	
+					if (!isNew) {
+						doUpdate(true);
+					} else {
+						doCreate(true);
+					}
 				}
 			}
 			
 			private function onSaveWithoutSubmit():void {
-				if (!isNew) {
-					doUpdate();
-				} else {
-					doCreate();
+				if (formValidate() == true) {	
+					if (!isNew) {
+						doUpdate();
+					} else {
+						doCreate();
+					}
 				}
 			}
 			
@@ -418,7 +435,11 @@
 					<mx:TextArea id="b_textArea" width="100%" height="100%"
 								 editable="false"/>
 	
-					<mx:Label id="b_personTxt" text="填写人："/>
+						<mx:HBox  horizontalCenter="0" width="100%">
+							<mx:Label id="dateTxt" text="填写时间："/>
+							<mx:Spacer width="100%"/>
+							<mx:Label id="b_personTxt" text="填写人："/>
+						</mx:HBox>	
 					</mx:VBox>
 				</mx:HBox>
 				<mx:HBox id="browseForm_approve"  horizontalAlign="left" width="0" height="0" horizontalScrollPolicy="off" verticalScrollPolicy="off" visible="false">
@@ -430,7 +451,7 @@
 						<mx:TextArea id="b_textArea_app" width="100%" height="100%"
 									 editable="false"/>
 						<mx:HBox  horizontalCenter="0" width="100%">
-							<mx:Label left="0"   id="dateTxt"/>
+							<mx:Label left="0"   id="dateTxt_app"/>
 							<mx:Spacer width="100%"/>
 							<mx:Label right="0" id="b_personTxt_app" text="审批人："/>
 						</mx:HBox>
