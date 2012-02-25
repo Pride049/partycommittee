@@ -14,6 +14,7 @@
 	<fx:Script>
 		<![CDATA[
 			import com.lnczx.utils.DateUtilExt;
+			import com.partycommittee.events.PcAgencyEvent;
 			import com.partycommittee.events.PcMeetingEvent;
 			import com.partycommittee.events.PcRemindLockEvent;
 			import com.partycommittee.events.PcWorkPlanEvent;
@@ -115,10 +116,7 @@
 //					case PCConst.WORKPLAN_TYPE_MEETING_TEAM:
 //						break;
 				}
-				
-				personLbl.text = "主持人:";
-
-				
+								
 				if (meetingType == PCConst.WORKPLAN_TYPE_MEETING_OTHER) {
 					meetingTitleBox.visible = meetingTitleBox.includeInLayout = false;
 					otherMeetingTitleBox.visible = otherMeetingTitleBox.includeInLayout = true;
@@ -169,12 +167,14 @@
 					if (!meeting) {
 						isCustom = true;
 					}
+					
+					attendTxt.text = agency.zbnum.toString();
 					initRemindLock();
 				}
 				
 				timeChange();
 			}
-			
+
 			private function getMeetingComment():void {
 				var meetingEvt:PcMeetingEvent = new PcMeetingEvent(PcMeetingEvent.GET_MEETING_COMMENT);
 				meetingEvt.meeting = meeting;
@@ -247,12 +247,12 @@
 					Alert.show("年份选择不正确!");
 					return false;					
 				}
-				
-				if (personTxt.text.length == 0) {
+
+				if (moderatorTxt.text.length == 0) {
 					Alert.show("主持人不能为空!");
 					return false;
-				}
-			
+				}				
+				
 				if (themeTxt.text.length == 0) {
 					Alert.show("主题不能为空!");
 					return false;
@@ -279,6 +279,12 @@
 					Alert.show("会议内容不能为空!");
 					return false;					
 				}
+				
+				if (personTxt.text.length == 0) {
+					Alert.show("填写人不能为空!");
+					return false;
+				}
+								
 			
 				return true;
 			}			
@@ -477,7 +483,11 @@
 			}		
 			
 			public function timeChange():void {
-				titleTxt.text = year + '年度第' + getQuarter(dateField.selectedDate.month + 1) + '季度' + title;
+				if (dateField.selectedDate) {
+					titleTxt.text = year + '年度第' + getQuarter(dateField.selectedDate.month + 1) + '季度' + title;
+				} else {
+					titleTxt.text = year + '年度第' + getQuarter(new Date().getMonth() + 1) + '季度' + title;
+				}
 			}
 		]]>
 	</fx:Script>
@@ -509,7 +519,7 @@
 			</mx:HBox>
 			<mx:HBox width="50%"
 					 horizontalScrollPolicy="off" verticalScrollPolicy="off">
-				<mx:Label id="personLbl" width="75"/>
+				<mx:Label text="主持人:" width="75"/>
 				<mx:TextInput id="moderatorTxt" width="100%"/>
 			</mx:HBox>
 		</mx:HBox>
@@ -546,9 +556,12 @@
 				<mx:TextArea id="textArea" width="100%" height="100%"
 							 editable="{!meeting || meeting.statusId == 1}"/>
 				
-				<mx:Label text="填写人："/>
-				<mx:TextInput id="personTxt" width="200"
-							  editable="{!meeting || meeting.statusId == 1}"/>
+				<mx:HBox>
+					<mx:Label text="填写人："/>
+					<mx:TextInput id="personTxt" width="200"
+								  editable="{!meeting || meeting.statusId == 1}"/>					
+				</mx:HBox>
+
 				
 				<mx:ControlBar width="100%" horizontalAlign="center" verticalAlign="middle">
 					<button:PcButton label="暂存" click="onSaveWithoutSubmit()"
