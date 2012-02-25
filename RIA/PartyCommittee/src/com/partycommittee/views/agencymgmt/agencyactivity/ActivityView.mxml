@@ -18,8 +18,18 @@
 			[Bindable]
 			private var model:ModelLocator = ModelLocator.getInstance();
 			
-//			public var si:int;
+			private var _toIndex:int;
 			
+			public function get toIndex():int
+			{
+				return _toIndex;
+			}
+
+			public function set toIndex(value:int):void
+			{
+				_toIndex = value;
+			}
+
 			private function onCreationCompleted():void {
 				
 //				var obj:Object = this.parent.parent.parent.parent as MainContainer;
@@ -53,8 +63,7 @@
 					reportView.percentHeight = 100;
 					reportView.percentWidth = 100;
 					reportView.tab = this.tab;
-//					reportView.si = si;
-//					si = 0;
+					reportView.toIndex = toIndex;
 					tab.addChild(reportView);
 					if (model.loginUser.enableReport != 1) {
 						reportView.enableReport = false;				

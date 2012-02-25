@@ -32,6 +32,7 @@
 			private var model:ModelLocator = ModelLocator.getInstance();
 			
 			private var _agency:PcAgencyVo;
+
 			[Bindable]
 			public function get agency():PcAgencyVo {
 				return this._agency;
@@ -40,14 +41,29 @@
 				this._agency = value;
 			}
 			
-//			public var si:int;
+			private var _toIndex:int;
 
+			public function get toIndex():int
+			{
+				return _toIndex;
+			}
+			
+			public function set toIndex(value:int):void
+			{
+				_toIndex = value;
+			}			
+			
 			public function onCreationCompleted():void {
 				onNavigateIn();
 				if (yearCmb) {
 					yearCmb.dataProvider = DataproviderFactory.getRangeYearForReport();
 					yearCmb.selectedItem = model.reportYear = new Date().getFullYear();
 					yearCmb.addEventListener(Event.CHANGE, onYearCmbChanged);
+				}
+				
+				if (toIndex > 0) {
+					tab.selectedIndex = toIndex;
+					toIndex = 0;
 				}
 			}
 			
@@ -183,7 +199,7 @@
 					case PCConst.AGENCY_CODE_TEAM:
 						break;
 				}
-				
+
 //				if (si > 0) {
 //					tab.selectedIndex = si;
 //					si = 0;
