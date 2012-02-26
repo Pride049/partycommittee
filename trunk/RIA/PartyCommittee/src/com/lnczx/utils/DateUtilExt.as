@@ -421,6 +421,20 @@ package com.lnczx.utils {
 		}
 		
 		/**
+		 * Creates a new Date based on the dte's some day.
+		 * 
+		 * <p>The hours, minutes and seconds are preserved.</p>
+		 * 
+		 * @param dte
+		 * @return 
+		 * 
+		 */
+		public static function preSomeDay(dte:Date, day:int):Date {
+			var res:Date = DateUtilExt.daysToDate(DateUtilExt.dateToDays(dte) - day);
+			return new Date(res.fullYear, res.month, res.date, dte.hours, dte.minutes, dte.seconds, dte.milliseconds);
+		}				
+		
+		/**
 		 * Creates a new Date based on the dte's beginning of week.
 		 * 
 		 * <p>Note that the constant BEGIN_WEEKDAY has a direct effect on the

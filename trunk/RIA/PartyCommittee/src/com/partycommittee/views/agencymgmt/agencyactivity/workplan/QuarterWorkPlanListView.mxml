@@ -192,7 +192,7 @@
 			
 			private function onItemDoubleClick():void {
 				editWorkPlan(dg.selectedItem as PcWorkPlanVo);
-			}			
+			}		
 			
 		]]>
 	</fx:Script>
@@ -226,10 +226,28 @@
 											outerDocument.editWorkPlan(data as PcWorkPlanVo);
 										}
 										
+										protected function formatActionButtonLabel(item:Object):String {											
+											if (item && (item as PcWorkPlanVo).statusId >=2 ) {
+												
+												return '查看';
+											} else {
+												if (ModelLocator.getInstance().loginUser.enableReport == 1) {
+													if (item && (item as PcWorkPlanVo).id ==0 ) {
+														return '填报';
+													} else {
+														return '修改';
+													} 
+													
+												} else {
+													return '查看';
+												}
+											}
+											return 'text';
+										}												
 									]]>
-								</fx:Script>								
-								<button:PcButton id="editBtn" label="{ ( (data as PcWorkPlanVo).statusId >=2 ) ? '查看' : ( ModelLocator.getInstance().loginUser.enableReport == 1 ? (  (data as PcWorkPlanVo).id == 0 ? '填报' : '修改' ) : '查看' ) }" click="editBtnClick()"
-												 />								
+								</fx:Script>	
+								<button:PcButton id="editBtn" label="{formatActionButtonLabel(data as PcWorkPlanVo)}" click="editBtnClick()"/>
+								
 							</mx:Box>
 						</fx:Component>
 					</mx:itemRenderer>

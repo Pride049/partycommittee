@@ -100,35 +100,74 @@
 			}
 			
 			private function initRemindLock():void {
-				return;
-				var remindLockEvt:PcRemindLockEvent = new PcRemindLockEvent(PcRemindLockEvent.GET_REMIND_LOCK_BY_ID);
-				remindLockEvt.agencyId = agency.id;
-				remindLockEvt.year = model.reportYear;
-				remindLockEvt.quarter = 0;
-				remindLockEvt.month = 0;
-				remindLockEvt.typeId = 1;
-				remindLockEvt.successCallback = getRemindLockSuccess;
-				remindLockEvt.failureCallback = getRemindLockFailure
-				remindLockEvt.dispatch();				
+				
+				// 检查上报期限，分几种情况
+				//	1. 未到上报期限 -> 锁定
+				var vo:PcRemindConfigVo = getRemindVo(1);
+				var cur_date = new Date();
+				var startDate:Date = new Date((model.reportYear + vo.startYear).toString(), vo.startMonth - 1, vo.startDay, 23, 59, 59 );
+				if (DateUtilExt.before(cur_date, startDate)) {
+					btn_commit.enabled = false;
+					remindTxt.text = "未到上报期限";
+					remindTxt.visible = true;
+				} else {
+					//	2. 已到上报期限 -> 打开
+					//	3. 已过上报期限 -> 锁定
+					//	4. 已过上报期限，解锁 -> 打开
+					//	5. 已过上报期限，并到延长时限 -> 锁定
+					var remindLockEvt:PcRemindLockEvent = new PcRemindLockEvent(PcRemindLockEvent.GET_REMIND_LOCK_BY_ID);
+					remindLockEvt.agencyId = agency.id;
+					remindLockEvt.year = model.reportYear;
+					remindLockEvt.quarter = 0;
+					remindLockEvt.month = 0;
+					remindLockEvt.typeId = 1;
+					remindLockEvt.successCallback = getRemindLockSuccess;
+					remindLockEvt.failureCallback = getRemindLockFailure
+					remindLockEvt.dispatch();
+				}
 			}
 			
-			private function setRemindLock():void {
-				var vo:PcRemindConfigVo = getRemindVo(1);
-				var y:Number = new Date().getFullYear();
-				var cur_date = new Date();
-				
-				if (vo) {
-					var endDate:Date = new Date((model.reportYear + vo.endYear).toString(), vo.endMonth - 1, vo.endDay, 23, 59, 59 );
-					if (DateUtilExt.after(cur_date, endDate)) {
-						btn_commit.label ="已锁定";
-						btn_commit.enabled = false;
-					} else {
-						btn_commit.label ="上报";
-						btn_commit.enabled = true;
+			private function getRemindLockSuccess(data:Object, evt:PcRemindLockEvent):void {
+				// 检查上报期限，分几种情况
+				//	1. 未到上报期限 -> 锁定
+				//	2. 已到上报期限 -> 打开
+				//	3. 已过上报期限 -> 锁定
+				//	4. 已过上报期限，解锁 -> 打开
+				//	5. 已过上报期限，并到延长时限 -> 锁定
+				if (data) {
+					var lock_vo:PcRemindLockVo = data as PcRemindLockVo;
+					
+					var config_vo:PcRemindConfigVo = getRemindVo(1);
+					var cur_date = new Date();
+					
+					//	3. 已过上报期限 -> 锁定
+					if (lock_vo.statusId == 9) {
+						var endDate:Date = new Date((model.reportYear + config_vo.endYear).toString(), config_vo.endMonth - 1, config_vo.endDay, 23, 59, 59 );
+						if (DateUtilExt.after(cur_date, endDate)) {
+							btn_commit.enabled = false;
+							remindTxt.text = "超过上报期限,已锁定";
+							remindTxt.visible = true;
+						}
+					} else if (lock_vo.statusId == 8) {
+						//	5. 已过上报期限，解锁后，并到延长时限 -> 锁定
+						if (lock_vo.delayDate && lock_vo.delayDate.length > 0) {
+							var delayDate:Date = new Date(lock_vo.delayDate);
+							if (DateUtilExt.after(cur_date, endDate)) {
+								btn_commit.enabled = false;
+								remindTxt.text = "超过上报期限,已锁定";
+								remindTxt.visible = true;
+							}
+						}
 					}
 				}
 			}
 			
+			private function getRemindLockFailure(data:Object, evt:PcRemindLockEvent):void {
+				btn_commit.enabled = true;
+				remindTxt.text = "";
+				remindTxt.visible = false;
+			}
+
 			public function getRemindVo(typeId:Number):PcRemindConfigVo {
 				var model:ModelLocator = ModelLocator.getInstance();
 				var dd:ArrayCollection = model.remindConfigCollection;
@@ -151,6 +190,7 @@
 			
 			private function onGetYearWorkPlanSuccess(data:Object, workPlanEvt:PcWorkPlanEvent):void {
 				this.enabled = true;
+				yearwpViewStack.selectedChild = reportForm;
 				if (!data) {
 					resetData();
 					initRemindLock();				
@@ -216,23 +256,6 @@
 				Alert.show("获取内容失败！");
 			}			
 			
-			private function getRemindLockSuccess(data:Object, evt:PcRemindLockEvent):void {
-				if (data) {
-					var vo:PcRemindLockVo = data as PcRemindLockVo;
-					if (vo.statusId == 9) {
-						setRemindLock();
-					}
-				}
-			}
-			
-			private function getRemindLockFailure(data:Object, evt:PcRemindLockEvent):void {
-				if (btn_commit.label == "已锁定") {
-					btn_commit.label ="上报";
-					btn_commit.enabled = true;
-				}		
-			}
-						
-			
 			private function onGetYearWorkPlanFailure():void {
 				this.enabled = true;
 			}
@@ -247,6 +270,7 @@
 					Alert.show("填写人不能为空!");
 					return false;
 				}
+				
 				return true;
 			}
 			
@@ -385,6 +409,7 @@
 									 visible="{!workPlan || workPlan.statusId == 1}"/>
 					<button:PcButton label="上报" id="btn_commit" click="onSaveAndCommit()"
 									 visible="{!workPlan || workPlan.statusId == 1}"/>
+					<mx:Label id="remindTxt" text="" visible="false" includeInLayout="{!browseMode}"/>
 					<button:PcButton label="查看审批"
 									 visible="{workPlan &amp;&amp; workPlan.statusId == 3}"
 									 click="onBrowseApproval()"/>
