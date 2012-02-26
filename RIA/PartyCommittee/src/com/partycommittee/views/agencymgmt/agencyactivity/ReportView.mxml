@@ -200,19 +200,11 @@
 						break;
 				}
 
-//				if (si > 0) {
-//					tab.selectedIndex = si;
-//					si = 0;
-//				}
 			}
 			
 			private function onYearCmbChanged(event:Event):void {
 				model.reportYear = yearCmb.selectedItem as Number;
 			}
-			
-//			private function tabChange():void {
-//				si = tab.selectedIndex;
-//			}
 			
 		]]>
 	</fx:Script>

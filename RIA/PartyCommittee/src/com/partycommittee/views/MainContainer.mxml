@@ -52,17 +52,9 @@
 			}
 			
 			private function initToolbar():void {
-
-				
-//				if (model.isLeafUser) {
-//					TreeContextMenuMgr.getInstance().editEnable = false;
-//					treeControlBar.visible = treeControlBar.includeInLayout = false;
-//				} else {
-					TreeContextMenuMgr.getInstance().editEnable = true;
-					treeControlBar.visible = treeControlBar.includeInLayout = true;
-					unExpandTree();
-//				}				
-				
+				TreeContextMenuMgr.getInstance().editEnable = true;
+				treeControlBar.visible = treeControlBar.includeInLayout = true;
+				unExpandTree();	
 			}
 			
 			private function initUserData():void {
