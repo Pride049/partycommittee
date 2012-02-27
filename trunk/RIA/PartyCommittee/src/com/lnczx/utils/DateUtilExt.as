@@ -515,7 +515,7 @@ package com.lnczx.utils {
 		 */
 		public static function beginOfQuarter(y:Number, q:Number):Date {
 			if (q == 1) return new Date(y, 0, 1);
-			if (q == 2) return new Date(y, 1, 1);
+			if (q == 2) return new Date(y, 3, 1);
 			if (q == 3) return new Date(y, 6, 1);
 			if (q == 4) return new Date(y, 9, 1);
 			return new Date(y, 1, 1);
