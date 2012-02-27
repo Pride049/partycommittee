@@ -321,7 +321,7 @@
 				startDate = DateUtilExt.preSomeDay(startDate, vo.startDay);
 				if (DateUtilExt.before(cur_date, startDate)) {
 					btn_commit.enabled = false;
-					remindTxt.text = "未到上报期限";
+					remindTxt.htmlText = "<font color='#ff0000'>说明:未到上报期限</font>";
 					remindTxt.visible = true;
 				} else {
 					//	2. 已到上报期限 -> 打开
@@ -356,20 +356,20 @@
 					
 					//	3. 已过上报期限 -> 锁定
 					if (lock_vo.statusId == 9) {
-						var endDate:Date = DateUtilExt.beginOfQuarter(year, quarter);
-						endDate = DateUtilExt.nextSomeDay(endDate, config_vo.endDay);
-						if (DateUtilExt.after(cur_date, endDate)) {
+//						var endDate:Date = DateUtilExt.beginOfQuarter(year, quarter);
+//						endDate = DateUtilExt.nextSomeDay(endDate, config_vo.endDay);
+//						if (DateUtilExt.after(cur_date, endDate)) {
 							btn_commit.enabled = false;
-							remindTxt.text = "超过上报期限,已锁定";
+							remindTxt.htmlText = "<font color='#ff0000'>说明:超过上报期限,已锁定</font>";
 							remindTxt.visible = true;
-						}
+//						}
 					} else if (lock_vo.statusId == 8) {
 						//	5. 已过上报期限，解锁后，并到延长时限 -> 锁定
 						if (lock_vo.delayDate && lock_vo.delayDate.length > 0) {
 							var delayDate:Date = new Date(lock_vo.delayDate);
-							if (DateUtilExt.after(cur_date, endDate)) {
+							if (DateUtilExt.after(cur_date, delayDate)) {
 								btn_commit.enabled = false;
-								remindTxt.text = "超过上报期限,已锁定";
+								remindTxt.htmlText = "<font color='#ff0000'>说明:超过上报期限,已锁定</font>";
 								remindTxt.visible = true;
 							}
 						}
