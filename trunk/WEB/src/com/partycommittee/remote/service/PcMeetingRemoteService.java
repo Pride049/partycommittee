@@ -73,8 +73,8 @@ public class PcMeetingRemoteService {
 	}		
 	
 	@RemotingInclude
-	public void evaluateMeeting(Integer meetingId, PcMeetingContentVo contentVo) {
-		pcMeetingService.evaluateMeeting(meetingId, contentVo);
+	public void evaluateMeeting(Integer meetingId, Integer statusId, PcMeetingContentVo contentVo) {
+		pcMeetingService.evaluateMeeting(meetingId, statusId, contentVo);
 	}
 	
 	@RemotingInclude

@@ -287,9 +287,29 @@
 									protected function editBtnClick():void {
 										outerDocument.editMeeting(data as PcMeetingVo);
 									}
+									
+									protected function formatActionButtonLabel(item:Object):String {											
+										if (item && (item as PcMeetingVo).statusId >=3 ) {
+											
+											return '查看';
+										} else {
+											if (ModelLocator.getInstance().loginUser.enableReport == 1) {
+												if (item && (item as PcMeetingVo).id ==0 ) {
+													return '填报';
+												} else {
+													return '修改';
+												} 
+												
+											} else {
+												return '查看';
+											}
+										}
+										return 'text';
+									}
+									
 								]]>
 							</fx:Script>
-							<button:PcButton id="editBtn" label="{ ( (data as PcMeetingVo).statusId >=2 )  ? '查看' : (  ModelLocator.getInstance().loginUser.enableReport == 1 ? '修改' : '查看') }" click="editBtnClick()"/>
+							<button:PcButton id="editBtn" label="{formatActionButtonLabel(data as PcMeetingVo)}" click="editBtnClick()"/>
 						</mx:Box>
 					</fx:Component>
 				</mx:itemRenderer>
@@ -320,9 +340,28 @@
 									protected function editBtnClick():void {
 										outerDocument.editMeeting(data as PcMeetingVo);
 									}
+									
+									protected function formatActionButtonLabel(item:Object):String {											
+										if (item && (item as PcMeetingVo).statusId >=3 ) {
+											
+											return '查看';
+										} else {
+											if (ModelLocator.getInstance().loginUser.enableReport == 1) {
+												if (item && (item as PcMeetingVo).id ==0 ) {
+													return '填报';
+												} else {
+													return '修改';
+												} 
+												
+											} else {
+												return '查看';
+											}
+										}
+										return 'text';
+									}									
 								]]>
 							</fx:Script>
-							<button:PcButton id="editBtn" label="{ ( (data as PcMeetingVo).statusId >=2 )  ? '查看' : (  ModelLocator.getInstance().loginUser.enableReport == 1 ? '修改' : '查看') }" click="editBtnClick()"/>
+							<button:PcButton id="editBtn" label="{formatActionButtonLabel(data as PcMeetingVo)}" click="editBtnClick()"/>
 						</mx:Box>
 					</fx:Component>
 				</mx:itemRenderer>
@@ -358,7 +397,7 @@
 										}
 										
 										protected function formatActionButtonLabel(item:Object):String {											
-											if (item && (item as PcMeetingVo).statusId >=2 ) {
+											if (item && (item as PcMeetingVo).statusId >=3 ) {
 												
 												return '查看';
 											} else {

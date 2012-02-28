@@ -70,8 +70,8 @@ package com.partycommittee.proxy
 			service.approvalWorkplan(workPlanId, content);
 		}
 		
-		public function evaluateWrokplan(workPlanId:Number, content:PcWorkPlanContentVo):void {
-			service.evaluateWrokplan(workPlanId, content);
+		public function evaluateWrokplan(workPlanId:Number,  statusId:Number, content:PcWorkPlanContentVo):void {
+			service.evaluateWrokplan(workPlanId, statusId, content);
 		}
 		
 		public function getApprovalInfo(workPlanId:Number):void {

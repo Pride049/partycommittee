@@ -54,7 +54,7 @@ package com.partycommittee.commands
 					proxy.approvalWorkplan(pcWorkPlanEvt.workPlan.id, pcWorkPlanEvt.workPlanContent);
 					break;
 				case PcWorkPlanEvent.EVALUATE_WORKPLAN:
-					proxy.evaluateWrokplan(pcWorkPlanEvt.workPlan.id, pcWorkPlanEvt.workPlanContent);
+					proxy.evaluateWrokplan(pcWorkPlanEvt.workPlan.id, pcWorkPlanEvt.workPlan.statusId, pcWorkPlanEvt.workPlanContent);
 					break;
 				case PcWorkPlanEvent.GET_APPROVAL_INFO:
 					proxy.getApprovalInfo(pcWorkPlanEvt.workPlan.id);

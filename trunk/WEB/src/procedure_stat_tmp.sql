@@ -141,6 +141,7 @@ begin
 	DECLARE id int(11) unsigned;
 	DECLARE parent_id int(11) unsigned;
 	DECLARE name VARCHAR(255);
+	DECLARE c_code VARCHAR(20);
 	DECLARE code_id int(11) unsigned;
 	DECLARE done int default 0;
 	
@@ -151,7 +152,7 @@ begin
   DECLARE row int default 0;
   DECLARE i int;
   DECLARE s tinyint;
-	DECLARE s_cursor CURSOR FOR SELECT a.id, a.name, a.code_id, b.parent_id FROM  pc_agency as a left join pc_agency_relation as b on a.id = b.agency_id WHERE a. code_id = 10;
+	DECLARE s_cursor CURSOR FOR SELECT a.id, a.name, a.code_id, a.code, b.parent_id FROM  pc_agency as a left join pc_agency_relation as b on a.id = b.agency_id WHERE a. code_id = 10;
 	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done=1;
 		
 	SET y = year(now());
@@ -163,7 +164,7 @@ begin
 	  SELECT FOUND_ROWS() into rows;
 	  SET row = 0;
 		cursor_loop:loop
-				FETCH s_cursor into id, name, code_id, parent_id;
+				FETCH s_cursor into id, name, code_id, c_code, parent_id;
 				
 				SET s = 0;
 				if row >= rows then
@@ -185,8 +186,8 @@ begin
 							CALL set_remind_status(i, s);
 							if s = 9 THEN
 								IF parent_id is not null then
-									INSERT INTO  pc_remind_lock (agency_id, name, code_id, parent_id, year, quarter, month, type_id, status) 
-									VALUES (id, name, code_id, parent_id, y  , 0, 0, i, s)	ON DUPLICATE KEY UPDATE agency_id = id, name = name;
+									INSERT INTO  pc_remind_lock (agency_id, name, code_id, code, parent_id, year, quarter, month, type_id, status) 
+									VALUES (id, name, code_id, c_code, parent_id, y  , 0, 0, i, s)	ON DUPLICATE KEY UPDATE agency_id = id, name = name;
 							  END IF;
 							END IF;
 						END IF;
@@ -204,8 +205,8 @@ begin
 							CALL set_remind_status(i, s);
 							if s = 9 THEN
 								IF parent_id is not null then
-									INSERT INTO  pc_remind_lock (agency_id, name, code_id, parent_id, year, quarter, month, type_id, status) 
-									VALUES (id, name, code_id, parent_id, y , q, 0, i, s)	ON DUPLICATE KEY UPDATE agency_id = id, name = name;
+									INSERT INTO  pc_remind_lock (agency_id, name, code_id, code_id, parent_id, year, quarter, month, type_id, status) 
+									VALUES (id, name, code_id, c_code, parent_id, y , q, 0, i, s)	ON DUPLICATE KEY UPDATE agency_id = id, name = name;
 							  END IF;
 							END IF;		
 						END IF;
@@ -222,7 +223,7 @@ begin
 							CALL set_remind_status(i, s);
 							if s = 9 THEN
 								IF parent_id is not null then
-									INSERT INTO  pc_remind_lock (agency_id, name, code_id, parent_id, year, quarter, month, type_id, status) 
+									INSERT INTO  pc_remind_lock (agency_id, name, code_id, code_id, parent_id, year, quarter, month, type_id, status) 
 									VALUES (id, name, code_id, parent_id, y - 1 , QUARTER(DATE_SUB(now(),interval 1 QUARTER)), 0, i, s)	ON DUPLICATE KEY UPDATE agency_id = id, name = name;
 								END IF;
 							END IF;
@@ -239,8 +240,8 @@ begin
 							CALL set_remind_status(i, s);
 							IF s = 9 THEN
 								IF parent_id is not null then
-									INSERT INTO  pc_remind_lock (agency_id, name, code_id, parent_id, year, quarter, month, type_id, status) 
-									VALUES (id, name, code_id, parent_id, y -1, 0, 0, i, s)	ON DUPLICATE KEY UPDATE agency_id = id, name = name;						
+									INSERT INTO  pc_remind_lock (agency_id, name, code_id, code_id, parent_id, year, quarter, month, type_id, status) 
+									VALUES (id, name, code_id, c_code, parent_id, y -1, 0, 0, i, s)	ON DUPLICATE KEY UPDATE agency_id = id, name = name;						
 								END IF;
 							END IF;
 						END IF;						
@@ -258,8 +259,8 @@ begin
 							CALL set_remind_status(i, s);
 							if s = 9 THEN
 								IF parent_id is not null then
-									INSERT INTO  pc_remind_lock (agency_id, name, code_id, parent_id, year, quarter, month, type_id, status) 
-									VALUES (id, name, code_id, parent_id, y-1 , QUARTER(DATE_SUB(now(),interval 1 QUARTER)), 0, i, s)	ON DUPLICATE KEY UPDATE agency_id = id, name = name;
+									INSERT INTO  pc_remind_lock (agency_id, name, code_id, code_id, parent_id, year, quarter, month, type_id, status) 
+									VALUES (id, name, code_id, c_code, parent_id, y-1 , QUARTER(DATE_SUB(now(),interval 1 QUARTER)), 0, i, s)	ON DUPLICATE KEY UPDATE agency_id = id, name = name;
 								END IF;
 							END IF;					
 						END IF;
@@ -281,8 +282,8 @@ begin
 							CALL set_remind_status(i, s);
 							if s = 9 THEN
 								IF parent_id is not null then
-									INSERT INTO  pc_remind_lock (agency_id, name, code_id, parent_id, year, quarter, month, type_id, status) 
-									VALUES (id, name, code_id, parent_id, y , q, 0, i, s)	ON DUPLICATE KEY UPDATE agency_id = id, name = name;
+									INSERT INTO  pc_remind_lock (agency_id, name, code_id, code_id, parent_id, year, quarter, month, type_id, status) 
+									VALUES (id, name, code_id, c_code, parent_id, y , q, 0, i, s)	ON DUPLICATE KEY UPDATE agency_id = id, name = name;
 								END IF;
 							END IF;					  
 						END IF;					  
@@ -298,8 +299,8 @@ begin
 							CALL set_remind_status(i, s);
 							if s = 9 THEN
 								IF parent_id is not null then
-									INSERT INTO  pc_remind_lock (agency_id, name, code_id, parent_id, year, quarter, month, type_id, status) 
-									VALUES (id, name, code_id, parent_id, y , QUARTER(DATE_SUB(now(),interval 1 QUARTER)), 0, i, s)	ON DUPLICATE KEY UPDATE agency_id = id, name = name;
+									INSERT INTO  pc_remind_lock (agency_id, name, code_id, code_id, parent_id, year, quarter, month, type_id, status) 
+									VALUES (id, name, code_id, c_code, parent_id, y , QUARTER(DATE_SUB(now(),interval 1 QUARTER)), 0, i, s)	ON DUPLICATE KEY UPDATE agency_id = id, name = name;
 								END IF;
 							END IF;
 						END IF;
@@ -316,8 +317,8 @@ begin
 							CALL set_remind_status(i, s);
 							if s = 9 THEN
 								IF parent_id is not null then
-									INSERT INTO  pc_remind_lock (agency_id, name, code_id, parent_id, year, quarter, month, type_id, status) 
-									VALUES (id, name, code_id, parent_id, y , QUARTER(DATE_SUB(now(),interval 1 QUARTER)), 0, i, s)	ON DUPLICATE KEY UPDATE agency_id = id, name = name;
+									INSERT INTO  pc_remind_lock (agency_id, name, code_id, code_id, parent_id, year, quarter, month, type_id, status) 
+									VALUES (id, name, code_id, c_code, parent_id, y , QUARTER(DATE_SUB(now(),interval 1 QUARTER)), 0, i, s)	ON DUPLICATE KEY UPDATE agency_id = id, name = name;
 								END IF;
 							END IF;	
 						END IF;
@@ -338,8 +339,8 @@ begin
 							CALL set_remind_status(i, s);
 							if s = 9 THEN
 								IF parent_id is not null then
-									INSERT INTO  pc_remind_lock (agency_id, name, code_id, parent_id, year, quarter, month, type_id, status) 
-									VALUES (id, name, code_id, parent_id, y -1 , 4, 12, i, s)	ON DUPLICATE KEY UPDATE agency_id = id, name = name;
+									INSERT INTO  pc_remind_lock (agency_id, name, code_id, code_id, parent_id, year, quarter, month, type_id, status) 
+									VALUES (id, name, code_id, c_code, parent_id, y -1 , 4, 12, i, s)	ON DUPLICATE KEY UPDATE agency_id = id, name = name;
 								END IF;
 							END IF;		
 						END IF;
@@ -355,8 +356,8 @@ begin
 							CALL set_remind_status(i, s);
 							if s = 9 THEN
 								IF parent_id is not null then
-									INSERT INTO  pc_remind_lock (agency_id, name, code_id, parent_id, year, quarter, month, type_id, status) 
-									VALUES (id, name, code_id, parent_id, y , q, month(now()) -1 , i, s)	ON DUPLICATE KEY UPDATE agency_id = id, name = name;
+									INSERT INTO  pc_remind_lock (agency_id, name, code_id, code_id, parent_id, year, quarter, month, type_id, status) 
+									VALUES (id, name, code_id , c_code, parent_id, y , q, month(now()) -1 , i, s)	ON DUPLICATE KEY UPDATE agency_id = id, name = name;
 								END IF;
 							END IF;							
 						END IF;						

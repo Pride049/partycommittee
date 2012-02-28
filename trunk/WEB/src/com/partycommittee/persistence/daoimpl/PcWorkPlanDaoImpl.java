@@ -116,7 +116,7 @@ public class PcWorkPlanDaoImpl extends JpaDaoBase implements PcWorkPlanDao {
 				calendar.setTime(new Date()); 
 				year = calendar.get(Calendar.YEAR);
 			}
-			return super.find("from PcWorkPlan where agency_id in (" + ids + ") AND year = " + year + " AND status_id > 1 Order by agency_id ASC ");
+			return super.find("from PcWorkPlan where agency_id in (" + ids + ") AND year = " + year + " AND status_id >= 3 Order by agency_id ASC ");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

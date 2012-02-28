@@ -227,7 +227,7 @@
 										}
 										
 										protected function formatActionButtonLabel(item:Object):String {											
-											if (item && (item as PcWorkPlanVo).statusId >=2 ) {
+											if (item && (item as PcWorkPlanVo).statusId >=3 ) {
 												
 												return '查看';
 											} else {

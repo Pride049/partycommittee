@@ -63,15 +63,10 @@
 					getMeetingComment();
 				}
 				
-				if (isApproval) {
-					this.title = "查看上级审批";
-					this.personLbl.text = "审批人:";
-					this.dateLbl.text = "审批日期:";
-				} else {
-					this.title = "查看上级评价";
-					this.personLbl.text = "评价人:";
-					this.dateLbl.text = "评价日期:";
-				}
+
+				this.title = "查看上级评语";
+				this.personLbl.text = "评语主题:";
+				this.dateLbl.text = "评语日期:";
 			}
 			
 			private function getWorkPlanComment():void {

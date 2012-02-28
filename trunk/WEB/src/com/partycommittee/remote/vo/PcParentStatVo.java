@@ -15,6 +15,8 @@ public class PcParentStatVo implements Serializable {
 	private Integer codeId;
 
 	private String name;
+	
+	private String code;
 
 	private Integer parentId;
 
@@ -228,11 +230,20 @@ public class PcParentStatVo implements Serializable {
 		this.agencyGoodjob = agencyGoodjob;
 	}
 	
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}	
+	
 	
 	public static PcParentStatVo fromPcParentStat(PcParentStat pevo) {
 		PcParentStatVo vo = new PcParentStatVo();
 		vo.setAgencyId(pevo.getAgencyId());
 		vo.setCodeId(pevo.getCodeId());
+		vo.setCode(pevo.getCode());
 		vo.setId(pevo.getId());
 		vo.setName(pevo.getName());
 		vo.setParentId(pevo.getParentId());
@@ -259,6 +270,7 @@ public class PcParentStatVo implements Serializable {
 	public static PcParentStat toPcParentStat(PcParentStatVo pevo) {
 		PcParentStat vo = new PcParentStat();
 		vo.setCodeId(pevo.getCodeId());
+		vo.setCode(pevo.getCode());
 		vo.setId(pevo.getId());
 		vo.setName(pevo.getName());
 		vo.setParentId(pevo.getParentId());

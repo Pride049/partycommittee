@@ -58,8 +58,8 @@ package com.partycommittee.proxy
 			service.getEvaluateInfo(meetingId);
 		}
 		
-		public function evaluateMeeting(meetingId:Number, content:PcMeetingContentVo):void {
-			service.evaluateMeeting(meetingId, content);
+		public function evaluateMeeting(meetingId:Number, statusId:Number, content:PcMeetingContentVo):void {
+			service.evaluateMeeting(meetingId, statusId, content);
 		}
 		
 		public function getAlertInfo(agencyId:Number, year:Number, quarter:Number):void {

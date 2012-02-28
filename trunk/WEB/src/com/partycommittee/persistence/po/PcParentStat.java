@@ -24,6 +24,8 @@ public class PcParentStat implements Serializable {
 	private Integer codeId;
 
 	private String name;
+	
+	private String code;
 
 	private Integer parentId;
 
@@ -264,5 +266,15 @@ public class PcParentStat implements Serializable {
 	public void setZbsjNum(Integer zbsjNum) {
 		this.zbsjNum = zbsjNum;
 	}
+	
+	
+	@Column(name = "code")
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}	
 
 }

@@ -22,6 +22,8 @@ public class PcRemindLockVo implements Serializable {
 	private String ext;
 
 	private String name;
+	
+	private String code;
 
 	private Integer parentId;
 
@@ -140,11 +142,20 @@ public class PcRemindLockVo implements Serializable {
 		this.delayDate = delayDate;
 	}
 	
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}	
+	
 	public static PcRemindLockVo fromPcRemindLock(PcRemindLock pevo) {
 		PcRemindLockVo vo = new PcRemindLockVo();
 		vo.setId(pevo.getId());
 		vo.setAgencyId(pevo.getAgencyId());
 		vo.setCodeId(pevo.getCodeId());
+		vo.setCode(pevo.getCode());
 		vo.setExt(pevo.getExt());
 		vo.setName(pevo.getName());
 		vo.setParentId(pevo.getParentId());
@@ -162,6 +173,7 @@ public class PcRemindLockVo implements Serializable {
 		vo.setId(pevo.getId());
 		vo.setAgencyId(pevo.getAgencyId());
 		vo.setCodeId(pevo.getCodeId());
+		vo.setCode(pevo.getCode());
 		vo.setExt(pevo.getExt());
 		vo.setName(pevo.getName());
 		vo.setParentId(pevo.getParentId());

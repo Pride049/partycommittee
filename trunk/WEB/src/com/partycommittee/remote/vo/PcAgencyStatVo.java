@@ -17,6 +17,8 @@ public class PcAgencyStatVo implements Serializable {
 	private String ext;
 
 	private String name;
+	
+	private String code;
 
 	private Integer parentId;
 
@@ -208,11 +210,20 @@ public class PcAgencyStatVo implements Serializable {
 		this.zbNum = zbNum;
 	}
 	
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}	
+	
 	
 	public static PcAgencyStatVo fromPcAgencyStat(PcAgencyStat pevo) {
 		PcAgencyStatVo vo = new PcAgencyStatVo();
 		vo.setAgencyId(pevo.getAgencyId());
 		vo.setCodeId(pevo.getCodeId());
+		vo.setCode(pevo.getCode());
 		vo.setId(pevo.getId());
 		vo.setName(pevo.getName());
 		vo.setParentId(pevo.getParentId());
@@ -236,6 +247,7 @@ public class PcAgencyStatVo implements Serializable {
 	public static PcAgencyStat toPcRemind(PcAgencyStatVo pevo) {
 		PcAgencyStat vo = new PcAgencyStat();
 		vo.setCodeId(pevo.getCodeId());
+		vo.setCode(pevo.getCode());
 		vo.setId(pevo.getId());
 		vo.setName(pevo.getName());
 		vo.setParentId(pevo.getParentId());

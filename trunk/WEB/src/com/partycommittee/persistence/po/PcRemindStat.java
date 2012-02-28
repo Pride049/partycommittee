@@ -26,6 +26,8 @@ public class PcRemindStat implements Serializable {
 	private Integer codeId;
 
 	private String ext;
+	
+	private String code;
 
 	private String name;
 
@@ -142,5 +144,15 @@ public class PcRemindStat implements Serializable {
 	public void setYear(Integer year) {
 		this.year = year;
 	}
+	
+	
+	@Column(name = "code")
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}	
 
 }
