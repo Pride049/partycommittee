@@ -224,7 +224,7 @@
 						b_textArea.htmlText = workPlan.workPlanContent.content;
 						dateTxt.text = "填写时间:" + DateUtil.toISOString(workPlan.workPlanContent.updatetime);
 					}						
-					if (workPlan.statusId == 4) {
+					if (workPlan.statusId >= 4) {
 						getEvaluateInfo(workPlan);
 					}
 				}
@@ -255,11 +255,44 @@
 				b_textArea_eva.htmlText = workplanContent.content;
 				b_personTxt_eva.text = "评语主体:" + workplanContent.memberName;
 				dateTxt_eva.text = "日期:" + DateUtil.toISOString(workplanContent.updatetime);
+				
+				if (workPlan.statusId == 5) {
+					getRateInfo();
+				}
 			}
 			
 			private function onGetEvaluateInfoFailure(info:Object, evt:PcWorkPlanEvent):void {
 				Alert.show("获取内容失败！");
 			}			
+			
+			private function getRateInfo():void {
+				var workPlanEvt:PcWorkPlanEvent = new PcWorkPlanEvent(PcWorkPlanEvent.GET_CONTENT_INFO);
+				workPlanEvt.workPlan = workPlan;
+				workPlanEvt.contentType = 4;
+				workPlanEvt.successCallback = onGetRateInfoSuccess;
+				workPlanEvt.failureCallback = onGetRateInfoFailure;
+				this.enabled = false;
+				workPlanEvt.dispatch();
+			}
+			
+			private function onGetRateInfoSuccess(data:Object, evt:PcWorkPlanEvent):void {
+				this.enabled = true;
+				if (data as PcWorkPlanContentVo) {
+					rate_box.percentWidth = 100;
+					rate_box.percentHeight = 10;
+					var contentVo:PcWorkPlanContentVo = data as PcWorkPlanContentVo;
+					this.ratePersonTxt.text = "评价主体:" + contentVo.memberName;
+					//this.rateTextArea.htmlText = contentVo.content;
+					rateGroup.selectedValue = contentVo.content;
+					dateTxt_rate.text = "日期:" + DateUtil.toISOString(contentVo.updatetime);
+					rate_box.visible = true;
+				}
+			}
+			
+			private function onGetRateInfoFailure(info:Object, evt:PcWorkPlanEvent):void {
+				this.enabled = true;
+			}				
+			
 			
 			private function formValidate():Boolean {
 				if (textArea.htmlText.length == 0) {
@@ -377,6 +410,7 @@
 	</fx:Script>
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<s:RadioButtonGroup id="rateGroup" />  
 	</fx:Declarations>
 	<mx:VBox width="100%" height="100%">
 		<mx:HBox width="100%" horizontalAlign="center"
@@ -431,7 +465,7 @@
 					
 					
 					
-					<mx:VBox width="100%" height="100%">
+					<mx:VBox width="97%" height="100%">
 						<mx:TextArea id="b_textArea" width="100%" height="100%"
 									 editable="{!workPlan || workPlan.statusId &lt; 3}"/>
 						<mx:HBox  horizontalCenter="0" width="100%">
@@ -443,24 +477,44 @@
 				</mx:HBox>					
 				
 				
-				<mx:HBox id="browseForm_evaluate"  horizontalAlign="left" width="0" height="0" horizontalScrollPolicy="off" verticalScrollPolicy="off" visible="false">
+				<mx:HBox id="browseForm_evaluate" horizontalAlign="left" width="0" height="0" horizontalScrollPolicy="off" verticalScrollPolicy="off" visible="false">
 					<mx:VBox left="6" right="6" top="6" bottom="6">
 						<mx:Label text="评"     />
 						<mx:Label text="语"     />
 					</mx:VBox>
 					
 					
-					<mx:VBox width="100%" height="100%">
+					<mx:VBox width="97%" height="100%">
 						<mx:TextArea id="b_textArea_eva" width="100%" height="100%"
 									 editable="false"/>
 						<mx:HBox  horizontalCenter="0" width="100%">
 							<mx:Label left="0"   id="dateTxt_eva"/>
 							<mx:Spacer width="100%"/>
 							<mx:Label right="0" id="b_personTxt_eva" text="评语主体："/>
-						</mx:HBox>						
+						</mx:HBox>	
 					</mx:VBox>
 				</mx:HBox>				
 
+				<mx:HBox id="rate_box" horizontalAlign="left" width="0" height="0" horizontalScrollPolicy="off" verticalScrollPolicy="off" visible="false">
+					<mx:VBox left="6" right="6" top="6" bottom="6">
+						<mx:Label text="评"     />
+						<mx:Label text="价"     />
+					</mx:VBox>					
+					<mx:VBox width="97%" height="100%">
+						<mx:HBox  horizontalCenter="0" width="100%">
+							<s:RadioButton groupName="rateGroup" fontFamily="宋体" id="rate1" selected="true" label="好" value="1" /> 
+							<s:RadioButton groupName="rateGroup" fontFamily="宋体" id="rate2" label="较好" value="2"/>
+							<s:RadioButton groupName="rateGroup" fontFamily="宋体" id="rate3" label="一般" value="3"/>
+							<s:RadioButton groupName="rateGroup" fontFamily="宋体" id="rate4" label="差" value="4"/>
+						</mx:HBox>
+						<mx:HBox  horizontalCenter="0" width="100%">
+							<mx:Label left="0"   id="dateTxt_rate"/>
+							<mx:Spacer width="100%"/>
+							<mx:Label right="0" id="ratePersonTxt" text="评价主体："/>
+						</mx:HBox>
+					</mx:VBox>
+				</mx:HBox>				
+				
 			</mx:VBox>		
 			
 		</mx:ViewStack>
