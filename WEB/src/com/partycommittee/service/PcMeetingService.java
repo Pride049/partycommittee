@@ -296,11 +296,11 @@ public class PcMeetingService {
 		pcMeetingDaoImpl.updateMeetingStatus(meetingId, statusId);
 	}	
 	
-	public void evaluateMeeting(Integer meetingId, PcMeetingContentVo contentVo) {
+	public void evaluateMeeting(Integer meetingId, Integer statusId, PcMeetingContentVo contentVo) {
 		contentVo.setMeetingId(meetingId);
 		contentVo.setType(3);
 		PcMeeting pcMeeting = pcMeetingDaoImpl.getMeetingById(meetingId);
-		pcMeeting.setStatusId(4);
+		pcMeeting.setStatusId(statusId);
 		pcMeetingDaoImpl.updateMeeting(pcMeeting);
 		
 		PcMeetingContent pcMeetingContent = pcMeetingContentDaoImpl.getContentBymeetingIdAndType(meetingId, 3);

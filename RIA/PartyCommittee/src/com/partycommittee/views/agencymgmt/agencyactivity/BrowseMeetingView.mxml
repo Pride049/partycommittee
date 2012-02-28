@@ -156,13 +156,6 @@
 	</fx:Declarations>
 	
 	<mx:VBox width="100%" height="100%">
-		<!--
-		<mx:HBox width="100%" height="50"
-				 horizontalAlign="center" verticalAlign="middle"
-				 horizontalScrollPolicy="off" verticalScrollPolicy="off">
-			<mx:Label text="下级会议浏览" fontSize="20" fontWeight="bold"/>
-		</mx:HBox>
-		-->
 		<mx:AdvancedDataGrid id="datagrid" width="100%" height="100%" 
 							 headerStyleName="dataGridHeader"
 							 dataProvider="{dp}"
@@ -185,27 +178,20 @@
 								<fx:Script>
 									<![CDATA[
 										import com.partycommittee.vo.PcMeetingVo;
-										
-//										[Bindable]
-//										private var btnLbl:String = "";
-//										override public function set data(value:Object):void {
-//											super.data = value;
-//											if (!(data as PcMeetingVo)) {
-//												return;
-//											}
-//											if ((data as PcMeetingVo).statusId == 4) {
-//												btnLbl = '完成';
-//											} else {
-//												btnLbl = '评价';
-//											}
-//										}
-										
 										protected function evaluateBtnClick():void {
 											outerDocument.evaluateMeeting(data as PcMeetingVo);
 										}
+										
+										protected function formatActionButtonLabel(item:Object):String {											
+											if (item && (item as PcMeetingVo).statusId < 4 ) {
+												return '评价';
+											} 
+											return '查看';
+										}											
+										
 									]]>
 								</fx:Script>
-								<button:PcButton label="{((data as PcMeetingVo).statusId == 4) ? '查看' : '评价'}" click="evaluateBtnClick()"/>
+								<button:PcButton id="editBtn" label="{formatActionButtonLabel(data as PcMeetingVo)}" click="evaluateBtnClick()"/>
 							</mx:Box>
 						</fx:Component>
 					</mx:itemRenderer>

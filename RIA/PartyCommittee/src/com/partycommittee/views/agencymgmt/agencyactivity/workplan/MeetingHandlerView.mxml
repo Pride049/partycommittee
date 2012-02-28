@@ -29,9 +29,7 @@
 			
 			[Bindable]
 			private var meetingTitle:String;
-			[Bindable]
-			private var hasHandle:Boolean = false;
-			
+
 			[Bindable]
 			private var year:Number;
 			[Bindable]
@@ -93,19 +91,19 @@
 				
 				switch (meeting.typeId) {
 					case PCConst.WORKPLAN_TYPE_CLASS:
-						meetingTitle = year + "年第" + quarter + "季度党课 评价";
+						meetingTitle = year + "年第" + quarter + "季度党课";
 						break;
 					case PCConst.WORKPLAN_TYPE_MEETING_BRANCH_COMMITTEE:
-						meetingTitle = year + "年第" + quarter + "季度支部委员会 评价";
+						meetingTitle = year + "年第" + quarter + "季度支部委员会";
 						break;
 					case PCConst.WORKPLAN_TYPE_MEETING_BRANCH_LIFE:
-						meetingTitle = year + "年第" + quarter + "季度支部生活会 评价";
+						meetingTitle = year + "年第" + quarter + "季度支部生活会";
 						break;
 					case PCConst.WORKPLAN_TYPE_MEETING_BRANCH_MEMBER:
-						meetingTitle = year + "年第" + quarter + "季度支部党员大会 评价";
+						meetingTitle = year + "年第" + quarter + "季度支部党员大会";
 						break;
 					case PCConst.WORKPLAN_TYPE_MEETING_OTHER:
-						meetingTitle = meeting.meetingName + " 评价";
+						meetingTitle = meeting.meetingName;
 						break;
 				}
 				
@@ -162,12 +160,9 @@
 			private function onGetEvaluateInfoSuccess(data:Object, evt:PcMeetingEvent):void {
 				this.enabled = true;
 				if (data as PcMeetingContentVo) {
-//					this.hasHandle = true;
 					var contentVo:PcMeetingContentVo = data as PcMeetingContentVo;
 					this.handlePersonTxt.text = contentVo.memberName;
 					this.handleTextArea.htmlText = contentVo.content;
-				} else {
-					this.hasHandle = false;
 				}
 			}
 			
@@ -176,7 +171,8 @@
 				Alert.show(info.toString());
 			}
 			
-			private function onHandle():void {
+			private function onHandle(statusId:Number):void {
+				meeting.statusId = statusId;
 				doEvaluate();
 			}
 			
@@ -291,18 +287,21 @@
 				<mx:HBox width="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off">
 					<mx:Label text="评价人:"/>
 					<mx:TextInput id="handlePersonTxt" width="200"
-								  editable="{!hasHandle}"/>
+								  editable="true"/>
 				</mx:HBox>
 				<richtexttoolbar:PopupRichTextToolBar width="100%" target="{handleTextArea}"/>
 				<mx:TextArea id="handleTextArea" width="100%" height="100%"
-							 editable="{!hasHandle}"/>
+							 editable="true"/>
 			</mx:VBox>
 		</mx:HBox>
 		
 		<mx:ControlBar width="100%" horizontalAlign="center" verticalAlign="middle">
-			<button:PcButton id="returnBtn" label="驳回" click="onReturn()" visible="{parseFloat(model.loginUser.privilege) == 1}"/>
-			<button:PcButton label="评价" click="onHandle()" visible="{meeting.statusId == 2}" includeInLayout="{!hasHandle}"/>
+			
+			<button:PcButton label="暂存" click="onHandle(3)"
+							 visible="{meeting.statusId == 3}"/>
+			<button:PcButton label="评价" click="onHandle(4)" visible="{meeting.statusId == 3}"/>
 			<button:PcButton label="关闭" click="close()"/>
+			<button:PcButton id="returnBtn" label="驳回" click="onReturn()" visible="{parseFloat(model.loginUser.privilege) == 1}"/>
 		</mx:ControlBar>
 	</mx:VBox>
 	

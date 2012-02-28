@@ -141,15 +141,6 @@
 				return "";
 			}
 			
-			public function approvalWorkPlan(workPlan:PcWorkPlanVo):void {
-				var win:WorkPlanHandlerView = new WorkPlanHandlerView();
-				win.agency = agency;
-				win.workPlan = workPlan;
-				win.parentView = this;
-				win.type = PCConst.WORKFLOW_TYPE_APPROVAL;
-				PopupMgr.instance.popupWindow(win);
-			}
-			
 			public function evaluateWorkPlan(workPlan:PcWorkPlanVo):void {
 				var win:WorkPlanHandlerView = new WorkPlanHandlerView();
 				win.agency = agency;
@@ -163,15 +154,7 @@
 				
 				var vo:PcWorkPlanVo = datagrid.selectedItem as PcWorkPlanVo;
 				if (vo) {
-					if (vo.typeId ==PCConst.WORKPLAN_TYPE_YEARLY || 
-						vo.typeId == PCConst.WORKPLAN_TYPE_QUARTER) {
-						approvalWorkPlan(vo);
-					}
-					
-					if (vo.typeId == PCConst.WORKPLAN_TYPE_YEARLY_SUMMARY ||
-						vo.typeId == PCConst.WORKPLAN_TYPE_QUARTER_SUMMARY) {
-						evaluateWorkPlan(vo);
-					}
+					evaluateWorkPlan(vo);
 				}
 				
 			}				
@@ -210,22 +193,20 @@
 										import com.partycommittee.vo.PcWorkPlanVo;
 
 										protected function actionClick():void {
-											if ((data as PcWorkPlanVo).typeId == PCConst.WORKPLAN_TYPE_YEARLY || 
-												(data as PcWorkPlanVo).typeId == PCConst.WORKPLAN_TYPE_QUARTER) {
-												outerDocument.approvalWorkPlan(data as PcWorkPlanVo);	
-											} else {
-												outerDocument.evaluateWorkPlan(data as PcWorkPlanVo);
+											outerDocument.evaluateWorkPlan(data as PcWorkPlanVo);
+										}
+										
+										protected function formatActionButtonLabel(item:Object):String {											
+											if (item && (item as PcWorkPlanVo).statusId >= 4  ) {
+												return '查看';
 											}
-											
+											return '评价';
 										}
 										
 																				
 									]]>
 								</fx:Script>
-								
-								<button:PcButton label="{ ( (data as PcWorkPlanVo).statusId == 3 || (data as PcWorkPlanVo).statusId == 4 ) ? '查看' :  (  ((data as PcWorkPlanVo).typeId == PCConst.WORKPLAN_TYPE_YEARLY || (data as PcWorkPlanVo).typeId == PCConst.WORKPLAN_TYPE_QUARTER) ? '审批' : '评价'   )}" 
-												 click="actionClick()"
-												 />							
+								<button:PcButton id="editBtn" label="{formatActionButtonLabel(data as PcWorkPlanVo)}" click="actionClick()"/>							
 							</mx:Box>
 						</fx:Component>
 					</mx:itemRenderer>

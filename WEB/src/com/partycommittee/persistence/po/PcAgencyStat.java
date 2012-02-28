@@ -24,6 +24,8 @@ public class PcAgencyStat implements Serializable {
 	private Integer codeId;
 
 	private String name;
+	
+	private String code;
 
 	private Integer parentId;
 
@@ -230,6 +232,16 @@ public class PcAgencyStat implements Serializable {
 	public void setZbNum(Integer zbNum) {
 		this.zbNum = zbNum;
 	}
+	
+	
+	@Column(name = "code")
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}	
 	
 
 }

@@ -110,7 +110,7 @@
 						workPlanStatusLbl = " (" + workPlanStatusLbl + ")";
 					}
 					
-					if (workPlan.statusId == 0 || workPlan.statusId == 1) {
+					if (workPlan.statusId < 3) {
 						QuearterViewStack.selectedChild = reportForm;
 					
 						if (workPlan.workPlanContent) {
@@ -151,7 +151,7 @@
 			private function onLoadContentSuccess(data:Object, evt:PcWorkPlanEvent):void {
 				this.enabled = true;
 				workPlan.workPlanContent = data as PcWorkPlanContentVo;
-				if (workPlan.statusId == 0 || workPlan.statusId == 1) {
+				if (workPlan.statusId < 3) {
 					personTxt.text = workPlan.workPlanContent.memberName;
 					textArea.htmlText = workPlan.workPlanContent.content;
 				} else {
@@ -237,7 +237,7 @@
 			private function doUpdate(isCommit:Boolean = false):void {
 				var workPlanEvt:PcWorkPlanEvent = new PcWorkPlanEvent(CRUDEventType.UPDATE);
 				var updateWorkPlan:PcWorkPlanVo = getUpdateWorkPlan();
-				updateWorkPlan.statusId = isCommit ? 2 : 1;
+				updateWorkPlan.statusId = isCommit ? 3 : 1;
 				workPlanEvt.workPlan = updateWorkPlan;
 				workPlanEvt.successCallback = onWorkPlanUpdateSuccess;
 				workPlanEvt.failureCallback = onWorkPlanUpdateFailure;
@@ -248,7 +248,7 @@
 			private function doCreate(isCommit:Boolean = false):void {
 				var workPlanEvt:PcWorkPlanEvent = new PcWorkPlanEvent(CRUDEventType.CREATE);
 				var newWorkPlan:PcWorkPlanVo = getNewWorkPlan();
-				newWorkPlan.statusId = isCommit ? 2 : 1;
+				newWorkPlan.statusId = isCommit ? 3 : 1;
 				workPlanEvt.workPlan = newWorkPlan;
 				workPlanEvt.successCallback = onWorkPlanCreateSuccess;
 				workPlanEvt.failureCallback = onWorkPlanCreateFailure;
@@ -422,18 +422,18 @@
 		
 				<richtexttoolbar:PopupRichTextToolBar width="100%" target="{textArea}"/>
 				<mx:TextArea id="textArea" width="100%" height="100%"
-							 editable="{!workPlan || workPlan.statusId == 1}"/>
+							 editable="{!workPlan || workPlan.statusId &lt; 3}"/>
 				<mx:HBox width="100%" horizontalAlign="left" horizontalScrollPolicy="off" verticalScrollPolicy="off">
 					<mx:Label text="填写人："/>
 					<mx:TextInput id="personTxt" width="200"
-								  editable="{!workPlan || workPlan.statusId == 1}"/>
+								  editable="{!workPlan || workPlan.statusId &lt; 3}"/>
 				</mx:HBox>		
 				<mx:ControlBar width="100%" horizontalAlign="center" verticalAlign="middle">
 					<button:PcButton label="暂存" click="onSaveWithoutSubmit()"
-									 visible="{!workPlan || workPlan.statusId == 1}"
+									 visible="{!workPlan || workPlan.statusId &lt; 3}"
 									 includeInLayout="{!detailMode}"/>
 					<button:PcButton label="上报" id="btn_commit" click="onSaveAndCommit()"
-									 visible="{!workPlan || workPlan.statusId == 1}"
+									 visible="{!workPlan || workPlan.statusId &lt; 3}"
 									 includeInLayout="{!detailMode}"/>
 					<mx:Label id="remindTxt" text="" visible="false" includeInLayout="{!detailMode}"/>
 					<button:PcButton label="关闭" click="close()"/>

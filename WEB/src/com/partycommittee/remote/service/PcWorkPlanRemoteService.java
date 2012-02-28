@@ -77,8 +77,8 @@ public class PcWorkPlanRemoteService {
 	}
 	
 	@RemotingInclude
-	public void evaluateWrokplan(Integer workPlanId, PcWorkPlanContentVo contentVo) {
-		pcWorkPlanService.evaluateWrokplan(workPlanId, contentVo);
+	public void evaluateWrokplan(Integer workPlanId, Integer statusId, PcWorkPlanContentVo contentVo) {
+		pcWorkPlanService.evaluateWrokplan(workPlanId, statusId, contentVo);
 	}
 	
 	@RemotingInclude

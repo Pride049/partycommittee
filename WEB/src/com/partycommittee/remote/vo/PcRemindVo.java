@@ -17,6 +17,8 @@ public class PcRemindVo implements Serializable {
 	private String ext;
 
 	private String name;
+	
+	private String code;
 
 	private Integer parentId;
 
@@ -108,11 +110,20 @@ public class PcRemindVo implements Serializable {
 		this.year = year;
 	}
 
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+	
 	public static PcRemindVo fromPcRemind(PcRemind pevo) {
 		PcRemindVo vo = new PcRemindVo();
 		vo.setId(pevo.getId());
 		vo.setAgencyId(pevo.getAgencyId());
 		vo.setCodeId(pevo.getCodeId());
+		vo.setCode(pevo.getCode());
 		vo.setExt(pevo.getExt());
 		vo.setName(pevo.getName());
 		vo.setParentId(pevo.getParentId());
@@ -129,6 +140,7 @@ public class PcRemindVo implements Serializable {
 		vo.setId(pevo.getId());
 		vo.setAgencyId(pevo.getAgencyId());
 		vo.setCodeId(pevo.getCodeId());
+		vo.setCode(pevo.getCode());
 		vo.setExt(pevo.getExt());
 		vo.setName(pevo.getName());
 		vo.setParentId(pevo.getParentId());

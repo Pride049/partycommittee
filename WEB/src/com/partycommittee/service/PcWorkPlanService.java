@@ -128,7 +128,7 @@ public class PcWorkPlanService {
 		contentVo.setWorkplanId(workPlanId);
 		contentVo.setType(2);
 		PcWorkPlan workPlan = pcWorkPlanDaoImpl.getWorkPlanById(workPlanId);
-		workPlan.setStatusId(3);
+//		workPlan.setStatusId(3);
 		pcWorkPlanDaoImpl.updateWorkPlan(workPlan);
 		
 		PcWorkPlanContent workPlanContent = pcWorkPlanContentDaoImpl.getContentByWorkPlanIdAndType(workPlanId, 2);
@@ -141,11 +141,11 @@ public class PcWorkPlanService {
 		}
 	}
 	
-	public void evaluateWrokplan(Integer workPlanId, PcWorkPlanContentVo contentVo) {
+	public void evaluateWrokplan(Integer workPlanId, Integer statusId, PcWorkPlanContentVo contentVo) {
 		contentVo.setWorkplanId(workPlanId);
 		contentVo.setType(3);
 		PcWorkPlan workPlan = pcWorkPlanDaoImpl.getWorkPlanById(workPlanId);
-		workPlan.setStatusId(4);
+		workPlan.setStatusId(statusId);
 		pcWorkPlanDaoImpl.updateWorkPlan(workPlan);
 		PcWorkPlanContent workPlanContent = pcWorkPlanContentDaoImpl.getContentByWorkPlanIdAndType(workPlanId, 3);
 		if (workPlanContent == null) {
@@ -308,11 +308,11 @@ public class PcWorkPlanService {
 		if (workPlanVo == null) {
 			return null;
 		}
-		if (workPlanVo.getTypeId() == 1 || workPlanVo.getTypeId() == 2) {
-			content = pcWorkPlanContentDaoImpl.getContentByWorkPlanIdAndType(workPlanVo.getId(), 2);
-		} else {
+//		if (workPlanVo.getTypeId() == 1 || workPlanVo.getTypeId() == 2) {
+//			content = pcWorkPlanContentDaoImpl.getContentByWorkPlanIdAndType(workPlanVo.getId(), 2);
+//		} else {
 			content = pcWorkPlanContentDaoImpl.getContentByWorkPlanIdAndType(workPlanVo.getId(), 3);
-		}
+//		}
 		if (content != null) {
 			return PcWorkPlanContentVo.fromPcWorkPlanContent(content);
 		}

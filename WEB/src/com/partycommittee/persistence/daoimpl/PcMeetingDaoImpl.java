@@ -92,7 +92,7 @@ public class PcMeetingDaoImpl extends JpaDaoBase implements PcMeetingDao {
 				calendar.setTime(new Date()); 
 				year = calendar.get(Calendar.YEAR);
 			}			
-			return super.find("from PcMeeting where agency_id in (" + ids + ") AND year = " + year + " AND status_id > 1 Order by agency_id ASC, quarter ASC, id DESC");
+			return super.find("from PcMeeting where agency_id in (" + ids + ") AND year = " + year + " AND status_id >= 3 Order by agency_id ASC, quarter ASC, id DESC");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

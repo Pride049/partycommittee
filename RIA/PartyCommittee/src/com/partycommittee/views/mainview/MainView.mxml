@@ -175,11 +175,11 @@
 					vo.q = c_q;
 					//年度计划
 					if (dp.getItemAt(i).typeId == 1) {
-						if (dp.getItemAt(i).statusId == 0 || dp.getItemAt(i).statusId == 1) {
+						if (dp.getItemAt(i).statusId < 3) {
 							vo.y1 = parseInt(vo.y1) + parseInt(dp.getItemAt(i).c);
 						} 
 						
-						if (dp.getItemAt(i).statusId == 2) {
+						if (dp.getItemAt(i).statusId == 3) {
 							vo.y2 = parseInt(vo.y2) + parseInt(dp.getItemAt(i).c);
 //							vo.y2 = dp.getItemAt(i).c;
 						} 
@@ -188,11 +188,11 @@
 					
 					//季度计划
 					if (dp.getItemAt(i).typeId == 2) {
-						if (dp.getItemAt(i).statusId == 0 || dp.getItemAt(i).statusId == 1) {
+						if (dp.getItemAt(i).statusId < 3) {
 							vo.q1 = parseInt(vo.q1) + parseInt(dp.getItemAt(i).c);
 						} 
 						
-						if (dp.getItemAt(i).statusId == 2) {
+						if (dp.getItemAt(i).statusId == 3) {
 							vo.q2 = parseInt(vo.q2) + parseInt(dp.getItemAt(i).c);
 //							vo.q2 = dp.getItemAt(i).c;
 						} 
@@ -201,11 +201,11 @@
 					
 					//季度执行情况
 					if (dp.getItemAt(i).typeId == 3) {
-						if (dp.getItemAt(i).statusId == 0 || dp.getItemAt(i).statusId == 1) {
+						if (dp.getItemAt(i).statusId < 3) {
 							vo.lq1 = parseInt(vo.lq1) + parseInt(dp.getItemAt(i).c);
 						} 
 						
-						if (dp.getItemAt(i).statusId == 2) {
+						if (dp.getItemAt(i).statusId == 3) {
 //							vo.lq2 = dp.getItemAt(i).c;
 							vo.lq2 = parseInt(vo.lq2) + parseInt(dp.getItemAt(i).c);
 						} 
@@ -214,11 +214,11 @@
 					
 					//年终总结
 					if (dp.getItemAt(i).typeId == 4) {
-						if (dp.getItemAt(i).statusId == 0 || dp.getItemAt(i).statusId == 1) {
+						if (dp.getItemAt(i).statusId < 3) {
 							vo.ly1 = parseInt(vo.ly1) + parseInt(dp.getItemAt(i).c);
 						} 
 						
-						if (dp.getItemAt(i).statusId == 2) {
+						if (dp.getItemAt(i).statusId == 3) {
 							vo.ly2 = parseInt(vo.ly2) + parseInt(dp.getItemAt(i).c);
 //							vo.ly2 = dp.getItemAt(i).c;
 						} 
@@ -227,44 +227,44 @@
 					
 					//党课
 					if (dp.getItemAt(i).typeId == 5) {
-						if (dp.getItemAt(i).statusId == 0 || dp.getItemAt(i).statusId == 1) {
+						if (dp.getItemAt(i).statusId < 3) {
 							vo.dk1 = parseInt(vo.dk1) + parseInt(dp.getItemAt(i).c);
 						} 
 						
-						if (dp.getItemAt(i).statusId == 2) {
+						if (dp.getItemAt(i).statusId == 3) {
 							vo.dk2 = parseInt(vo.dk2) + parseInt(dp.getItemAt(i).c);
 						}
 					}
 					
 					//党员大会
 					if (dp.getItemAt(i).typeId == 6) {
-						if (dp.getItemAt(i).statusId == 0 || dp.getItemAt(i).statusId == 1) {
+						if (dp.getItemAt(i).statusId < 3) {
 							vo.dydh1 = parseInt(vo.dydh1) + parseInt(dp.getItemAt(i).c);
 						} 
 						
-						if (dp.getItemAt(i).statusId == 2) {
+						if (dp.getItemAt(i).statusId == 3) {
 							vo.dydh2 = parseInt(vo.dydh2) + parseInt(dp.getItemAt(i).c);
 						}
 					}	
 					
 					//支部民主生活会
 					if (dp.getItemAt(i).typeId == 7) {
-						if (dp.getItemAt(i).statusId == 0 || dp.getItemAt(i).statusId == 1) {
+						if (dp.getItemAt(i).statusId < 3) {
 							vo.mzshh1 = parseInt(vo.mzshh1) + parseInt(dp.getItemAt(i).c);
 						} 
 						
-						if (dp.getItemAt(i).statusId == 2) {
+						if (dp.getItemAt(i).statusId == 3) {
 							vo.mzshh2 = parseInt(vo.mzshh2) + parseInt(dp.getItemAt(i).c);
 						}
 					}	
 					
 					//支部委员会
 					if (dp.getItemAt(i).typeId == 8) {
-						if (dp.getItemAt(i).statusId == 0 || dp.getItemAt(i).statusId == 1) {
+						if (dp.getItemAt(i).statusId < 3) {
 							vo.zbwyh1 = parseInt(vo.zbwyh1) + parseInt(dp.getItemAt(i).c);
 						} 
 						
-						if (dp.getItemAt(i).statusId == 2) {
+						if (dp.getItemAt(i).statusId == 3) {
 							vo.zbwyh2 = parseInt(vo.zbwyh2) + parseInt(dp.getItemAt(i).c);
 						}
 					}					
