@@ -96,11 +96,11 @@
 				switch (workPlan.typeId) {
 					case PCConst.WORKPLAN_TYPE_YEARLY:
 						workPlanTitle = year + "年度工作计划";
-						quarterBox.visible = quarterBox.includeInLayout = false;
+//						quarterBox.visible = quarterBox.includeInLayout = false;
 						break;
 					case PCConst.WORKPLAN_TYPE_YEARLY_SUMMARY:
 						workPlanTitle = year + "年终工作总结";
-						quarterBox.visible = quarterBox.includeInLayout = false;
+//						quarterBox.visible = quarterBox.includeInLayout = false;
 						break;
 					case PCConst.WORKPLAN_TYPE_QUARTER:
 						workPlanTitle = year + "年第" + quarter + "季度工作计划";
@@ -169,9 +169,7 @@
 					this.handlePersonTxt.text = contentVo.memberName;
 					this.handleTextArea.htmlText = contentVo.content;
 					
-					if (workPlan.statusId == 5) {
-						getRateInfo();
-					}
+					getRateInfo();
 				}
 			}
 			
@@ -266,7 +264,9 @@
 			
 			private function doRate():void {
 				var rateEvt:PcWorkPlanEvent = new PcWorkPlanEvent(PcWorkPlanEvent.RATE_WORKPLAN, agency);
-				workPlan.statusId = 5;
+				if (workPlan.statusId > 3) {
+					workPlan.statusId = 5;
+				}
 				rateEvt.workPlan = workPlan;
 				rateEvt.workPlanContent = getRateContent();
 				rateEvt.successCallback = onRateSuccess;
@@ -325,10 +325,12 @@
 					<mx:Label text="年    份："/>
 					<mx:Label text="{year}"/>
 				</mx:HBox>
+				<!--
 				<mx:HBox id="quarterBox" width="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off">
 					<mx:Label text="季    度："/>
 					<mx:Label text="{quarter}"/>
 				</mx:HBox>
+				-->
 				<mx:HBox width="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off">
 					<mx:Label text="填写人："/>
 					<mx:TextInput id="personTxt" width="200"
@@ -340,28 +342,33 @@
 			<mx:VRule height="100%"/>
 			<mx:VBox width="50%" height="100%"
 					 horizontalScrollPolicy="off" verticalScrollPolicy="off">
-				<mx:VBox id="rate_box" horizontalScrollPolicy="off" verticalScrollPolicy="off">
-					<mx:HBox width="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off">
-						<mx:Label text="评价:      "/>
-						<s:RadioButton groupName="rateGroup" id="rate1" selected="true" label="好" value="1" color="0x323232" /> 
-						<s:RadioButton groupName="rateGroup" id="rate2" label="较好" value="2" color="0x323232"/>
-						<s:RadioButton groupName="rateGroup" id="rate3" label="一般" value="3" color="0x323232"/>
-						<s:RadioButton groupName="rateGroup" id="rate4" label="差" value="4" color="0x323232"/>
-					</mx:HBox>
-					<mx:HBox width="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off">
-					<mx:Label text="评价主体:"/>
-					<mx:TextInput id="ratePersonTxt" width="200"
-								  editable="true"/>
-					</mx:HBox>
-				</mx:VBox>
+
 				<mx:HBox width="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off">
 					<mx:Label id="handlePersonLbl"/>
 					<mx:TextInput id="handlePersonTxt" width="200"
 								  editable="true"/>
 				</mx:HBox>
 				
+				<richtexttoolbar:PopupRichTextToolBar width="100%" height="22" target="{handleTextArea}" visible="{!workPlan || workPlan.statusId == 3 }"/>
 				<mx:TextArea id="handleTextArea" width="100%" height="100%"
 							 editable="true"/>
+
+				
+				<mx:VBox id="rate_box" horizontalScrollPolicy="off" verticalScrollPolicy="off">
+					<mx:HBox width="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off">
+						<mx:Label text="评价:      "/>
+						<s:RadioButton groupName="rateGroup" fontFamily="宋体" id="rate1" selected="true" label="好" value="1" /> 
+						<s:RadioButton groupName="rateGroup" fontFamily="宋体" id="rate2" label="较好" value="2"/>
+						<s:RadioButton groupName="rateGroup" fontFamily="宋体" id="rate3" label="一般" value="3"/>
+						<s:RadioButton groupName="rateGroup" fontFamily="宋体" id="rate4" label="差" value="4"/>
+					</mx:HBox>
+					<mx:HBox width="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off">
+						<mx:Label text="评价主体:"/>
+						<mx:TextInput id="ratePersonTxt" width="200"
+									  editable="true"/>
+					</mx:HBox>
+				</mx:VBox>				
+				
 			</mx:VBox>
 		</mx:HBox>
 		
