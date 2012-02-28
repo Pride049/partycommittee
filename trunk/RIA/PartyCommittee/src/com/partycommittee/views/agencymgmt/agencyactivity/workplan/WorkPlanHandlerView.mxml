@@ -130,8 +130,9 @@
 			}
 			
 			private function loadWorkPlanContent():void {
-				var evt:PcWorkPlanEvent = new PcWorkPlanEvent(PcWorkPlanEvent.GET_WORKPLAN_CONTENT_BY_WORKPLANID);
+				var evt:PcWorkPlanEvent = new PcWorkPlanEvent(PcWorkPlanEvent.GET_CONTENT_INFO);
 				evt.workPlan = workPlan;
+				evt.contentType = 1;
 				evt.successCallback = onLoadContentSuccess;
 				evt.failureCallback = onLoadContentFailure;
 				this.enabled = false;
@@ -152,8 +153,9 @@
 			}
 			
 			private function getEvaluateInfo():void {
-				var workPlanEvt:PcWorkPlanEvent = new PcWorkPlanEvent(PcWorkPlanEvent.GET_EVALUATE_INFO);
+				var workPlanEvt:PcWorkPlanEvent = new PcWorkPlanEvent(PcWorkPlanEvent.GET_CONTENT_INFO);
 				workPlanEvt.workPlan = workPlan;
+				workPlanEvt.contentType = 3;
 				workPlanEvt.successCallback = onGetEvaluateInfoSuccess;
 				workPlanEvt.failureCallback = onGetEvaluateInfoFailure;
 				this.enabled = false;
@@ -166,6 +168,10 @@
 					var contentVo:PcWorkPlanContentVo = data as PcWorkPlanContentVo;
 					this.handlePersonTxt.text = contentVo.memberName;
 					this.handleTextArea.htmlText = contentVo.content;
+					
+					if (workPlan.statusId == 5) {
+						getRateInfo();
+					}
 				}
 			}
 			
@@ -173,6 +179,33 @@
 				this.enabled = true;
 				Alert.show(info.toString());
 			}
+			
+			private function getRateInfo():void {
+				var workPlanEvt:PcWorkPlanEvent = new PcWorkPlanEvent(PcWorkPlanEvent.GET_CONTENT_INFO);
+				workPlanEvt.workPlan = workPlan;
+				workPlanEvt.contentType = 4;
+				workPlanEvt.successCallback = onGetRateInfoSuccess;
+				workPlanEvt.failureCallback = onGetRateInfoFailure;
+				this.enabled = false;
+				workPlanEvt.dispatch();
+			}
+			
+			private function onGetRateInfoSuccess(data:Object, evt:PcWorkPlanEvent):void {
+				this.enabled = true;
+				if (data as PcWorkPlanContentVo) {
+					var contentVo:PcWorkPlanContentVo = data as PcWorkPlanContentVo;
+					this.ratePersonTxt.text = contentVo.memberName;
+					//this.rateTextArea.htmlText = contentVo.content;
+					rateGroup.selectedValue = contentVo.content;
+					
+				}
+			}
+			
+			private function onGetRateInfoFailure(info:Object, evt:PcWorkPlanEvent):void {
+				this.enabled = true;
+				Alert.show(info.toString());
+			}			
+			
 			
 			private function onReturn():void {
 				workPlan.statusId = 2;
@@ -216,6 +249,33 @@
 			}
 			
 			private function onEvaluateSuccess(data:Object, workPlanEvt:PcWorkPlanEvent):void {
+//				this.enabled = true;
+//				if (parentView is BrowseWorkplanView) {
+//					(parentView as BrowseWorkplanView).refreshData();
+//				} else if (parentView is MainView) {
+//					(parentView as MainView).refreshData();
+//				}
+				doRate();
+//				this.close();
+			}
+			
+			private function onEvaluateFailure(info:Object, workPlanEvt:PcWorkPlanEvent):void {
+				this.enabled = true;
+				Alert.show("评语失败！");
+			}
+			
+			private function doRate():void {
+				var rateEvt:PcWorkPlanEvent = new PcWorkPlanEvent(PcWorkPlanEvent.RATE_WORKPLAN, agency);
+				workPlan.statusId = 5;
+				rateEvt.workPlan = workPlan;
+				rateEvt.workPlanContent = getRateContent();
+				rateEvt.successCallback = onRateSuccess;
+				rateEvt.failureCallback = onRateFailure;
+				this.enabled = false;	
+				rateEvt.dispatch();
+			}
+			
+			private function onRateSuccess(data:Object, workPlanEvt:PcWorkPlanEvent):void {
 				this.enabled = true;
 				if (parentView is BrowseWorkplanView) {
 					(parentView as BrowseWorkplanView).refreshData();
@@ -223,12 +283,11 @@
 					(parentView as MainView).refreshData();
 				}
 				this.close();
-			}
+			}	
 			
-			private function onEvaluateFailure(info:Object, workPlanEvt:PcWorkPlanEvent):void {
+			private function onRateFailure(info:Object, workPlanEvt:PcWorkPlanEvent):void {
 				this.enabled = true;
-				Alert.show("评价失败！");
-			}
+			}			
 			
 			private function getHandleContent():PcWorkPlanContentVo {
 				var contentVo:PcWorkPlanContentVo = new PcWorkPlanContentVo();
@@ -237,10 +296,18 @@
 				return contentVo;
 			}
 			
+			private function getRateContent():PcWorkPlanContentVo {
+				var contentVo:PcWorkPlanContentVo = new PcWorkPlanContentVo();
+				contentVo.memberName = ratePersonTxt.text;
+				contentVo.content = rateGroup.selectedValue.toString();
+				return contentVo;
+			}			
+			
 		]]>
 	</fx:Script>
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<s:RadioButtonGroup id="rateGroup" />  
 	</fx:Declarations>
 	
 	<mx:VBox width="100%" height="100%"
@@ -273,6 +340,20 @@
 			<mx:VRule height="100%"/>
 			<mx:VBox width="50%" height="100%"
 					 horizontalScrollPolicy="off" verticalScrollPolicy="off">
+				<mx:VBox id="rate_box" horizontalScrollPolicy="off" verticalScrollPolicy="off">
+					<mx:HBox width="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off">
+						<mx:Label text="评价:      "/>
+						<s:RadioButton groupName="rateGroup" id="rate1" selected="true" label="好" value="1" color="0x323232" /> 
+						<s:RadioButton groupName="rateGroup" id="rate2" label="较好" value="2" color="0x323232"/>
+						<s:RadioButton groupName="rateGroup" id="rate3" label="一般" value="3" color="0x323232"/>
+						<s:RadioButton groupName="rateGroup" id="rate4" label="差" value="4" color="0x323232"/>
+					</mx:HBox>
+					<mx:HBox width="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off">
+					<mx:Label text="评价主体:"/>
+					<mx:TextInput id="ratePersonTxt" width="200"
+								  editable="true"/>
+					</mx:HBox>
+				</mx:VBox>
 				<mx:HBox width="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off">
 					<mx:Label id="handlePersonLbl"/>
 					<mx:TextInput id="handlePersonTxt" width="200"

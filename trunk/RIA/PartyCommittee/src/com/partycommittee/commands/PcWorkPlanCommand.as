@@ -44,29 +44,20 @@ package com.partycommittee.commands
 				case PcWorkPlanEvent.GET_WORKPLAN_QUARTER_RESULT_LIST:
 					proxy.getResultListQuarter(pcWorkPlanEvt.agency.id, pcWorkPlanEvt.year);
 					break;
-				case PcWorkPlanEvent.GET_WORKPLAN_CONTENT_BY_WORKPLANID:
-					proxy.getContentByWorkPlanId(pcWorkPlanEvt.workPlan.id);
-					break;
 				case PcWorkPlanEvent.SUBMIT_WORKPLAN:
 					proxy.submitWorkPlan(pcWorkPlanEvt.workPlan);
-					break;
-				case PcWorkPlanEvent.APPROVAL_WORKPLAN:
-					proxy.approvalWorkplan(pcWorkPlanEvt.workPlan.id, pcWorkPlanEvt.workPlanContent);
 					break;
 				case PcWorkPlanEvent.EVALUATE_WORKPLAN:
 					proxy.evaluateWrokplan(pcWorkPlanEvt.workPlan.id, pcWorkPlanEvt.workPlan.statusId, pcWorkPlanEvt.workPlanContent);
 					break;
-				case PcWorkPlanEvent.GET_APPROVAL_INFO:
-					proxy.getApprovalInfo(pcWorkPlanEvt.workPlan.id);
+				case PcWorkPlanEvent.RATE_WORKPLAN:
+					proxy.rateWrokplan(pcWorkPlanEvt.workPlan.id, pcWorkPlanEvt.workPlan.statusId, pcWorkPlanEvt.workPlanContent);
 					break;
-				case PcWorkPlanEvent.GET_EVALUATE_INFO:
-					proxy.getEvaluateInfo(pcWorkPlanEvt.workPlan.id);
-					break;
+				case PcWorkPlanEvent.GET_CONTENT_INFO:
+					proxy.getContentInfo(pcWorkPlanEvt.workPlan.id, pcWorkPlanEvt.contentType);
+					break;				
 				case PcWorkPlanEvent.GET_ALERT_INFO:
 					proxy.getAlertInfo(pcWorkPlanEvt.agency.id, pcWorkPlanEvt.year, pcWorkPlanEvt.quarter);
-					break;
-				case PcWorkPlanEvent.GET_WORKPLAN_COMMENT:
-					proxy.getWorkplanComment(pcWorkPlanEvt.workPlan);
 					break;
 				case PcWorkPlanEvent.RETURN_WORKPLAN:
 					proxy.updateWorkPlanStatus(pcWorkPlanEvt.workPlan.id, pcWorkPlanEvt.workPlan.statusId);
@@ -89,8 +80,6 @@ package com.partycommittee.commands
 				case PcWorkPlanEvent.GET_WORKPLAN_QUARTER:
 					break;
 				case PcWorkPlanEvent.GET_COMMIT_CHILDREN_WORKPLAN:
-					break;
-				case PcWorkPlanEvent.APPROVAL_WORKPLAN:
 					break;
 				case PcWorkPlanEvent.EVALUATE_WORKPLAN:
 					break;

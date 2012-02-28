@@ -57,7 +57,7 @@
 						workPlan.typeId == PCConst.WORKPLAN_TYPE_YEARLY) {
 						isApproval = true;
 					}
-					getWorkPlanComment();
+					getEvaluateInfo();
 				}
 				if (meeting) {
 					getMeetingComment();
@@ -69,16 +69,17 @@
 				this.dateLbl.text = "评语日期:";
 			}
 			
-			private function getWorkPlanComment():void {
-				var workPlanEvt:PcWorkPlanEvent = new PcWorkPlanEvent(PcWorkPlanEvent.GET_WORKPLAN_COMMENT);
+			private function getEvaluateInfo():void {
+				var workPlanEvt:PcWorkPlanEvent = new PcWorkPlanEvent(PcWorkPlanEvent.GET_CONTENT_INFO);
 				workPlanEvt.workPlan = workPlan;
-				workPlanEvt.successCallback = onGetWorkplanCommentSuccess;
-				workPlanEvt.failureCallback = onGetWorkplanCommentFailure;
+				workPlanEvt.contentType = 3;
+				workPlanEvt.successCallback = onGetEvaluateInfoSuccess;
+				workPlanEvt.failureCallback = onGetEvaluateInfoFailure;
 				this.enabled = false;
 				workPlanEvt.dispatch();
 			}
 			
-			private function onGetWorkplanCommentSuccess(data:Object, evt:PcWorkPlanEvent):void {
+			private function onGetEvaluateInfoSuccess(data:Object, evt:PcWorkPlanEvent):void {
 				this.enabled = true;
 				var workplanContent:PcWorkPlanContentVo = data as PcWorkPlanContentVo;
 				if (!workplanContent) {
@@ -89,7 +90,7 @@
 				dateTxt.text = DateUtil.toISOString(workplanContent.updatetime);
 			}
 			
-			private function onGetWorkplanCommentFailure(info:Object, evt:PcWorkPlanEvent):void {
+			private function onGetEvaluateInfoFailure(info:Object, evt:PcWorkPlanEvent):void {
 				this.enabled = true;
 				Alert.show("获取内容失败！");
 			}

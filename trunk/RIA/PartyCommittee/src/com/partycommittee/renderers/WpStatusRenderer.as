@@ -32,25 +32,32 @@ package com.partycommittee.renderers
 					break;
 				case 2:
 					if (model.loginUser.enableReport != 1) {
+						htmlText = "驳回";
+					} else {
+						htmlText = '<u><font color="#0000ff"><a href="event:nowp">驳回</a></font></u>';	
+					}
+					break;				
+				case 3:
+					if (model.loginUser.enableReport != 1) {
 						htmlText = "已报";
 					} else {
 						htmlText = '<u><font color="#0000ff"><a href="event:nowp">已报</a></font></u>';	
 					}
 					break;				
-				case 3:
-					if (model.loginUser.enableReport != 1) {
-						htmlText = "已审";
-					} else {
-						htmlText = '<u><font color="#0000ff"><a href="event:nowp">已审</a></font></u>';	
-					}
-					break;
 				case 4:
 					if (model.loginUser.enableReport != 1) {
-						htmlText = "已评";
+						htmlText = "已评语";
 					} else {
-						htmlText = '<u><font color="#0000ff"><a href="event:nowp">已评</a></font></u>';	
+						htmlText = '<u><font color="#0000ff"><a href="event:nowp">已评语</a></font></u>';	
 					}	
 					break;
+				case 5:
+					if (model.loginUser.enableReport != 1) {
+						htmlText = "已评价";
+					} else {
+						htmlText = '<u><font color="#0000ff"><a href="event:nowp">已评价</a></font></u>';	
+					}	
+					break;				
 				case 8:
 					htmlText = "已解锁";	
 					break;

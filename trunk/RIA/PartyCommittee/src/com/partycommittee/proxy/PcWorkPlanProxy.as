@@ -54,10 +54,6 @@ package com.partycommittee.proxy
 			service.getResultListQuarter(agencyId, year);
 		}
 		
-		public function getContentByWorkPlanId(workPlanId:Number):void {
-			service.getContentByWorkPlanId(workPlanId);
-		}
-		
 		public function submitWorkPlan(workPlan:PcWorkPlanVo):void {
 			service.submitWorkPlan(workPlan);
 		}
@@ -66,22 +62,18 @@ package com.partycommittee.proxy
 			service.getCommitWorkplanListByParentId(parentId, year);
 		}
 		
-		public function approvalWorkplan(workPlanId:Number, content:PcWorkPlanContentVo):void {
-			service.approvalWorkplan(workPlanId, content);
-		}
-		
 		public function evaluateWrokplan(workPlanId:Number,  statusId:Number, content:PcWorkPlanContentVo):void {
 			service.evaluateWrokplan(workPlanId, statusId, content);
 		}
 		
-		public function getApprovalInfo(workPlanId:Number):void {
-			service.getApprovalInfo(workPlanId);
-		}
+		public function rateWrokplan(workPlanId:Number,  statusId:Number, content:PcWorkPlanContentVo):void {
+			service.rateWrokplan(workPlanId, statusId, content);
+		}		
 		
-		public function getEvaluateInfo(workPlanId:Number):void {
-			service.getEvaluateInfo(workPlanId);
+		public function getContentInfo(workPlanId:Number, type:Number):void {
+			service.getContentInfo(workPlanId, type);
 		}
-		
+				
 		public function getAlertInfo(agencyId:Number, year:Number, quarter:Number):void {
 			service.getAlertInfo(agencyId, year, quarter);
 		}
