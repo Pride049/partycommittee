@@ -49,17 +49,13 @@ package com.partycommittee.renderers
 		}
 		
 		public function setValue(datas:Object):void {
-			
-			
-			
-			
+
 			var y:Number = new Date().getFullYear();
 			
 			var cur_date:Date = new Date();
 			var value:Number = 7;	
 			var startDate:Date;
 			var endDate:Date;
-
 
 		}
 		

@@ -95,8 +95,9 @@
 			}
 			
 			private function loadWorkPlanContent():void {
-				var evt:PcWorkPlanEvent = new PcWorkPlanEvent(PcWorkPlanEvent.GET_WORKPLAN_CONTENT_BY_WORKPLANID);
+				var evt:PcWorkPlanEvent = new PcWorkPlanEvent(PcWorkPlanEvent.GET_CONTENT_INFO);
 				evt.workPlan = workPlan;
+				evt.contentType = 1;
 				evt.successCallback = onLoadContentSuccess;
 				evt.failureCallback = onLoadContentFailure;
 				this.enabled = false;

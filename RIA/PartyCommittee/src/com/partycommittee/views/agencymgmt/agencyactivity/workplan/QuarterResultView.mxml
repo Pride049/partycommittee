@@ -126,7 +126,7 @@
 							b_personTxt.text = "填报人:" + workPlan.workPlanContent.memberName;
 							b_textArea.htmlText = workPlan.workPlanContent.content;
 							if (workPlan.statusId == 4) {
-								getWorkPlanComment(workPlan);
+								getEvaluateInfo(workPlan);
 							}
 						} else {
 							loadWorkPlanContent();
@@ -140,8 +140,9 @@
 			}
 			
 			private function loadWorkPlanContent():void {
-				var evt:PcWorkPlanEvent = new PcWorkPlanEvent(PcWorkPlanEvent.GET_WORKPLAN_CONTENT_BY_WORKPLANID);
+				var evt:PcWorkPlanEvent = new PcWorkPlanEvent(PcWorkPlanEvent.GET_CONTENT_INFO);
 				evt.workPlan = workPlan;
+				evt.contentType = 1;
 				evt.successCallback = onLoadContentSuccess;
 				evt.failureCallback = onLoadContentFailure;
 				this.enabled = false;
@@ -159,24 +160,27 @@
 					b_textArea.htmlText = workPlan.workPlanContent.content;		
 					dateTxt.text = "填写时间:" + DateUtil.toISOString(workPlan.workPlanContent.updatetime);
 					if (workPlan.statusId == 4) {
-						getWorkPlanComment(workPlan);
+						getEvaluateInfo(workPlan);
 					}					
 				}
 			}
 			
-			private function onGetWorkplanCommentFailure(info:Object, evt:PcWorkPlanEvent):void {
-				Alert.show("获取内容失败！");
-			}					
-			
-			private function getWorkPlanComment(workPlan:PcWorkPlanVo):void {
-				var workPlanEvt:PcWorkPlanEvent = new PcWorkPlanEvent(PcWorkPlanEvent.GET_WORKPLAN_COMMENT);
+			private function onLoadContentFailure(info:Object, evt:PcWorkPlanEvent):void {
+				this.enabled = true;
+				Alert.show("读取执行情况内容失败！");
+			}
+						
+
+			private function getEvaluateInfo(workPlan:PcWorkPlanVo):void {
+				var workPlanEvt:PcWorkPlanEvent = new PcWorkPlanEvent(PcWorkPlanEvent.GET_CONTENT_INFO);
 				workPlanEvt.workPlan = workPlan;
-				workPlanEvt.successCallback = onGetWorkplanCommentSuccess;
-				workPlanEvt.failureCallback = onGetWorkplanCommentFailure;
+				workPlanEvt.contentType = 3;
+				workPlanEvt.successCallback = onGetEvaluateInfoSuccess;
+				workPlanEvt.failureCallback = onGetEvaluateInfoFailure;
 				workPlanEvt.dispatch();
 			}
 			
-			private function onGetWorkplanCommentSuccess(data:Object, evt:PcWorkPlanEvent):void {
+			private function onGetEvaluateInfoSuccess(data:Object, evt:PcWorkPlanEvent):void {
 				this.enabled = true;
 				var workplanContent:PcWorkPlanContentVo = data as PcWorkPlanContentVo;
 				if (!workplanContent) {
@@ -189,12 +193,11 @@
 				b_personTxt_eva.text = "评价人:" + workplanContent.memberName;
 				dateTxt_eva.text = "评价日期:" + DateUtil.toISOString(workplanContent.updatetime);
 			}			
-			
-			private function onLoadContentFailure(info:Object, evt:PcWorkPlanEvent):void {
-				this.enabled = true;
-				Alert.show("读取执行情况内容失败！");
-			}
-			
+
+			private function onGetEvaluateInfoFailure(info:Object, evt:PcWorkPlanEvent):void {
+				Alert.show("获取内容失败！");
+			}					
+
 			private function resetData():void {
 				workPlan = null;
 				personTxt.text = "";

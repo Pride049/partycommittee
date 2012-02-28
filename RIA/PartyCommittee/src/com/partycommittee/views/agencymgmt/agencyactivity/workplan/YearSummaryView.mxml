@@ -218,20 +218,25 @@
 						b_textArea.htmlText = workPlan.workPlanContent.content;
 					}						
 					if (workPlan.statusId == 4) {
-						getWorkPlanComment(workPlan);
+						getEvaluateInfo(workPlan);
 					}					
 				}
 			}
 			
-			private function getWorkPlanComment(workPlan:PcWorkPlanVo):void {
-				var workPlanEvt:PcWorkPlanEvent = new PcWorkPlanEvent(PcWorkPlanEvent.GET_WORKPLAN_COMMENT);
+			private function onGetYearSummaryWorkPlanFailure():void {
+				this.enabled = true;
+			}
+
+			private function getEvaluateInfo(workPlan:PcWorkPlanVo):void {
+				var workPlanEvt:PcWorkPlanEvent = new PcWorkPlanEvent(PcWorkPlanEvent.GET_CONTENT_INFO);
 				workPlanEvt.workPlan = workPlan;
-				workPlanEvt.successCallback = onGetWorkplanCommentSuccess;
-				workPlanEvt.failureCallback = onGetWorkplanCommentFailure;
+				workPlanEvt.contentType = 3;
+				workPlanEvt.successCallback = onGetEvaluateInfoSuccess;
+				workPlanEvt.failureCallback = onGetEvaluateInfoFailure;
 				workPlanEvt.dispatch();
 			}
 			
-			private function onGetWorkplanCommentSuccess(data:Object, evt:PcWorkPlanEvent):void {
+			private function onGetEvaluateInfoSuccess(data:Object, evt:PcWorkPlanEvent):void {
 				this.enabled = true;
 				var workplanContent:PcWorkPlanContentVo = data as PcWorkPlanContentVo;
 				if (!workplanContent) {
@@ -245,14 +250,10 @@
 				dateTxt_eva.text = "日期:" + DateUtil.toISOString(workplanContent.updatetime);
 			}
 			
-			private function onGetWorkplanCommentFailure(info:Object, evt:PcWorkPlanEvent):void {
+			private function onGetEvaluateInfoFailure(info:Object, evt:PcWorkPlanEvent):void {
 				Alert.show("获取内容失败！");
 			}			
-			
-			private function onGetYearSummaryWorkPlanFailure():void {
-				this.enabled = true;
-			}
-			
+
 			private function formValidate():Boolean {
 				if (textArea.htmlText.length == 0) {
 					Alert.show("年终工作总结不能为空!");

@@ -23,6 +23,8 @@ package com.partycommittee.renderers
 				case 1:
 					htmlText = "未报";
 				case 2:
+					htmlText  = "驳回";					
+				case 3:
 					//'<u><font color="#0000ff"><a href="event:getRemindList&typeId&'+datas.agencyId+'">'+datas.y1+'</a></font></u>';
 					if (typeId == 1 || typeId == 2) {
 						htmlText = '<u><font color="#0000ff"><a href="event:approval&'+typeId+'&'+datas.agencyId+'">未审</a></font></u>';
@@ -31,12 +33,14 @@ package com.partycommittee.renderers
 						//htmlText = '<u><font color="#0000ff"><a href="event:evaluate&'+typeId+'&2&'+datas.agencyId+'">未评</a></font></u>';
 					}
 					break;				
-				case 3:
-					htmlText  = "已审";
+
 					break;
 				case 4:
-					htmlText  = "已评";		
+					htmlText  = "已评语";		
 					break;
+				case 5:
+					htmlText  = "已评价";		
+					break;				
 			}
 		}
 	}

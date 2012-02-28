@@ -16,7 +16,7 @@ package com.partycommittee.util
 					return "已报";
 				case 4:
 					return "已评语";
-				case 6:
+				case 5:
 					return "已评价";
 			}
 			return "";

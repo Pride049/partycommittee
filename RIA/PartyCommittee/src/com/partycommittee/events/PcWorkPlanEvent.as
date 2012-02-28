@@ -6,7 +6,6 @@ package com.partycommittee.events
 	
 	public class PcWorkPlanEvent extends BaseEvent {
 		public static const PCWORKPLAN_EVENT:String = "com.partycommittee.events.PcWorkPlanEvent";
-		
 		public static const GET_WORKPLAN_YEARLY:String = "getWorkPlanYearly";
 		public static const GET_WORKPLAN_YEARLY_SUMMARY:String = "getWorkPlanYearlySummary";
 		public static const GET_WORKPLAN_QUARTER:String = "getWorkPlanQuarter";
@@ -14,19 +13,17 @@ package com.partycommittee.events
 		public static const GET_WORKPLAN_QUARTER_LIST:String = "getWorkPlanQuarterList";
 		public static const GET_WORKPLAN_QUARTER_RESULT_LIST:String = "getWorkPlanQuarterResultList";
 		public static const GET_COMMIT_CHILDREN_WORKPLAN:String = "getCommitChildrenWorkplan";
-		public static const GET_WORKPLAN_CONTENT_BY_WORKPLANID:String = "getWorkPlanContentByWorkPlanId";
 		public static const SUBMIT_WORKPLAN:String = "submitWorkPlan";
-		
-		public static const GET_APPROVAL_INFO:String = "getApprovalInfo";
-		public static const GET_EVALUATE_INFO:String = "getEvaluateInfo";
-		public static const APPROVAL_WORKPLAN:String = "approvalWorkPlan";
 		public static const EVALUATE_WORKPLAN:String = "valuateWorkPlan";
+		public static const RATE_WORKPLAN:String = "rateWorkPlan";
 		public static const RETURN_WORKPLAN:String = "returnWorkPlan";
 		
-		public static const GET_WORKPLAN_COMMENT:String = "getWorkPlanComment";
 		public static const GET_ALERT_INFO:String = "getAlertInfo";
+		public static const GET_CONTENT_INFO:String = "getContentInfo";
+		
 		
 		private var _agency:PcAgencyVo;
+
 		public function set agency(value:PcAgencyVo):void {
 			this._agency = value;
 		}
@@ -67,12 +64,24 @@ package com.partycommittee.events
 		}
 		
 		private var _kind:String;
+		
 		public function set kind(value:String):void {
 			this._kind = value;
 		}
 		public function get kind():String {
 			return this._kind;
 		}
+		
+		private var _contentType:Number;
+		
+		public function get contentType():Number {
+			return _contentType;
+		}
+		
+		public function set contentType(value:Number):void	{
+			_contentType = value;
+		}
+		
 		
 		public function PcWorkPlanEvent(kind:String = "READ", agency:PcAgencyVo = null) {
 			super(PCWORKPLAN_EVENT);

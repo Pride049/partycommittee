@@ -70,16 +70,16 @@ public class PcWorkPlanRemoteService {
 	public PcWorkPlanContentVo getWorkPlanContentByWorkPlanId(Integer workPlanId) {
 		return pcWorkPlanService.getWorkPlanContentByWorkPlanId(workPlanId);
 	}
-	
-	@RemotingInclude
-	public void approvalWorkplan(Integer workPlanId, PcWorkPlanContentVo contentVo) {
-		pcWorkPlanService.approvalWorkPlan(workPlanId, contentVo);
-	}
-	
+		
 	@RemotingInclude
 	public void evaluateWrokplan(Integer workPlanId, Integer statusId, PcWorkPlanContentVo contentVo) {
 		pcWorkPlanService.evaluateWrokplan(workPlanId, statusId, contentVo);
 	}
+	
+	@RemotingInclude
+	public void rateWrokplan(Integer workPlanId, Integer statusId, PcWorkPlanContentVo contentVo) {
+		pcWorkPlanService.rateWrokplan(workPlanId, statusId, contentVo);
+	}	
 	
 	@RemotingInclude
 	public List<PcWorkPlanVo> getWorkPlanListQuarter(Integer agencyId, Integer year) {
@@ -95,29 +95,15 @@ public class PcWorkPlanRemoteService {
 	public void submitWorkPlan(PcWorkPlanVo workPlan) {
 		pcWorkPlanService.submitWorkPlan(workPlan);
 	}
-	
+
 	@RemotingInclude
-	public PcWorkPlanContentVo getContentByWorkPlanId(Integer workPlanId) {
-		return pcWorkPlanService.getContentByWorkPlanId(workPlanId);
-	}
-	
-	@RemotingInclude
-	public PcWorkPlanContentVo getApprovalInfo(Integer workPlanId) {
-		return pcWorkPlanService.getApprovalInfo(workPlanId);
-	}
-	
-	@RemotingInclude
-	public PcWorkPlanContentVo getEvaluateInfo(Integer workPlanId) {
-		return pcWorkPlanService.getEvaluateInfo(workPlanId);
-	}
+	public PcWorkPlanContentVo getContentInfo(Integer workPlanId, Integer type) {
+		return pcWorkPlanService.getContentInfo(workPlanId, type);
+	}	
 	
 	@RemotingInclude
 	public List<PcWorkPlanVo> getAlertInfo(Integer agencyId, Integer year, Integer quarter) {
 		return pcWorkPlanService.getAlertInfo(agencyId, year, quarter);
 	}
-	
-	@RemotingInclude
-	public PcWorkPlanContentVo getWorkplanComment(PcWorkPlanVo workPlanVo) {
-		return pcWorkPlanService.getWorkplanComment(workPlanVo);
-	}
+
 }
