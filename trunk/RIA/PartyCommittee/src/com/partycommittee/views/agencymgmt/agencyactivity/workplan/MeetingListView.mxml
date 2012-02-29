@@ -28,10 +28,7 @@
 			
 			[Bindable]
 			public var browseMode:Boolean = false;
-			
-			[Bindable]
-			public var enableNewMeeting:Boolean = false;
-			
+
 			[Bindable]
 			private var dp:ArrayCollection = new ArrayCollection();
 			
@@ -80,132 +77,31 @@
 				}
 			}
 			
-			public function updateData():void {
-				switch (type) {
-					case PCConst.WORKPLAN_TYPE_CLASS:
-						getClassList();
-						break;
-					case PCConst.WORKPLAN_TYPE_MEETING_BRANCH_COMMITTEE:
-						enableNewMeeting = true;
-						dg.columns = committeeColumns;
-						getBranchCommitteeList();
-						break;
-					case PCConst.WORKPLAN_TYPE_MEETING_BRANCH_LIFE:
-						getBranchLifeList();
-						break;
-					case PCConst.WORKPLAN_TYPE_MEETING_BRANCH_MEMBER:
-						enableNewMeeting = true;
-						dg.columns = memberColumns;
-						getBranchMemberList();
-						break;
-					case PCConst.WORKPLAN_TYPE_MEETING_OTHER:
-						getOtherList();
-						break;
-//					case PCConst.WORKPLAN_TYPE_MEETING_TEAM:
-//						break;
-				}
+			public function updateData():void {				
+				getMeetingList();
 			}
 			
-			private function getClassList():void {
-				var evt:PcMeetingEvent = new PcMeetingEvent(PcMeetingEvent.GET_CLASS_LIST);
+			private function getMeetingList():void {
+				var evt:PcMeetingEvent = new PcMeetingEvent(PcMeetingEvent.GET_MEETING_LIST);
 				evt.agency = agency;
 				evt.year = year;
-				evt.successCallback = onClassListSuccess;
-				evt.failureCallback = onClassListFailure;
+				evt.meetingType = type;
+				evt.successCallback = onMeetingListSuccess;
+				evt.failureCallback = onMeetingListFailure;
 				this.enabled = false;
 				evt.dispatch();
-			}
+			}			
 			
-			private function onClassListSuccess(data:Object, evt:PcMeetingEvent):void {
+			private function onMeetingListSuccess(data:Object, evt:PcMeetingEvent):void {
 				this.enabled = true;
 				dp = data as ArrayCollection;
 			}
 			
-			private function onClassListFailure(info:Object, evt:PcMeetingEvent):void {
+			private function onMeetingListFailure(info:Object, evt:PcMeetingEvent):void {
 				this.enabled = true;
 				Alert.show(info.toString());
-			}
-			
-			private function getBranchCommitteeList():void {
-				var evt:PcMeetingEvent = new PcMeetingEvent(PcMeetingEvent.GET_BRANCH_COMMITTEE_LIST);
-				evt.agency = agency;
-				evt.year = year;
-				evt.successCallback = onBranchCommitteeListSuccess;
-				evt.failureCallback = onBranchCommitteeListFailure;
-				this.enabled = false;
-				evt.dispatch();
-			}
-			
-			private function onBranchCommitteeListSuccess(data:Object, evt:PcMeetingEvent):void {
-				this.enabled = true;
-				dp = data as ArrayCollection;
-			}
-			
-			private function onBranchCommitteeListFailure(info:Object, evt:PcMeetingEvent):void {
-				this.enabled = true;
-				Alert.show(info.toString());
-			}
-			
-			private function getBranchLifeList():void {
-				var evt:PcMeetingEvent = new PcMeetingEvent(PcMeetingEvent.GET_BRANCH_LIFE_LIST);
-				evt.agency = agency;
-				evt.year = year;
-				evt.successCallback = onBranchLifeListSuccess;
-				evt.failureCallback = onBranchLifeListFailure;
-				this.enabled = false;
-				evt.dispatch();
-			}
-			
-			private function onBranchLifeListSuccess(data:Object, evt:PcMeetingEvent):void {
-				this.enabled = true;
-				dp = data as ArrayCollection;
-			}
-			
-			private function onBranchLifeListFailure(info:Object, evt:PcMeetingEvent):void {
-				this.enabled = true;
-				dp = data as ArrayCollection;
-			}
-			
-			private function getBranchMemberList():void {
-				var evt:PcMeetingEvent = new PcMeetingEvent(PcMeetingEvent.GET_BRANCH_MEMBER_LIST);
-				evt.agency = agency;
-				evt.year = year;
-				evt.successCallback = onBranchMemberListSuccess;
-				evt.failureCallback = onBranchMemberListFailure;
-				this.enabled = false;
-				evt.dispatch();
-			}
-			
-			private function onBranchMemberListSuccess(data:Object, evt:PcMeetingEvent):void {
-				this.enabled = true;
-				dp = data as ArrayCollection;
-			}
-			
-			private function onBranchMemberListFailure(info:Object, evt:PcMeetingEvent):void {
-				this.enabled = true;
-				Alert.show(info.toString());
-			}
-			
-			private function getOtherList():void {
-				var evt:PcMeetingEvent = new PcMeetingEvent(PcMeetingEvent.GET_OTHER_LIST);
-				evt.agency = agency;
-				evt.year = year;
-				evt.successCallback = onOtherListSuccess;
-				evt.failureCallback = onOtherListFailure;
-				this.enabled = false;
-				evt.dispatch();
-			}
-			
-			private function onOtherListSuccess(data:Object, evt:PcMeetingEvent):void {
-				this.enabled = true;
-				this.dp = data as ArrayCollection;
-			}
-			
-			private function onOtherListFailure(info:Object, evt:PcMeetingEvent):void {
-				this.enabled = true;
-				Alert.show(info.toString());
-			}
-			
+			}			
+
 			public function editMeeting(meeting:PcMeetingVo):void {
 				var win:MeetingView = new MeetingView();
 				win.agency = agency;
@@ -262,112 +158,7 @@
 		]]>
 	</fx:Script>
 	<fx:Declarations>
-		<!-- branch committee meeting columns -->
-		<fx:Array id="committeeColumns">
-			<mx:AdvancedDataGridColumn headerText="年度" dataField="year"/>
-			<mx:AdvancedDataGridColumn headerText="季度" dataField="quarter" 
-									   labelFunction="{LblFunctionHelper.workPlanQuarterLblFunc}"/>
-			<mx:AdvancedDataGridColumn headerText="月份" dataField="month"/>
-			<mx:AdvancedDataGridColumn headerText="会议" dataField="typeId"
-									   labelFunction="{LblFunctionHelper.workPlanTypeLblFunc}"/>
-			<mx:AdvancedDataGridColumn headerText="召开时间" dataField="meetingDatetime"
-									   labelFunction="{LblFunctionHelper.dateLblFunc}"/>
-			<mx:AdvancedDataGridColumn headerText="状态" dataField="statusId"
-									   labelFunction="{LblFunctionHelper.workPlanStatusLblFunc}"/>
-			<mx:AdvancedDataGridColumn headerText="操作">
-				<mx:itemRenderer>
-					<fx:Component>
-						<mx:Box horizontalAlign="center" verticalAlign="middle"
-								horizontalScrollPolicy="off" verticalScrollPolicy="off">
-							<fx:Script>
-								<![CDATA[
-									import com.partycommittee.model.ModelLocator;
-									import com.partycommittee.vo.PcMeetingVo;
-									
-									protected function editBtnClick():void {
-										outerDocument.editMeeting(data as PcMeetingVo);
-									}
-									
-									protected function formatActionButtonLabel(item:Object):String {											
-										if (item && (item as PcMeetingVo).statusId >=3 ) {
-											
-											return '查看';
-										} else {
-											if (ModelLocator.getInstance().loginUser.enableReport == 1) {
-												if (item && (item as PcMeetingVo).id ==0 ) {
-													return '填报';
-												} else {
-													return '修改';
-												} 
-												
-											} else {
-												return '查看';
-											}
-										}
-										return 'text';
-									}
-									
-								]]>
-							</fx:Script>
-							<button:PcButton id="editBtn" label="{formatActionButtonLabel(data as PcMeetingVo)}" click="editBtnClick()"/>
-						</mx:Box>
-					</fx:Component>
-				</mx:itemRenderer>
-			</mx:AdvancedDataGridColumn>
-	
-		</fx:Array>
-		
-		<!-- branch member meeting columns -->
-		<fx:Array id="memberColumns">
-			<mx:AdvancedDataGridColumn headerText="年度" dataField="year"/>
-			<mx:AdvancedDataGridColumn headerText="季度" dataField="quarter" 
-									   labelFunction="{LblFunctionHelper.workPlanQuarterLblFunc}"/>
-			<mx:AdvancedDataGridColumn headerText="会议" dataField="typeId"
-									   labelFunction="{LblFunctionHelper.workPlanTypeLblFunc}"/>
-			<mx:AdvancedDataGridColumn headerText="召开时间" dataField="meetingDatetime"
-									   labelFunction="{LblFunctionHelper.dateLblFunc}"/>
-			<mx:AdvancedDataGridColumn headerText="状态" dataField="statusId"
-									   labelFunction="{LblFunctionHelper.workPlanStatusLblFunc}"/>
-			<mx:AdvancedDataGridColumn headerText="操作">
-				<mx:itemRenderer>
-					<fx:Component>
-						<mx:Box horizontalAlign="center" verticalAlign="middle"
-								horizontalScrollPolicy="off" verticalScrollPolicy="off">
-							<fx:Script>
-								<![CDATA[
-									import com.partycommittee.vo.PcMeetingVo;
-									import com.partycommittee.model.ModelLocator;
-									protected function editBtnClick():void {
-										outerDocument.editMeeting(data as PcMeetingVo);
-									}
-									
-									protected function formatActionButtonLabel(item:Object):String {											
-										if (item && (item as PcMeetingVo).statusId >=3 ) {
-											
-											return '查看';
-										} else {
-											if (ModelLocator.getInstance().loginUser.enableReport == 1) {
-												if (item && (item as PcMeetingVo).id ==0 ) {
-													return '填报';
-												} else {
-													return '修改';
-												} 
-												
-											} else {
-												return '查看';
-											}
-										}
-										return 'text';
-									}									
-								]]>
-							</fx:Script>
-							<button:PcButton id="editBtn" label="{formatActionButtonLabel(data as PcMeetingVo)}" click="editBtnClick()"/>
-						</mx:Box>
-					</fx:Component>
-				</mx:itemRenderer>
-			</mx:AdvancedDataGridColumn>
 
-		</fx:Array>
 	</fx:Declarations>
 	<mx:VBox height="100%" width="100%">
 		<mx:AdvancedDataGrid id="dg" dataProvider="{dp}" width="100%" height="100%"
@@ -377,6 +168,7 @@
 				<mx:AdvancedDataGridColumn headerText="年度" dataField="year"/>
 				<mx:AdvancedDataGridColumn headerText="季度" dataField="quarter" 
 										   labelFunction="{LblFunctionHelper.workPlanQuarterLblFunc}"/>
+				<mx:AdvancedDataGridColumn headerText="月份" dataField="month"/>
 				<mx:AdvancedDataGridColumn headerText="会议" dataField="typeId"
 										   labelFunction="{LblFunctionHelper.workPlanTypeLblFunc}"/>
 				<mx:AdvancedDataGridColumn headerText="召开时间" dataField="meetingDatetime"

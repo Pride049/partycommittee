@@ -19,26 +19,12 @@ package com.partycommittee.commands
 			var proxy:PcMeetingProxy = getProxy();
 			var meeting:PcMeetingVo = pcMeetingEvt.meeting;
 			switch (pcMeetingEvt.kind) {
-				case PcMeetingEvent.GET_BRANCH_COMMITTEE_LIST:
-					proxy.getBranchCommitteeMeetingList(pcMeetingEvt.agency.id, pcMeetingEvt.year);
-					break;
-				case PcMeetingEvent.GET_BRANCH_LIFE_LIST:
-					proxy.getBranchLifeMeetingList(pcMeetingEvt.agency.id, pcMeetingEvt.year);
-					break;
-				case PcMeetingEvent.GET_BRANCH_MEMBER_LIST:
-					proxy.getBranchMemberMeetingList(pcMeetingEvt.agency.id, pcMeetingEvt.year);
-					break;
-				case PcMeetingEvent.GET_CLASS_LIST:
-					proxy.getClassMeetingList(pcMeetingEvt.agency.id, pcMeetingEvt.year);
+				case PcMeetingEvent.GET_MEETING_LIST:
+					proxy.getMeetingList(pcMeetingEvt.agency.id, pcMeetingEvt.year, pcMeetingEvt.meetingType);
 					break;
 				case PcMeetingEvent.GET_MEETING_CONTENT:
 					proxy.getMeetingContent(meeting.id);
 					break;
-				case PcMeetingEvent.GET_OTHER_LIST:
-					proxy.getOtherMeetingList(pcMeetingEvt.agency.id, pcMeetingEvt.year);
-					break;
-//				case PcMeetingEvent.GET_TEAM_LIST:
-//					break;
 				case PcMeetingEvent.SUBMIT_MEETING:
 					proxy.submitMeeting(meeting);
 					break;

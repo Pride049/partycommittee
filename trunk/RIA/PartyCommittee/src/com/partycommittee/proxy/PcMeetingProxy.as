@@ -13,31 +13,15 @@ package com.partycommittee.proxy
 			service = ServiceLocator.getInstance().getRemoteObject(SERVICE_NAME);
 			this.responder = responder;
 		}
-		
-		public function getBranchCommitteeMeetingList(agencyId:Number, year:Number):void {
-			service.getBranchCommitteeMeetingList(agencyId, year);
-		}
-		
-		public function getBranchLifeMeetingList(agencyId:Number, year:Number):void {
-			service.getBranchLifeMeetingList(agencyId, year);
-		}
-		
-		public function getBranchMemberMeetingList(agencyId:Number, year:Number):void {
-			service.getBranchMemberMeetingList(agencyId, year);
-		}
-		
-		public function getClassMeetingList(agencyId:Number, year:Number):void {
-			service.getClassMeetingList(agencyId, year);
-		}
-		
+
+		public function getMeetingList(agencyId:Number, year:Number, meetingType:Number):void {
+			service.getMeetingList(agencyId, year, meetingType);
+		}		
+
 		public function getMeetingContent(meetingId:Number):void {
 			service.getMeetingContent(meetingId);
 		}
-		
-		public function getOtherMeetingList(agencyId:Number, year:Number):void {
-			service.getOtherMeetingList(agencyId, year);
-		}
-		
+
 		public function submitMeeting(meeting:PcMeetingVo):void {
 			service.submitMeeting(meeting);
 		}
