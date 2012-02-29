@@ -7,12 +7,9 @@ package com.partycommittee.events
 	public class PcMeetingEvent extends BaseEvent {
 		public static const PCMEETING_EVENT:String = "com.partycommittee.events.PcMeetingEvent";
 		
-		public static const GET_CLASS_LIST:String = "getClassList";
-		public static const GET_BRANCH_MEMBER_LIST:String = "getBranchMemberList";
-		public static const GET_BRANCH_LIFE_LIST:String = "getBranchLifeList";
-		public static const GET_BRANCH_COMMITTEE_LIST:String = "getBranchCommitteeList";
+		public static const GET_MEETING_LIST:String = "getMeetingList";
+		
 		public static const GET_TEAM_LIST:String = "getTeamList";
-		public static const GET_OTHER_LIST:String = "getOtherList";
 		public static const GET_EVALUATE_INFO:String = "getEvaluateInfo";
 		
 		public static const GET_COMMIT_CHILDREN_MEETING:String = "getCommitChildrenMeeting";
@@ -28,6 +25,7 @@ package com.partycommittee.events
 		public static const GET_ALERT_INFO:String = "getAlertInfo";
 		
 		private var _agency:PcAgencyVo;
+
 		public function set agency(value:PcAgencyVo):void {
 			this._agency = value;
 		}
@@ -74,6 +72,19 @@ package com.partycommittee.events
 		public function get kind():String {
 			return this._kind;
 		}
+		
+		private var _meetingType:Number;
+		
+		public function get meetingType():Number
+		{
+			return _meetingType;
+		}
+		
+		public function set meetingType(value:Number):void
+		{
+			_meetingType = value;
+		}
+		
 		
 		public function PcMeetingEvent(kind:String = "READ", agency:PcAgencyVo = null) {
 			super(PCMEETING_EVENT);

@@ -23,35 +23,15 @@ public class PcMeetingRemoteService {
 	}
 	
 	@RemotingInclude
-	public List<PcMeetingVo> getBranchCommitteeMeetingList(Integer agencyId, Integer year) {
-		return pcMeetingService.getBranchCommitteeMeetingList(agencyId, year);
-	}
-	
-	@RemotingInclude
-	public List<PcMeetingVo> getBranchLifeMeetingList(Integer agencyId, Integer year) {
-		return pcMeetingService.getBranchLifeMeetingList(agencyId, year);
-	}
-	
-	@RemotingInclude
-	public List<PcMeetingVo> getBranchMemberMeetingList(Integer agencyId, Integer year) {
-		return pcMeetingService.getBranchMemberMeetingList(agencyId, year);
-	}
-	
-	@RemotingInclude
-	public List<PcMeetingVo> getClassMeetingList(Integer agencyId, Integer year) {
-		return pcMeetingService.getClassMeetingList(agencyId, year);
-	}
-	
+	public List<PcMeetingVo> getMeetingList(Integer agencyId, Integer year, Integer meetingType) {
+		return pcMeetingService.getMeetingList(agencyId, year, meetingType);
+	}	
+		
 	@RemotingInclude
 	public PcMeetingContentVo getMeetingContent(Integer meetingId) {
 		return pcMeetingService.getMeetingContent(meetingId);
 	}
-	
-	@RemotingInclude
-	public List<PcMeetingVo> getOtherMeetingList(Integer agencyId, Integer year) {
-		return pcMeetingService.getOtherMeetingList(agencyId, year);
-	}
-	
+
 	@RemotingInclude
 	public void submitMeeting(PcMeetingVo meeting) {
 		pcMeetingService.submitMeeting(meeting);
