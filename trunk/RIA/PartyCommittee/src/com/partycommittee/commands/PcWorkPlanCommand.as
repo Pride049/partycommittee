@@ -47,11 +47,9 @@ package com.partycommittee.commands
 				case PcWorkPlanEvent.SUBMIT_WORKPLAN:
 					proxy.submitWorkPlan(pcWorkPlanEvt.workPlan);
 					break;
-				case PcWorkPlanEvent.EVALUATE_WORKPLAN:
-					proxy.evaluateWrokplan(pcWorkPlanEvt.workPlan.id, pcWorkPlanEvt.workPlan.statusId, pcWorkPlanEvt.workPlanContent);
-					break;
-				case PcWorkPlanEvent.RATE_WORKPLAN:
-					proxy.rateWrokplan(pcWorkPlanEvt.workPlan.id, pcWorkPlanEvt.workPlan.statusId, pcWorkPlanEvt.workPlanContent);
+				
+				case PcWorkPlanEvent.SAVE_CONTENT_WORKPLAN:
+					proxy.saveContentWrokplan(pcWorkPlanEvt.workPlan.id, pcWorkPlanEvt.workPlan.statusId, pcWorkPlanEvt.workPlanContent);
 					break;
 				case PcWorkPlanEvent.GET_CONTENT_INFO:
 					proxy.getContentInfo(pcWorkPlanEvt.workPlan.id, pcWorkPlanEvt.contentType);
@@ -68,24 +66,6 @@ package com.partycommittee.commands
 		}
 		
 		public function result(data:Object):void {
-			var model:ModelLocator = ModelLocator.getInstance();
-			var pcWorkPlanEvt:PcWorkPlanEvent = event as PcWorkPlanEvent;
-			switch (pcWorkPlanEvt.kind) {
-				case CRUDEventType.CREATE:
-					break;
-				case CRUDEventType.UPDATE:
-					break;
-				case PcWorkPlanEvent.GET_WORKPLAN_YEARLY:
-					break;
-				case PcWorkPlanEvent.GET_WORKPLAN_QUARTER:
-					break;
-				case PcWorkPlanEvent.GET_COMMIT_CHILDREN_WORKPLAN:
-					break;
-				case PcWorkPlanEvent.EVALUATE_WORKPLAN:
-					break;
-				default:
-					break;
-			}
 			onSuccess(data);
 		}
 		

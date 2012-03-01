@@ -53,19 +53,19 @@ public class PcMeetingRemoteService {
 	}		
 	
 	@RemotingInclude
-	public void evaluateMeeting(Integer meetingId, Integer statusId, PcMeetingContentVo contentVo) {
-		pcMeetingService.evaluateMeeting(meetingId, statusId, contentVo);
+	public void saveContentMeeting(Integer meetingId, Integer statusId, PcMeetingContentVo contentVo) {
+		pcMeetingService.saveContentMeeting(meetingId, statusId, contentVo);
 	}
 	
 	@RemotingInclude
 	public List<PcMeetingVo> getCommitChildrenMeeting(Integer agencyId, Integer year) {
 		return pcMeetingService.getCommitChildrenMeeting(agencyId, year);
 	}
-	
+
 	@RemotingInclude
-	public PcMeetingContentVo getEvaluateInfo(Integer meetingId) {
-		return pcMeetingService.getEvaluateInfo(meetingId);
-	}
+	public PcMeetingContentVo getContentInfo(Integer meetingId, Integer meetingType) {
+		return pcMeetingService.getContentInfo(meetingId, meetingType);
+	}	
 	
 	@RemotingInclude
 	public List<PcMeetingVo> getAlertInfo(Integer agencyId, Integer year, Integer quarter) {

@@ -75,7 +75,6 @@ public class PcMeetingContent implements Serializable {
 		this.content = content;
 	}
 	
-	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "updatetime", length = 23)
 	public Date getUpdateTime() {
 		return updateTime;

@@ -37,12 +37,12 @@ package com.partycommittee.commands
 				case PcMeetingEvent.GET_COMMIT_CHILDREN_MEETING:
 					proxy.getCommitChildrenMeeting(pcMeetingEvt.agency.id, pcMeetingEvt.year );
 					break;
-				case PcMeetingEvent.GET_EVALUATE_INFO:
-					proxy.getEvaluateInfo(pcMeetingEvt.meeting.id);
-					break;
-				case PcMeetingEvent.EVALUATE_MEETING:
-					proxy.evaluateMeeting(pcMeetingEvt.meeting.id, pcMeetingEvt.meeting.statusId, pcMeetingEvt.meetingContent);
-					break;
+				case PcMeetingEvent.GET_CONTENT_INFO:
+					proxy.getContentInfo(pcMeetingEvt.meeting.id, pcMeetingEvt.meetingType);
+					break;		
+				case PcMeetingEvent.SAVE_CONTENT_MEETING:
+					proxy.saveContentMeeting(pcMeetingEvt.meeting.id, pcMeetingEvt.meeting.statusId, pcMeetingEvt.meetingContent);
+					break;									
 				case PcMeetingEvent.GET_ALERT_INFO:
 					proxy.getAlertInfo(pcMeetingEvt.agency.id, pcMeetingEvt.year, pcMeetingEvt.quarter);
 					break;

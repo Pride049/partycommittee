@@ -14,8 +14,8 @@ package com.partycommittee.events
 		public static const GET_WORKPLAN_QUARTER_RESULT_LIST:String = "getWorkPlanQuarterResultList";
 		public static const GET_COMMIT_CHILDREN_WORKPLAN:String = "getCommitChildrenWorkplan";
 		public static const SUBMIT_WORKPLAN:String = "submitWorkPlan";
-		public static const EVALUATE_WORKPLAN:String = "valuateWorkPlan";
-		public static const RATE_WORKPLAN:String = "rateWorkPlan";
+		
+		public static const SAVE_CONTENT_WORKPLAN:String = "saveContentWorkPlan";
 		public static const RETURN_WORKPLAN:String = "returnWorkPlan";
 		
 		public static const GET_ALERT_INFO:String = "getAlertInfo";

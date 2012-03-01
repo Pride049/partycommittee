@@ -137,14 +137,15 @@ public class PcMeetingService {
 		pcMeetingDaoImpl.updateMeetingStatus(meetingId, statusId);
 	}	
 	
-	public void evaluateMeeting(Integer meetingId, Integer statusId, PcMeetingContentVo contentVo) {
+	public void saveContentMeeting(Integer meetingId, Integer statusId, PcMeetingContentVo contentVo) {
 		contentVo.setMeetingId(meetingId);
-		contentVo.setType(3);
+		//contentVo.setType(3);
+		Integer contentType = contentVo.getType();
 		PcMeeting pcMeeting = pcMeetingDaoImpl.getMeetingById(meetingId);
 		pcMeeting.setStatusId(statusId);
 		pcMeetingDaoImpl.updateMeeting(pcMeeting);
 		
-		PcMeetingContent pcMeetingContent = pcMeetingContentDaoImpl.getContentBymeetingIdAndType(meetingId, 3);
+		PcMeetingContent pcMeetingContent = pcMeetingContentDaoImpl.getContentBymeetingIdAndType(meetingId, contentType);
 		if (pcMeetingContent == null) {
 			pcMeetingContentDaoImpl.createContent(PcMeetingContentVo.toPcMeetingContent(contentVo));
 		} else {
@@ -178,13 +179,13 @@ public class PcMeetingService {
 		return list;
 	}
 
-	public PcMeetingContentVo getEvaluateInfo(Integer meetingId) {
-		PcMeetingContent content = pcMeetingContentDaoImpl.getContentBymeetingIdAndType(meetingId, 3);
+	public PcMeetingContentVo getContentInfo(Integer meetingId, Integer meetingType) {
+		PcMeetingContent content = pcMeetingContentDaoImpl.getContentBymeetingIdAndType(meetingId, meetingType);
 		if (content == null) {
 			return null;
 		}
 		return PcMeetingContentVo.fromPcMeetingContent(content);
-	}
+	}	
 
 	public List<PcMeetingVo> getAlertInfo(Integer agencyId, Integer year,
 			Integer quarter) {
