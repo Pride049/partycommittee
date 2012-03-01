@@ -12,6 +12,6 @@ package com.partycommittee.vo
 		public var memberId:Number;
 		public var memberName:String;
 		public var content:String;
-		public var updateTime:Date;
+		public var updatetime:Date;
 	}
 }
