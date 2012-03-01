@@ -112,7 +112,7 @@
 				}
 				textArea.htmlText = meetingContent.content;
 				personTxt.text = meetingContent.memberName;
-				dateTxt.text = DateUtil.toISOString(meetingContent.updateTime);
+				dateTxt.text = DateUtil.toISOString(meetingContent.updatetime);
 			}
 			
 			private function onGetMeetingCommentFailure(info:Object, evt:PcMeetingEvent):void {

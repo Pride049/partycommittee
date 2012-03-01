@@ -14,7 +14,7 @@ public class PcMeetingContentVo implements Serializable {
 	private Integer memberId;
 	private String memberName;
 	private String content;
-	private Date updateTime;
+	private Date updatetime;
 	
 	public Integer getId() {
 		return id;
@@ -52,11 +52,11 @@ public class PcMeetingContentVo implements Serializable {
 	public void setContent(String content) {
 		this.content = content;
 	}
-	public Date getUpdateTime() {
-		return updateTime;
+	public Date getUpdatetime() {
+		return updatetime;
 	}
-	public void setUpdateTime(Date updateTime) {
-		this.updateTime = updateTime;
+	public void setUpdatetime(Date updatetime) {
+		this.updatetime = updatetime;
 	}
 	
 	public static PcMeetingContent toPcMeetingContent(PcMeetingContentVo contentVo) {
@@ -67,7 +67,7 @@ public class PcMeetingContentVo implements Serializable {
 		content.setMemberId(contentVo.getMemberId());
 		content.setMemberName(contentVo.getMemberName());
 		content.setType(contentVo.getType());
-		content.setUpdateTime(contentVo.getUpdateTime());
+		content.setUpdatetime(contentVo.getUpdatetime());
 		return content;
 	}
 
@@ -79,7 +79,7 @@ public class PcMeetingContentVo implements Serializable {
 		contentVo.setMemberId(content.getMemberId());
 		contentVo.setMemberName(content.getMemberName());
 		contentVo.setType(content.getType());
-		contentVo.setUpdateTime(content.getUpdateTime());
+		contentVo.setUpdatetime(content.getUpdatetime());
 		return contentVo;
 	}
 }

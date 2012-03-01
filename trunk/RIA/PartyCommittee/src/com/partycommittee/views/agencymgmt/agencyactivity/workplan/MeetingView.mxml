@@ -152,6 +152,7 @@
 					} else {
 						meetingViewStack.selectedChild = browseForm;
 						if (meeting.content) {
+							b_personTxt.text = '填写人' + meeting.content.memberName;
 							b_textArea.htmlText = meeting.content.content;
 							if (meeting.statusId >= 4) {
 								getEvaluateInfo();
@@ -186,18 +187,17 @@
 			private function onLoadContentSuccess(data:Object, evt:PcMeetingEvent):void {
 				this.enabled = true;
 				meeting.content = data as PcMeetingContentVo;
-				
-				personTxt.text = "填写人:" + meeting.content.memberName;
-				
 				if (meetingViewStack.selectedChild == reportForm) {
+					personTxt.text = meeting.content.memberName;
 					textArea.htmlText = meeting.content.content;
 				}
 				if (meetingViewStack.selectedChild == browseForm) {
+					b_personTxt.text = '填写人' + meeting.content.memberName;
 					b_textArea.htmlText = meeting.content.content;
 				}
 				
 				if (meeting.statusId >= 3) {
-					dateTxt.text = "日期:" + DateUtil.toISOString(meeting.content.updateTime);
+					dateTxt.text = "日期:" + DateUtil.toISOString(meeting.content.updatetime);
 				} 
 				
 				if (meeting.statusId >= 4) {
@@ -227,11 +227,11 @@
 					return;
 				}
 				browseForm_evaluate.percentWidth = 100;
-				browseForm_evaluate.percentHeight = 30;	
+				browseForm_evaluate.percentHeight = 40;	
 				browseForm_evaluate.visible = true;
 				b_textArea_eva.htmlText = meetingContent.content;
 				b_personTxt_eva.text = "评语主体:" + meetingContent.memberName;
-				dateTxt_eva.text = "日期:" + DateUtil.toISOString(meetingContent.updateTime);
+				dateTxt_eva.text = "日期:" + DateUtil.toISOString(meetingContent.updatetime);
 				
 				if (meeting.statusId == 5) {
 					getRateInfo();
@@ -262,7 +262,7 @@
 					this.ratePersonTxt.text = "评价主体:" + contentVo.memberName;
 					//this.rateTextArea.htmlText = contentVo.content;
 					rateGroup.selectedValue = contentVo.content;
-					dateTxt_rate.text = "日期:" + DateUtil.toISOString(contentVo.updateTime);
+					dateTxt_rate.text = "日期:" + DateUtil.toISOString(contentVo.updatetime);
 					rate_box.visible = true;
 				}
 			}
@@ -666,58 +666,41 @@
 			<mx:VBox id="browseForm" width="100%" height="100%"
 					 left="6" right="6" top="6" bottom="6"
 					 horizontalScrollPolicy="off" verticalScrollPolicy="off">
-				<mx:HBox width="100%" horizontalAlign="left" height="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off">
-					<mx:VBox left="6" right="6" top="6" bottom="6">
-						<mx:Label text="会"     />
-						<mx:Label text="议"     />
-						<mx:Label text="内"     />
-						<mx:Label text="容"     />						
-					</mx:VBox>		
-					<mx:VBox width="97%" height="100%">
+				<mx:Label text="会议内容:" fontWeight="bold"/>
+				<mx:HBox width="100%"  horizontalAlign="left" height="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off">
+					<mx:VBox width="100%" height="100%" horizontalAlign="right">
 						<mx:TextArea id="b_textArea" width="100%" height="100%"
 									 editable="false"/>
 						<mx:HBox  horizontalCenter="0" width="100%">
-							<mx:Label id="dateTxt" text="日期："/>
-							<mx:Spacer width="100%"/>
 							<mx:Label id="b_personTxt" text="填写人："/>
+							<mx:Spacer width="100%"/>
+							<mx:Label id="dateTxt" text="日期："/>
 						</mx:HBox>	
 					</mx:VBox>
 				</mx:HBox>
 				
-				<mx:HBox id="browseForm_evaluate"  horizontalAlign="left" width="0" height="0" horizontalScrollPolicy="off" verticalScrollPolicy="off" visible="false">
-					<mx:VBox left="6" right="6" top="6" bottom="6">
-						<mx:Label text="评"     />
-						<mx:Label text="语"     />
-					</mx:VBox>	
-					<mx:VBox width="97%" height="100%">
-						<mx:TextArea id="b_textArea_eva" width="100%" height="100%"
-									 editable="false"/>	
-						<mx:HBox  horizontalCenter="0" width="100%">
-							<mx:Label left="0" id="b_personTxt_eva"/>
-							<mx:Spacer width="100%"/>
-							<mx:Label right="0"   id="dateTxt_eva"/>
-						</mx:HBox>							
-					</mx:VBox>
-				</mx:HBox>
+				<mx:VBox id="browseForm_evaluate"  width="0" height="0" horizontalScrollPolicy="off" verticalScrollPolicy="off" visible="false">
+					<mx:Label text="评语:" fontWeight="bold"/>
+					<mx:TextArea id="b_textArea_eva" width="100%" height="100%"
+								 editable="false"/>	
+					<mx:HBox  horizontalCenter="0" width="100%">
+						<mx:Label left="0" id="b_personTxt_eva"/>
+						<mx:Spacer width="100%"/>
+						<mx:Label right="0"   id="dateTxt_eva"/>
+					</mx:HBox>							
+				</mx:VBox>
+				
 				
 				<mx:HBox id="rate_box" horizontalAlign="left" width="0" height="0" horizontalScrollPolicy="off" verticalScrollPolicy="off" visible="false">
-					<mx:VBox left="6" right="6" top="6" bottom="6">
-						<mx:Label text="评"     />
-						<mx:Label text="价"     />
-					</mx:VBox>					
-					<mx:VBox width="97%" height="100%">
-						<mx:HBox  horizontalCenter="0" width="100%">
+						<mx:Label text="评价:" fontWeight="bold"/>
 							<s:RadioButton groupName="rateGroup" fontFamily="宋体" id="rate1" selected="true" label="好" value="1" /> 
 							<s:RadioButton groupName="rateGroup" fontFamily="宋体" id="rate2" label="较好" value="2"/>
 							<s:RadioButton groupName="rateGroup" fontFamily="宋体" id="rate3" label="一般" value="3"/>
 							<s:RadioButton groupName="rateGroup" fontFamily="宋体" id="rate4" label="差" value="4"/>
-						</mx:HBox>
-						<mx:HBox  horizontalCenter="0" width="100%">
-							<mx:Label left="0"   id="dateTxt_rate"/>
 							<mx:Spacer width="100%"/>
 							<mx:Label right="0" id="ratePersonTxt" text="评价主体："/>
-						</mx:HBox>
-					</mx:VBox>
+							<mx:Label left="0"   id="dateTxt_rate"/>
+						
 				</mx:HBox>				
 				
 				<mx:ControlBar width="100%" horizontalAlign="center" verticalAlign="middle">

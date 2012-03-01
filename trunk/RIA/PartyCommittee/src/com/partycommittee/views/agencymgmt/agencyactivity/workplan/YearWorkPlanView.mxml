@@ -468,9 +468,9 @@
 						<mx:TextArea id="b_textArea" width="100%" height="100%"
 									 editable="{!workPlan || workPlan.statusId &lt; 3}"/>
 						<mx:HBox  horizontalCenter="0" width="100%">
-							<mx:Label id="dateTxt" text="日期："/>
-							<mx:Spacer width="100%"/>
 							<mx:Label id="b_personTxt" text="填写人："/>
+							<mx:Spacer width="100%"/>
+							<mx:Label id="dateTxt" text="日期："/>
 						</mx:HBox>							
 					</mx:VBox>
 				</mx:HBox>					
@@ -487,9 +487,9 @@
 						<mx:TextArea id="b_textArea_eva" width="100%" height="100%"
 									 editable="false"/>
 						<mx:HBox  horizontalCenter="0" width="100%">
-							<mx:Label left="0"   id="dateTxt_eva"/>
-							<mx:Spacer width="100%"/>
 							<mx:Label right="0" id="b_personTxt_eva" text="评语主体："/>
+							<mx:Spacer width="100%"/>
+							<mx:Label left="0"   id="dateTxt_eva"/>
 						</mx:HBox>	
 					</mx:VBox>
 				</mx:HBox>				
@@ -507,9 +507,9 @@
 							<s:RadioButton groupName="rateGroup" fontFamily="宋体" id="rate4" label="差" value="4"/>
 						</mx:HBox>
 						<mx:HBox  horizontalCenter="0" width="100%">
-							<mx:Label left="0"   id="dateTxt_rate"/>
-							<mx:Spacer width="100%"/>
 							<mx:Label right="0" id="ratePersonTxt" text="评价主体："/>
+							<mx:Spacer width="100%"/>
+							<mx:Label left="0"   id="dateTxt_rate"/>
 						</mx:HBox>
 					</mx:VBox>
 				</mx:HBox>				

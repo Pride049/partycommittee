@@ -23,7 +23,7 @@ public class PcMeetingContent implements Serializable {
 	private Integer memberId;
 	private String memberName;
 	private String content;
-	private Date updateTime;
+	private Date updatetime;
 	
 	@Id
 	@Column(name = "id", unique = true, nullable = false)
@@ -75,12 +75,12 @@ public class PcMeetingContent implements Serializable {
 		this.content = content;
 	}
 	
-	@Column(name = "updatetime", length = 23)
-	public Date getUpdateTime() {
-		return updateTime;
+	@Column(name = "updatetime")
+	public Date getUpdatetime() {
+		return updatetime;
 	}
-	public void setUpdateTime(Date updateTime) {
-		this.updateTime = updateTime;
+	public void setUpdatetime(Date updatetime) {
+		this.updatetime = updatetime;
 	}
 	
 }
