@@ -70,15 +70,10 @@ public class PcWorkPlanRemoteService {
 	public PcWorkPlanContentVo getWorkPlanContentByWorkPlanId(Integer workPlanId) {
 		return pcWorkPlanService.getWorkPlanContentByWorkPlanId(workPlanId);
 	}
-		
+
 	@RemotingInclude
-	public void evaluateWrokplan(Integer workPlanId, Integer statusId, PcWorkPlanContentVo contentVo) {
-		pcWorkPlanService.evaluateWrokplan(workPlanId, statusId, contentVo);
-	}
-	
-	@RemotingInclude
-	public void rateWrokplan(Integer workPlanId, Integer statusId, PcWorkPlanContentVo contentVo) {
-		pcWorkPlanService.rateWrokplan(workPlanId, statusId, contentVo);
+	public void saveContentWrokplan(Integer workPlanId, Integer statusId, PcWorkPlanContentVo contentVo) {
+		pcWorkPlanService.saveContentWrokplan(workPlanId, statusId, contentVo);
 	}	
 	
 	@RemotingInclude

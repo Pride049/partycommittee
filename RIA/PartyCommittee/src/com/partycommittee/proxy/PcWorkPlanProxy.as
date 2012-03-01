@@ -61,13 +61,9 @@ package com.partycommittee.proxy
 		public function getCommitWorkplanListByParentId(parentId:Number, year:Number):void {
 			service.getCommitWorkplanListByParentId(parentId, year);
 		}
-		
-		public function evaluateWrokplan(workPlanId:Number,  statusId:Number, content:PcWorkPlanContentVo):void {
-			service.evaluateWrokplan(workPlanId, statusId, content);
-		}
-		
-		public function rateWrokplan(workPlanId:Number,  statusId:Number, content:PcWorkPlanContentVo):void {
-			service.rateWrokplan(workPlanId, statusId, content);
+
+		public function saveContentWrokplan(workPlanId:Number,  statusId:Number, content:PcWorkPlanContentVo):void {
+			service.saveContentWrokplan(workPlanId, statusId, content);
 		}		
 		
 		public function getContentInfo(workPlanId:Number, type:Number):void {

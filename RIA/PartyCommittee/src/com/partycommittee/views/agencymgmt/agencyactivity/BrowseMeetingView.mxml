@@ -170,7 +170,7 @@
 				<mx:AdvancedDataGridColumn headerText="年度" dataField="year"/>
 				<mx:AdvancedDataGridColumn headerText="季度" dataField="quarter"
 										   labelFunction="quarterLblFunc"/>
-				<mx:AdvancedDataGridColumn headerText="评价">
+				<mx:AdvancedDataGridColumn headerText="操作">
 					<mx:itemRenderer>
 						<fx:Component>
 							<mx:Box horizontalAlign="center" verticalAlign="middle"
@@ -184,7 +184,7 @@
 										
 										protected function formatActionButtonLabel(item:Object):String {											
 											if (item && (item as PcMeetingVo).statusId < 4 ) {
-												return '评价';
+												return '审核';
 											} 
 											return '查看';
 										}											

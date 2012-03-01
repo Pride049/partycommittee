@@ -158,7 +158,7 @@
 				} else {
 					b_personTxt.text = "填报人:" + workPlan.workPlanContent.memberName;
 					b_textArea.htmlText = workPlan.workPlanContent.content;		
-					dateTxt.text = "填写时间:" + DateUtil.toISOString(workPlan.workPlanContent.updatetime);
+					dateTxt.text = "日期:" + DateUtil.toISOString(workPlan.workPlanContent.updatetime);
 					if (workPlan.statusId == 4) {
 						getEvaluateInfo(workPlan);
 					}					
@@ -492,7 +492,7 @@
 						<mx:TextArea id="b_textArea" width="100%" height="100%"
 								 editable="false"/>
 						<mx:HBox  horizontalCenter="0" width="100%">
-							<mx:Label id="dateTxt" text="填写时间："/>
+							<mx:Label id="dateTxt" text="日期："/>
 							<mx:Spacer width="100%"/>
 							<mx:Label id="b_personTxt" text="填写人："/>
 						</mx:HBox>	

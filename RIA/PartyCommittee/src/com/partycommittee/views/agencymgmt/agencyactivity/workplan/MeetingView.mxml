@@ -17,7 +17,7 @@
 			import com.partycommittee.events.PcAgencyEvent;
 			import com.partycommittee.events.PcMeetingEvent;
 			import com.partycommittee.events.PcRemindLockEvent;
-			import com.partycommittee.events.PcWorkPlanEvent;
+			import com.partycommittee.events.PcMeetingEvent;
 			import com.partycommittee.manager.popup.PopupMgr;
 			import com.partycommittee.model.ModelLocator;
 			import com.partycommittee.util.CRUDEventType;
@@ -30,7 +30,7 @@
 			import com.partycommittee.vo.PcMeetingVo;
 			import com.partycommittee.vo.PcRemindConfigVo;
 			import com.partycommittee.vo.PcRemindLockVo;
-			import com.partycommittee.vo.PcWorkPlanContentVo;
+			import com.partycommittee.vo.PcMeetingContentVo;
 			import com.partycommittee.vo.PcWorkPlanVo;
 			
 			import flashx.textLayout.debug.assert;
@@ -153,8 +153,8 @@
 						meetingViewStack.selectedChild = browseForm;
 						if (meeting.content) {
 							b_textArea.htmlText = meeting.content.content;
-							if (meeting.statusId == 4) {
-								getMeetingComment();
+							if (meeting.statusId >= 4) {
+								getEvaluateInfo();
 							}							
 						} else {
 							loadMeetingContent();
@@ -172,35 +172,11 @@
 				
 				timeChange();
 			}
-
-			private function getMeetingComment():void {
-				var meetingEvt:PcMeetingEvent = new PcMeetingEvent(PcMeetingEvent.GET_MEETING_COMMENT);
-				meetingEvt.meeting = meeting;
-				meetingEvt.successCallback = onGetMeetingCommentSuccess;
-				meetingEvt.failureCallback = onGetMeetingCommentFailure;
-				this.enabled = false;
-				meetingEvt.dispatch();
-			}
-			
-			private function onGetMeetingCommentSuccess(data:Object, evt:PcMeetingEvent):void {
-				this.enabled = true;
-				var meetingContent:PcMeetingContentVo = data as PcMeetingContentVo;
-				if (!meetingContent) {
-					return;
-				}
-				b_textArea_eva.htmlText = meetingContent.content;
-				b_personTxt_eva.text = "评价人" + meetingContent.memberName;
-				dateTxt_eva.text = "评价日期:" + DateUtil.toISOString(meetingContent.updateTime);
-			}
-			
-			private function onGetMeetingCommentFailure(info:Object, evt:PcMeetingEvent):void {
-				this.enabled = true;
-				Alert.show("获取内容失败！");
-			}			
 			
 			private function loadMeetingContent():void {
-				var evt:PcMeetingEvent = new PcMeetingEvent(PcMeetingEvent.GET_MEETING_CONTENT);
+				var evt:PcMeetingEvent = new PcMeetingEvent(PcMeetingEvent.GET_CONTENT_INFO);
 				evt.meeting = meeting;
+				evt.meetingType = 1;
 				evt.successCallback = onLoadContentSuccess;
 				evt.failureCallback = onLoadContentFailure;
 				this.enabled = false;
@@ -212,7 +188,7 @@
 				meeting.content = data as PcMeetingContentVo;
 				
 				personTxt.text = "填写人:" + meeting.content.memberName;
-
+				
 				if (meetingViewStack.selectedChild == reportForm) {
 					textArea.htmlText = meeting.content.content;
 				}
@@ -220,16 +196,81 @@
 					b_textArea.htmlText = meeting.content.content;
 				}
 				
-				if (meeting.statusId > 1) {
-					dateTxt.text = "填写时间:" + DateUtil.toISOString(meeting.content.updateTime);
+				if (meeting.statusId >= 3) {
+					dateTxt.text = "日期:" + DateUtil.toISOString(meeting.content.updateTime);
 				} 
+				
+				if (meeting.statusId >= 4) {
+					getEvaluateInfo();
+				}					
 			}
 			
 			private function onLoadContentFailure(info:Object, evt:PcMeetingEvent):void {
 				this.enabled = true;
 				Alert.show("读取会议内容失败！");
+			}			
+
+			private function getEvaluateInfo():void {
+				var meetingEvt:PcMeetingEvent = new PcMeetingEvent(PcMeetingEvent.GET_CONTENT_INFO);
+				meetingEvt.meeting = meeting;
+				meetingEvt.meetingType = 3;
+				meetingEvt.successCallback = onGetEvaluateInfoSuccess;
+				meetingEvt.failureCallback = onGetEvaluateInfoFailure;
+				this.enabled = false;
+				meetingEvt.dispatch();
 			}
 			
+			private function onGetEvaluateInfoSuccess(data:Object, evt:PcMeetingEvent):void {
+				this.enabled = true;
+				var meetingContent:PcMeetingContentVo = data as PcMeetingContentVo;
+				if (!meetingContent) {
+					return;
+				}
+				browseForm_evaluate.percentWidth = 100;
+				browseForm_evaluate.percentHeight = 30;	
+				browseForm_evaluate.visible = true;
+				b_textArea_eva.htmlText = meetingContent.content;
+				b_personTxt_eva.text = "评语主体:" + meetingContent.memberName;
+				dateTxt_eva.text = "日期:" + DateUtil.toISOString(meetingContent.updateTime);
+				
+				if (meeting.statusId == 5) {
+					getRateInfo();
+				}				
+			}
+			
+			private function onGetEvaluateInfoFailure(info:Object, evt:PcMeetingEvent):void {
+				this.enabled = true;
+				Alert.show("获取内容失败！");
+			}	
+			
+			private function getRateInfo():void {
+				var evt:PcMeetingEvent = new PcMeetingEvent(PcMeetingEvent.GET_CONTENT_INFO);
+				evt.meeting = meeting;
+				evt.meetingType = 4;
+				evt.successCallback = onGetRateInfoSuccess;
+				evt.failureCallback = onGetRateInfoFailure;
+				this.enabled = false;
+				evt.dispatch();
+			}
+			
+			private function onGetRateInfoSuccess(data:Object, evt:PcMeetingEvent):void {
+				this.enabled = true;
+				if (data as PcMeetingContentVo) {
+					rate_box.percentWidth = 100;
+					rate_box.percentHeight = 10;
+					var contentVo:PcMeetingContentVo = data as PcMeetingContentVo;
+					this.ratePersonTxt.text = "评价主体:" + contentVo.memberName;
+					//this.rateTextArea.htmlText = contentVo.content;
+					rateGroup.selectedValue = contentVo.content;
+					dateTxt_rate.text = "日期:" + DateUtil.toISOString(contentVo.updateTime);
+					rate_box.visible = true;
+				}
+			}
+			
+			private function onGetRateInfoFailure(info:Object, evt:PcMeetingEvent):void {
+				this.enabled = true;
+			}			
+						
 			private function onGetYearWorkPlanFailure():void {
 				this.enabled = true;
 			}
@@ -539,6 +580,7 @@
 	</fx:Script>
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<s:RadioButtonGroup id="rateGroup" />  
 	</fx:Declarations>
 	
 	<mx:VBox width="100%" height="100%"
@@ -631,11 +673,11 @@
 						<mx:Label text="内"     />
 						<mx:Label text="容"     />						
 					</mx:VBox>		
-					<mx:VBox width="100%" height="100%">
+					<mx:VBox width="97%" height="100%">
 						<mx:TextArea id="b_textArea" width="100%" height="100%"
 									 editable="false"/>
 						<mx:HBox  horizontalCenter="0" width="100%">
-							<mx:Label id="dateTxt" text="填写时间："/>
+							<mx:Label id="dateTxt" text="日期："/>
 							<mx:Spacer width="100%"/>
 							<mx:Label id="b_personTxt" text="填写人："/>
 						</mx:HBox>	
@@ -645,9 +687,9 @@
 				<mx:HBox id="browseForm_evaluate"  horizontalAlign="left" width="0" height="0" horizontalScrollPolicy="off" verticalScrollPolicy="off" visible="false">
 					<mx:VBox left="6" right="6" top="6" bottom="6">
 						<mx:Label text="评"     />
-						<mx:Label text="价"     />
+						<mx:Label text="语"     />
 					</mx:VBox>	
-					<mx:VBox width="100%" height="100%">
+					<mx:VBox width="97%" height="100%">
 						<mx:TextArea id="b_textArea_eva" width="100%" height="100%"
 									 editable="false"/>	
 						<mx:HBox  horizontalCenter="0" width="100%">
@@ -657,6 +699,27 @@
 						</mx:HBox>							
 					</mx:VBox>
 				</mx:HBox>
+				
+				<mx:HBox id="rate_box" horizontalAlign="left" width="0" height="0" horizontalScrollPolicy="off" verticalScrollPolicy="off" visible="false">
+					<mx:VBox left="6" right="6" top="6" bottom="6">
+						<mx:Label text="评"     />
+						<mx:Label text="价"     />
+					</mx:VBox>					
+					<mx:VBox width="97%" height="100%">
+						<mx:HBox  horizontalCenter="0" width="100%">
+							<s:RadioButton groupName="rateGroup" fontFamily="宋体" id="rate1" selected="true" label="好" value="1" /> 
+							<s:RadioButton groupName="rateGroup" fontFamily="宋体" id="rate2" label="较好" value="2"/>
+							<s:RadioButton groupName="rateGroup" fontFamily="宋体" id="rate3" label="一般" value="3"/>
+							<s:RadioButton groupName="rateGroup" fontFamily="宋体" id="rate4" label="差" value="4"/>
+						</mx:HBox>
+						<mx:HBox  horizontalCenter="0" width="100%">
+							<mx:Label left="0"   id="dateTxt_rate"/>
+							<mx:Spacer width="100%"/>
+							<mx:Label right="0" id="ratePersonTxt" text="评价主体："/>
+						</mx:HBox>
+					</mx:VBox>
+				</mx:HBox>				
+				
 				<mx:ControlBar width="100%" horizontalAlign="center" verticalAlign="middle">
 					<button:PcButton label="关闭" click="close()"/>
 				</mx:ControlBar>

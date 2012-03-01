@@ -10,15 +10,14 @@ package com.partycommittee.events
 		public static const GET_MEETING_LIST:String = "getMeetingList";
 		
 		public static const GET_TEAM_LIST:String = "getTeamList";
-		public static const GET_EVALUATE_INFO:String = "getEvaluateInfo";
+		public static const GET_CONTENT_INFO:String = "getContentInfo";
 		
 		public static const GET_COMMIT_CHILDREN_MEETING:String = "getCommitChildrenMeeting";
 		
 		public static const GET_MEETING_CONTENT:String = "getMeetingContent";
 		public static const SUBMIT_MEETING:String = "submitMeeting";
 		
-		public static const APPROVAL_MEETING:String = "approvalMeeting";
-		public static const EVALUATE_MEETING:String = "evaluateMeeting";
+		public static const SAVE_CONTENT_MEETING:String = "saveContentMeeting";
 		public static const RETURN_MEETING:String = "returnMeeting";
 		
 		public static const GET_MEETING_COMMENT:String = "getMeetingComment";

@@ -38,13 +38,13 @@ package com.partycommittee.proxy
 			service.getCommitChildrenMeeting(agencyId, year);
 		}
 		
-		public function getEvaluateInfo(meetingId:Number):void {
-			service.getEvaluateInfo(meetingId);
-		}
+		public function getContentInfo(meetingId:Number, meetingType:Number):void {
+			service.getContentInfo(meetingId, meetingType);
+		}		
 		
-		public function evaluateMeeting(meetingId:Number, statusId:Number, content:PcMeetingContentVo):void {
-			service.evaluateMeeting(meetingId, statusId, content);
-		}
+		public function saveContentMeeting(meetingId:Number, statusId:Number, content:PcMeetingContentVo):void {
+			service.saveContentMeeting(meetingId, statusId, content);
+		}		
 		
 		public function getAlertInfo(agencyId:Number, year:Number, quarter:Number):void {
 			service.getAlertInfo(agencyId, year, quarter);
