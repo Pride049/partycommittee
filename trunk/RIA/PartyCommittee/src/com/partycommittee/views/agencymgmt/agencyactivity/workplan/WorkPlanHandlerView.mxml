@@ -21,6 +21,7 @@
 			import com.partycommittee.util.DataproviderFactory;
 			import com.partycommittee.util.WorkPlanCodeUtil;
 			import com.partycommittee.views.agencymgmt.agencyactivity.BrowseWorkplanView;
+			import com.partycommittee.views.agencymgmt.agencyactivity.workplan.component.ReturnFormWindow;
 			import com.partycommittee.views.mainview.MainView;
 			import com.partycommittee.vo.PcAgencyVo;
 			import com.partycommittee.vo.PcWorkPlanContentVo;
@@ -207,11 +208,20 @@
 				Alert.show(info.toString());
 			}			
 			
+			private function doReturn():void {
+				var title:String = '驳回原因';
+				var win:ReturnFormWindow = new ReturnFormWindow();
+				win.title = title;
+				win.callbackFunction = this.onReturn;
+				win.modelType = 'report';
+				PopupMgr.instance.popupWindow(win);
+			}
 			
-			private function onReturn():void {
+			private function onReturn(returnTxt:String, returnPerson:String):void {
 				workPlan.statusId = 2;
-				var evt:PcWorkPlanEvent = new PcWorkPlanEvent(PcWorkPlanEvent.RETURN_WORKPLAN, agency);
+				var evt:PcWorkPlanEvent = new PcWorkPlanEvent(PcWorkPlanEvent.SAVE_CONTENT_WORKPLAN, agency);
 				evt.workPlan = workPlan;
+				evt.workPlanContent = getReturnContent(returnTxt, returnPerson);
 				evt.successCallback = onReturnSuccess;
 				evt.failureCallback = onReturnFailure;
 				this.enabled = false;
@@ -306,7 +316,15 @@
 				contentVo.content = rateGroup.selectedValue.toString();
 				contentVo.type = 4;
 				return contentVo;
-			}			
+			}		
+			
+			private function getReturnContent(returnTxt:String, returnPerson:String):PcWorkPlanContentVo {
+				var contentVo:PcWorkPlanContentVo = new PcWorkPlanContentVo();
+				contentVo.memberName = returnPerson;
+				contentVo.content = returnTxt;
+				contentVo.type = 2;
+				return contentVo;
+			}					
 			
 		]]>
 	</fx:Script>
@@ -383,7 +401,7 @@
 			<button:PcButton id="handleBtn" label="保存" click="onHandle(4)" visible="{workPlan.statusId &lt; 5}" />
 			
 			<button:PcButton label="关闭" click="close()"/>
-			<button:PcButton id="returnBtn" label="驳回" click="onReturn()" visible="{parseFloat(model.loginUser.privilege) == 1}"/>
+			<button:PcButton id="returnBtn" label="驳回" click="doReturn()" visible="{parseFloat(model.loginUser.privilege) == 1}"/>
 		</mx:ControlBar>
 	</mx:VBox>
 	
