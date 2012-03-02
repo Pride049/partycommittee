@@ -21,6 +21,7 @@
 			import com.partycommittee.util.DateUtil;
 			import com.partycommittee.util.WorkPlanCodeUtil;
 			import com.partycommittee.util.WorkPlanStatusUtil;
+			import com.partycommittee.views.agencymgmt.agencyactivity.workplan.component.ReturnFormWindow;
 			import com.partycommittee.vo.PcAgencyVo;
 			import com.partycommittee.vo.PcRemindConfigVo;
 			import com.partycommittee.vo.PcRemindLockVo;
@@ -405,6 +406,16 @@
 				commentView.workPlan = workPlan;
 				PopupMgr.instance.popupWindow(commentView);
 			}
+
+			private function onGetReturnInfo():void {
+				var title:String = '驳回原因';
+				var win:ReturnFormWindow = new ReturnFormWindow();
+				win.title = title;
+				win.reportId = workPlan.id;
+				win.type = 'workplan';
+				win.modelType = 'browse';
+				PopupMgr.instance.popupWindow(win);
+			}			
 		]]>
 	</fx:Script>
 	<fx:Declarations>
@@ -444,6 +455,8 @@
 					<button:PcButton label="上报" id="btn_commit" click="onSaveAndCommit()"
 									 visible="{!workPlan || workPlan.statusId &lt; 3}"/>
 					<mx:Label id="remindTxt" text="" visible="false" includeInLayout="{!browseMode}"/>
+					<button:PcButton label="查看驳回原因" id="btn_return" click="onGetReturnInfo()"
+									 visible="{workPlan &amp;&amp; workPlan.statusId == 2}"/>
 				</mx:ControlBar>
 			</mx:VBox>
 			

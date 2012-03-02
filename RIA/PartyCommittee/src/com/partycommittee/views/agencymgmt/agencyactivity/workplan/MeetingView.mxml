@@ -17,7 +17,6 @@
 			import com.partycommittee.events.PcAgencyEvent;
 			import com.partycommittee.events.PcMeetingEvent;
 			import com.partycommittee.events.PcRemindLockEvent;
-			import com.partycommittee.events.PcMeetingEvent;
 			import com.partycommittee.manager.popup.PopupMgr;
 			import com.partycommittee.model.ModelLocator;
 			import com.partycommittee.util.CRUDEventType;
@@ -25,12 +24,12 @@
 			import com.partycommittee.util.DateUtil;
 			import com.partycommittee.util.WorkPlanCodeUtil;
 			import com.partycommittee.util.WorkPlanStatusUtil;
+			import com.partycommittee.views.agencymgmt.agencyactivity.workplan.component.ReturnFormWindow;
 			import com.partycommittee.vo.PcAgencyVo;
 			import com.partycommittee.vo.PcMeetingContentVo;
 			import com.partycommittee.vo.PcMeetingVo;
 			import com.partycommittee.vo.PcRemindConfigVo;
 			import com.partycommittee.vo.PcRemindLockVo;
-			import com.partycommittee.vo.PcMeetingContentVo;
 			import com.partycommittee.vo.PcWorkPlanVo;
 			
 			import flashx.textLayout.debug.assert;
@@ -576,6 +575,17 @@
 					initRemindLock();
 				}
 			}
+			
+			private function onGetReturnInfo():void {
+				var title:String = '驳回原因';
+				var win:ReturnFormWindow = new ReturnFormWindow();
+				win.title = title;
+				win.reportId = meeting.id;
+				win.type = 'meeting';
+				win.modelType = 'browse';
+				PopupMgr.instance.popupWindow(win);
+			}
+				
 		]]>
 	</fx:Script>
 	<fx:Declarations>
@@ -660,6 +670,8 @@
 									 includeInLayout="{!detailMode}"/>
 					<mx:Label id="remindTxt" text="" visible="false" includeInLayout="{!detailMode}"/>
 					<button:PcButton label="关闭" click="close()"/>
+					<button:PcButton label="查看驳回原因" id="btn_return" click="onGetReturnInfo()"
+									 visible="{meeting &amp;&amp; meeting.statusId == 2}"/>
 				</mx:ControlBar>
 			</mx:VBox>
 			
