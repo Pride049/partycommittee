@@ -23,5 +23,6 @@ package com.partycommittee.vo
 		public var agencyCodeId:Number;
 		
 		public var agencyList:ArrayCollection;
+		public var roles:ArrayCollection;
 	}
 }

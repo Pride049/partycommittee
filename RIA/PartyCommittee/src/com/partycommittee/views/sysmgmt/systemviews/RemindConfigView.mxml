@@ -15,11 +15,14 @@
 			import com.partycommittee.vo.PcRemindConfigVo;
 			
 			import mx.collections.ArrayCollection;
+			import mx.containers.TabNavigator;
 			import mx.controls.Alert;
 			import mx.events.PropertyChangeEvent;
 			
 			import spark.components.ComboBox;
-
+			
+			public var tab:TabNavigator;
+			
 			[Bindable]
 			private var model:ModelLocator = ModelLocator.getInstance();
 			
@@ -67,6 +70,10 @@
 			
 			private function onCreationCompleted():void {
 				onNavigateIn();
+				
+				if (this.tab && this.tab.selectedChild == this) {
+					refreshData();
+				}	
 			}
 			
 			public function refreshData(evt:* = null):void {

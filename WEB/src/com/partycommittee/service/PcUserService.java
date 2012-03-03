@@ -10,11 +10,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.partycommittee.persistence.daoimpl.PcAgencyDaoImpl;
 import com.partycommittee.persistence.daoimpl.PcAgencyMappingDaoImpl;
+import com.partycommittee.persistence.daoimpl.PcRoleDaoImpl;
 import com.partycommittee.persistence.daoimpl.PcUserDaoImpl;
+import com.partycommittee.persistence.daoimpl.PcUserRoleDaoImpl;
 import com.partycommittee.persistence.po.PcAgency;
 import com.partycommittee.persistence.po.PcAgencyMapping;
+import com.partycommittee.persistence.po.PcRole;
 import com.partycommittee.persistence.po.PcUser;
+import com.partycommittee.persistence.po.PcUserRole;
 import com.partycommittee.remote.vo.PcAgencyVo;
+import com.partycommittee.remote.vo.PcRoleVo;
+import com.partycommittee.remote.vo.PcUserRoleVo;
 import com.partycommittee.remote.vo.PcUserVo;
 import com.partycommittee.remote.vo.helper.PageHelperVo;
 import com.partycommittee.remote.vo.helper.PageResultVo;
@@ -40,6 +46,18 @@ public class PcUserService {
 	public void setPcAgencyDaoImpl(PcAgencyDaoImpl pcAgencyDaoImpl) {
 		this.pcAgencyDaoImpl = pcAgencyDaoImpl;
 	}
+	
+	@Resource(name="PcRoleDaoImpl")
+	private PcRoleDaoImpl pcRoleDaoImpl;
+	public void setPcRoleDaoImpl(PcRoleDaoImpl pcRoleDaoImpl) {
+		this.pcRoleDaoImpl = pcRoleDaoImpl;
+	}	
+	
+	@Resource(name="PcUserRoleDaoImpl")
+	private PcUserRoleDaoImpl pcUserRoleDaoImpl;
+	public void setPcUserRoleDaoImpl(PcUserRoleDaoImpl pcUserRoleDaoImpl) {
+		this.pcUserRoleDaoImpl = pcUserRoleDaoImpl;
+	}		
 	
 	public PcUserVo login(String username, String password) {
 		PcUser user = pcUserDaoImpl.login(username, password);
@@ -206,4 +224,27 @@ public class PcUserService {
 		}
 		return temp;
 	}
+	
+	public List<PcRoleVo> getRoleList() {
+		List<PcRoleVo> list = new ArrayList<PcRoleVo>();
+		List<PcRole> roleList = pcRoleDaoImpl.getRoleList();
+		if (roleList != null && roleList.size() > 0) {
+			for (PcRole item : roleList) {
+				list.add(PcRoleVo.fromPcRole(item));
+			}
+		}
+		return list;
+	}	
+	
+	public List<PcUserRoleVo> getRolesByUserId(Integer userId) {
+		List<PcUserRoleVo> list = new ArrayList<PcUserRoleVo>();
+		List<PcUserRole> roleList = pcUserRoleDaoImpl.getRolesByUserId(userId);
+		if (roleList != null && roleList.size() > 0) {
+			for (PcUserRole item : roleList) {
+				list.add(PcUserRoleVo.fromPcUserRole(item));
+			}
+		}
+		return list;
+	}		
+	
 }

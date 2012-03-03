@@ -24,11 +24,14 @@
 			import com.partycommittee.vo.page.PageResultVo;
 			
 			import mx.collections.ArrayCollection;
+			import mx.containers.TabNavigator;
 			import mx.controls.Alert;
 			import mx.core.FlexGlobals;
 			import mx.events.CloseEvent;
 			import mx.events.PropertyChangeEvent;
 			import mx.managers.PopUpManager;
+			
+			public var tab:TabNavigator;
 			
 			[Bindable]
 			private var model:ModelLocator = ModelLocator.getInstance();
@@ -77,9 +80,15 @@
 					page.pageIndex = 1;
 				}
 				pageBar.addEventListener("pageChange", refreshData);
+				
+				if (this.tab && this.tab.selectedChild == this) {
+					onNavigateIn();
+				}	
+				
 			}
 			
 			public function refreshData(evt:* = null):void {
+				if (!agency) return;
 				var userEvt:PcUserEvent = new PcUserEvent();
 				userEvt.page = page;
 //				if (useFilterCk.selected && agency) {

@@ -24,13 +24,17 @@
 			import com.partycommittee.vo.page.PageResultVo;
 			
 			import mx.collections.ArrayCollection;
+			import mx.containers.TabNavigator;
 			import mx.controls.Alert;
 			import mx.controls.DataGrid;
 			import mx.core.FlexGlobals;
 			import mx.events.CloseEvent;
 			import mx.events.PropertyChangeEvent;
 			import mx.managers.PopUpManager;
-
+			
+			
+			public var tab:TabNavigator;
+			
 			[Bindable]
 			private var model:ModelLocator = ModelLocator.getInstance();
 			
@@ -51,6 +55,10 @@
 			
 			private function onCreationCompleted():void {
 //				onNavigateIn();
+				if (this.tab && this.tab.selectedChild == this) {
+					
+					refreshData();
+				}	
 			}
 			
 			override protected function onNavigateIn():void {

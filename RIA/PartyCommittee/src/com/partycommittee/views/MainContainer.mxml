@@ -8,7 +8,7 @@
 		   xmlns:partymember="com.partycommittee.views.partymember.*" 
 		   xmlns:tree="com.partycommittee.control.tree.*" 
 		   xmlns:agencyviews="com.partycommittee.views.agencymgmt.agencyviews.*" 
-		   xmlns:systemviews="com.partycommittee.views.sysmgmt.systemviews.*"
+		   xmlns:systemviews="com.partycommittee.views.sysmgmt.*"
 		   xmlns:stats="com.partycommittee.views.stats.*"
 		   creationComplete="onCreationCompleted()" 
 		   xmlns:agencyactivity="com.partycommittee.views.agencymgmt.agencyactivity.*" 
@@ -48,6 +48,7 @@
 				hDivBox.getDividerAt(0).addEventListener(MouseEvent.DOUBLE_CLICK, onDividerDoubleClick);
 				initToolbar();
 				initUserData();
+				initRoles();
 				initRemindConfig();
 			}
 			
@@ -62,6 +63,26 @@
 				userEvent.successCallback = onGetSessionSuccess;
 				userEvent.dispatch();
 			}
+			
+			private function initUserRole():void {
+				var userEvent:PcUserEvent = new PcUserEvent(PcUserEvent.GET_USER_ROLE);
+				userEvent.successCallback = onGetUserRoleSuccess;
+				userEvent.failureCallback = onGetUserRoleFailure;
+				userEvent.dispatch();
+			}				
+			
+			private function initRoles():void {
+				var userEvent:PcUserEvent = new PcUserEvent(PcUserEvent.GET_ROLES);
+				userEvent.successCallback = onGetRolesSuccess;
+				userEvent.dispatch();
+			}				
+
+			private function initRemindConfig():void {
+				var evt:PcRemindConfigEvent = new PcRemindConfigEvent(PcRemindConfigEvent.GET_REMIND_CONFIG_LIST);
+				evt.successCallback = onGetRemindConfigSuccess;
+				evt.dispatch();
+			}
+						
 			
 			private function onGetSessionSuccess(data:Object, evt:PcUserEvent):void {
 				if (!data) return;
@@ -92,9 +113,9 @@
 				
 				// Remove recount view if the user not have root agency privilege.
 				if (!isRootUser()) {
-					mainViewStack.removeChild(accountView);
-					mainViewStack.removeChild(remindconfigView);
-					mainViewStack.removeChild(remindLockView);
+					mainViewStack.removeChild(systemManagerView);
+//					mainViewStack.removeChild(remindconfigView);
+//					mainViewStack.removeChild(remindLockView);
 					mainViewStack.removeChild(statView);
 				}
 				
@@ -103,13 +124,25 @@
 					if (model.isLeafUser && model.loginUser.enableReport != 1) orgView.editEnable = false;
 				}
 				
+				initUserRole();
+				
 			}
 			
-			private function initRemindConfig():void {
-				var evt:PcRemindConfigEvent = new PcRemindConfigEvent(PcRemindConfigEvent.GET_REMIND_CONFIG_LIST);
-				evt.successCallback = onGetRemindConfigSuccess;
-				evt.dispatch();
+			private function onGetRolesSuccess(data:Object, evt:PcUserEvent):void {
+				if (!data) return;
+				model.roleCollection = data as ArrayCollection;
 			}
+			
+			private function onGetUserRoleSuccess(data:Object, evt:PcUserEvent):void {
+				if (!data) return;
+//				model.roleCollection = data as ArrayCollection;
+				model.loginUser.roles = data as ArrayCollection;
+			
+			}	
+			
+			private function onGetUserRoleFailure(data:Object, evt:PcUserEvent):void {
+				
+			}				
 			
 			private function onGetRemindConfigSuccess(data:Object, evt:PcRemindConfigEvent):void {
 				if (!data) return;
@@ -191,8 +224,7 @@
 			}
 			
 			private function viewStackChange(event:Event) {
-				if (mainViewStack.selectedChild == remindconfigView ||
-					mainViewStack.selectedChild == mainView || 
+				if (mainViewStack.selectedChild == mainView || 
 					mainViewStack.selectedChild == statView
 					) {
 					unExpandTree();
@@ -230,18 +262,14 @@
 				<agencyactivity:ActivityView id="activityView" width="100%" height="100%"
 											 label="组织生活" 
 											 viewStack="{mainViewStack}"/>
-				<systemviews:AccountManageView id="accountView" width="100%" height="100%" 
-											   label="账号管理"
-											   viewStack="{mainViewStack}"/>
 				<stats:ParentStat id="statView" width="100%" height="100%" 
 											label="统计分析"
-											viewStack="{mainViewStack}"/>					
-				<systemviews:RemindConfigView id="remindconfigView" width="100%" height="100%" 
-											   label="提醒设定"
-											   viewStack="{mainViewStack}"/>
-				<systemviews:RemindLockView id="remindLockView" width="100%" height="100%" 
-											  label="解锁"
-											  viewStack="{mainViewStack}"/>				
+											viewStack="{mainViewStack}"/>
+				<systemviews:SystemManagerView id="systemManagerView" width="100%" height="100%" 
+											   label="系统管理"
+											   viewStack="{mainViewStack}"/>				
+				
+			
 			</mx:ViewStack>
 		</mx:HDividedBox>
 	</mx:Canvas>

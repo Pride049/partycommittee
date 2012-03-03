@@ -71,6 +71,20 @@ package com.partycommittee.model
 		
 		public var isLeafUser:Boolean = false;
 		public var leafAgency:PcAgencyVo;
+		
+		private var _roleCollection:ArrayCollection;
+
+		public function get roleCollection():ArrayCollection
+		{
+			return _roleCollection;
+		}
+
+		public function set roleCollection(value:ArrayCollection):void
+		{
+			_roleCollection = value;
+		}
+
+		
 	}
 }
 
