@@ -22,6 +22,7 @@ package com.partycommittee.commands
 		}
 		
 		override public function execute(event:CairngormEvent):void {
+			var model:ModelLocator = ModelLocator.getInstance();
 			super.execute(event);
 			var pcUserEvent:PcUserEvent = event as PcUserEvent;
 			var pcUserProxy:PcUserProxy = getProxy();
@@ -58,6 +59,12 @@ package com.partycommittee.commands
 					break;
 				case PcUserEvent.GET_SESSION:
 					pcUserProxy.getLoginUser();
+					break;
+				case PcUserEvent.GET_ROLES:
+					pcUserProxy.getRoleList();
+					break;
+				case PcUserEvent.GET_USER_ROLE:
+					pcUserProxy.getRolesByUserId(model.loginUser.id);
 					break;
 				default :
 					break;

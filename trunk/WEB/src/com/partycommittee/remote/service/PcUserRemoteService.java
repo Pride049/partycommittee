@@ -11,6 +11,8 @@ import org.springframework.flex.remoting.RemotingInclude;
 import org.springframework.stereotype.Service;
 
 import com.partycommittee.constants.SessionConstant;
+import com.partycommittee.remote.vo.PcRoleVo;
+import com.partycommittee.remote.vo.PcUserRoleVo;
 import com.partycommittee.remote.vo.PcUserVo;
 import com.partycommittee.remote.vo.helper.PageHelperVo;
 import com.partycommittee.remote.vo.helper.PageResultVo;
@@ -84,4 +86,14 @@ public class PcUserRemoteService {
 			pCUserService.deleteUser(userVo);
 		}
 	}
+	
+	@RemotingInclude
+	public List<PcRoleVo> getRoleList() {
+		return pCUserService.getRoleList();
+	}	
+	
+	@RemotingInclude
+	public List<PcUserRoleVo> getRolesByUserId(Integer userId) {
+		return pCUserService.getRolesByUserId(userId);
+	}		
 }
