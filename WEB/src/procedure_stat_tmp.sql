@@ -2,11 +2,12 @@ delimiter //
 DROP procedure IF EXISTS stat_remind//
 CREATE PROCEDURE stat_remind()
 begin
-	DECLARE id int(11) unsigned;
-	DECLARE parent_id int(11) unsigned;
-	DECLARE name VARCHAR(255);
+	DECLARE c_id int(11) unsigned;
+	DECLARE c_parent_id int(11) unsigned;
+	DECLARE c_name VARCHAR(255);
+	DECLARE c_parent_name VARCHAR(255);
 	DECLARE c_code VARCHAR(20);
-	DECLARE code_id int(11) unsigned;
+	DECLARE c_code_id int(11) unsigned;
 	DECLARE done int default 0;
 	
 	DECLARE y year(4);
@@ -28,7 +29,10 @@ begin
 	  SELECT FOUND_ROWS() into rows;
 	  SET row = 0;
 		cursor_loop:loop
-				FETCH s_cursor into id, name, code_id, c_code, parent_id;
+				FETCH s_cursor into c_id, c_name, c_code_id, c_code, c_parent_id;
+
+				SELECT name into c_parent_name FROM pc_agency where id = c_parent_id;
+					
 				SET s = 0;
 				if row >= rows then
 					leave cursor_loop;
@@ -39,21 +43,21 @@ begin
 				END IF;
 
 				IF i <= 4 THEN
-		   				SELECT max(status_id) into s FROM pc_workplan WHERE agency_id = id AND year = y AND quarter = q AND type_id = i;
+		   				SELECT max(status_id) into s FROM pc_workplan WHERE agency_id = c_id AND year = y AND quarter = q AND type_id = i;
 		   				IF  s IS NULL THEN
 			   				SET s = 0;
 							END IF;
 						
 				ELSE 
-						 SELECT max(status_id) into s FROM pc_meeting WHERE agency_id = id AND year = y AND quarter = q AND type_id = i;
+						 SELECT max(status_id) into s FROM pc_meeting WHERE agency_id = c_id AND year = y AND quarter = q AND type_id = i;
 						 IF  s IS NULL THEN
 			   				SET s = 0;
 							END IF;
 				END IF;	
-				IF parent_id is not null THEN
-					INSERT INTO  pc_remind (agency_id, name, code_id, code, parent_id, year, quarter, type_id, status) 
-					VALUES (id, name, code_id,c_code, parent_id,  y, q, i, s) 			
-					ON DUPLICATE KEY UPDATE status = s, name =name, code = c_code;
+				IF c_parent_id is not null THEN
+					INSERT INTO  pc_remind (agency_id, name, code_id, code, parent_id, parent_name, year, quarter, type_id, status) 
+					VALUES (c_id, c_name, c_code_id,c_code, c_parent_id, c_parent_name,  y, q, i, s) 			
+					ON DUPLICATE KEY UPDATE status = s, name =c_name, code = c_code, parent_name = c_parent_name;
 			  END IF;
 				SET row = row + 1;
 		end loop cursor_loop;
@@ -68,28 +72,32 @@ begin
 		  SELECT FOUND_ROWS() into rows;
 		  SET row = 0;
 			cursor_loop:loop	  
-				FETCH s_cursor into id, name, code_id, parent_id;
+				FETCH s_cursor into c_id, c_name, c_code_id, c_code, c_parent_id;
+
+				SELECT name into c_parent_name FROM pc_agency where id = c_parent_id;
+			
 				SET s = 0;
 				if row >= rows then
 					leave cursor_loop;
 				end if;	  
-		  	SELECT max(status_id) into s FROM pc_workplan WHERE agency_id = id AND year = y -1 AND quarter = 4 AND type_id = 3;
+		  	SELECT max(status_id) into s FROM pc_workplan WHERE agency_id = c_id AND year = y -1 AND quarter = 4 AND type_id = 3;
 				IF  s IS NULL THEN
 	 				SET s = 0;
 				END IF;	 
-				IF parent_id is not null THEN
-					INSERT INTO  pc_remind (agency_id, name, code_id, code, parent_id, year, quarter, type_id, status) 
-					VALUES (id, name, code_id, code, parent_id, y -1, 4, 3, s) 			
-					ON DUPLICATE KEY UPDATE status = s, name =name, code = c_code;				
+				IF c_parent_id is not null THEN
+					INSERT INTO  pc_remind (agency_id, name, code_id, code, parent_id, parent_name, year, quarter, type_id, status) 
+					VALUES (c_id, c_name, c_code_id, c_code, c_parent_id, c_parent_name, y -1, 4, 3, s) 			
+					ON DUPLICATE KEY UPDATE status = s, name =name, code = c_code, parent_name = c_parent_name;				
 				END IF;
-		  	SELECT max(status_id) into s FROM pc_workplan WHERE agency_id = id AND year = y -1 AND quarter = 0 AND type_id = 4;
+				
+		  	SELECT max(status_id) into s FROM pc_workplan WHERE agency_id = c_id AND year = y -1 AND quarter = 0 AND type_id = 4;
 				IF  s IS NULL THEN
 	 				SET s = 0;
 				END IF;	 
-				IF parent_id is not null THEN
-					INSERT INTO  pc_remind (agency_id, name, code_id, code, parent_id, year, quarter, type_id, status) 
-					VALUES (id, name, code_id, c_code, parent_id, y -1, 0, 4, s) 			
-					ON DUPLICATE KEY UPDATE status = s, name =name, code = c_code;					
+				IF c_parent_id is not null THEN
+					INSERT INTO  pc_remind (agency_id, name, code_id, code, parent_id, parent_name, year, quarter, type_id, status) 
+					VALUES (c_id, c_name, c_code_id, c_code, c_parent_id, c_parent_name, y -1, 0, 4, s) 			
+					ON DUPLICATE KEY UPDATE status = s, name =c_name, code = c_code, parent_name = c_parent_name;					
 			  END IF;
 			SET row = row + 1;
 			end loop cursor_loop;

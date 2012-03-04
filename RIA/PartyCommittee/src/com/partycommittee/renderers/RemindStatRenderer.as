@@ -53,7 +53,7 @@ package com.partycommittee.renderers
 				}
 			} else if(_listData.columnIndex == 2)	{
 				if (datas.y2 > 0) {
-					htmlText = '<u><font color="#0000ff"><a href="event:getRemindList&1&2&'+datas.agencyId+'">'+datas.y2+'</a></font></u>';
+					htmlText = '<u><font color="#0000ff"><a href="event:getRemindList&1&3&'+datas.agencyId+'">'+datas.y2+'</a></font></u>';
 				} else {
 					htmlText = datas.y2;
 				}					
@@ -65,7 +65,7 @@ package com.partycommittee.renderers
 				}					
 			} else if(_listData.columnIndex == 4)	{
 				if (datas.lq2 > 0) {
-					htmlText = '<u><font color="#0000ff"><a href="event:getRemindList&3&2&'+datas.agencyId+'">'+datas.lq2+'</a></font></u>';
+					htmlText = '<u><font color="#0000ff"><a href="event:getRemindList&3&3&'+datas.agencyId+'">'+datas.lq2+'</a></font></u>';
 				} else {
 					htmlText = datas.lq2;
 				}					
@@ -77,7 +77,7 @@ package com.partycommittee.renderers
 				}					
 			} else if(_listData.columnIndex == 6)	{
 				if (datas.ly2 > 0) {
-					htmlText = '<u><font color="#0000ff"><a href="event:getRemindList&4&2&'+datas.agencyId+'">'+datas.ly2+'</a></font></u>';
+					htmlText = '<u><font color="#0000ff"><a href="event:getRemindList&4&3&'+datas.agencyId+'">'+datas.ly2+'</a></font></u>';
 				} else {
 					htmlText = datas.ly2;
 				}					
@@ -89,7 +89,7 @@ package com.partycommittee.renderers
 				}					
 			} else if(_listData.columnIndex == 8)	{
 				if (datas.q2 > 0) {
-					htmlText = '<u><font color="#0000ff"><a href="event:getRemindList&2&2&'+datas.agencyId+'">'+datas.q2+'</a></font></u>';
+					htmlText = '<u><font color="#0000ff"><a href="event:getRemindList&2&3&'+datas.agencyId+'">'+datas.q2+'</a></font></u>';
 				} else {
 					htmlText = datas.q2;
 				}					
@@ -102,7 +102,7 @@ package com.partycommittee.renderers
 				
 			} else if(_listData.columnIndex == 10)	{
 				if (datas.dk2 > 0) {
-					htmlText = '<u><font color="#0000ff"><a href="event:getRemindList&5&2&'+datas.agencyId+'">'+datas.dk2+'</a></font></u>';
+					htmlText = '<u><font color="#0000ff"><a href="event:getRemindList&5&3&'+datas.agencyId+'">'+datas.dk2+'</a></font></u>';
 				} else {
 					htmlText = datas.dk2;
 				}	
@@ -116,7 +116,7 @@ package com.partycommittee.renderers
 				
 			} else if(_listData.columnIndex == 12)	{
 				if (datas.dydh2 > 0) {
-					htmlText = '<u><font color="#0000ff"><a href="event:getRemindList&6&2&'+datas.agencyId+'">'+datas.dydh2+'</a></font></u>';
+					htmlText = '<u><font color="#0000ff"><a href="event:getRemindList&6&3&'+datas.agencyId+'">'+datas.dydh2+'</a></font></u>';
 				} else {
 					htmlText = datas.dydh2;
 				}				
@@ -131,7 +131,7 @@ package com.partycommittee.renderers
 				
 			} else if(_listData.columnIndex == 14)	{
 				if (datas.mzshh2 > 0) {
-					htmlText = '<u><font color="#0000ff"><a href="event:getRemindList&7&2&'+datas.agencyId+'">'+datas.mzshh2+'</a></font></u>';
+					htmlText = '<u><font color="#0000ff"><a href="event:getRemindList&7&3&'+datas.agencyId+'">'+datas.mzshh2+'</a></font></u>';
 				} else {
 					htmlText = datas.mzshh2;
 				}	
@@ -145,7 +145,7 @@ package com.partycommittee.renderers
 				
 			} else if(_listData.columnIndex == 16)	{
 				if (datas.zbwyh2 > 0) {
-					htmlText = '<u><font color="#0000ff"><a href="event:getRemindList&8&2&'+datas.agencyId+'">'+datas.zbwyh2+'</a></font></u>';
+					htmlText = '<u><font color="#0000ff"><a href="event:getRemindList&8&3&'+datas.agencyId+'">'+datas.zbwyh2+'</a></font></u>';
 				} else {
 					htmlText = datas.zbwyh2;
 				}				
@@ -167,7 +167,7 @@ package com.partycommittee.renderers
 				}
 			} else if(_listData.columnIndex == 2)	{
 				if (datas.y2 > 0) {
-					htmlText = '<u><font color="#0000ff"><a href="event:getRemindList&1&2&'+datas.agencyId+'">'+datas.y2+'</a></font></u>';
+					htmlText = '<u><font color="#0000ff"><a href="event:getRemindList&1&3&'+datas.agencyId+'">'+datas.y2+'</a></font></u>';
 				} else {
 					htmlText = datas.y2;
 				}					
@@ -179,7 +179,7 @@ package com.partycommittee.renderers
 				}					
 			} else if(_listData.columnIndex == 4)	{
 				if (datas.lq2 > 0) {
-					htmlText = '<u><font color="#0000ff"><a href="event:getRemindList&3&2&'+datas.agencyId+'">'+datas.lq2+'</a></font></u>';
+					htmlText = '<u><font color="#0000ff"><a href="event:getRemindList&3&3&'+datas.agencyId+'">'+datas.lq2+'</a></font></u>';
 				} else {
 					htmlText = datas.lq2;
 				}					
@@ -192,7 +192,7 @@ package com.partycommittee.renderers
 				}					
 			} else if(_listData.columnIndex == 6)	{
 				if (datas.q2 > 0) {
-					htmlText = '<u><font color="#0000ff"><a href="event:getRemindList&2&2&'+datas.agencyId+'">'+datas.q2+'</a></font></u>';
+					htmlText = '<u><font color="#0000ff"><a href="event:getRemindList&2&3&'+datas.agencyId+'">'+datas.q2+'</a></font></u>';
 				} else {
 					htmlText = datas.q2;
 				}					
@@ -205,7 +205,7 @@ package com.partycommittee.renderers
 				
 			} else if(_listData.columnIndex == 8)	{
 				if (datas.dk2 > 0) {
-					htmlText = '<u><font color="#0000ff"><a href="event:getRemindList&5&2&'+datas.agencyId+'">'+datas.dk2+'</a></font></u>';
+					htmlText = '<u><font color="#0000ff"><a href="event:getRemindList&5&3&'+datas.agencyId+'">'+datas.dk2+'</a></font></u>';
 				} else {
 					htmlText = datas.dk2;
 				}	
@@ -219,7 +219,7 @@ package com.partycommittee.renderers
 				
 			} else if(_listData.columnIndex == 10)	{
 				if (datas.dydh2 > 0) {
-					htmlText = '<u><font color="#0000ff"><a href="event:getRemindList&6&2&'+datas.agencyId+'">'+datas.dydh2+'</a></font></u>';
+					htmlText = '<u><font color="#0000ff"><a href="event:getRemindList&6&3&'+datas.agencyId+'">'+datas.dydh2+'</a></font></u>';
 				} else {
 					htmlText = datas.dydh2;
 				}				
@@ -234,7 +234,7 @@ package com.partycommittee.renderers
 				
 			} else if(_listData.columnIndex == 13)	{
 				if (datas.mzshh1 > 0) {
-					htmlText = '<u><font color="#0000ff"><a href="event:getRemindList&7&2&'+datas.agencyId+'">'+datas.mzshh2+'</a></font></u>';
+					htmlText = '<u><font color="#0000ff"><a href="event:getRemindList&7&3&'+datas.agencyId+'">'+datas.mzshh2+'</a></font></u>';
 				} else {
 					htmlText = datas.mzshh2;
 				}	
@@ -248,7 +248,7 @@ package com.partycommittee.renderers
 				
 			} else if(_listData.columnIndex == 12)	{
 				if (datas.zbwyh2 > 0) {
-					htmlText = '<u><font color="#0000ff"><a href="event:getRemindList&8&2&'+datas.agencyId+'">'+datas.zbwyh2+'</a></font></u>';
+					htmlText = '<u><font color="#0000ff"><a href="event:getRemindList&8&3&'+datas.agencyId+'">'+datas.zbwyh2+'</a></font></u>';
 				} else {
 					htmlText = datas.zbwyh2;
 				}				

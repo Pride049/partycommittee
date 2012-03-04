@@ -306,6 +306,14 @@
 				var q:Number = c_q;
 				
 				var dateGridColumnArray :Array = new Array();
+				
+				var d:AdvancedDataGridColumn = new AdvancedDataGridColumn();
+				d.dataField = "parentName";
+				d.headerText = "上级党委";
+				//c1.wordWrap = true;
+				d.width = 200;
+				dateGridColumnArray.push(d);				
+				
 				var c:AdvancedDataGridColumn = new AdvancedDataGridColumn();
 				c.dataField = "name";
 				c.headerText = "支部名称";
@@ -345,6 +353,14 @@
 				var q:Number = c_q;
 				
 				var dateGridColumnArray :Array = new Array();
+				
+				var d:AdvancedDataGridColumn = new AdvancedDataGridColumn();
+				d.dataField = "parentName";
+				d.headerText = "上级党委";
+				//c1.wordWrap = true;
+				d.width = 200;
+				dateGridColumnArray.push(d);					
+				
 				var c:AdvancedDataGridColumn = new AdvancedDataGridColumn();
 				c.dataField = "name";
 				c.headerText = "支部名称";
@@ -407,7 +423,7 @@
 				
 				var c_y_2:AdvancedDataGridColumn = new AdvancedDataGridColumn();
 				c_y_2.dataField = "y2";
-				c_y_2.headerText = "未审";
+				c_y_2.headerText = "未评";
 				c_y_2.width = 60;
 				c_y_2.itemRenderer = new ClassFactory(com.partycommittee.renderers.RemindStatRenderer);
 				c_y_ChildArray.push(c_y_2);
@@ -433,7 +449,7 @@
 					
 					var c_last_q_2:AdvancedDataGridColumn = new AdvancedDataGridColumn();
 					c_last_q_2.dataField = "lq2";
-					c_last_q_2.headerText = "未审";
+					c_last_q_2.headerText = "未评";
 					c_last_q_2.width = 80;
 					c_last_q_2.itemRenderer = new ClassFactory(com.partycommittee.renderers.RemindStatRenderer);
 					c_last_q_ChildArray.push(c_last_q_2);
@@ -458,7 +474,7 @@
 					
 					var c_last_y_2:AdvancedDataGridColumn = new AdvancedDataGridColumn();
 					c_last_y_2.dataField = "ly2";
-					c_last_y_2.headerText = "未审";
+					c_last_y_2.headerText = "未评";
 					c_last_y_2.width = 80;
 					c_last_y_2.itemRenderer = new ClassFactory(com.partycommittee.renderers.RemindStatRenderer);
 					c_last_y_ChildArray.push(c_last_y_2);
@@ -484,7 +500,7 @@
 					
 					var c_last_q_2:AdvancedDataGridColumn = new AdvancedDataGridColumn();
 					c_last_q_2.dataField = "lq2";
-					c_last_q_2.headerText = "未审";
+					c_last_q_2.headerText = "未评";
 					c_last_q_2.width = 80;
 					c_last_q_2.itemRenderer = new ClassFactory(com.partycommittee.renderers.RemindStatRenderer);
 					c_last_q_ChildArray.push(c_last_q_2);
@@ -509,7 +525,7 @@
 				
 				var c_q_2:AdvancedDataGridColumn = new AdvancedDataGridColumn();
 				c_q_2.dataField = "q2";
-				c_q_2.headerText = "未审";
+				c_q_2.headerText = "未评";
 				c_q_2.width = 70;
 				c_q_2.itemRenderer = new ClassFactory(com.partycommittee.renderers.RemindStatRenderer);
 				c_q_ChildArray.push(c_q_2);

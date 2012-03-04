@@ -3,6 +3,8 @@ package com.partycommittee.remote.vo;
 import java.io.Serializable;
 import java.sql.Date;
 
+import javax.persistence.Column;
+
 import com.partycommittee.persistence.po.PcRemind;
 
 public class PcRemindVo implements Serializable {
@@ -21,6 +23,8 @@ public class PcRemindVo implements Serializable {
 	private String code;
 
 	private Integer parentId;
+	
+	private String parentName;
 
 	private Integer quarter;
 
@@ -77,6 +81,15 @@ public class PcRemindVo implements Serializable {
 	public void setParentId(Integer parentId) {
 		this.parentId = parentId;
 	}
+	
+	public String getParentName() {
+		return parentName;
+	}
+
+	public void setParentName(String parentName) {
+		this.parentName = parentName;
+	}
+		
 
 	public Integer getQuarter() {
 		return quarter;
@@ -127,6 +140,7 @@ public class PcRemindVo implements Serializable {
 		vo.setExt(pevo.getExt());
 		vo.setName(pevo.getName());
 		vo.setParentId(pevo.getParentId());
+		vo.setParentName(pevo.getParentName());
 		vo.setQuarter(pevo.getQuarter());
 		vo.setStatusId(pevo.getStatusId());
 		vo.setTypeId(pevo.getTypeId());
@@ -144,6 +158,7 @@ public class PcRemindVo implements Serializable {
 		vo.setExt(pevo.getExt());
 		vo.setName(pevo.getName());
 		vo.setParentId(pevo.getParentId());
+		vo.setParentName(pevo.getParentName());
 		vo.setQuarter(pevo.getQuarter());
 		vo.setStatusId(pevo.getStatusId());
 		vo.setTypeId(pevo.getTypeId());
