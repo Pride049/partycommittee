@@ -56,9 +56,6 @@ package com.partycommittee.proxy
 		public function getRoleList():void {
 			service.getRoleList();
 		}
-		
-		public function getRolesByUserId(userId:Number):void {
-			service.getRolesByUserId(userId);
-		}		
+	
 	}
 }

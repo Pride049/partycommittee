@@ -65,6 +65,7 @@ public class PcUserService {
 			return null;
 		}
 		PcUserVo userVo = PcUserVo.fromPCUser(user);
+		userVo.setRoles(getRolesByUserId(userVo.getId()));
 		return userVo;
 	}
 	
@@ -73,7 +74,9 @@ public class PcUserService {
 		List<PcUser> userList = pcUserDaoImpl.getUserList();
 		if (userList != null && userList.size() > 0) {
 			for (PcUser user : userList) {
-				list.add(PcUserVo.fromPCUser(user));
+				PcUserVo vo = PcUserVo.fromPCUser(user);
+				vo.setRoles(getRolesByUserId(vo.getId()));
+				list.add(vo);
 			}
 		}
 		return list;
@@ -96,6 +99,7 @@ public class PcUserService {
 		if (pageResult.getList() != null && pageResult.getList().size() > 0) {
 			for (PcUser user : pageResult.getList()) {
 				PcUserVo userVo = PcUserVo.fromPCUser(user);
+				userVo.setRoles(getRolesByUserId(userVo.getId()));
 				getAgencyList(userVo);
 				list.add(userVo);
 			}
@@ -116,6 +120,7 @@ public class PcUserService {
 		if (pageResult.getList() != null && pageResult.getList().size() > 0) {
 			for (PcUser user : pageResult.getList()) {
 				PcUserVo userVo = PcUserVo.fromPCUser(user);
+				userVo.setRoles(getRolesByUserId(userVo.getId()));
 				getAgencyList(userVo);
 				list.add(userVo);
 			}
@@ -152,6 +157,7 @@ public class PcUserService {
 		updateAgencyCodeId(user);
 		user = pcUserDaoImpl.createUser(user);
 		updateUserAgencyMapping(user.getId(), userVo.getPrivilege());
+		updateUserRoles(user.getId(), userVo.getRoles());
 	}
 	
 	public void updateUser(PcUserVo userVo) {
@@ -159,6 +165,7 @@ public class PcUserService {
 		updateAgencyCodeId(user);
 		pcUserDaoImpl.updateUser(user);
 		updateUserAgencyMapping(user.getId(), userVo.getPrivilege());
+		updateUserRoles(userVo.getId(), userVo.getRoles());
 	}
 	
 	private void updateAgencyCodeId(PcUser user) {
@@ -202,6 +209,16 @@ public class PcUserService {
 		}
 	}
 	
+	private void updateUserRoles(Long userId, List<Integer> roles) {
+		pcUserRoleDaoImpl.deleteByUserId(userId);
+		for (Integer roleId : roles) {
+			PcUserRole vo = new PcUserRole();
+			vo.setUserId(userId);
+			vo.setRoleId(roleId);
+			pcUserRoleDaoImpl.createUserRole(vo);
+		}
+	}	
+	
 	public void deleteUser(PcUserVo userVo) {
 		PcUser user = PcUserVo.toPCUser(userVo);
 		pcUserDaoImpl.deleteUser(user);
@@ -236,12 +253,12 @@ public class PcUserService {
 		return list;
 	}	
 	
-	public List<PcUserRoleVo> getRolesByUserId(Integer userId) {
-		List<PcUserRoleVo> list = new ArrayList<PcUserRoleVo>();
+	public List<Integer> getRolesByUserId(Long userId) {
+		List<Integer> list = new ArrayList<Integer>();
 		List<PcUserRole> roleList = pcUserRoleDaoImpl.getRolesByUserId(userId);
 		if (roleList != null && roleList.size() > 0) {
 			for (PcUserRole item : roleList) {
-				list.add(PcUserRoleVo.fromPcUserRole(item));
+				list.add(PcUserRoleVo.fromPcUserRole(item).getRoleId());
 			}
 		}
 		return list;

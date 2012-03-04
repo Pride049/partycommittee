@@ -48,7 +48,6 @@
 				hDivBox.getDividerAt(0).addEventListener(MouseEvent.DOUBLE_CLICK, onDividerDoubleClick);
 				initToolbar();
 				initUserData();
-				initRoles();
 				initRemindConfig();
 			}
 			
@@ -63,13 +62,6 @@
 				userEvent.successCallback = onGetSessionSuccess;
 				userEvent.dispatch();
 			}
-			
-			private function initUserRole():void {
-				var userEvent:PcUserEvent = new PcUserEvent(PcUserEvent.GET_USER_ROLE);
-				userEvent.successCallback = onGetUserRoleSuccess;
-				userEvent.failureCallback = onGetUserRoleFailure;
-				userEvent.dispatch();
-			}				
 			
 			private function initRoles():void {
 				var userEvent:PcUserEvent = new PcUserEvent(PcUserEvent.GET_ROLES);
@@ -123,9 +115,7 @@
 					orgView.editEnable = (parseFloat(model.loginUser.privilege) == model.focusAgencyVo.id );
 					if (model.isLeafUser && model.loginUser.enableReport != 1) orgView.editEnable = false;
 				}
-				
-				initUserRole();
-				
+				initRoles();
 			}
 			
 			private function onGetRolesSuccess(data:Object, evt:PcUserEvent):void {
@@ -133,23 +123,11 @@
 				model.roleCollection = data as ArrayCollection;
 			}
 			
-			private function onGetUserRoleSuccess(data:Object, evt:PcUserEvent):void {
-				if (!data) return;
-//				model.roleCollection = data as ArrayCollection;
-				model.loginUser.roles = data as ArrayCollection;
-			
-			}	
-			
-			private function onGetUserRoleFailure(data:Object, evt:PcUserEvent):void {
-				
-			}				
-			
 			private function onGetRemindConfigSuccess(data:Object, evt:PcRemindConfigEvent):void {
 				if (!data) return;
 				model.remindConfigCollection = data as ArrayCollection;
 			}
-			
-			
+
 			private function onPropertyChanged(event:PropertyChangeEvent):void {
 				if (event.property == "isLeafUser") {
 					model.removeEventListener(PropertyChangeEvent.PROPERTY_CHANGE, onPropertyChanged);

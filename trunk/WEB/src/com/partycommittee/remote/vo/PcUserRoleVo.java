@@ -13,7 +13,7 @@ public class PcUserRoleVo implements Serializable {
 	private static final long serialVersionUID = -3609023388156250129L;
 	
 	private Integer id;
-	private Integer userId;
+	private Long userId;
 	private Integer roleId;
 
 	public Integer getId() {
@@ -24,11 +24,11 @@ public class PcUserRoleVo implements Serializable {
 		this.id = id;
 	}
 	
-	public Integer getUserId() {
+	public Long getUserId() {
 		return userId;
 	}
 
-	public void setUserId(Integer userId) {
+	public void setUserId(Long userId) {
 		this.userId = userId;
 	}
 

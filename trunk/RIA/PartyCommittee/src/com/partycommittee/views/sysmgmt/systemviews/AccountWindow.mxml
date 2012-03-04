@@ -16,12 +16,18 @@
 		<![CDATA[
 			import com.partycommittee.events.PcAgencyEvent;
 			import com.partycommittee.events.PcUserEvent;
+			import com.partycommittee.model.ModelLocator;
 			import com.partycommittee.util.CRUDEventType;
+			import com.partycommittee.vo.PcRoleVo;
+			import com.partycommittee.vo.PcUserRoleVo;
 			import com.partycommittee.vo.PcUserVo;
 			
+			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
 			import mx.managers.PopUpManager;
 			import mx.validators.EmailValidator;
+			
+			public var model:ModelLocator = ModelLocator.getInstance();
 			
 			[Bindable]
 			public var type:String = CRUDEventType.CREATE;
@@ -45,6 +51,7 @@
 			}
 			
 			private function updateData():void {
+				initRoleCkGroup();
 				if (!this._userVo) {
 					return;
 				}
@@ -58,8 +65,35 @@
 				if (this._userVo.privilege) {
 					privilegeView.agencyIdArry = this._userVo.privilege.split(",");
 				}
+				
+				setRoleCkGroup();
 			}
 			
+			private function initRoleCkGroup():void {
+				var data:ArrayCollection = model.roleCollection;
+				for (var i=0; i< data.length; i++) {
+					var vo:PcRoleVo = data.getItemAt(i) as PcRoleVo;
+					var ck:CheckBox = new CheckBox();
+					ck.label = vo.name;
+					if (i == 0) ck.selected = true;
+					role_ck_group.addChild(ck);
+				}
+			}
+			
+			private function setRoleCkGroup():void {
+				var data:ArrayCollection = this._userVo.roles as ArrayCollection;
+				var checkboxs:Array = role_ck_group.getChildren();
+				for(var i = 0; i < checkboxs.length; i++) {
+					var vo:CheckBox = checkboxs[i] as CheckBox;
+					for (var j = 0; j < data.length; j++) {
+						if ( int(i + 1) == int(data.getItemAt(j)) ) {
+							vo.selected = true;
+						}
+						
+					}
+				}
+			}			
+
 			private function save():void {
 				if (passwordTxt.text != confirmPwTxt.text) {
 					Alert.show("两次密码输入不一致！");
@@ -120,6 +154,26 @@
 				newUser.description = commentTxt.text;
 				newUser.enableReport = enableReportCk.selected ? 1 : 0;
 				newUser.privilege = privilegeView.agencyIdArry.join(",");
+				
+				
+				var selectRols:ArrayCollection = new ArrayCollection();
+				var checkboxs:Array = role_ck_group.getChildren();
+				var hasSelected:Boolean = false;
+				for(var i = 0; i < checkboxs.length; i++) {
+					if ( (checkboxs[i] as CheckBox).selected == true ) {
+						selectRols.addItem(i+1);
+						hasSelected = true;
+					}
+				}
+
+				if (!hasSelected) {
+					Alert.show("请至少选择一项权限");
+					return null;
+				}
+				newUser.roles = new ArrayCollection();
+				newUser.roles = selectRols;				
+				
+				
 				return newUser;
 			}
 			
@@ -132,6 +186,24 @@
 				if (updatePwCk.selected == false) {
 					updateUser.password = userVo.password;
 				}
+				
+				var selectRols:ArrayCollection = new ArrayCollection();
+				var checkboxs:Array = role_ck_group.getChildren();
+				var hasSelected:Boolean = false;
+				for(var i = 0; i < checkboxs.length; i++) {
+					if ( (checkboxs[i] as CheckBox).selected == true ) {
+						selectRols.addItem(i+1);
+						hasSelected = true;
+					}
+				}
+				
+				if (!hasSelected) {
+					Alert.show("请至少选择一项权限");
+					return null;
+				}				
+				updateUser.roles = new ArrayCollection();
+				updateUser.roles = selectRols;				
+				
 				return updateUser;
 			}
 			
@@ -193,6 +265,11 @@
 				<mx:FormItem label="备注:" width="100%">
 					<mx:TextArea id="commentTxt" width="100%" height="60"/>
 				</mx:FormItem>
+				
+				<mx:FormItem id="role_ck_group" label="相关权限:" direction="horizontal" width="100%">
+					
+				</mx:FormItem>				
+				
 			</mx:Form>
 			<mx:ControlBar width="100%" horizontalAlign="center">
 				<button:PcButton label="保存" click="save()"/>

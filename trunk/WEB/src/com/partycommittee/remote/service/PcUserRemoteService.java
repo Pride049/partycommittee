@@ -91,9 +91,5 @@ public class PcUserRemoteService {
 	public List<PcRoleVo> getRoleList() {
 		return pCUserService.getRoleList();
 	}	
-	
-	@RemotingInclude
-	public List<PcUserRoleVo> getRolesByUserId(Integer userId) {
-		return pCUserService.getRolesByUserId(userId);
-	}		
+		
 }
