@@ -11,6 +11,7 @@
 	<fx:Script>
 		<![CDATA[
 			import com.partycommittee.model.ModelLocator;
+			import com.partycommittee.util.UserUtil;
 			import com.partycommittee.views.MainContainer;
 			
 			import mx.events.PropertyChangeEvent;
@@ -65,8 +66,8 @@
 					reportView.tab = this.tab;
 					reportView.toIndex = toIndex;
 					tab.addChild(reportView);
-					if (model.loginUser.enableReport != 1) {
-						reportView.enableReport = false;				
+					if (UserUtil.checkRole(2, model.loginUser.roles) == false) {
+						reportView.enableReport = false;
 					}
 				} else {
 					var browseView:BrowseView = new BrowseView();

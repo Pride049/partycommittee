@@ -301,7 +301,7 @@
 					return false;
 				}
 			
-				if (asenceTxt.text.length > 0) {
+				if (asenceTxt.text.length > 0 && Number(asenceTxt.text) > 0) {
 					if (asenceMembersTxt.text.length == 0) {
 						Alert.show("缺席人名单不能为空!");
 						return false;
@@ -670,8 +670,8 @@
 									 includeInLayout="{!detailMode}"/>
 					<mx:Label id="remindTxt" text="" visible="false" includeInLayout="{!detailMode}"/>
 					<button:PcButton label="关闭" click="close()"/>
-					<button:PcButton label="查看驳回原因" id="btn_return" click="onGetReturnInfo()"
-									 visible="{meeting &amp;&amp; meeting.statusId == 2}"/>
+					<button:PcButton label="查看驳回原因" id="btn_return" click="onGetReturnInfo()" includeInLayout="{!detailMode}"
+									 visible="{meeting &amp;&amp; meeting.statusId == 2}" />
 				</mx:ControlBar>
 			</mx:VBox>
 			

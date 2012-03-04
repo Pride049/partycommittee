@@ -456,7 +456,7 @@
 									 visible="{!workPlan || workPlan.statusId &lt; 3}"/>
 					<mx:Label id="remindTxt" text="" visible="false" includeInLayout="{!browseMode}"/>
 					<button:PcButton label="查看驳回原因" id="btn_return" click="onGetReturnInfo()"
-									 visible="{workPlan &amp;&amp; workPlan.statusId == 2}"/>
+									 visible="{workPlan &amp;&amp; workPlan.statusId == 2}" includeInLayout="{!browseMode}"/>
 				</mx:ControlBar>
 			</mx:VBox>
 			

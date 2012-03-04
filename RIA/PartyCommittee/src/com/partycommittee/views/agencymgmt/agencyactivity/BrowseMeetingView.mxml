@@ -177,16 +177,29 @@
 									horizontalScrollPolicy="off" verticalScrollPolicy="off">
 								<fx:Script>
 									<![CDATA[
+										import com.partycommittee.model.ModelLocator;
+										import com.partycommittee.util.UserUtil;
 										import com.partycommittee.vo.PcMeetingVo;
 										protected function evaluateBtnClick():void {
 											outerDocument.evaluateMeeting(data as PcMeetingVo);
 										}
 										
 										protected function formatActionButtonLabel(item:Object):String {											
-											if (item && (item as PcMeetingVo).statusId < 4 ) {
-												return '审核';
-											} 
-											return '查看';
+
+											if (item && (item as PcMeetingVo).statusId == 3  ) {
+												if (UserUtil.checkRole(3, ModelLocator.getInstance().loginUser.roles) == true) {
+													return '评语';
+												}
+											}
+											
+											if (item && (item as PcMeetingVo).statusId == 4  ) {
+												if (UserUtil.checkRole(4, ModelLocator.getInstance().loginUser.roles) == true) {
+													return '评价';
+												}
+											}
+											return '查看';											
+											
+											
 										}											
 										
 									]]>

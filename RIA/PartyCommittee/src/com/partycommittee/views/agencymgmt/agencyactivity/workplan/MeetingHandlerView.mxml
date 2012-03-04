@@ -17,6 +17,7 @@
 			import com.partycommittee.events.PcMeetingEvent;
 			import com.partycommittee.manager.popup.PopupMgr;
 			import com.partycommittee.model.ModelLocator;
+			import com.partycommittee.util.UserUtil;
 			import com.partycommittee.views.agencymgmt.agencyactivity.BrowseMeetingView;
 			import com.partycommittee.views.agencymgmt.agencyactivity.workplan.component.ReturnFormWindow;
 			import com.partycommittee.vo.PcAgencyVo;
@@ -25,9 +26,7 @@
 			
 			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
-			
-			private var isNew:Boolean = true;
-			
+
 			[Bindable]
 			private var meetingTitle:String;
 
@@ -109,7 +108,6 @@
 				}
 				
 				if (meeting.id) {
-					isNew = false;
 					dateField.selectedDate = meeting.meetingDatetime;
 					themeTxt.text = meeting.theme;
 					attendTxt.text = meeting.attend + "";
@@ -122,9 +120,21 @@
 					} else {
 						loadMeetingContent();
 					}
-				} else {
-					isNew = true;
-				}
+					
+					// 处理存在即有评价又有评语权限的情况
+					if (meeting.statusId == 3) {
+						if (UserUtil.checkRole(4, model.loginUser.roles) == false) {
+							rate_box.visible = false;
+						}
+					}
+					
+					if (meeting.statusId == 4) {
+						if (UserUtil.checkRole(4, model.loginUser.roles) == false) {
+							handleBtn.visible = false;		
+							rate_box.visible = false;
+						}
+					}					
+				} 
 			}
 			
 			private function loadMeetingContent():void {
@@ -206,9 +216,36 @@
 				Alert.show(info.toString());
 			}				
 			
+			private function formValidate():Boolean {
+				if (handlePersonTxt.text.length == 0) {
+					Alert.show("评语主体不能为空!");
+					return false;
+				}
+				
+				if (handleTextArea.htmlText.length == 0) {
+					Alert.show("评语不能为空!");
+					return false;
+				}
+				
+				if (UserUtil.checkRole(4, model.loginUser.roles) == true) {
+					if (ratePersonTxt.text.length == 0) {
+						Alert.show("评价主体不能为空!");
+						return false;
+					}
+				}
+				
+				return true;
+			}				
+			
 			private function onHandle(statusId:Number):void {
-				meeting.statusId = statusId;
-				doEvaluate();
+				if (formValidate() == true) {	
+					meeting.statusId = statusId;
+					if (statusId == 5) {
+						doRate();
+					} else {
+						doEvaluate();
+					}
+				}				
 			}
 			
 			private function doEvaluate():void {
@@ -223,9 +260,12 @@
 			
 			private function onEvaluateSuccess(data:Object, meetingEvt:PcMeetingEvent):void {
 				this.enabled = true;
-//				parentView.refreshData();
-//				this.close();
-				doRate();
+				if (UserUtil.checkRole(4, model.loginUser.roles) == false) {
+					parentView.refreshData();
+					this.close();
+				} else {
+					doRate();
+				}
 			}
 			
 			private function onEvaluateFailure(info:Object, meetingEvt:PcMeetingEvent):void {
@@ -390,11 +430,11 @@
 				<mx:HBox width="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off">
 					<mx:Label text="评语主体:"/>
 					<mx:TextInput id="handlePersonTxt" width="200"
-								  editable="true"/>
+								  editable="{meeting.statusId == 3}"/>
 				</mx:HBox>
 				<richtexttoolbar:PopupRichTextToolBar width="100%" target="{handleTextArea}"/>
 				<mx:TextArea id="handleTextArea" width="100%" height="100%"
-							 editable="true"/>
+							 editable="{meeting.statusId == 3}"/>
 							
 			</mx:VBox>
 
@@ -406,9 +446,9 @@
 			
 			<button:PcButton label="暂存" click="onHandle(3)"
 							 visible="{meeting.statusId == 3}"/>
-			<button:PcButton label="保存" click="onHandle(4)" visible="{meeting.statusId &lt; 5}"/>
+			<button:PcButton id="handleBtn" label="保存" click="onHandle(meeting.statusId == 4 ? 5 : 4)" visible="{meeting.statusId &lt; 5}" />
 			<button:PcButton label="关闭" click="close()"/>
-			<button:PcButton id="returnBtn" label="驳回" click="doReturn()" visible="{parseFloat(model.loginUser.privilege) == 1}"/>
+			<button:PcButton id="returnBtn" label="驳回" click="doReturn()" visible="{UserUtil.checkRole(5, model.loginUser.roles)}"/>
 		</mx:ControlBar>
 	</mx:VBox>
 	

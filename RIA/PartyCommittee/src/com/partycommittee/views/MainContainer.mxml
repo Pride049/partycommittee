@@ -28,6 +28,7 @@
 			import com.partycommittee.manager.tree.TreeContextMenuMgr;
 			import com.partycommittee.manager.tree.TreeMgr;
 			import com.partycommittee.model.ModelLocator;
+			import com.partycommittee.util.UserUtil;
 			import com.partycommittee.vo.PcAgencyVo;
 			import com.partycommittee.vo.PcUserVo;
 			
@@ -92,29 +93,15 @@
 				agencyEvent.failureCallback = noAgencyHandler;
 				agencyEvent.dispatch();
 				
-				// Remove agency report view if the user not have privilege.
-				if (model.loginUser.enableReport != 1) {
-//					activityView.reportView.enableReport = false;
-//					mainViewStack.removeChild(agencyActivityView);
-					if (!isRootUser()) {
-//						orgView.editEnable = false;
-						TreeContextMenuMgr.getInstance().editEnable = false;
-						treeControlBar.visible = treeControlBar.includeInLayout = false;
-					}
-				}
-				
-				// Remove recount view if the user not have root agency privilege.
 				if (!isRootUser()) {
+					TreeContextMenuMgr.getInstance().editEnable = false;
+					treeControlBar.visible = treeControlBar.includeInLayout = false;
 					mainViewStack.removeChild(systemManagerView);
-//					mainViewStack.removeChild(remindconfigView);
-//					mainViewStack.removeChild(remindLockView);
 					mainViewStack.removeChild(statView);
 				}
 				
-				if (orgView && model.focusAgencyVo) {
-					orgView.editEnable = (parseFloat(model.loginUser.privilege) == model.focusAgencyVo.id );
-					if (model.isLeafUser && model.loginUser.enableReport != 1) orgView.editEnable = false;
-				}
+				
+				setOrgViewEdit();
 				initRoles();
 			}
 			
@@ -138,6 +125,22 @@
 						unExpandTree();
 					}
 				}
+			}
+			
+			private function setOrgViewEdit():void {
+				// 判断是否可以填写组织管理
+				if (orgView && model.focusAgencyVo) {
+					
+					// 1. 可以填写本支部的组织管理					
+					orgView.editEnable = (parseFloat(model.loginUser.privilege) == model.focusAgencyVo.id );
+					
+					// 2. 只有上报权才可填写:
+					if (model.isLeafUser) {
+						if (UserUtil.checkRole(2, model.loginUser.roles) == false) {
+							orgView.editEnable = false;
+						}
+					}
+				}				
 			}
 			
 			private function isRootUser():Boolean {
@@ -195,10 +198,8 @@
 					}
 				}
 				
-				if (orgView && model.focusAgencyVo) {
-					orgView.editEnable = (parseFloat(model.loginUser.privilege) == model.focusAgencyVo.id );
-					if (model.isLeafUser && model.loginUser.enableReport != 1) orgView.editEnable = false;	
-				}
+				setOrgViewEdit();			
+				
 			}
 			
 			private function viewStackChange(event:Event) {

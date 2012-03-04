@@ -214,8 +214,8 @@
 										   itemRenderer="mx.controls.Label" textAlign="left"/>
 				<mx:AdvancedDataGridColumn headerText="状态" dataField="status" 
 										   labelFunction="{LblFunctionHelper.userStatusLblFunc}"/>
-				<mx:AdvancedDataGridColumn headerText="权限"
-										   labelFunction="{LblFunctionHelper.userPrivilegeLblFunc}"/>
+				<!--<mx:AdvancedDataGridColumn headerText="权限"
+										   labelFunction="{LblFunctionHelper.userPrivilegeLblFunc}"/>-->
 				<mx:AdvancedDataGridColumn headerText="最近登录时间" dataField="lastLoginTime" textAlign="left"/>
 			</mx:columns>
 		</mx:AdvancedDataGrid>
