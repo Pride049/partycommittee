@@ -13,6 +13,7 @@
 			import com.partycommittee.model.ModelLocator;
 			import com.partycommittee.util.DataproviderFactory;
 			import com.partycommittee.util.LblFunctionHelper;
+			import com.partycommittee.util.UserUtil;
 			import com.partycommittee.util.WorkPlanCodeUtil;
 			import com.partycommittee.vo.PcAgencyVo;
 			import com.partycommittee.vo.PcMeetingVo;
@@ -109,7 +110,7 @@
 				win.meetingType = type;
 				win.parentView = this;
 				win.detailMode = true;
-				if (model.loginUser.enableReport == 1) {
+				if (UserUtil.checkRole(2, model.loginUser.roles) == true) {
 					win.detailMode = false;
 				} 				
 				PopupMgr.instance.popupWindow(win);
@@ -182,8 +183,9 @@
 									horizontalScrollPolicy="off" verticalScrollPolicy="off">
 								<fx:Script>
 									<![CDATA[
-										import com.partycommittee.vo.PcMeetingVo;
 										import com.partycommittee.model.ModelLocator;
+										import com.partycommittee.util.UserUtil;
+										import com.partycommittee.vo.PcMeetingVo;
 										protected function editBtnClick():void {
 											outerDocument.editMeeting(data as PcMeetingVo);
 										}
@@ -193,7 +195,7 @@
 												
 												return '查看';
 											} else {
-												if (ModelLocator.getInstance().loginUser.enableReport == 1) {
+												if (UserUtil.checkRole(2, ModelLocator.getInstance().loginUser.roles) == true) {
 													if (item && (item as PcMeetingVo).id ==0 ) {
 														return '填报';
 													} else {

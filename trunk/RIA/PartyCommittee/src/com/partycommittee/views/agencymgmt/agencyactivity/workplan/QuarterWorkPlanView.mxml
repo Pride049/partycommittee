@@ -493,8 +493,8 @@
 									  includeInLayout="{!detailMode}"/>
 					<mx:Label id="remindTxt" text="" visible="false" includeInLayout="{!detailMode}"/>
 					<button:PcButton label="关闭" click="close()"/>
-					<button:PcButton label="查看驳回原因" id="btn_return" click="onGetReturnInfo()"
-									 visible="{workPlan &amp;&amp; workPlan.statusId == 2}"/>
+					<button:PcButton label="查看驳回原因" id="btn_return" click="onGetReturnInfo()" includeInLayout="{!detailMode}"
+									 visible="{workPlan &amp;&amp; workPlan.statusId == 2}" />
 				</mx:ControlBar>
 			</mx:VBox>
 	

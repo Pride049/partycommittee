@@ -189,18 +189,30 @@
 									horizontalScrollPolicy="off" verticalScrollPolicy="off">
 								<fx:Script>
 									<![CDATA[
+										import com.partycommittee.model.ModelLocator;
 										import com.partycommittee.util.LblFunctionHelper;
+										import com.partycommittee.util.UserUtil;
 										import com.partycommittee.vo.PcWorkPlanVo;
 
 										protected function actionClick():void {
 											outerDocument.evaluateWorkPlan(data as PcWorkPlanVo);
 										}
 										
-										protected function formatActionButtonLabel(item:Object):String {											
-											if (item && (item as PcWorkPlanVo).statusId >= 4  ) {
-												return '查看';
+										protected function formatActionButtonLabel(item:Object):String {
+											
+											if (item && (item as PcWorkPlanVo).statusId == 3  ) {
+												if (UserUtil.checkRole(3, ModelLocator.getInstance().loginUser.roles) == true) {
+													return '评语';
+												}
 											}
-											return '审核';
+											
+											if (item && (item as PcWorkPlanVo).statusId == 4  ) {
+												if (UserUtil.checkRole(4, ModelLocator.getInstance().loginUser.roles) == true) {
+													return '评价';
+												}
+											}
+											return '查看';
+											
 										}
 										
 																				

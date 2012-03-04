@@ -60,7 +60,6 @@
 				emailTxt.text = this._userVo.email;
 				telTxt.text = this._userVo.phone;
 				commentTxt.text = this._userVo.description;
-				enableReportCk.selected = (this._userVo.enableReport == 1);
 				
 				if (this._userVo.privilege) {
 					privilegeView.agencyIdArry = this._userVo.privilege.split(",");
@@ -152,7 +151,6 @@
 					newUser.password = passwordTxt.text;
 				}
 				newUser.description = commentTxt.text;
-				newUser.enableReport = enableReportCk.selected ? 1 : 0;
 				newUser.privilege = privilegeView.agencyIdArry.join(",");
 				
 				
@@ -233,13 +231,10 @@
 		<mx:VBox height="100%" width="100%"
 				 horizontalAlign="center" verticalAlign="middle"
 				 horizontalScrollPolicy="off" verticalScrollPolicy="off">
-			<mx:Form width="450" height="100%" labelWidth="60"
+			<mx:Form width="600" height="100%" labelWidth="60"
 					 minWidth="200">
 				<mx:FormItem label="启用:" width="100%">
 					<mx:CheckBox id="statucCk" selected="true"/>
-				</mx:FormItem>
-				<mx:FormItem label="可填报:" width="100%">
-					<mx:CheckBox id="enableReportCk"/>
 				</mx:FormItem>
 				<mx:FormItem label="用户名:" width="100%">
 					<mx:TextInput id="usernameTxt" width="100%"/>
