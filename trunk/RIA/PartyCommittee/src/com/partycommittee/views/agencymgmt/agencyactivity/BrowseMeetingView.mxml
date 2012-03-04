@@ -170,6 +170,8 @@
 				<mx:AdvancedDataGridColumn headerText="年度" dataField="year"/>
 				<mx:AdvancedDataGridColumn headerText="季度" dataField="quarter"
 										   labelFunction="quarterLblFunc"/>
+				<mx:AdvancedDataGridColumn headerText="月份" dataField="month"
+										   />
 				<mx:AdvancedDataGridColumn headerText="操作">
 					<mx:itemRenderer>
 						<fx:Component>

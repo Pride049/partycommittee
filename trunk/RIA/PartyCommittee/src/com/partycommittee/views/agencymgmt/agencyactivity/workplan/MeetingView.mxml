@@ -398,9 +398,9 @@
 				newMeeting.year = dateField.selectedDate.getFullYear();
 				newMeeting.quarter = getQuarter(dateField.selectedDate.month + 1);
 				newMeeting.month = 0;
-				if (meetingType == PCConst.WORKPLAN_TYPE_MEETING_BRANCH_COMMITTEE) {
+				//if (meetingType == PCConst.WORKPLAN_TYPE_MEETING_BRANCH_COMMITTEE) {
 					newMeeting.month = dateField.selectedDate.month + 1;
-				}
+				//}
 				newMeeting.agencyId = agency.id;
 				newMeeting.moderator = moderatorTxt.text;
 				newMeeting.theme = themeTxt.text;
@@ -430,9 +430,9 @@
 				meeting.year = dateField.selectedDate.getFullYear();
 				meeting.quarter = getQuarter(dateField.selectedDate.month + 1);
 				meeting.month = 0;
-				if (meetingType == PCConst.WORKPLAN_TYPE_MEETING_BRANCH_COMMITTEE) {
+				//if (meetingType == PCConst.WORKPLAN_TYPE_MEETING_BRANCH_COMMITTEE) {
 					meeting.month = dateField.selectedDate.month + 1;
-				}
+				//}
 				meeting.theme = themeTxt.text;
 				meeting.moderator = moderatorTxt.text;
 				meeting.attend = Number(attendTxt.text);

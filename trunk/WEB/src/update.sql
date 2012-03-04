@@ -8,6 +8,8 @@ update `pc_meeting` set `status_id` = 3 where `status_id` = 2
 update `pc_workplan_content` set type = 3 where type = 2;
 update `pc_meeting_content` set type = 3 where type = 2;
 
+update pc_meeting set month = month(meeting_datetime);
+
 ALTER TABLE  `pc_meeting_content` CHANGE  `updatetime`  `updatetime` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT  '时间'
 
 ALTER TABLE  `pc_agency` ADD INDEX (  `code_id` ) ;
