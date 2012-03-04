@@ -24,28 +24,37 @@ public class PcRemindDaoImpl extends JpaDaoBase implements PcRemindDao {
 				return null;
 			}
 			EntityManager em = super.getEntityManager();
+			
+			Query sql1 = em.createQuery("select code from PcAgency where id = " + id);
+			List<String> rs = sql1.getResultList();
+			String code = rs.get(0);
 			// 获取直属党支部
-			Query query=em.createQuery("from PcRemind where parent_id = " + id + " AND year = " + year + " and quarter = " + q + " AND type_id = " + tid + " AND status <= 1 Order by agency_id ASC ");
+			Query query=em.createQuery("from PcRemind where code like '"+code+"%' AND year = " + year + " and quarter = " + q + " AND type_id = " + tid + " AND status <= 1 Order by agency_id ASC ");
 			List<PcRemind> list =  query.getResultList();
 			
-			// 获取下级党委或党总支下属党支部:
-			Query sql = em.createQuery("SELECT id FROM PcAgency WHERE id in (SELECT agencyId FROM PcAgencyRelation WHERE parent_id = " + id + "  ) AND code_id in (7,8)" );
-			List<Integer> rs = sql.getResultList();
 			
-			if (rs.size() > 0) {
-				String ids = "";
-				for (Integer idItem : rs) {
-					if (ids.equals("")) {
-						ids = idItem + "";
-					} else {
-						ids += "," + idItem;
-					}
-				}
-
-				Query query1=em.createQuery("from PcRemind where   parent_id in (" + ids + ") AND year = " + year + " and quarter = " + q + " AND type_id = " + tid + " AND status<=1 Order by agency_id ASC ");
-				List<PcRemind> list1 = query1.getResultList();
-				list.addAll(list1);
-			}			
+//			// 获取直属党支部
+//			Query query=em.createQuery("from PcRemind where parent_id = " + id + " AND year = " + year + " and quarter = " + q + " AND type_id = " + tid + " AND status <= 1 Order by agency_id ASC ");
+//			List<PcRemind> list =  query.getResultList();
+//			
+//			// 获取下级党委或党总支下属党支部:
+//			Query sql = em.createQuery("SELECT id FROM PcAgency WHERE id in (SELECT agencyId FROM PcAgencyRelation WHERE parent_id = " + id + "  ) AND code_id in (7,8)" );
+//			List<Integer> rs = sql.getResultList();
+//			
+//			if (rs.size() > 0) {
+//				String ids = "";
+//				for (Integer idItem : rs) {
+//					if (ids.equals("")) {
+//						ids = idItem + "";
+//					} else {
+//						ids += "," + idItem;
+//					}
+//				}
+//
+//				Query query1=em.createQuery("from PcRemind where   parent_id in (" + ids + ") AND year = " + year + " and quarter = " + q + " AND type_id = " + tid + " AND status<=1 Order by agency_id ASC ");
+//				List<PcRemind> list1 = query1.getResultList();
+//				list.addAll(list1);
+//			}			
 			
 			return list;
 //			return super.find("from PcRemind where parent_id = " + id + " AND year = " + year + " and quarter = " + q + " AND type_id = " + tid + " AND status <= 1 Order by agency_id ASC ");
@@ -64,27 +73,30 @@ public class PcRemindDaoImpl extends JpaDaoBase implements PcRemindDao {
 			}
 			EntityManager em = super.getEntityManager();
 			
+			Query sql1 = em.createQuery("select code from PcAgency where id = " + id);
+			List<String> rs = sql1.getResultList();
+			String code = rs.get(0);
 			// 获取直属党支部
-			Query query=em.createQuery("from PcRemind where   parent_id = " + id + " AND year = " + year + " and quarter = " + q + " AND type_id = " + tid + " AND status = " + sid + " Order by agency_id ASC ");
+			Query query=em.createQuery("from PcRemind where code like '"+code+"%' AND year = " + year + " and quarter = " + q + " AND type_id = " + tid + " AND status = " + sid + " Order by agency_id ASC ");
 			List<PcRemind> list =  query.getResultList();
-			// 获取下级党委或党总支下属党支部:
-			Query sql = em.createQuery("SELECT id FROM PcAgency WHERE id in (SELECT agencyId FROM PcAgencyRelation WHERE parent_id = " + id + "  ) AND code_id in (7,8)" );
-			List<Integer> rs = sql.getResultList();
-			
-			if (rs.size() > 0) {
-				String ids = "";
-				for (Integer idItem : rs) {
-					if (ids.equals("")) {
-						ids = idItem + "";
-					} else {
-						ids += "," + idItem;
-					}
-				}
-
-				Query query1=em.createQuery("from PcRemind where   parent_id in (" + ids + ") AND year = " + year + " and quarter = " + q + " AND type_id = " + tid + " AND status = " + sid + " Order by agency_id ASC ");
-				List<PcRemind> list1 = query1.getResultList();
-				list.addAll(list1);
-			}
+//			// 获取下级党委或党总支下属党支部:
+//			Query sql = em.createQuery("SELECT id FROM PcAgency WHERE id in (SELECT agencyId FROM PcAgencyRelation WHERE parent_id = " + id + "  ) AND code_id in (7,8)" );
+//			List<Integer> rs = sql.getResultList();
+//			
+//			if (rs.size() > 0) {
+//				String ids = "";
+//				for (Integer idItem : rs) {
+//					if (ids.equals("")) {
+//						ids = idItem + "";
+//					} else {
+//						ids += "," + idItem;
+//					}
+//				}
+//
+//				Query query1=em.createQuery("from PcRemind where   parent_id in (" + ids + ") AND year = " + year + " and quarter = " + q + " AND type_id = " + tid + " AND status = " + sid + " Order by agency_id ASC ");
+//				List<PcRemind> list1 = query1.getResultList();
+//				list.addAll(list1);
+//			}
 
 			return list;
 		} catch (Exception e) {

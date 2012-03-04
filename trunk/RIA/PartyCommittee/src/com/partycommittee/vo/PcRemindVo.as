@@ -13,6 +13,7 @@ package com.partycommittee.vo
 		public var quarter:Number;
 		public var statusId:Number;
 		public var name:String;
+		public var parentName:String;
 		public var parentId:Number;
 		public var codeId:Number;
 		public var ext:String;		

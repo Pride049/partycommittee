@@ -1,4 +1,16 @@
-﻿ALTER TABLE  `pc_agency` ADD INDEX (  `code_id` ) ;
+﻿statusId == 2 改为 statusId == 3
+
+update `pc_workplan` set `status_id` = 4 where `status_id` = 3
+update `pc_workplan` set `status_id` = 3 where `status_id` = 2
+update `pc_meeting` set `status_id` = 4 where `status_id` = 3
+update `pc_meeting` set `status_id` = 3 where `status_id` = 2
+
+update `pc_workplan_content` set type = 3 where type = 2;
+update `pc_meeting_content` set type = 3 where type = 2;
+
+ALTER TABLE  `pc_meeting_content` CHANGE  `updatetime`  `updatetime` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT  '时间'
+
+ALTER TABLE  `pc_agency` ADD INDEX (  `code_id` ) ;
 
 ALTER TABLE  `pc_agency_relation` ADD INDEX (  `agency_id` ) ;
 ALTER TABLE  `pc_agency_relation` ADD INDEX (  `parent_id` ) ;
@@ -7,6 +19,16 @@ ALTER TABLE  `pc_workplan` ADD INDEX (  `agency_id` ,  `type_id` ,  `year` ,  `q
 ALTER TABLE  `pc_meeting` ADD INDEX (  `agency_id` ,  `year` ,  `quarter` ,  `type_id` ) ;
 
 ALTER TABLE  `pc_member` ADD INDEX (  `agency_id` ,  `post_id` ) ;
+
+UPDATE  `partycommittee`.`pc_agency` SET  `code_id` =  '8' WHERE  `pc_agency`.`id` =244;
+
+浏览权，上报权，评语权，评价权、驳回权
+
+browse
+report
+evaluate
+rate
+return
 
 
 设置my.ini
@@ -86,6 +108,7 @@ CREATE TABLE IF NOT EXISTS `pc_remind_lock` (
   `agency_id` int(11) unsigned NOT NULL COMMENT '党支部ID',
   `name` varchar(255) NOT NULL COMMENT '党支部名称',
   `code_id` int(11) NOT NULL DEFAULT '0' COMMENT '党支部类型',
+  `code` varchar(20) NOT NULL,
   `parent_id` int(11) unsigned NOT NULL COMMENT '上级党支部ID',
   `year` year(4) NOT NULL COMMENT '年度',
   `quarter` tinyint(1) unsigned NOT NULL COMMENT '季度',
@@ -96,7 +119,7 @@ CREATE TABLE IF NOT EXISTS `pc_remind_lock` (
   `ext` varchar(255) DEFAULT 'beijing' COMMENT 'saas扩展字段',
   PRIMARY KEY (`id`),
   UNIQUE KEY `agency_id` (`agency_id`,`code_id`,`parent_id`,`year`,`quarter`,`month`,`type_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='党支部提醒统计表' AUTO_INCREMENT=12326 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='党支部提醒统计表' AUTO_INCREMENT=1 ;
 
 
 DROP TABLE IF EXISTS `pc_remind`;
@@ -107,6 +130,7 @@ CREATE TABLE IF NOT EXISTS `pc_remind` (
   `code_id` int(11) NOT NULL DEFAULT '0' COMMENT '党支部类型',
   `code` varchar(20) NOT NULL,
   `parent_id` int(11) unsigned NOT NULL COMMENT '上级党支部ID',
+  `parent_name` varchar(255) NOT NULL,
   `year` year(4) NOT NULL COMMENT '年度',
   `quarter` tinyint(1) unsigned NOT NULL COMMENT '季度',
   `type_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '年度计划状态',
@@ -135,8 +159,35 @@ CREATE TABLE IF NOT EXISTS `pc_remind_stat` (
   UNIQUE KEY `agency_id` (`agency_id`,`code_id`,`parent_id`,`year`,`quarter`,`type_id`,`status`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='党支部提醒统计表' AUTO_INCREMENT=1 ;
 
+--
+-- 表的结构 `pc_roles`
+--
+
+DROP TABLE IF EXISTS `pc_roles`;
+CREATE TABLE IF NOT EXISTS `pc_roles` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `role` varchar(20) NOT NULL COMMENT '权限',
+  `name` varchar(20) NOT NULL COMMENT '说明',
+  `enable` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '是否可用 1=可以 0=停用',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+--
+-- 转存表中的数据 `pc_roles`
+--
+
+INSERT INTO `pc_roles` (`id`, `role`, `name`, `enable`) VALUES
+(1, 'browse', '浏览权', 1),
+(2, 'report', '上报权', 1),
+(3, 'evaluate', '评语权', 1),
+(4, 'rate', '评价权', 1),
+(5, 'return', '驳回权', 1),
+(6, 'delete', '删除', 1);
 
 
+
+
+导出党员花名册
 
 SELECT T2.p_name as '最上级党委',T2.parent_name as '上级党委', T2.name as '支部名称', T2.code as  '党支部代码',T1.name  as '姓名', T3.description as '性别', T4.description as '民族',
 DATE_FORMAT( T1.birthday,  '%Y-%m-%d' )  as '出生日期', DATE_FORMAT( T1.workday,  '%Y-%m-%d' )  as '参加工作年月',  DATE_FORMAT( T1.joinday,  '%Y-%m-%d' ) as '入党时间',
@@ -159,46 +210,8 @@ order by T2.p_id, T2.parent_id, T2.id asc
 
 
 
-验证:
 
-  党支部数：  SELECT count(*) FROM `pc_agency` WHERE id in (select agency_id from pc_agency_relation where parent_id = 2)
-  党小组树:   SELECT SUM(p_count) FROM `pc_agency` WHERE id in (select agency_id from pc_agency_relation where parent_id = 2) 
-  党员总数:   SELECT SUM(zb_num) FROM `pc_agency` WHERE id in (select agency_id from pc_agency_relation where parent_id = 2) 
-支部书记数:   SELECT count(*) FROM `pc_member` WHERE agency_id in (select agency_id from pc_agency_relation where parent_id = 2)  and duty_id = 1
-
-  支委会
-  出勤率  :   SELECT (SUM(attend) - SUM(asence) ) / SUM(attend) FROM `pc_meeting` WHERE agency_id in (select agency_id from pc_agency_relation where parent_id = 2) and status_id >=2
-truncate pc_agency_stat;
-truncate pc_parent_stat;
-truncate pc_remind;
-truncate pc_remind_stat;
-truncate pc_remind_lock;
-
-
-
-根据ID查找下属所有的党支部
-
-	SELECT distinct id FROM (
-		SELECT id FROM pc_agency  WHERE id IN ( SELECT agency_id FROM pc_agency_relation WHERE parent_id =82 ) AND code_id =10
-		UNION ALL 
-		SELECT agency_id AS id FROM pc_agency_relation WHERE parent_id IN ( SELECT agency_id FROM pc_agency_relation WHERE parent_id =82 )
-	) AS a
-
-
-
-	
-	
-
-查找二级党委:
-
-select agency_id,parent_id from pc_agency_relation  where parent_id in (select id from `pc_agency` where code_id = 7)
-
-
-select * from (select * from pc_agency where id in
-(select agency_id,parent_id from pc_agency_relation  where parent_id in (select id from `pc_agency` where code_id = 7)  ) ) as a 
-where code_id = 7
-
-
+检查及更新code
 
 delimiter //
 DROP procedure IF EXISTS update_agency_code//
@@ -259,6 +272,7 @@ delimiter ;
 
 
 
+检查code
 
 delimiter //
 DROP procedure IF EXISTS check_agency_code//
@@ -314,3 +328,71 @@ delimiter ;
 
 
 
+插入用户权限:
+
+
+delimiter //
+DROP procedure IF EXISTS update_user_role//
+CREATE PROCEDURE update_user_role()
+begin
+	DECLARE done int default 0;
+	DECLARE userId int(11) unsigned;
+	DECLARE agencyId int(11) unsigned;
+	DECLARE c_report tinyint(2) unsigned;
+	DECLARE c_code_id int(11) unsigned;	
+	DECLARE c_code VARCHAR(20);
+	
+	DECLARE rows int default 0;
+	DECLARE row int default 0;
+	DECLARE i int;
+	
+  DECLARE s_cursor CURSOR FOR SELECT id, privilege, enable_report from pc_user order by id asc;
+	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done=1;
+
+  open s_cursor; 
+  SELECT FOUND_ROWS() into rows;
+  SELECT rows;
+  SET row = 0;
+	cursor_loop:loop
+			FETCH s_cursor into userId, agencyId, c_report;
+				
+				
+			IF row >= rows then
+				leave cursor_loop;
+			end if;
+				
+				
+				SELECT code, code_id into c_code, c_code_id FROM pc_agency where id = agencyId;
+				
+				SELECT userId, agencyId,c_report, c_code_id;
+				
+				INSERT INTO pc_user_role VALUES (0, userId, 1);
+				
+				IF (c_code_id = 10 AND c_report = 1) THEN
+						INSERT INTO pc_user_role VALUES (0, userId, 2);
+				END IF;
+				
+				IF c_code_id = 6 THEN
+					INSERT INTO pc_user_role VALUES (0, userId, 1);
+					INSERT INTO pc_user_role VALUES (0, userId, 3);
+					INSERT INTO pc_user_role VALUES (0, userId, 4);
+					INSERT INTO pc_user_role VALUES (0, userId, 5);
+					INSERT INTO pc_user_role VALUES (0, userId, 6);
+				END IF;				
+				
+				IF c_code_id = 7 THEN
+						INSERT INTO pc_user_role VALUES (0, userId, 3);
+						INSERT INTO pc_user_role VALUES (0, userId, 4);					
+				END IF;
+								
+				IF (c_code_id = 8 OR c_code_id = 15) THEN
+						INSERT INTO pc_user_role VALUES (0, userId, 3);				
+				END IF;
+			SET row = row + 1;
+	end loop cursor_loop;
+	close s_cursor;
+	
+	
+end;
+//
+delimiter ;

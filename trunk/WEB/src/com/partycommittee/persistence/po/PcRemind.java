@@ -29,6 +29,8 @@ public class PcRemind implements Serializable {
 	private String name;
 
 	private Integer parentId;
+	
+	private String parentName;
 
 	private Integer quarter;
 
@@ -96,6 +98,16 @@ public class PcRemind implements Serializable {
 	public void setParentId(Integer parentId) {
 		this.parentId = parentId;
 	}
+	
+	@Column(name = "parent_name")
+	public String getParentName() {
+		return parentName;
+	}
+
+	public void setParentName(String parentName) {
+		this.parentName = parentName;
+	}
+	
 
 	@Column(name = "quarter")
 	public Integer getQuarter() {
