@@ -15,7 +15,6 @@ package com.partycommittee.events
 		public static const LOGOUT:String = "logout";
 		public static const GET_SESSION:String = "getSession";
 		public static const GET_ROLES:String = "getRoles";
-		public static const GET_USER_ROLE:String = "getUserole";
 		
 		private var _user:PcUserVo;
 		public function set user(value:PcUserVo):void {

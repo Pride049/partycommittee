@@ -63,9 +63,6 @@ package com.partycommittee.commands
 				case PcUserEvent.GET_ROLES:
 					pcUserProxy.getRoleList();
 					break;
-				case PcUserEvent.GET_USER_ROLE:
-					pcUserProxy.getRolesByUserId(model.loginUser.id);
-					break;
 				default :
 					break;
 			}

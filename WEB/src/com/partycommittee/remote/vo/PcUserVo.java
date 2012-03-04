@@ -22,7 +22,17 @@ public class PcUserVo implements Serializable {
 	private Integer agencyCodeId;
 	
 	private List<PcAgencyVo> agencyList;
+	private List<Integer> roles;
 	
+	
+	public List<Integer> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(List<Integer> roles) {
+		this.roles = roles;
+	}
+
 	public List<PcAgencyVo> getAgencyList() {
 		return agencyList;
 	}
