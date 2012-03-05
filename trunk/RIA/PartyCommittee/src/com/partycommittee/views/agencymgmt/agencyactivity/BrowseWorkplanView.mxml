@@ -79,10 +79,10 @@
 					getCommitWorkPlan();
 					return;
 				}
-				var pcAgencyEvt:PcAgencyEvent = new PcAgencyEvent(PcAgencyEvent.GET_CHILDREN, agency);
-				pcAgencyEvt.successCallback = onGetChildrenSuccess;
-				pcAgencyEvt.failureCallback = onGetChildrenFailure;
-				pcAgencyEvt.dispatch();
+//				var pcAgencyEvt:PcAgencyEvent = new PcAgencyEvent(PcAgencyEvent.GET_CHILDREN, agency);
+//				pcAgencyEvt.successCallback = onGetChildrenSuccess;
+//				pcAgencyEvt.failureCallback = onGetChildrenFailure;
+//				pcAgencyEvt.dispatch();
 			}
 			
 			private function onGetChildrenSuccess(data:Object, evt:PcAgencyEvent):void {
