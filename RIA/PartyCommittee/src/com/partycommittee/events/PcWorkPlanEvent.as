@@ -20,6 +20,7 @@ package com.partycommittee.events
 		
 		public static const GET_ALERT_INFO:String = "getAlertInfo";
 		public static const GET_CONTENT_INFO:String = "getContentInfo";
+		public static const DELETE_WORKPLAN:String = "deleteWorkPlan";
 		
 		
 		private var _agency:PcAgencyVo;

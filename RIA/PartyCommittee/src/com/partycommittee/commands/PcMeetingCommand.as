@@ -51,7 +51,10 @@ package com.partycommittee.commands
 					break;
 				case PcMeetingEvent.RETURN_MEETING:
 					proxy.updateMeetingStatus(pcMeetingEvt.meeting.id, pcMeetingEvt.meeting.statusId);
-					break;				
+					break;	
+				case PcMeetingEvent.DELETE_MEETING:
+					proxy.deleteMeeting(pcMeetingEvt.meeting.id);
+					break;						
 				default :
 					break;
 			}

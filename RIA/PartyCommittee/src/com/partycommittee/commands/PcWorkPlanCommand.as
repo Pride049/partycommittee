@@ -59,7 +59,10 @@ package com.partycommittee.commands
 					break;
 				case PcWorkPlanEvent.RETURN_WORKPLAN:
 					proxy.updateWorkPlanStatus(pcWorkPlanEvt.workPlan.id, pcWorkPlanEvt.workPlan.statusId);
-					break;			
+					break;	
+				case PcWorkPlanEvent.DELETE_WORKPLAN:
+					proxy.deleteWorkPlan(pcWorkPlanEvt.workPlan.id);
+					break;					
 				default :
 					break;
 			}

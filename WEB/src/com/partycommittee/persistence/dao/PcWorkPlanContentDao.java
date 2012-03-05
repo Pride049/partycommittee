@@ -12,4 +12,6 @@ public interface PcWorkPlanContentDao {
 
 	PcWorkPlanContent getContentByWorkPlanIdAndType(Integer workPlanId, int i);
 	
+	public void deleteWorkPlanContentByWorkPlanId(Integer workPlanId); 
+
 }

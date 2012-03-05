@@ -11,6 +11,7 @@ import org.springframework.orm.jpa.JpaCallback;
 import org.springframework.stereotype.Repository;
 
 import com.partycommittee.persistence.dao.PcWorkPlanDao;
+import com.partycommittee.persistence.po.PcAgency;
 import com.partycommittee.persistence.po.PcWorkPlan;
 
 @Repository("PcWorkPlanDaoImpl")
@@ -190,5 +191,14 @@ public class PcWorkPlanDaoImpl extends JpaDaoBase implements PcWorkPlanDao {
 		}
 		return null;
 	}
+	
+	@Override
+	public void deleteWorkPlan(Integer workPlanId) {
+		try {
+			super.removeFromKey(PcWorkPlan.class, workPlanId);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}	
 
 }

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import com.partycommittee.persistence.dao.PcMeetingDao;
 import com.partycommittee.persistence.po.PcMeeting;
+import com.partycommittee.persistence.po.PcWorkPlan;
 
 @Repository("PcMeetingDaoImpl")
 public class PcMeetingDaoImpl extends JpaDaoBase implements PcMeetingDao {
@@ -127,5 +128,13 @@ public class PcMeetingDaoImpl extends JpaDaoBase implements PcMeetingDao {
 		}
 		return null;
 	}
+
+	public void deleteMeeting(Integer meetingId) {
+		try {
+			super.removeFromKey(PcMeeting.class, meetingId);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}	
 
 }

@@ -56,6 +56,10 @@ package com.partycommittee.proxy
 		
 		public function updateMeetingStatus(meetingId:Number, statusId:Number):void {
 			service.updateMeetingStatus(meetingId, statusId);
+		}	
+		
+		public function deleteMeeting(meetingId:Number):void {
+			service.deleteMeeting(meetingId);
 		}		
 		
 	}

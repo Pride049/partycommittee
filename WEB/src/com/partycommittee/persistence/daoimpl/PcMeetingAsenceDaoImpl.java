@@ -2,6 +2,10 @@ package com.partycommittee.persistence.daoimpl;
 
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceException;
+
+import org.springframework.orm.jpa.JpaCallback;
 import org.springframework.stereotype.Repository;
 
 import com.partycommittee.persistence.dao.PcMeetingAsenceDao;
@@ -60,5 +64,19 @@ public class PcMeetingAsenceDaoImpl extends JpaDaoBase implements PcMeetingAsenc
 			e.printStackTrace();
 		}
 	}
+	
+	public void deleteMeetingAsenceByMeetingId(Integer meetingId) {
+		try {
+			final String sql = "delete from PcMeetingAsence  where meetingId = " + meetingId;
+			this.getJpaTemplate().execute(new JpaCallback<Object>(){
+				public Object doInJpa(EntityManager em)throws PersistenceException {
+					int size = em.createQuery(sql).executeUpdate();
+					return size;
+				}
+	 		 });
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}	
 
 }
