@@ -33,7 +33,7 @@ public class PcAgencyDaoImpl extends JpaDaoBase implements PcAgencyDao {
 		}
 		return null;
 	}
-
+	
 	@Override
 	public void createAgency(PcAgency agency) {
 		try {
@@ -77,6 +77,17 @@ public class PcAgencyDaoImpl extends JpaDaoBase implements PcAgencyDao {
 		}
 		return null;
 	}
+	
+	public List<PcAgency> getChildrenAgencyByCode(String code) {
+		try {
+			Integer childCodeLen = code.length() + 2;
+			return  super.find("from PcAgency where code like '" + code + "%' and length(code) = " + childCodeLen);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return null;
+	}	
+	
 	
 	@SuppressWarnings("unchecked")
 	@Override

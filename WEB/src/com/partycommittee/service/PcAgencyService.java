@@ -58,6 +58,16 @@ public class PcAgencyService {
 		return list;
 	}
 	
+	public List<PcAgencyVo> getChildrenAgencyListByCode(int agencyId) {
+		List<PcAgencyVo> list = new ArrayList<PcAgencyVo>();
+		PcAgency agency =  pcAgencyDaoImpl.getAgencyById(agencyId);
+		List<PcAgency> agencyList = pcAgencyDaoImpl.getChildrenAgencyByCode(agency.getCode());
+		for (PcAgency item : agencyList) {
+			list.add(PcAgencyVo.fromPcAgency(item));
+		}
+		return list;
+	}	
+	
 	public PcAgencyVo getAgencyById(int agencyId) {
 		PcAgency agency = pcAgencyDaoImpl.getAgencyById(agencyId);
 		if (agency == null) {

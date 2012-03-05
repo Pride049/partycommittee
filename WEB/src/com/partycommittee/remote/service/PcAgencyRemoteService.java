@@ -85,18 +85,19 @@ public class PcAgencyRemoteService {
 	
 	@RemotingInclude
 	public List<PcAgencyVo> getChildren(int agencyId) {
-		List<PcAgencyVo> agencyList = new ArrayList<PcAgencyVo>();
-		List<PcAgencyRelationVo> relationList = pcAgencyRelationService.getChildrenByAgencyId(agencyId);
-		if (relationList != null && relationList.size() > 0) {
-			for (PcAgencyRelationVo pcAgencyRelationVo : relationList) {
-			 	PcAgencyVo agencyVo = pcAgencyService.getAgencyById(pcAgencyRelationVo.getAgencyId());
-			 	if (agencyVo != null) {
-			 		agencyVo.setParentId(pcAgencyRelationVo.getParentId());
-			 		agencyList.add(agencyVo);
-			 	}
-			}
-		}
-		return agencyList;
+//		List<PcAgencyVo> agencyList = new ArrayList<PcAgencyVo>();
+//		List<PcAgencyRelationVo> relationList = pcAgencyRelationService.getChildrenByAgencyId(agencyId);
+//		if (relationList != null && relationList.size() > 0) {
+//			for (PcAgencyRelationVo pcAgencyRelationVo : relationList) {
+//			 	PcAgencyVo agencyVo = pcAgencyService.getAgencyById(pcAgencyRelationVo.getAgencyId());
+//			 	if (agencyVo != null) {
+//			 		agencyVo.setParentId(pcAgencyRelationVo.getParentId());
+//			 		agencyList.add(agencyVo);
+//			 	}
+//			}
+//		}
+//		return agencyList;
+		return pcAgencyService.getChildrenAgencyListByCode(agencyId);
 	}
 	
 	@RemotingInclude
