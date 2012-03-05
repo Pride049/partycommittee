@@ -219,6 +219,16 @@ public class PcWorkPlanService {
 		workPlan.setStatusId(1);
 		pcWorkPlanDaoImpl.updateWorkPlan(PcWorkPlanVo.toPcWorkPlan(workPlan));
 	}
+	
+	public Boolean deleteWorkPlan(Integer workPlanId) {
+		try {
+			pcWorkPlanDaoImpl.deleteWorkPlan(workPlanId);
+			pcWorkPlanContentDaoImpl.deleteWorkPlanContentByWorkPlanId(workPlanId);
+		}catch (Exception e) {
+			return false;
+		}
+		return true;
+	}	
 
 	public PcWorkPlanContentVo getContentInfo(Integer workPlanId, Integer type) {
 		PcWorkPlanContent content = pcWorkPlanContentDaoImpl.getContentByWorkPlanIdAndType(workPlanId, type);

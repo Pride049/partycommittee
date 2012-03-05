@@ -14,6 +14,7 @@
 			import com.partycommittee.events.PcWorkPlanEvent;
 			import com.partycommittee.manager.popup.PopupMgr;
 			import com.partycommittee.model.ModelLocator;
+			import com.partycommittee.util.UserUtil;
 			import com.partycommittee.util.WorkPlanCodeUtil;
 			import com.partycommittee.views.agencymgmt.agencyactivity.workplan.QuarterWorkPlanView;
 			import com.partycommittee.views.agencymgmt.agencyactivity.workplan.WorkPlanHandlerView;
@@ -24,6 +25,7 @@
 			import mx.collections.ArrayCollection;
 			import mx.containers.Canvas;
 			import mx.controls.Alert;
+			import mx.events.CloseEvent;
 			import mx.events.PropertyChangeEvent;
 			
 			[Bindable]
@@ -150,6 +152,35 @@
 				PopupMgr.instance.popupWindow(win);
 			}
 			
+			public function deleteWorkPlan():void {
+				Alert.yesLabel = '确认';
+				Alert.noLabel = '取消';	
+				Alert.show('请确认是否要删除?', '',  Alert.YES | Alert.NO, this, onDeleteConfirm);
+			}			
+			
+			protected function onDeleteConfirm(event:CloseEvent):void {
+				if (event.detail == Alert.YES) {
+					var workPlanEvt:PcWorkPlanEvent = new PcWorkPlanEvent(PcWorkPlanEvent.DELETE_WORKPLAN);
+					workPlanEvt.workPlan = datagrid.selectedItem as PcWorkPlanVo;
+					workPlanEvt.successCallback = onDeleteWorkPlanSuccess;
+					workPlanEvt.failureCallback = onDeleteWorkPlanFailure;
+					this.enabled = false;
+					workPlanEvt.dispatch();
+				}
+			}
+			
+			private function onDeleteWorkPlanSuccess(data:Object, evt:PcWorkPlanEvent):void {
+				this.enabled = true;
+				Alert.show('删除成功');
+				this.refreshData();
+			}
+			
+			private function onDeleteWorkPlanFailure(info:Object, evt:PcWorkPlanEvent):void {
+				this.enabled = true;
+				Alert.show('删除失败');
+			}			
+			
+			
 			private function onItemDoubleClick():void {
 				
 				var vo:PcWorkPlanVo = datagrid.selectedItem as PcWorkPlanVo;
@@ -185,7 +216,7 @@
 				<mx:AdvancedDataGridColumn headerText="操作">
 					<mx:itemRenderer>
 						<fx:Component>
-							<mx:Box horizontalAlign="center" verticalAlign="middle"
+							<mx:HBox horizontalAlign="center" verticalAlign="middle"
 									horizontalScrollPolicy="off" verticalScrollPolicy="off">
 								<fx:Script>
 									<![CDATA[
@@ -219,10 +250,32 @@
 									]]>
 								</fx:Script>
 								<button:PcButton id="editBtn" label="{formatActionButtonLabel(data as PcWorkPlanVo)}" click="actionClick()"/>							
-							</mx:Box>
+								
+							</mx:HBox>
 						</fx:Component>
 					</mx:itemRenderer>
 				</mx:AdvancedDataGridColumn>
+				
+				<mx:AdvancedDataGridColumn headerText="" visible="{UserUtil.checkRole(6, ModelLocator.getInstance().loginUser.roles)}">
+					<mx:itemRenderer>
+						<fx:Component>
+							<mx:HBox horizontalAlign="center" verticalAlign="middle"
+									 horizontalScrollPolicy="off" verticalScrollPolicy="off">
+								<fx:Script>
+									<![CDATA[
+										import com.partycommittee.util.UserUtil;
+										import com.partycommittee.vo.PcWorkPlanVo;
+										
+										protected function deleteClick():void {
+											outerDocument.deleteWorkPlan();
+										}
+									]]>
+								</fx:Script>							
+								<button:PcButton id="deleteBtn" label="删除" click="deleteClick()"/>
+							</mx:HBox>
+						</fx:Component>
+					</mx:itemRenderer>
+				</mx:AdvancedDataGridColumn>				
 			</mx:columns>
 		</mx:AdvancedDataGrid>
 	</mx:VBox>

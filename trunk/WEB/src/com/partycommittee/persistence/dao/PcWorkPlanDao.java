@@ -20,4 +20,5 @@ public interface PcWorkPlanDao {
 	public PcWorkPlan getWorkPlanQuarterByTypeId(Integer agencyId,
 			Integer year, Integer quarter, Integer typeId);	
 
+	public void deleteWorkPlan(Integer workPlanId);
 }

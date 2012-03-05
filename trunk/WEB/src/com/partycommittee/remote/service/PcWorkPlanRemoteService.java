@@ -100,5 +100,10 @@ public class PcWorkPlanRemoteService {
 	public List<PcWorkPlanVo> getAlertInfo(Integer agencyId, Integer year, Integer quarter) {
 		return pcWorkPlanService.getAlertInfo(agencyId, year, quarter);
 	}
+	
+	@RemotingInclude
+	public Boolean deleteWorkPlan(Integer workPlanId) {
+		return pcWorkPlanService.deleteWorkPlan(workPlanId);
+	}	
 
 }

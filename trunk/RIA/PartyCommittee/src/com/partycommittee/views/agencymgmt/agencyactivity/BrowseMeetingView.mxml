@@ -13,6 +13,7 @@
 			import com.partycommittee.events.PcMeetingEvent;
 			import com.partycommittee.manager.popup.PopupMgr;
 			import com.partycommittee.model.ModelLocator;
+			import com.partycommittee.util.UserUtil;
 			import com.partycommittee.util.WorkPlanCodeUtil;
 			import com.partycommittee.views.agencymgmt.agencyactivity.workplan.MeetingHandlerView;
 			import com.partycommittee.vo.PcAgencyVo;
@@ -20,6 +21,7 @@
 			
 			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
+			import mx.events.CloseEvent;
 			import mx.events.PropertyChangeEvent;
 			
 			[Bindable]
@@ -140,7 +142,34 @@
 				PopupMgr.instance.popupWindow(win);
 			}
 			
-
+			public function deleteMeeting():void {
+				Alert.yesLabel = '确认';
+				Alert.noLabel = '取消';	
+				Alert.show('请确认是否要删除?', '',  Alert.YES | Alert.NO, this, onDeleteConfirm);
+			}			
+			
+			protected function onDeleteConfirm(event:CloseEvent):void {
+				if (event.detail == Alert.YES) {
+					var evt:PcMeetingEvent = new PcMeetingEvent(PcMeetingEvent.DELETE_MEETING);
+					evt.meeting = datagrid.selectedItem as PcMeetingVo;
+					evt.successCallback = onDeleteMeetingSuccess;
+					evt.failureCallback = onDeleteMeetingFailure;
+					this.enabled = false;
+					evt.dispatch();					
+					
+				}
+			}
+			
+			private function onDeleteMeetingSuccess(data:Object, evt:PcMeetingEvent):void {
+				this.enabled = true;
+				Alert.show('删除成功');
+				this.refreshData();
+			}
+			
+			private function onDeleteMeetingFailure(info:Object, evt:PcMeetingEvent):void {
+				this.enabled = true;
+				Alert.show('删除失败');
+			}	
 			
 			private function onItemDoubleClick():void {
 				if (datagrid.selectedItem) {
@@ -211,6 +240,27 @@
 						</fx:Component>
 					</mx:itemRenderer>
 				</mx:AdvancedDataGridColumn>
+				
+				<mx:AdvancedDataGridColumn headerText="" visible="{UserUtil.checkRole(6, ModelLocator.getInstance().loginUser.roles)}">
+					<mx:itemRenderer>
+						<fx:Component>
+							<mx:HBox horizontalAlign="center" verticalAlign="middle"
+									 horizontalScrollPolicy="off" verticalScrollPolicy="off">
+								<fx:Script>
+									<![CDATA[
+										import com.partycommittee.util.UserUtil;
+										import com.partycommittee.vo.PcMeetingVo;
+										
+										protected function deleteClick():void {
+											outerDocument.deleteMeeting();
+										}
+									]]>
+								</fx:Script>							
+								<button:PcButton id="deleteBtn" label="删除" click="deleteClick()"/>
+							</mx:HBox>
+						</fx:Component>
+					</mx:itemRenderer>
+				</mx:AdvancedDataGridColumn>					
 			</mx:columns>
 		</mx:AdvancedDataGrid>
 	</mx:VBox>

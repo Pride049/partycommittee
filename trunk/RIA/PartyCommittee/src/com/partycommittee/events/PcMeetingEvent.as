@@ -22,6 +22,7 @@ package com.partycommittee.events
 		
 		public static const GET_MEETING_COMMENT:String = "getMeetingComment";
 		public static const GET_ALERT_INFO:String = "getAlertInfo";
+		public static const DELETE_MEETING:String = "deleteMeeting";
 		
 		private var _agency:PcAgencyVo;
 

@@ -240,4 +240,11 @@ public class PcMeetingService {
 		}
 		return PcMeetingContentVo.fromPcMeetingContent(content);
 	}
+	
+	public Boolean deleteMeeting(Integer meetingId) {
+		pcMeetingDaoImpl.deleteMeeting(meetingId);
+		pcMeetingContentDaoImpl.deleteMeetingContentByMeetingId(meetingId);
+		pcMeetingAsenceDaoImpl.deleteMeetingAsenceByMeetingId(meetingId);
+		return true;
+	}		
 }

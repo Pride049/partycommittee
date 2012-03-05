@@ -76,4 +76,9 @@ public class PcMeetingRemoteService {
 	public PcMeetingContentVo getMeetingComment(PcMeetingVo meetingVo) {
 		return pcMeetingService.getMeetingComment(meetingVo);
 	}
+	
+	@RemotingInclude
+	public Boolean deleteMeeting(Integer meetingId) {
+		return pcMeetingService.deleteMeeting(meetingId);
+	}	
 }
