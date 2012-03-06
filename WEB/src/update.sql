@@ -10,19 +10,24 @@ update `pc_meeting_content` set type = 3 where type = 2;
 
 update pc_meeting set month = month(meeting_datetime);
 
-ALTER TABLE  `pc_meeting_content` CHANGE  `updatetime`  `updatetime` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT  '时间'
+
 
 ALTER TABLE  `pc_agency` ADD INDEX (  `code_id` ) ;
 
 ALTER TABLE  `pc_agency_relation` ADD INDEX (  `agency_id` ) ;
 ALTER TABLE  `pc_agency_relation` ADD INDEX (  `parent_id` ) ;
 
-ALTER TABLE  `pc_workplan` ADD INDEX (  `agency_id` ,  `type_id` ,  `year` ,  `quarter` ) ;
-ALTER TABLE  `pc_meeting` ADD INDEX (  `agency_id` ,  `year` ,  `quarter` ,  `type_id` ) ;
+ALTER TABLE  `pc_workplan` ADD INDEX (  `agency_id` ,  `type_id` ,  `year` ,  `quarter` ,  `status_id` ) ;
+ALTER TABLE  `pc_workplan_content` ADD INDEX (  `workplan_id` ,  `type` ) ;
+ALTER TABLE  `pc_meeting` ADD INDEX (  `agency_id` ,  `year` ,  `quarter` ,  `type_id`,  `status_id` ) ;
+ALTER TABLE  `pc_meeting_content` CHANGE  `updatetime`  `updatetime` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT  '时间'
+ALTER TABLE  `pc_meeting_content` ADD INDEX (  `meeting_id` ,  `type` ) ;
 
 ALTER TABLE  `pc_member` ADD INDEX (  `agency_id` ,  `post_id` ) ;
 
 UPDATE  `partycommittee`.`pc_agency` SET  `code_id` =  '8' WHERE  `pc_agency`.`id` =244;
+
+
 
 浏览权，上报权，评语权，评价权、驳回权
 
@@ -186,6 +191,86 @@ INSERT INTO `pc_roles` (`id`, `role`, `name`, `enable`) VALUES
 (5, 'return', '驳回权', 1),
 (6, 'delete', '删除', 1);
 
+
+CREATE TABLE IF NOT EXISTS `pc_parent_stats` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `agency_id` int(11) unsigned NOT NULL COMMENT '党支部ID',
+  `name` varchar(255) NOT NULL COMMENT '党支部名称',
+  `code_id` int(11) NOT NULL DEFAULT '0' COMMENT '党支部类型',
+  `code` varchar(10) NOT NULL,
+  `parent_id` int(11) unsigned NOT NULL COMMENT '上级党支部ID',
+  `ejdw_num` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '二级党委数量',
+  `dzj_num` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '党总支数量',
+  `dzb_num` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '党支部数',
+  `2year_num` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '支部改选时间满两年的支部数',
+  `less7_num` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '党员人数不足7人的党支部数量',
+  `no_fsj_zbwy_num` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '只设支部书记未设支部副书记、支部委员的支部数量',
+  `dxz_num` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '党小组数量',
+  `dy_num` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '党员人数',
+  `zbsj_num` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '支部书记数',
+  `zbfsj_num` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '支部副书记数',
+  `zzwy_num` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '组织委员数',
+  `xcwy_num` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '宣传委员数',
+  `jjwy_num` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '纪检委员数',
+  `qnwy_num` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '青年委员数',
+  `ghwy_num` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '工会委员数',
+  `fnwy_num` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '妇女委员数',
+  `bmwy_num` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '保密委员数',
+  `updatetime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `agency_id` (`agency_id`,`code_id`,`parent_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='党建办党支部基本情况统计表' AUTO_INCREMENT=1 ;
+
+
+CREATE TABLE IF NOT EXISTS `pc_agency_stats` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `agency_id` int(11) unsigned NOT NULL COMMENT '党支部ID',
+  `name` varchar(255) NOT NULL COMMENT '党支部名称',
+  `code_id` int(11) NOT NULL DEFAULT '0' COMMENT '党支部类型',
+  `code` varchar(10) NOT NULL,
+  `parent_id` int(11) unsigned NOT NULL COMMENT '上级党支部ID',
+  `setup_datetime` datetime NOT NULL COMMENT '设选时间',
+  `dxz_num` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '党小组数量',
+  `dy_num` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '党员人数',
+  `zbsj_num` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '支部书记数',
+  `zbfsj_num` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '支部副书记数',
+  `zb_num` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '支部委员数(不含书记副书记)',
+  `updatetime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `agency_id` (`agency_id`,`code_id`,`parent_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='党支部基本情况统计表' AUTO_INCREMENT=1 ;
+
+
+CREATE TABLE IF NOT EXISTS `pc_zzsh_stat` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `agency_id` int(11) unsigned NOT NULL COMMENT '党支部ID',
+  `name` varchar(255) NOT NULL COMMENT '党支部名称',
+  `code_id` int(11) NOT NULL DEFAULT '0' COMMENT '党支部类型',
+  `code` varchar(20) NOT NULL,
+  `parent_id` int(11) unsigned NOT NULL COMMENT '上级党支部ID',
+  `year` year(4) NOT NULL COMMENT '年度',
+  `quarter` tinyint(1) unsigned NOT NULL COMMENT '季度',
+  `month` smallint(5) unsigned NOT NULL COMMENT '季度',
+  `type_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '会议类型',
+  `total` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '实际召开数',
+  `total_success` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '一次成功上报数',
+  `total_return` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '一次成功上报数',
+  `total_delay` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '补开补报情况',  
+  `reported` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '规范执行情况',
+  `reported_rate` decimal(6,4) NOT NULL DEFAULT '0.0000' COMMENT '规范执行率',
+  `attend` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '应出席人数',
+  `asence` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '缺席人数',
+  `attend_rate` decimal(6,4) NOT NULL DEFAULT '0.0000' COMMENT '出席率',
+  `eva` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '已评价数',
+  `eva_rate` decimal(6,4) NOT NULL DEFAULT '0.0000' COMMENT '评价率',
+  `eva_1` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '好',
+  `eva_2` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '较好',
+  `eva_3` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '一般',
+  `eva_4` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '差',
+  `agency_goodjob` int(10) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `agency_id` (`agency_id`,`code_id`,`parent_id`,`year`,`quarter`,`type_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='组织生活统计表' AUTO_INCREMENT=1 ;
 
 
 
