@@ -12,6 +12,7 @@ begin
 	
 	DECLARE y year(4);
 	DECLARE q tinyint(1) unsigned;
+	DECLARE m smallint(5) unsigned;
 
   DECLARE rows int default 0;
   DECLARE row int default 0;
@@ -19,12 +20,7 @@ begin
   DECLARE s tinyint;
 	DECLARE s_cursor CURSOR FOR SELECT a.id, a.name, a.code_id, a.code, b.parent_id FROM  pc_agency as a left join pc_agency_relation as b on a.id = b.agency_id WHERE a. code_id = 10;
 	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done=1;
-		
-	SET y = year(now());
-	SET q = quarter(now());		
-	set i = 1;
-	
-	
+			
 		open s_cursor; 
 	  SELECT FOUND_ROWS() into rows;
 	  SET row = 0;
@@ -38,19 +34,36 @@ begin
 				while i < 9 do	
 				
 					SET s = 0;
-					SET q = quarter(now());
+					SET y = year(now());
+					SET q = quarter(now());		
+					SET m = month(now());		
 					IF (i = 1 OR i = 4) THEN
 					   SET q = 0;
 					END IF;
-	
+					
+					IF i = 3 THEN
+						 IF q = 1 THEN
+						 	SET y = y -1;
+						 	SET q = 4;
+						 ELSE 
+						 	SET q = q -1 ;
+						 END IF;
+					END IF;
+					
+					IF i = 4 THEN
+						 SET y = y -1;
+					END IF;
 					IF i <= 4 THEN
 			   				SELECT max(status_id) into s FROM pc_workplan WHERE agency_id = c_id AND year = y AND quarter = q AND type_id = i;
 			   				IF  s IS NULL THEN
 				   				SET s = 0;
 								END IF;
-							
-					ELSE 
-							 SELECT max(status_id) into s FROM pc_meeting WHERE agency_id = c_id AND year = y AND quarter = q AND type_id = i;
+								
+					ELSE
+							 IF i <> 8 THEN
+							 	 SET m = 0;
+							 END IF;
+							 SELECT max(status_id) into s FROM pc_meeting WHERE agency_id = c_id AND year = y AND quarter = q and month = m AND type_id = i;
 							 IF  s IS NULL THEN
 				   				SET s = 0;
 								END IF;
@@ -68,47 +81,6 @@ begin
 		end loop cursor_loop;
 		close s_cursor;
 		
-
-	
-		SET q = quarter(now());	
-	  if q = 1 THEN
-			open s_cursor; 
-		  SELECT FOUND_ROWS() into rows;
-		  SET row = 0;
-			cursor_loop:loop	  
-				FETCH s_cursor into c_id, c_name, c_code_id, c_code, c_parent_id;
-
-				SELECT name into c_parent_name FROM pc_agency where id = c_parent_id;
-			
-				SET s = 0;
-				if row >= rows then
-					leave cursor_loop;
-				end if;	  
-		  	SELECT max(status_id) into s FROM pc_workplan WHERE agency_id = c_id AND year = y -1 AND quarter = 4 AND type_id = 3;
-				IF  s IS NULL THEN
-	 				SET s = 0;
-				END IF;	 
-				IF c_parent_id is not null THEN
-					INSERT INTO  pc_remind (agency_id, name, code_id, code, parent_id, parent_name, year, quarter, type_id, status) 
-					VALUES (c_id, c_name, c_code_id, c_code, c_parent_id, c_parent_name, y -1, 4, 3, s) 			
-					ON DUPLICATE KEY UPDATE status = s, name =name, code = c_code, parent_name = c_parent_name;				
-				END IF;
-				
-		  	SELECT max(status_id) into s FROM pc_workplan WHERE agency_id = c_id AND year = y -1 AND quarter = 0 AND type_id = 4;
-				IF  s IS NULL THEN
-	 				SET s = 0;
-				END IF;	 
-				IF c_parent_id is not null THEN
-					INSERT INTO  pc_remind (agency_id, name, code_id, code, parent_id, parent_name, year, quarter, type_id, status) 
-					VALUES (c_id, c_name, c_code_id, c_code, c_parent_id, c_parent_name, y -1, 0, 4, s) 			
-					ON DUPLICATE KEY UPDATE status = s, name =c_name, code = c_code, parent_name = c_parent_name;					
-			  END IF;
-			SET row = row + 1;
-			end loop cursor_loop;
-			close s_cursor;			
-	 	
-	  END IF;	
-	
 end;
 //
 delimiter ;
@@ -118,29 +90,47 @@ delimiter //
 DROP procedure IF EXISTS stat_remind_stat//
 CREATE PROCEDURE stat_remind_stat()
 begin
-
-	DECLARE y year(4);
-
-	SET y = year(now());
-	truncate pc_remind_stat;
-	INSERT INTO pc_remind_stat (agency_id ,name ,code_id ,parent_id ,year ,quarter ,type_id ,status ,c)
-	SELECT T1.parent_id as agency_id, T2.name, T2.code_id, T3.parent_id, T1.year, T1.quarter, T1.type_id, T1.status, T1.c FROM (SELECT code_id, parent_id, year ,quarter, type_id, status, count(*) as c FROM pc_remind WHERE year = y GROUP BY code_id, parent_id, year ,quarter, type_id, status) as T1
-	LEFT JOIN pc_agency as T2 ON T1.parent_id = T2.id
-	LEFT JOIN pc_agency_relation as T3 ON T1.parent_id = T3.agency_id
-	ON DUPLICATE KEY UPDATE c = T1.c, name = T2.name;
+	DECLARE done int default 0;
+	DECLARE c_id int(11) unsigned;
+	DECLARE c_name VARCHAR(255);
+	DECLARE c_code VARCHAR(20);
+	DECLARE c_code_id int(11) unsigned;	
+	DECLARE c_parent_id int(11) unsigned;
 	
-	INSERT INTO pc_remind_stat (agency_id ,name ,code_id ,parent_id ,year ,quarter ,type_id ,status ,c)
-	SELECT T1.parent_id as agency_id, T2.name, T2.code_id, T3.parent_id, T1.year, T1.quarter, T1.type_id, T1.status, T1.c FROM (SELECT code_id, parent_id, year ,quarter, type_id, status, count(*) as c FROM pc_remind WHERE year = y -1 GROUP BY code_id, parent_id, year ,quarter, type_id, status) as T1
-	LEFT JOIN pc_agency as T2 ON T1.parent_id = T2.id
-	LEFT JOIN pc_agency_relation as T3 ON T1.parent_id = T3.agency_id
-	ON DUPLICATE KEY UPDATE c = T1.c, name = T2.name;	
+	DECLARE y year(4);
+	DECLARE q tinyint(1) unsigned;
 
-	INSERT INTO pc_remind_stat (agency_id ,name ,code_id ,parent_id ,year ,quarter ,type_id ,status ,c)
-	SELECT T1.agency_id, T2.name, T2.code_id, T3.parent_id, T1.year, T1.quarter, T1.type_id, T1.status, T1.c FROM
-	(SELECT parent_id as agency_id, YEAR, quarter, type_id, status, SUM( c ) as c FROM  `pc_remind_stat` WHERE parent_id <>1 GROUP BY parent_id, YEAR, quarter, type_id, status) as T1
-	LEFT JOIN pc_agency as T2 ON T1.agency_id = T2.id
-	LEFT JOIN pc_agency_relation as T3 ON T1.agency_id = T3.agency_id
-	ON DUPLICATE KEY UPDATE c = pc_remind_stat.c + T1.c, name = T2.name;	
+	DECLARE rows int default 0;
+	DECLARE row int default 0;
+	DECLARE i int;
+	
+	DECLARE zb_num int(11) unsigned;
+	
+  DECLARE s_cursor CURSOR FOR SELECT a.id, a.name, a.code_id, a.code, b.parent_id FROM  pc_agency as a left join pc_agency_relation as b on a.id = b.agency_id WHERE a.code_id in (7,8,15);
+	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done=1;
+
+  open s_cursor; 
+  SELECT FOUND_ROWS() into rows;
+  SET row = 0;
+	cursor_loop:loop
+			FETCH s_cursor into c_id, c_name, c_code_id, c_code, c_parent_id;
+--			SELECT c_id;
+			IF row >= rows then
+				leave cursor_loop;
+			end if;
+			
+			INSERT INTO pc_remind_stat (agency_id ,name ,code_id ,parent_id ,year ,quarter ,type_id ,status ,c)
+			SELECT c_id as agency_id, c_name as name, c_code_id as code_id, c_parent_id as parent_id, year, quarter, type_id, status, SUM(c) as c FROM
+			(select year ,quarter, type_id, status, count(*) as c FROM pc_remind 
+			WHERE code like CONCAT(c_code, '%') GROUP BY code_id, parent_id, year ,quarter, type_id, status) as T1
+			GROUP BY year ,quarter, type_id, status
+			ON DUPLICATE KEY UPDATE c = c, name = c_name, code = c_code, code_id = c_code_id;			
+
+			SET row = row + 1;
+	end loop cursor_loop;
+	close s_cursor;
+							
+											
 end;
 //
 delimiter ;
@@ -150,246 +140,104 @@ delimiter //
 DROP procedure IF EXISTS check_remind_lock//
 CREATE PROCEDURE check_remind_lock()
 begin
-	DECLARE id int(11) unsigned;
-	DECLARE parent_id int(11) unsigned;
-	DECLARE name VARCHAR(255);
+	DECLARE c_id int(11) unsigned;
+	DECLARE c_parent_id int(11) unsigned;
+	DECLARE c_name VARCHAR(255);
+	DECLARE c_parent_name VARCHAR(255);
 	DECLARE c_code VARCHAR(20);
-	DECLARE code_id int(11) unsigned;
+	DECLARE c_code_id int(11) unsigned;
 	DECLARE done int default 0;
 	
 	DECLARE y year(4);
-	DECLARE q tinyint(1) unsigned;
+	DECLARE q int(10) unsigned;
+	DECLARE m int(10) unsigned;
 
   DECLARE rows int default 0;
   DECLARE row int default 0;
   DECLARE i int;
-  DECLARE s tinyint;
+  DECLARE s tinyint(1) unsigned;
 	DECLARE s_cursor CURSOR FOR SELECT a.id, a.name, a.code_id, a.code, b.parent_id FROM  pc_agency as a left join pc_agency_relation as b on a.id = b.agency_id WHERE a. code_id = 10;
 	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done=1;
-		
-	SET y = year(now());
-	SET q = quarter(now());		
-	set i = 1;
-
-	while i < 9 do	
+			
 		open s_cursor; 
 	  SELECT FOUND_ROWS() into rows;
 	  SET row = 0;
 		cursor_loop:loop
-				FETCH s_cursor into id, name, code_id, c_code, parent_id;
-				
-				SET s = 0;
+				FETCH s_cursor into c_id, c_name, c_code_id, c_code, c_parent_id;
+				SELECT name into c_parent_name FROM pc_agency where id = c_parent_id;
 				if row >= rows then
 					leave cursor_loop;
-				end if;			
+				end if;		
+				set i = 1;
+				while i < 9 do	
 				
-				
-				
-				SET q = quarter(now());
-				
-				if q = 1 THEN
-				
-					if i = 1 THEN
-						SELECT max(status_id) into s FROM pc_workplan WHERE agency_id = id AND year = y AND quarter = 0 AND type_id = i;
-						IF  s IS NULL THEN
-				   			SET s = 0;
-						END IF;
-						if s < 2 THEN
-							CALL set_remind_status(i, s);
-							if s = 9 THEN
-								IF parent_id is not null then
-									INSERT INTO  pc_remind_lock (agency_id, name, code_id, code, parent_id, year, quarter, month, type_id, status) 
-									VALUES (id, name, code_id, c_code, parent_id, y  , 0, 0, i, s)	ON DUPLICATE KEY UPDATE agency_id = id, name = name;
-							  END IF;
-							END IF;
-						END IF;
-						
-					END if;
+					SET s = 0;
+					SET y = year(now());
+					SET q = quarter(now());		
+					SET m = 0;
 					
-					if i = 2 THEN
-					  SELECT max(status_id) into s FROM pc_workplan WHERE agency_id = id AND year = y AND quarter = q AND type_id = i;
-
-						
-						IF  s IS NULL THEN
-				   			SET s = 0;
-						END IF;
-						if s < 2 THEN
-							CALL set_remind_status(i, s);
-							if s = 9 THEN
-								IF parent_id is not null then
-									INSERT INTO  pc_remind_lock (agency_id, name, code_id, code_id, parent_id, year, quarter, month, type_id, status) 
-									VALUES (id, name, code_id, c_code, parent_id, y , q, 0, i, s)	ON DUPLICATE KEY UPDATE agency_id = id, name = name;
-							  END IF;
-							END IF;		
-						END IF;
-															  
+					IF i = 1 THEN
+						SET q = 0;
 					END IF;
 					
-					if i = 3 THEN
-						SELECT max(status_id) into s FROM pc_workplan WHERE agency_id = id AND year = y - 1 AND quarter = QUARTER(DATE_SUB(now(),interval 1 QUARTER)) AND type_id = i;
-						
-						IF  s IS NULL THEN
-				   			SET s = 0;
+					IF (i = 3 OR i = 5 OR i = 6 OR i = 7) THEN
+						SET q = q - 1;
+						IF q = 0 THEN
+							SET y = y -1;
+						 	SET q = 4;					
 						END IF;
-						if s < 2 THEN
-							CALL set_remind_status(i, s);
-							if s = 9 THEN
-								IF parent_id is not null then
-									INSERT INTO  pc_remind_lock (agency_id, name, code_id, code_id, parent_id, year, quarter, month, type_id, status) 
-									VALUES (id, name, code_id, parent_id, y - 1 , QUARTER(DATE_SUB(now(),interval 1 QUARTER)), 0, i, s)	ON DUPLICATE KEY UPDATE agency_id = id, name = name;
-								END IF;
-							END IF;
-						END IF;
-																		
 					END IF;
 					
-				  IF i = 4 THEN
-						SELECT max(status_id) into s FROM pc_workplan WHERE agency_id = id AND year = y - 1 AND quarter = 0 AND type_id = i;
-						IF  s IS NULL THEN
-				   			SET s = 0;
+					IF i = 4 THEN
+						SET y = y - 1;
+						SET q = 0;
+					END IF;					
+					
+					IF i = 8 THEN
+						SET m = month(now()) - 1;
+						SET q = QUARTER(DATE_SUB(now(),interval 1 month));
+						IF m = 0 THEN
+							SET y = y - 1;
+							SET m = 12;
+							SET q = 4;
 						END IF;
-						if s < 2 THEN
-							CALL set_remind_status(i, s);
-							IF s = 9 THEN
-								IF parent_id is not null then
-									INSERT INTO  pc_remind_lock (agency_id, name, code_id, code_id, parent_id, year, quarter, month, type_id, status) 
-									VALUES (id, name, code_id, c_code, parent_id, y -1, 0, 0, i, s)	ON DUPLICATE KEY UPDATE agency_id = id, name = name;						
-								END IF;
-							END IF;
-						END IF;						
-						
 					END IF;
 					
-					IF (i > 4 and i < 8) THEN
+--					SELECT i, y, q, m;					
 					
-						SELECT max(status_id) into s FROM pc_meeting WHERE agency_id = id AND year = y -1  AND quarter = QUARTER(DATE_SUB(now(),interval 1 QUARTER)) AND type_id = i;
-						
-						IF  s IS NULL THEN
-				   			SET s = 0;
-						END IF;
-						if s < 2 THEN
-							CALL set_remind_status(i, s);
-							if s = 9 THEN
-								IF parent_id is not null then
-									INSERT INTO  pc_remind_lock (agency_id, name, code_id, code_id, parent_id, year, quarter, month, type_id, status) 
-									VALUES (id, name, code_id, c_code, parent_id, y-1 , QUARTER(DATE_SUB(now(),interval 1 QUARTER)), 0, i, s)	ON DUPLICATE KEY UPDATE agency_id = id, name = name;
-								END IF;
-							END IF;					
-						END IF;
-												
-					END IF;
 					
-
-					
-				ELSE
-
-					
-					if i = 2 THEN
-					  SELECT max(status_id) into s FROM pc_workplan WHERE agency_id = id AND year = y AND quarter = q AND type_id = i;
-					  
-						IF  s IS NULL THEN
-				   			SET s = 0;
-						END IF;
-						if s < 2 THEN
-							CALL set_remind_status(i, s);
-							if s = 9 THEN
-								IF parent_id is not null then
-									INSERT INTO  pc_remind_lock (agency_id, name, code_id, code_id, parent_id, year, quarter, month, type_id, status) 
-									VALUES (id, name, code_id, c_code, parent_id, y , q, 0, i, s)	ON DUPLICATE KEY UPDATE agency_id = id, name = name;
-								END IF;
-							END IF;					  
-						END IF;					  
-					END IF;
-					
-					if i = 3 THEN
-						SELECT max(status_id) into s FROM pc_workplan WHERE agency_id = id AND year = y AND quarter = QUARTER(DATE_SUB(now(),interval 1 QUARTER)) AND type_id = i;
-						
-						IF  s IS NULL THEN
-				   			SET s = 0;
-						END IF;
-						if s < 2 THEN
-							CALL set_remind_status(i, s);
-							if s = 9 THEN
-								IF parent_id is not null then
-									INSERT INTO  pc_remind_lock (agency_id, name, code_id, code_id, parent_id, year, quarter, month, type_id, status) 
-									VALUES (id, name, code_id, c_code, parent_id, y , QUARTER(DATE_SUB(now(),interval 1 QUARTER)), 0, i, s)	ON DUPLICATE KEY UPDATE agency_id = id, name = name;
-								END IF;
-							END IF;
-						END IF;
-																		
-					END IF;
-										
-					IF i > 4 AND i < 8 THEN
-						SELECT max(status_id) into s FROM pc_meeting WHERE agency_id = id AND year = y  AND quarter = QUARTER(DATE_SUB(now(),interval 1 QUARTER)) AND type_id = i;
-						
-						IF  s IS NULL THEN
-				   			SET s = 0;
-						END IF;
-						if s < 2 THEN
-							CALL set_remind_status(i, s);
-							if s = 9 THEN
-								IF parent_id is not null then
-									INSERT INTO  pc_remind_lock (agency_id, name, code_id, code_id, parent_id, year, quarter, month, type_id, status) 
-									VALUES (id, name, code_id, c_code, parent_id, y , QUARTER(DATE_SUB(now(),interval 1 QUARTER)), 0, i, s)	ON DUPLICATE KEY UPDATE agency_id = id, name = name;
-								END IF;
-							END IF;	
-						END IF;
-												
-					END IF;	
-				END IF;
-				
-				
-				if i = 8 THEN
-					if month(now()) = 1 THEN
-				
-						SELECT max(status_id) into s FROM pc_meeting WHERE agency_id = id AND year = y -1  AND month = 12 AND type_id = i;
-						
-						IF  s IS NULL THEN
-				   			SET s = 0;
-						END IF;
-						if s < 2 THEN
-							CALL set_remind_status(i, s);
-							if s = 9 THEN
-								IF parent_id is not null then
-									INSERT INTO  pc_remind_lock (agency_id, name, code_id, code_id, parent_id, year, quarter, month, type_id, status) 
-									VALUES (id, name, code_id, c_code, parent_id, y -1 , 4, 12, i, s)	ON DUPLICATE KEY UPDATE agency_id = id, name = name;
-								END IF;
-							END IF;		
-						END IF;
-																	
+					IF i <= 4 THEN
+			   			SELECT max(status_id) into s FROM pc_workplan WHERE agency_id = c_id AND year = y AND quarter = q AND type_id = i;
 					ELSE
-						
-						SELECT max(status_id) into s FROM pc_meeting WHERE agency_id = id AND year = y  AND month = month(now()) -1  AND type_id = i;
-						
-						IF  s IS NULL THEN
-				   			SET s = 0;
-						END IF;
-						if s < 2 THEN
-							CALL set_remind_status(i, s);
-							if s = 9 THEN
-								IF parent_id is not null then
-									INSERT INTO  pc_remind_lock (agency_id, name, code_id, code_id, parent_id, year, quarter, month, type_id, status) 
-									VALUES (id, name, code_id , c_code, parent_id, y , q, month(now()) -1 , i, s)	ON DUPLICATE KEY UPDATE agency_id = id, name = name;
-								END IF;
-							END IF;							
-						END IF;						
-						
-					END IF;				
-				
-			  END IF;
-				
+							SELECT max(status_id) into s FROM pc_meeting WHERE agency_id = c_id AND year = y AND quarter = q AND month = m AND type_id = i;
+					END IF;	
+					
+   				IF  s IS NULL THEN
+	   				SET s = 0;
+					END IF;								
+					
+					IF (c_parent_id is not null AND y >= 2012) THEN
+							if s < 3 THEN
+								CALL set_remind_status(i, s);
+								if s = 9 THEN
+										INSERT INTO  pc_remind_lock (agency_id, name, code_id, code, parent_id, year, quarter, month, type_id, status) 
+										VALUES (c_id, c_name, c_code_id, c_code, c_parent_id, y , q, m, i, s)	ON DUPLICATE KEY UPDATE agency_id = c_id, name = c_name;
+								END IF;		
+							END IF;									
+				  END IF;
+
+			  set i=i+1;
+				end while;  
 			  
 				SET row = row + 1;
 		end loop cursor_loop;
 		close s_cursor;
-	  
-	  set i=i+1;
-	end while;  
-	
+		
+
+		UPDATE pc_remind_lock set status = 9 WHERE status = 8 and delay_date < date_format(now(), '%Y-%m-%d');
 end;
 //
 delimiter ;
-
 
 
 delimiter //
@@ -737,12 +585,6 @@ begin
 	
 	DECLARE s_cursor CURSOR FOR SELECT a.id, a.name, a.code_id, a.code, b.parent_id FROM  pc_agency as a left join pc_agency_relation as b on a.id = b.agency_id WHERE a. code_id = 10;
 	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done=1;
-
-	SET y = year(now());
-	SET q = quarter(now());		
-	SET m = month(now());		
-	set i = 1;
-	
 	
 	  open s_cursor; 
 	  SELECT FOUND_ROWS() into rows;
@@ -777,12 +619,14 @@ begin
 				SET i = 1;
 				IF c_parent_id is not null THEN
 					while i <= 9 do	
+						SET y = year(now());
 						SET q = quarter(now());		
+						SET m = month(now());
 						
 						
-	-- 				年度计划	q = 1 AND i = 1
-	--			  年终总结	q = 4 AND i = 4					
-	--				季度计划和季度执行情况					
+-- 				年度计划	q = 1 AND i = 1	
+--			  年终总结	q = 4 AND i = 4					
+--				季度计划和季度执行情况					
 						IF ( i = 2 OR i = 3 OR (q = 1 AND i = 1) OR  (q = 4 AND i = 4)) THEN
 								IF (i = 1 OR i = 4) THEN
 									SET q = 0;
@@ -790,12 +634,41 @@ begin
 												SELECT COUNT(*) into stat_total FROM pc_workplan WHERE agency_id = c_id AND type_id = i AND year =y AND quarter = q AND status_id >= 3;
 												SELECT COUNT(*) into stat_total_delay FROM pc_remind_lock WHERE agency_id = c_id  AND year =y AND quarter = q AND type_id = i;
 												SELECT COUNT(*) into stat_total_return FROM pc_workplan as a left join pc_workplan_content as b on a.id = b.workplan_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = q AND a.status_id >= 3 AND b.type = 2;
-												SELECT Max(month(b.updatetime)) into m FROM pc_workplan as a left join pc_workplan_content as b on a.id = b.workplan_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = q AND a.status_id >= 3 AND b.type = 1;
-												SELECT COUNT(*) into stat_eva FROM pc_workplan WHERE agency_id = id AND type_id = i AND year = y AND quarter = q AND status_id = 5;
+--												SELECT Max(month(b.updatetime)) into m FROM pc_workplan as a left join pc_workplan_content as b on a.id = b.workplan_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = q AND a.status_id >= 3 AND b.type = 1;
+												SELECT COUNT(*) into stat_eva FROM pc_workplan WHERE agency_id = c_id AND type_id = i AND year = y AND quarter = q AND status_id = 5;
 												SELECT COUNT(CASE WHEN b.content = 1 THEN a.id END) into stat_eva_1 FROM pc_workplan as a left join pc_workplan_content as b on a.id = b.workplan_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = q AND a.status_id = 5 AND b.type = 4;
 												SELECT COUNT(CASE WHEN b.content = 2 THEN a.id END) into stat_eva_2 FROM pc_workplan as a left join pc_workplan_content as b on a.id = b.workplan_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = q AND a.status_id = 5 AND b.type = 4;
 												SELECT COUNT(CASE WHEN b.content = 3 THEN a.id END) into stat_eva_3 FROM pc_workplan as a left join pc_workplan_content as b on a.id = b.workplan_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = q AND a.status_id = 5 AND b.type = 4;
 												SELECT COUNT(CASE WHEN b.content = 4 THEN a.id END) into stat_eva_4 FROM pc_workplan as a left join pc_workplan_content as b on a.id = b.workplan_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = q AND a.status_id = 5 AND b.type = 4;
+
+																					
+												IF (stat_total > 0) THEN
+													SELECT 1 - stat_total_delay, ROUND( (1 - stat_total_delay)/1 , 4) into stat_reported, stat_reported_rate;
+													SET stat_total_success = stat_total - stat_total_delay - stat_total_return;
+												END IF;
+												
+												IF (stat_eva > 0) THEN
+													SET stat_eva = 1;
+													SET stat_eva_rate = 1;
+												ELSE 
+													SET stat_eva = 0;
+													SET stat_eva_rate = 0;
+												END IF;
+												
+												SET m = 0;
+						END IF;
+												
+--					会议类						
+						IF (i = 5 OR i = 6 OR i =7 OR i = 9 )  THEN
+												SELECT COUNT(*), sum(attend), sum(asence) into stat_total, stat_attend, stat_asence FROM pc_meeting WHERE agency_id = c_id AND type_id = i AND year =y AND quarter = q AND status_id >= 3;
+												SELECT COUNT(*) into stat_total_delay FROM pc_remind_lock WHERE agency_id = c_id  AND year =y AND quarter = q AND type_id = i;
+												SELECT COUNT(*) into stat_total_return FROM pc_meeting as a left join pc_meeting_content as b on a.id = b.meeting_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = q AND a.status_id >= 3 AND b.type = 2;
+--												SELECT Max(month(b.updatetime)) into m FROM pc_workplan as a left join pc_workplan_content as b on a.id = b.workplan_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = q AND a.status_id >= 3 AND b.type = 1;
+												SELECT COUNT(*) into stat_eva FROM pc_meeting WHERE agency_id = c_id AND type_id = i AND year = y AND quarter = q AND status_id = 5;
+												SELECT COUNT(CASE WHEN b.content = 1 THEN a.id END) into stat_eva_1 FROM pc_meeting as a left join pc_meeting_content as b on a.id = b.meeting_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = q AND a.status_id = 5 AND b.type = 4;
+												SELECT COUNT(CASE WHEN b.content = 2 THEN a.id END) into stat_eva_2 FROM pc_meeting as a left join pc_meeting_content as b on a.id = b.meeting_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = q AND a.status_id = 5 AND b.type = 4;
+												SELECT COUNT(CASE WHEN b.content = 3 THEN a.id END) into stat_eva_3 FROM pc_meeting as a left join pc_meeting_content as b on a.id = b.meeting_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = q AND a.status_id = 5 AND b.type = 4;
+												SELECT COUNT(CASE WHEN b.content = 4 THEN a.id END) into stat_eva_4 FROM pc_meeting as a left join pc_meeting_content as b on a.id = b.meeting_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = q AND a.status_id = 5 AND b.type = 4;
 
 												
 												IF (stat_total > 0) THEN
@@ -808,19 +681,37 @@ begin
 												ELSE 
 													SET stat_eva = 0;
 													SET stat_eva_rate = 0;
+												END IF;				
+												
+												IF stat_attend is null THEN
+													SET stat_attend = 0;
 												END IF;
+												
+												IF stat_asence is null THEN
+													SET stat_asence = 0;
+												END IF;			
+												
+												IF stat_attend >= stat_asence THEN
+													SELECT ROUND(  (stat_attend - stat_asence)/ stat_attend , 4) into stat_attend_rate;
+												ELSEIF stat_attend = 0 THEN
+													SET stat_attend_rate = 0;
+												END IF;												
+												
+														
+												SET m = 0;
+						
 						END IF;
 						
-						IF i > 4 THEN
-												SELECT COUNT(*) into stat_total FROM pc_meeting WHERE agency_id = c_id AND type_id = i AND year =y AND quarter = q AND status_id >= 3;
-												SELECT COUNT(*) into stat_total_delay FROM pc_remind_lock WHERE agency_id = c_id  AND year =y AND quarter = q AND type_id = i;
-												SELECT COUNT(*) into stat_total_return FROM pc_workplan as a left join pc_workplan_content as b on a.id = b.workplan_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = q AND a.status_id >= 3 AND b.type = 2;
-												SELECT Max(month(b.updatetime)) into m FROM pc_workplan as a left join pc_workplan_content as b on a.id = b.workplan_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = q AND a.status_id >= 3 AND b.type = 1;
-												SELECT COUNT(*) into stat_eva FROM pc_workplan WHERE agency_id = id AND type_id = i AND year = y AND quarter = q AND status_id = 5;
-												SELECT COUNT(CASE WHEN b.content = 1 THEN a.id END) into stat_eva_1 FROM pc_workplan as a left join pc_workplan_content as b on a.id = b.workplan_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = q AND a.status_id = 5 AND b.type = 4;
-												SELECT COUNT(CASE WHEN b.content = 2 THEN a.id END) into stat_eva_2 FROM pc_workplan as a left join pc_workplan_content as b on a.id = b.workplan_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = q AND a.status_id = 5 AND b.type = 4;
-												SELECT COUNT(CASE WHEN b.content = 3 THEN a.id END) into stat_eva_3 FROM pc_workplan as a left join pc_workplan_content as b on a.id = b.workplan_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = q AND a.status_id = 5 AND b.type = 4;
-												SELECT COUNT(CASE WHEN b.content = 4 THEN a.id END) into stat_eva_4 FROM pc_workplan as a left join pc_workplan_content as b on a.id = b.workplan_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = q AND a.status_id = 5 AND b.type = 4;
+						IF i = 8 THEN
+												SELECT COUNT(*), sum(attend), sum(asence) into stat_total, stat_attend, stat_asence FROM pc_meeting WHERE agency_id = c_id AND type_id = i AND year =y AND quarter = q AND month = m AND status_id >= 3;
+												SELECT COUNT(*) into stat_total_delay FROM pc_remind_lock WHERE agency_id = c_id  AND year =y AND quarter = q AND month = m AND type_id = i;
+												SELECT COUNT(*) into stat_total_return FROM pc_meeting as a left join pc_meeting_content as b on a.id = b.meeting_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = q AND month = m AND a.status_id >= 3 AND b.type = 2;
+--												SELECT Max(month(b.updatetime)) into m FROM pc_workplan as a left join pc_workplan_content as b on a.id = b.workplan_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = q AND a.status_id >= 3 AND b.type = 1;
+												SELECT COUNT(*) into stat_eva FROM pc_meeting WHERE agency_id = c_id AND type_id = i AND year = y AND quarter = q AND month = m AND status_id = 5;
+												SELECT COUNT(CASE WHEN b.content = 1 THEN a.id END) into stat_eva_1 FROM pc_meeting as a left join pc_meeting_content as b on a.id = b.meeting_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = q AND month = m AND a.status_id = 5 AND b.type = 4;
+												SELECT COUNT(CASE WHEN b.content = 2 THEN a.id END) into stat_eva_2 FROM pc_meeting as a left join pc_meeting_content as b on a.id = b.meeting_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = q AND month = m AND a.status_id = 5 AND b.type = 4;
+												SELECT COUNT(CASE WHEN b.content = 3 THEN a.id END) into stat_eva_3 FROM pc_meeting as a left join pc_meeting_content as b on a.id = b.meeting_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = q AND month = m AND a.status_id = 5 AND b.type = 4;
+												SELECT COUNT(CASE WHEN b.content = 4 THEN a.id END) into stat_eva_4 FROM pc_meeting as a left join pc_meeting_content as b on a.id = b.meeting_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = q AND month = m AND a.status_id = 5 AND b.type = 4;
 
 												
 												IF (stat_total > 0) THEN
@@ -833,10 +724,47 @@ begin
 												ELSE 
 													SET stat_eva = 0;
 													SET stat_eva_rate = 0;
-												END IF;						
+												END IF;			
+												
+												IF stat_attend is null THEN
+													SET stat_attend = 0;
+												END IF;
+												
+												IF stat_asence is null THEN
+													SET stat_asence = 0;
+												END IF;			
+												
+												IF stat_attend >= stat_asence THEN
+													SELECT ROUND(  (stat_attend - stat_asence)/ stat_attend , 4) into stat_attend_rate;
+												ELSEIF stat_attend = 0 THEN
+													SET stat_attend_rate = 0;
+												END IF;																	
+																
+						END IF;
 						
+--						SELECT c_id, c_name, stat_attend_rate, i;
+						
+						IF stat_reported_rate is null THEN
+							SET stat_reported_rate = 0;
+						END IF;	
+						
+						IF stat_eva_rate is null THEN
+							SET stat_eva_rate = 0;
 						END IF;		
-	
+						
+						IF stat_attend_rate is null THEN
+							SET stat_attend_rate = 0;
+						END IF;														
+							
+						INSERT INTO pc_zzsh_stat (agency_id, name, code_id, code, parent_id, year, quarter, month, type_id, total, total_success, total_return, total_delay, reported, reported_rate,  attend, asence, attend_rate, eva, eva_rate, eva_1, eva_2, eva_3, eva_4, agency_goodjob) VALUES
+						(c_id, c_name, c_code_id, c_code, c_parent_id, y, q, m, i, stat_total, stat_total_success, stat_total_return, stat_total_delay, stat_reported, stat_reported_rate, stat_attend, stat_asence, stat_attend_rate, stat_eva, stat_eva_rate, stat_eva_1, stat_eva_2, stat_eva_3, stat_eva_4, 0)
+						ON DUPLICATE KEY UPDATE 
+						name = c_name, code_id = c_code_id, code = c_code, parent_id = c_parent_id,
+						total = stat_total, total_success = stat_total_success,  total_return = stat_total_return,  total_delay = stat_total_delay,  
+						reported = stat_reported, reported_rate = stat_reported_rate, 
+						attend = stat_attend, asence = stat_asence, attend_rate = stat_attend_rate ,
+						eva = stat_eva, eva_rate = stat_eva_rate,  eva_1 = stat_eva_1, eva_2 = stat_eva_2, eva_3 = stat_eva_3, eva_4 = stat_eva_4;
+						
 						set i=i+1;
 					end while;
 
@@ -844,15 +772,282 @@ begin
 				SET row = row + 1;
 		end loop cursor_loop;
 		close s_cursor;
+		
+		
+--  处理跨年和跨季度的情况 开始
+	  open s_cursor; 
+	  SELECT FOUND_ROWS() into rows;
+	  SET row = 0;
+		cursor_loop:loop
+				FETCH s_cursor into c_id, c_name, c_code_id, c_code, c_parent_id;
+				SET  stat_reported = 0;
+				SET  stat_reported_rate = 0;
+				
+				SET  stat_total = 0;
+				SET  stat_total_success = 0;
+				SET  stat_total_return = 0;
+				SET  stat_total_delay = 0;
+				
+				SET  stat_attend = 0;
+				SET  stat_asence = 0;
+				SET  stat_attend_rate  = 0;
+			
+				SET  stat_eva = 0;
+				SET  stat_eva_rate  = 0;
+				SET  stat_eva_1 = 0;
+				SET  stat_eva_2 = 0;
+				SET  stat_eva_3 = 0;
+				SET  stat_eva_4 = 0;
+
+				
+				IF row >= rows then
+					leave cursor_loop;
+				end if;
+				SET i = 1;
+				IF c_parent_id is not null THEN
+					while i <= 9 do	
+						SET y = year(now());
+						SET q = quarter(now());		
+						SET m = month(now());
+						
+--			  年终总结	q = 4 AND i = 4					
+--				季度计划和季度执行情况					
+						IF i = 3 THEN
+										IF q = 1 THEN
+									 		SET y = y -1;
+											SET q = 4;
+										ELSE 
+											SET q = q - 1;
+										END IF;
+							
+							
+										SELECT COUNT(*) into stat_total FROM pc_workplan WHERE agency_id = c_id AND type_id = i AND year =y AND quarter = q AND status_id >= 3;
+										SELECT COUNT(*) into stat_total_delay FROM pc_remind_lock WHERE agency_id = c_id  AND year =y AND quarter = q AND type_id = i;
+										SELECT COUNT(*) into stat_total_return FROM pc_workplan as a left join pc_workplan_content as b on a.id = b.workplan_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = q AND a.status_id >= 3 AND b.type = 2;
+										SELECT COUNT(*) into stat_eva FROM pc_workplan WHERE agency_id = c_id AND type_id = i AND year = y AND quarter = q AND status_id = 5;
+										SELECT COUNT(CASE WHEN b.content = 1 THEN a.id END) into stat_eva_1 FROM pc_workplan as a left join pc_workplan_content as b on a.id = b.workplan_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = q AND a.status_id = 5 AND b.type = 4;
+										SELECT COUNT(CASE WHEN b.content = 2 THEN a.id END) into stat_eva_2 FROM pc_workplan as a left join pc_workplan_content as b on a.id = b.workplan_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = q AND a.status_id = 5 AND b.type = 4;
+										SELECT COUNT(CASE WHEN b.content = 3 THEN a.id END) into stat_eva_3 FROM pc_workplan as a left join pc_workplan_content as b on a.id = b.workplan_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = q AND a.status_id = 5 AND b.type = 4;
+										SELECT COUNT(CASE WHEN b.content = 4 THEN a.id END) into stat_eva_4 FROM pc_workplan as a left join pc_workplan_content as b on a.id = b.workplan_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = q AND a.status_id = 5 AND b.type = 4;
+				
+										IF (stat_total > 0) THEN
+											SELECT 1 - stat_total_delay, ROUND( (1 - stat_total_delay)/1 , 4) into stat_reported, stat_reported_rate;
+											SET stat_total_success = stat_total - stat_total_delay - stat_total_return;
+										END IF;
+										
+										IF (stat_eva > 0) THEN
+											SET stat_eva = 1;
+											SET stat_eva_rate = 1;
+										ELSE 
+											SET stat_eva = 0;
+											SET stat_eva_rate = 0;
+										END IF;
+										
+										SET m = 0;
+										
+										IF stat_reported_rate is null THEN
+											SET stat_reported_rate = 0;
+										END IF;	
+								
+										
+									INSERT INTO pc_zzsh_stat (agency_id, name, code_id, code, parent_id, year, quarter, month, type_id, total, total_success, total_return, total_delay, reported, reported_rate,  attend, asence, attend_rate, eva, eva_rate, eva_1, eva_2, eva_3, eva_4, agency_goodjob) VALUES
+									(c_id, c_name, c_code_id, c_code, c_parent_id, y, q, m, i, stat_total, stat_total_success, stat_total_return, stat_total_delay, stat_reported, stat_reported_rate, stat_attend, stat_asence, stat_attend_rate, stat_eva, stat_eva_rate, stat_eva_1, stat_eva_2, stat_eva_3, stat_eva_4, 0)
+									ON DUPLICATE KEY UPDATE 
+									name = c_name, code_id = c_code_id, code = c_code, parent_id = c_parent_id,
+									total = stat_total, total_success = stat_total_success,  total_return = stat_total_return,  total_delay = stat_total_delay,  
+									reported = stat_reported, reported_rate = stat_reported_rate, 
+									attend = stat_attend, asence = stat_asence, attend_rate = stat_attend_rate ,
+									eva = stat_eva, eva_rate = stat_eva_rate,  eva_1 = stat_eva_1, eva_2 = stat_eva_2, eva_3 = stat_eva_3, eva_4 = stat_eva_4;
+
+	
+						END IF;
+						
+						
+						IF (q = 1 AND i = 4) THEN
+										
+										SET y = y -1;
+										SET q = 4;
+									
+										SELECT COUNT(*) into stat_total FROM pc_workplan WHERE agency_id = c_id AND type_id = i AND year =y AND quarter = q AND status_id >= 3;
+										SELECT COUNT(*) into stat_total_delay FROM pc_remind_lock WHERE agency_id = c_id  AND year =y AND quarter = q AND type_id = i;
+										SELECT COUNT(*) into stat_total_return FROM pc_workplan as a left join pc_workplan_content as b on a.id = b.workplan_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = q AND a.status_id >= 3 AND b.type = 2;
+										SELECT COUNT(*) into stat_eva FROM pc_workplan WHERE agency_id = c_id AND type_id = i AND year = y AND quarter = q AND status_id = 5;
+										SELECT COUNT(CASE WHEN b.content = 1 THEN a.id END) into stat_eva_1 FROM pc_workplan as a left join pc_workplan_content as b on a.id = b.workplan_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = q AND a.status_id = 5 AND b.type = 4;
+										SELECT COUNT(CASE WHEN b.content = 2 THEN a.id END) into stat_eva_2 FROM pc_workplan as a left join pc_workplan_content as b on a.id = b.workplan_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = q AND a.status_id = 5 AND b.type = 4;
+										SELECT COUNT(CASE WHEN b.content = 3 THEN a.id END) into stat_eva_3 FROM pc_workplan as a left join pc_workplan_content as b on a.id = b.workplan_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = q AND a.status_id = 5 AND b.type = 4;
+										SELECT COUNT(CASE WHEN b.content = 4 THEN a.id END) into stat_eva_4 FROM pc_workplan as a left join pc_workplan_content as b on a.id = b.workplan_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = q AND a.status_id = 5 AND b.type = 4;
+				
+										IF (stat_total > 0) THEN
+											SELECT 1 - stat_total_delay, ROUND( (1 - stat_total_delay)/1 , 4) into stat_reported, stat_reported_rate;
+											SET stat_total_success = stat_total - stat_total_delay - stat_total_return;
+										END IF;
+										
+										IF (stat_eva > 0) THEN
+											SET stat_eva = 1;
+											SET stat_eva_rate = 1;
+										ELSE 
+											SET stat_eva = 0;
+											SET stat_eva_rate = 0;
+										END IF;
+										
+										SET m = 0;
+										
+										IF stat_reported_rate is null THEN
+											SET stat_reported_rate = 0;
+										END IF;	
+								
+										
+									INSERT INTO pc_zzsh_stat (agency_id, name, code_id, code, parent_id, year, quarter, month, type_id, total, total_success, total_return, total_delay, reported, reported_rate,  attend, asence, attend_rate, eva, eva_rate, eva_1, eva_2, eva_3, eva_4, agency_goodjob) VALUES
+									(c_id, c_name, c_code_id, c_code, c_parent_id, y, q, m, i, stat_total, stat_total_success, stat_total_return, stat_total_delay, stat_reported, stat_reported_rate, stat_attend, stat_asence, stat_attend_rate, stat_eva, stat_eva_rate, stat_eva_1, stat_eva_2, stat_eva_3, stat_eva_4, 0)
+									ON DUPLICATE KEY UPDATE 
+									name = c_name, code_id = c_code_id, code = c_code, parent_id = c_parent_id,
+									total = stat_total, total_success = stat_total_success,  total_return = stat_total_return,  total_delay = stat_total_delay,  
+									reported = stat_reported, reported_rate = stat_reported_rate, 
+									attend = stat_attend, asence = stat_asence, attend_rate = stat_attend_rate ,
+									eva = stat_eva, eva_rate = stat_eva_rate,  eva_1 = stat_eva_1, eva_2 = stat_eva_2, eva_3 = stat_eva_3, eva_4 = stat_eva_4;
+
+	
+						END IF;						
+						
+						
+						set i=i+1;
+					end while;
+
+				END IF;
+				SET row = row + 1;
+		end loop cursor_loop;
+		close s_cursor;		
+		
+--  处理跨年和跨季度的情况 结束		
+		
 
 end;
 //
 delimiter ;
 
 
+delimiter //
+DROP procedure IF EXISTS stat_zzsh_stat//
+CREATE PROCEDURE stat_zzsh_stat()
+begin
+	DECLARE done int default 0;
+	DECLARE c_id int(11) unsigned;
+	DECLARE c_name VARCHAR(255);
+	DECLARE c_code VARCHAR(20);
+	DECLARE c_code_id int(11) unsigned;	
+	DECLARE c_parent_id int(11) unsigned;
+	
+	DECLARE y year(4);
+	DECLARE q tinyint(1) unsigned;
+
+	DECLARE rows int default 0;
+	DECLARE row int default 0;
+	DECLARE i int;
+	
+	DECLARE zb_num int(11) unsigned;
+	
+  DECLARE s_cursor CURSOR FOR SELECT a.id, a.name, a.code_id, a.code, b.parent_id FROM  pc_agency as a left join pc_agency_relation as b on a.id = b.agency_id WHERE a.code_id in (7,8,15);
+	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done=1;
+
+  open s_cursor; 
+  SELECT FOUND_ROWS() into rows;
+  SET row = 0;
+	cursor_loop:loop
+			FETCH s_cursor into c_id, c_name, c_code_id, c_code, c_parent_id;
+--			SELECT c_id;
+			IF row >= rows then
+				leave cursor_loop;
+			end if;
+			
+			INSERT INTO pc_zzsh_stat (agency_id, name, code_id, code, parent_id, year, quarter, month, type_id, total, total_success, total_return, total_delay, reported, reported_rate,  attend, asence, attend_rate, eva, eva_rate, eva_1, eva_2, eva_3, eva_4, agency_goodjob)
+			SELECT * FROM
+			(SELECT c_id as agency_id, c_name as name, c_code_id as code_id, c_code as code, c_parent_id as parent_id, T1.year, T1.quarter, T1.month, T1.type_id, T1.total, T1.total_success, T1.total_return, T1.total_delay, T1.reported,
+		  (CASE WHEN T1.reported_rate is NULL THEN 0 ELSE T1.reported_rate END) as reported_rate, 
+		  T1.attend, T1.asence, 
+		  (CASE WHEN T1.attend_rate is NULL THEN 0 ELSE T1.attend_rate END) as attend_rate, 
+		  T1.eva, 
+		  (CASE WHEN T1.eva_rate is NULL THEN 0 ELSE T1.eva_rate END) as eva_rate, 
+		  T1.eva_1, T1.eva_2, T1.eva_3, T1.eva_4,
+		  T1.agency_goodjob FROM 
+			(SELECT YEAR, quarter, month, type_id, 
+					 SUM(total) as total, 
+					 SUM(total_success) as total_success, 
+					 SUM(total_return) as total_return, 
+					 SUM(total_delay) as total_delay, 
+					 SUM(  reported ) as reported , 
+					 ROUND(  COUNT(CASE WHEN total > 0 THEN total END)/COUNT(*), 4) reported_rate,
+					 SUM(  attend ) as attend , 
+					 SUM(  asence ) as asence , 
+					 ROUND(SUM(attend_rate)/COUNT(CASE WHEN total > 0 THEN total END), 4) as attend_rate,
+					 SUM(eva) as eva,
+					 ROUND(SUM(eva)/COUNT(CASE WHEN total > 0 THEN total END), 4) as eva_rate , 
+					 SUM(eva_1) as eva_1,
+					 SUM(eva_2) as eva_2,
+					 SUM(eva_3) as eva_3,
+					 SUM(eva_4) as eva_4,
+					 COUNT(CASE WHEN reported_rate = 1 THEN agency_id END) as agency_goodjob
+			FROM  pc_zzsh_stat where code like CONCAT (c_code, '%') AND code <> c_code
+			GROUP BY YEAR, quarter, type_id )  as T1
+			) as T2
+			ON DUPLICATE KEY UPDATE 
+									name = c_name, code_id = c_code_id, code = c_code, parent_id = c_parent_id,
+									total = T2.total, total_success = T2.total_success,  total_return = T2.total_return,  total_delay = T2.total_delay,  
+									reported = T2.reported, reported_rate = T2.reported_rate, 
+									attend = T2.attend, asence = T2.asence, attend_rate = T2.attend_rate ,
+									eva = T2.eva, eva_rate = T2.eva_rate,  eva_1 = T2.eva_1, eva_2 = T2.eva_2, eva_3 = T2.eva_3, eva_4 = T2.eva_4, agency_goodjob = T2.agency_goodjob;
+			
 
 
-
+			SET row = row + 1;
+	end loop cursor_loop;
+	close s_cursor;
+							
+							
+	
+	SELECT count(*) INTO zb_num FROM (SELECT a.id, b.parent_id FROM `pc_agency` as a left join pc_agency_relation as b on a.id = b.agency_id WHERE a.code_id = 10) as T WHERE parent_id is not null;				
+								
+								
+	INSERT INTO pc_zzsh_stat (agency_id, name, code_id, code, parent_id, year, quarter, month, type_id, total, total_success, total_return, total_delay, reported, reported_rate,  attend, asence, attend_rate, eva, eva_rate, eva_1, eva_2, eva_3, eva_4, agency_goodjob)
+	SELECT * FROM
+	(SELECT T1.parent_id as agency_id, T2.name, T2.code_id, T2.code,  0 as parent_id, T1.year, T1.quarter, T1.month, T1.type_id, T1.total, T1.total_success, T1.total_return, T1.total_delay, T1.reported,
+  (CASE WHEN T1.reported_rate is NULL THEN 0 ELSE T1.reported_rate END) as reported_rate, 
+  T1.attend, T1.asence, 
+  (CASE WHEN T1.attend_rate is NULL THEN 0 ELSE T1.attend_rate END) as attend_rate, 
+  T1.eva, 
+  (CASE WHEN T1.eva_rate is NULL THEN 0 ELSE T1.eva_rate END) as eva_rate, 
+  T1.eva_1, T1.eva_2, T1.eva_3, T1.eva_4,
+  T1.agency_goodjob FROM 
+	(SELECT parent_id, YEAR, quarter, month, type_id, 
+			 SUM(total) as total, 
+			 SUM(total_success) as total_success, 
+			 SUM(total_return) as total_return, 
+			 SUM(total_delay) as total_delay, 
+			 SUM(  reported ) as reported , 
+			 ROUND(  SUM(agency_goodjob)/zb_num, 4) reported_rate,
+			 SUM(  attend ) as attend , 
+			 SUM(  asence ) as asence , 
+			 ROUND(SUM(attend_rate)/COUNT(CASE WHEN total > 0 THEN total END), 4) as attend_rate,
+			 SUM(eva) as eva,
+			 ROUND(SUM(eva)/COUNT(CASE WHEN total > 0 THEN total END), 4) as eva_rate , 
+			 SUM(eva_1) as eva_1,
+			 SUM(eva_2) as eva_2,
+			 SUM(eva_3) as eva_3,
+			 SUM(eva_4) as eva_4,
+			 SUM(agency_goodjob) as agency_goodjob
+	FROM  pc_zzsh_stat WHERE parent_id = 1 
+	GROUP BY parent_id,YEAR, quarter, type_id )  as T1
+	LEFT JOIN pc_agency as T2 ON T1.parent_id = T2.id ) as T3
+	ON DUPLICATE KEY UPDATE 
+							name = c_name, code_id = c_code_id, code = c_code, parent_id = c_parent_id,
+							total = T3.total, total_success = T3.total_success,  total_return = T3.total_return,  total_delay = T3.total_delay,  
+							reported = T3.reported, reported_rate = T3.reported_rate, 
+							attend = T3.attend, asence = T3.asence, attend_rate = T3.attend_rate ,
+							eva = T3.eva, eva_rate = T3.eva_rate,  eva_1 = T3.eva_1, eva_2 = T3.eva_2, eva_3 = T3.eva_3, eva_4 = T3.eva_4, agency_goodjob = T3.agency_goodjob;							
+					
+							
+end;
+//
+delimiter ;
 
 delimiter //
 DROP PROCEDURE IF EXISTS `stats_remind_process`//
@@ -880,8 +1075,11 @@ BEGIN
     IF (@event_stats_lock_isfree = 1) THEN
         SELECT GET_LOCK('event_stats_lock', 10) INTO @event_stats_lock_isfree;
         IF (@event_stats_lock_isfree = 1) THEN
-            CALL stat_agency();
-            CALL stat_agency_stat();            
+        		CALL proc_agency_stats();
+        		CALL proc_parent_stats();
+        		CALL check_remind_lock();
+            CALL stat_zzsh();
+            CALL stat_zzsh_stat();            
         END IF;
         SELECT RELEASE_LOCK('event_stats_lock_isfree');
     END IF;
@@ -896,7 +1094,7 @@ delimiter //
 SET GLOBAL event_scheduler = OFF //
 DROP EVENT IF EXISTS `event_stats`//
 CREATE EVENT IF NOT EXISTS `event_stats`
-ON SCHEDULE EVERY 6 HOUR
+ON SCHEDULE EVERY 3 HOUR
 ON COMPLETION PRESERVE
 DO
    BEGIN

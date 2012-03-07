@@ -1,6 +1,9 @@
 package com.partycommittee.service;
 
+import java.util.Date;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -47,6 +50,15 @@ public class PcRemindLockService {
 	}
 	
 	public void updateRemindLock(PcRemindLockVo pevo) {
+		if (pevo.getStatusId() ==8) {
+			//解锁后，默认延长一周时间后锁定.
+			
+			SimpleDateFormat df=new SimpleDateFormat("yyyy-MM-dd");
+			 Calendar cal=Calendar.getInstance();
+			 cal.add(Calendar.DATE, 7);
+			 Date date=cal.getTime();
+			 pevo.setDelayDate(df.format(date));
+		}
 		PcRemindLock vo = PcRemindLockVo.toPcRemindLock(pevo);
 		pcRemindLockDaoImpl.updateRemindLock(vo);
 	}
