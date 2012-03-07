@@ -202,7 +202,6 @@
 			public function confirmUnLock():void {
 				Alert.show("请确认解锁操作", "提示", 
 					Alert.YES | Alert.NO, FlexGlobals.topLevelApplication.root, unLock);
-			
 			}
 			
 			private function onUnlockSuceess(data:Object, evt:PcRemindLockEvent):void {

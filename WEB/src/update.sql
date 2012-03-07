@@ -269,7 +269,7 @@ CREATE TABLE IF NOT EXISTS `pc_zzsh_stat` (
   `eva_4` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '差',
   `agency_goodjob` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `agency_id` (`agency_id`,`code_id`,`parent_id`,`year`,`quarter`,`type_id`)
+  UNIQUE KEY `agency_id` (`agency_id`,`code_id`,`parent_id`,`year`,`quarter`, `month`,`type_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='组织生活统计表' AUTO_INCREMENT=1 ;
 
 

@@ -17,6 +17,8 @@ package com.partycommittee.vo
 		
 		public var ext:String;
 		
+		public var code:String;
+		
 		public var name:String;	
 		
 		public var year:Number;
