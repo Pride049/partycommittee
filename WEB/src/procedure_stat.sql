@@ -540,8 +540,6 @@ end;
 //
 delimiter ;
 
-
-
 delimiter //
 DROP procedure IF EXISTS stat_zzsh//
 CREATE PROCEDURE stat_zzsh()
@@ -593,24 +591,7 @@ begin
 				FETCH s_cursor into c_id, c_name, c_code_id, c_code, c_parent_id;
 --				SELECT c_id, c_name;
 
-				SET  stat_reported = 0;
-				SET  stat_reported_rate = 0;
-				
-				SET  stat_total = 0;
-				SET  stat_total_success = 0;
-				SET  stat_total_return = 0;
-				SET  stat_total_delay = 0;
-				
-				SET  stat_attend = 0;
-				SET  stat_asence = 0;
-				SET  stat_attend_rate  = 0;
-			
-				SET  stat_eva = 0;
-				SET  stat_eva_rate  = 0;
-				SET  stat_eva_1 = 0;
-				SET  stat_eva_2 = 0;
-				SET  stat_eva_3 = 0;
-				SET  stat_eva_4 = 0;
+
 
 				
 				IF row >= rows then
@@ -619,6 +600,26 @@ begin
 				SET i = 1;
 				IF c_parent_id is not null THEN
 					while i <= 9 do	
+					
+						SET  stat_reported = 0;
+						SET  stat_reported_rate = 0;
+						
+						SET  stat_total = 0;
+						SET  stat_total_success = 0;
+						SET  stat_total_return = 0;
+						SET  stat_total_delay = 0;
+						
+						SET  stat_attend = 0;
+						SET  stat_asence = 0;
+						SET  stat_attend_rate  = 0;
+					
+						SET  stat_eva = 0;
+						SET  stat_eva_rate  = 0;
+						SET  stat_eva_1 = 0;
+						SET  stat_eva_2 = 0;
+						SET  stat_eva_3 = 0;
+						SET  stat_eva_4 = 0;					
+					
 						SET y = year(now());
 						SET q = quarter(now());		
 						SET m = month(now());
@@ -673,6 +674,7 @@ begin
 												
 												IF (stat_total > 0) THEN
 													SELECT 1 - stat_total_delay, ROUND( (1 - stat_total_delay)/1 , 4) into stat_reported, stat_reported_rate;
+													SET stat_total_success = stat_total - stat_total_delay - stat_total_return;
 												END IF;
 												
 												IF (stat_eva > 0) THEN
@@ -716,6 +718,7 @@ begin
 												
 												IF (stat_total > 0) THEN
 													SELECT 1 - stat_total_delay, ROUND( (1 - stat_total_delay)/1 , 4) into stat_reported, stat_reported_rate;
+													SET stat_total_success = stat_total - stat_total_delay - stat_total_return;
 												END IF;
 												
 												IF (stat_eva > 0) THEN
@@ -780,24 +783,7 @@ begin
 	  SET row = 0;
 		cursor_loop:loop
 				FETCH s_cursor into c_id, c_name, c_code_id, c_code, c_parent_id;
-				SET  stat_reported = 0;
-				SET  stat_reported_rate = 0;
-				
-				SET  stat_total = 0;
-				SET  stat_total_success = 0;
-				SET  stat_total_return = 0;
-				SET  stat_total_delay = 0;
-				
-				SET  stat_attend = 0;
-				SET  stat_asence = 0;
-				SET  stat_attend_rate  = 0;
-			
-				SET  stat_eva = 0;
-				SET  stat_eva_rate  = 0;
-				SET  stat_eva_1 = 0;
-				SET  stat_eva_2 = 0;
-				SET  stat_eva_3 = 0;
-				SET  stat_eva_4 = 0;
+
 
 				
 				IF row >= rows then
@@ -806,6 +792,27 @@ begin
 				SET i = 1;
 				IF c_parent_id is not null THEN
 					while i <= 9 do	
+					
+					SET  stat_reported = 0;
+					SET  stat_reported_rate = 0;
+					
+					SET  stat_total = 0;
+					SET  stat_total_success = 0;
+					SET  stat_total_return = 0;
+					SET  stat_total_delay = 0;
+					
+					SET  stat_attend = 0;
+					SET  stat_asence = 0;
+					SET  stat_attend_rate  = 0;
+				
+					SET  stat_eva = 0;
+					SET  stat_eva_rate  = 0;
+					SET  stat_eva_1 = 0;
+					SET  stat_eva_2 = 0;
+					SET  stat_eva_3 = 0;
+					SET  stat_eva_4 = 0;					
+					
+					
 						SET y = year(now());
 						SET q = quarter(now());		
 						SET m = month(now());
@@ -975,19 +982,19 @@ begin
 					 SUM(total_return) as total_return, 
 					 SUM(total_delay) as total_delay, 
 					 SUM(  reported ) as reported , 
-					 ROUND(  COUNT(CASE WHEN total > 0 THEN total END)/COUNT(*), 4) reported_rate,
+					 ROUND( SUM(reported_rate)/COUNT(CASE WHEN total > 0 THEN total END), 4) reported_rate,
 					 SUM(  attend ) as attend , 
 					 SUM(  asence ) as asence , 
 					 ROUND(SUM(attend_rate)/COUNT(CASE WHEN total > 0 THEN total END), 4) as attend_rate,
 					 SUM(eva) as eva,
-					 ROUND(SUM(eva)/COUNT(CASE WHEN total > 0 THEN total END), 4) as eva_rate , 
+					 ROUND(SUM(eva_rate)/COUNT(CASE WHEN total > 0 THEN total END), 4) as eva_rate , 
 					 SUM(eva_1) as eva_1,
 					 SUM(eva_2) as eva_2,
 					 SUM(eva_3) as eva_3,
 					 SUM(eva_4) as eva_4,
 					 COUNT(CASE WHEN reported_rate = 1 THEN agency_id END) as agency_goodjob
 			FROM  pc_zzsh_stat where code like CONCAT (c_code, '%') AND code <> c_code
-			GROUP BY YEAR, quarter, type_id )  as T1
+			GROUP BY YEAR, quarter, month, type_id )  as T1
 			) as T2
 			ON DUPLICATE KEY UPDATE 
 									name = c_name, code_id = c_code_id, code = c_code, parent_id = c_parent_id,
@@ -1004,7 +1011,7 @@ begin
 							
 							
 	
-	SELECT count(*) INTO zb_num FROM (SELECT a.id, b.parent_id FROM `pc_agency` as a left join pc_agency_relation as b on a.id = b.agency_id WHERE a.code_id = 10) as T WHERE parent_id is not null;				
+--	SELECT count(*) INTO zb_num FROM (SELECT a.id, b.parent_id FROM `pc_agency` as a left join pc_agency_relation as b on a.id = b.agency_id WHERE a.code_id = 10) as T WHERE parent_id is not null;				
 								
 								
 	INSERT INTO pc_zzsh_stat (agency_id, name, code_id, code, parent_id, year, quarter, month, type_id, total, total_success, total_return, total_delay, reported, reported_rate,  attend, asence, attend_rate, eva, eva_rate, eva_1, eva_2, eva_3, eva_4, agency_goodjob)
@@ -1023,22 +1030,22 @@ begin
 			 SUM(total_return) as total_return, 
 			 SUM(total_delay) as total_delay, 
 			 SUM(  reported ) as reported , 
-			 ROUND(  SUM(agency_goodjob)/zb_num, 4) reported_rate,
+			 ROUND(SUM(reported_rate)/COUNT(CASE WHEN total > 0 THEN total END), 4) as reported_rate,
 			 SUM(  attend ) as attend , 
 			 SUM(  asence ) as asence , 
 			 ROUND(SUM(attend_rate)/COUNT(CASE WHEN total > 0 THEN total END), 4) as attend_rate,
 			 SUM(eva) as eva,
-			 ROUND(SUM(eva)/COUNT(CASE WHEN total > 0 THEN total END), 4) as eva_rate , 
+			 ROUND(SUM(eva_rate)/COUNT(CASE WHEN total > 0 THEN total END), 4) as eva_rate , 
 			 SUM(eva_1) as eva_1,
 			 SUM(eva_2) as eva_2,
 			 SUM(eva_3) as eva_3,
 			 SUM(eva_4) as eva_4,
 			 SUM(agency_goodjob) as agency_goodjob
 	FROM  pc_zzsh_stat WHERE parent_id = 1 
-	GROUP BY parent_id,YEAR, quarter, type_id )  as T1
+	GROUP BY parent_id,YEAR, quarter, month, type_id )  as T1
 	LEFT JOIN pc_agency as T2 ON T1.parent_id = T2.id ) as T3
 	ON DUPLICATE KEY UPDATE 
-							name = c_name, code_id = c_code_id, code = c_code, parent_id = c_parent_id,
+							name = T3.name, code_id = T3.code_id, code = T3.code, parent_id = T3.parent_id,
 							total = T3.total, total_success = T3.total_success,  total_return = T3.total_return,  total_delay = T3.total_delay,  
 							reported = T3.reported, reported_rate = T3.reported_rate, 
 							attend = T3.attend, asence = T3.asence, attend_rate = T3.attend_rate ,
