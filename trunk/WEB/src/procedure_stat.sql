@@ -299,7 +299,7 @@ begin
   DECLARE stat_ejdw_num int(10) unsigned;
   DECLARE stat_dzj_num int(10) unsigned;
   DECLARE stat_dzb_num int(10) unsigned;
-  DECLARE stat_2year_num int(10) unsigned;
+  DECLARE stat_more2year_num int(10) unsigned;
   DECLARE stat_less7_num int(10) unsigned;
   DECLARE stat_no_fsj_zbwy_num int(10) unsigned;
   DECLARE stat_dxz_num int(10) unsigned;
@@ -327,7 +327,7 @@ begin
 		  SET stat_ejdw_num = 0;
 		  SET stat_dzj_num = 0;
 		  SET stat_dzb_num = 0;
-		  SET stat_2year_num = 0;
+		  SET stat_more2year_num = 0;
 		  SET stat_less7_num = 0;
 		  SET stat_no_fsj_zbwy_num = 0;
 		  SET stat_zbsj_num = 0;
@@ -351,7 +351,7 @@ begin
 				
 --      截止统计时间支部改选时间满两年的支部数				
 				IF unix_timestamp(now()) > unix_timestamp(DATE_ADD(c_setup_datetime,INTERVAL 2 YEAR)) THEN
-					SET stat_2year_num = 1;
+					SET stat_more2year_num = 1;
 			  END IF;
 			  
 --			党员人数不足7人的党支部数量			  
@@ -378,8 +378,8 @@ begin
 				END IF;
 				
 			IF c_parent_id is not null THEN
-				INSERT INTO pc_parent_stats (agency_id, name, code_id, code, parent_id, ejdw_num, dzj_num, dzb_num, 2year_num, less7_num, no_fsj_zbwy_num, dxz_num, dy_num, zbsj_num, zbfsj_num, zzwy_num, xcwy_num, jjwy_num, qnwy_num, ghwy_num, fnwy_num, bmwy_num) VALUES
-				(c_id, c_name, c_code_id, c_code, c_parent_id, stat_ejdw_num, stat_dzj_num, stat_dzb_num, stat_2year_num, stat_less7_num, stat_no_fsj_zbwy_num, stat_dxz_num, stat_dy_num, stat_zbsj_num, stat_zbfsj_num, stat_zzwy_num, stat_xcwy_num, stat_jjwy_num, stat_qnwy_num, stat_ghwy_num, stat_fnwy_num, stat_bmwy_num)
+				INSERT INTO pc_parent_stats (agency_id, name, code_id, code, parent_id, ejdw_num, dzj_num, dzb_num, more2year_num, less7_num, no_fsj_zbwy_num, dxz_num, dy_num, zbsj_num, zbfsj_num, zzwy_num, xcwy_num, jjwy_num, qnwy_num, ghwy_num, fnwy_num, bmwy_num) VALUES
+				(c_id, c_name, c_code_id, c_code, c_parent_id, stat_ejdw_num, stat_dzj_num, stat_dzb_num, stat_more2year_num, stat_less7_num, stat_no_fsj_zbwy_num, stat_dxz_num, stat_dy_num, stat_zbsj_num, stat_zbfsj_num, stat_zzwy_num, stat_xcwy_num, stat_jjwy_num, stat_qnwy_num, stat_ghwy_num, stat_fnwy_num, stat_bmwy_num)
 				ON DUPLICATE KEY UPDATE 
 				name = c_name, 
 				code_id = c_code_id, 
@@ -388,7 +388,7 @@ begin
 				ejdw_num = stat_ejdw_num, 
 				dzj_num = stat_dzj_num, 
 				dzb_num = stat_dzb_num, 
-				2year_num = stat_2year_num, 
+				more2year_num = stat_more2year_num, 
 				less7_num = stat_less7_num, 
 				no_fsj_zbwy_num = stat_no_fsj_zbwy_num, 
 				dxz_num = stat_dxz_num, 
@@ -448,25 +448,25 @@ begin
 				SELECT COUNT(*) INTO stat_ejdw_num  FROM pc_agency WHERE code like CONCAT (c_code, '%') and code_id = 15;
 				SELECT COUNT(*) INTO stat_dzj_num FROM pc_agency WHERE code like CONCAT (c_code, '%') and code_id = 8;
 			END IF;
-			INSERT INTO pc_parent_stats (agency_id, name, code_id, code, parent_id, ejdw_num, dzj_num, dzb_num, 2year_num, less7_num, no_fsj_zbwy_num, dxz_num, dy_num, zbsj_num, zbfsj_num, zzwy_num, xcwy_num, jjwy_num, qnwy_num, ghwy_num, fnwy_num, bmwy_num)
+			INSERT INTO pc_parent_stats (agency_id, name, code_id, code, parent_id, ejdw_num, dzj_num, dzb_num, more2year_num, less7_num, no_fsj_zbwy_num, dxz_num, dy_num, zbsj_num, zbfsj_num, zzwy_num, xcwy_num, jjwy_num, qnwy_num, ghwy_num, fnwy_num, bmwy_num)
 			SELECT  c_id as agency_id, c_name as name, c_code_id as code_id, c_code as  code, c_parent_id as  parent_id,
 			stat_ejdw_num as ejdw_num,
-			stat_dzj_num as ejdw_num,
-			SUM(dzb_num) as ejdw_num,
-			SUM(2year_num) as ejdw_num,
-			SUM(less7_num) as ejdw_num,
-			SUM(no_fsj_zbwy_num) as ejdw_num,
-			SUM(dxz_num) as ejdw_num,
-			SUM(dy_num) as ejdw_num,
-			SUM(zbsj_num) as ejdw_num,
-			SUM(zbfsj_num) as ejdw_num,
-			SUM(zzwy_num) as ejdw_num,
-			SUM(xcwy_num) as ejdw_num, 
-			SUM(jjwy_num) as ejdw_num,
-			SUM(qnwy_num) as ejdw_num,
-			SUM(ghwy_num) as ejdw_num,
-			SUM(fnwy_num) as ejdw_num,
-			SUM(bmwy_num) as ejdw_num
+			stat_dzj_num as dzj_num,
+			SUM(dzb_num) as dzb_num,
+			SUM(more2year_num) as more2year_num,
+			SUM(less7_num) as less7_num,
+			SUM(no_fsj_zbwy_num) as no_fsj_zbwy_num,
+			SUM(dxz_num) as dxz_num,
+			SUM(dy_num) as dy_num,
+			SUM(zbsj_num) as zbsj_num,
+			SUM(zbfsj_num) as zbfsj_num,
+			SUM(zzwy_num) as zzwy_num,
+			SUM(xcwy_num) as xcwy_num, 
+			SUM(jjwy_num) as jjwy_num,
+			SUM(qnwy_num) as qnwy_num,
+			SUM(ghwy_num) as ghwy_num,
+			SUM(fnwy_num) as fnwy_num,
+			SUM(bmwy_num) as bmwy_num
 			FROM pc_parent_stats 
 			WHERE code like CONCAT (c_code, '%')
 			ON DUPLICATE KEY UPDATE 
@@ -477,7 +477,7 @@ begin
 			ejdw_num = stat_ejdw_num, 
 			dzj_num = stat_dzj_num, 
 			dzb_num = dzb_num, 
-			2year_num = 2year_num, 
+			more2year_num = more2year_num, 
 			less7_num = less7_num, 
 			no_fsj_zbwy_num = no_fsj_zbwy_num, 
 			dxz_num = dxz_num, 
@@ -495,33 +495,35 @@ begin
 			SET row = row + 1;
 	end loop cursor_loop;
 	close s_cursor;
-
-	INSERT INTO pc_parent_stats (agency_id, name, code_id, code, parent_id, ejdw_num, dzj_num, dzb_num, 2year_num, less7_num, no_fsj_zbwy_num, dxz_num, dy_num, zbsj_num, zbfsj_num, zzwy_num, xcwy_num, jjwy_num, qnwy_num, ghwy_num, fnwy_num, bmwy_num)
-	SELECT  1 as agency_id, '北京市公安局党委' as name, 6 as code_id, '' as  code, 0 as  parent_id,
+	
+	
+	INSERT INTO pc_parent_stats (agency_id, name, code_id, code, parent_id, ejdw_num, dzj_num, dzb_num, more2year_num, less7_num, no_fsj_zbwy_num, dxz_num, dy_num, zbsj_num, zbfsj_num, zzwy_num, xcwy_num, jjwy_num, qnwy_num, ghwy_num, fnwy_num, bmwy_num)
+	SELECT  T1.parent_id as agency_id, T2.name, T2.code_id, T2.code, 0 as  parent_id,
 	SUM(ejdw_num) as ejdw_num,
-	SUM(dzj_num) as ejdw_num,
-	SUM(dzb_num) as ejdw_num,
-	SUM(2year_num) as ejdw_num,
-	SUM(less7_num) as ejdw_num,
-	SUM(no_fsj_zbwy_num) as ejdw_num,
-	SUM(dxz_num) as ejdw_num,
-	SUM(dy_num) as ejdw_num,
-	SUM(zbsj_num) as ejdw_num,
-	SUM(zbfsj_num) as ejdw_num,
-	SUM(zzwy_num) as ejdw_num,
-	SUM(xcwy_num) as ejdw_num, 
-	SUM(jjwy_num) as ejdw_num,
-	SUM(qnwy_num) as ejdw_num,
-	SUM(ghwy_num) as ejdw_num,
-	SUM(fnwy_num) as ejdw_num,
-	SUM(bmwy_num) as ejdw_num
-	FROM pc_parent_stats 
+	SUM(dzj_num) as dzj_num,
+	SUM(dzb_num) as dzb_num,
+	SUM(more2year_num) as more2year_num,
+	SUM(less7_num) as less7_num,
+	SUM(no_fsj_zbwy_num) as no_fsj_zbwy_num,
+	SUM(dxz_num) as dxz_num,
+	SUM(dy_num) as dy_num,
+	SUM(zbsj_num) as zbsj_num,
+	SUM(zbfsj_num) as zbfsj_num,
+	SUM(zzwy_num) as zzwy_num,
+	SUM(xcwy_num) as xcwy_num, 
+	SUM(jjwy_num) as jjwy_num,
+	SUM(qnwy_num) as qnwy_num,
+	SUM(ghwy_num) as ghwy_num,
+	SUM(fnwy_num) as fnwy_num,
+	SUM(bmwy_num) as bmwy_num
+	FROM pc_parent_stats as T1
+	LEFT JOIN pc_agency as T2 on T1.parent_id = T2.id
 	WHERE parent_id = 1
 	ON DUPLICATE KEY UPDATE 
 	ejdw_num = ejdw_num, 
 	dzj_num = dzj_num, 
 	dzb_num = dzb_num, 
-	2year_num = 2year_num, 
+	more2year_num = more2year_num, 
 	less7_num = less7_num, 
 	no_fsj_zbwy_num = no_fsj_zbwy_num, 
 	dxz_num = dxz_num, 
@@ -534,11 +536,13 @@ begin
 	qnwy_num = qnwy_num, 
 	ghwy_num = ghwy_num, 
 	fnwy_num = fnwy_num, 
-	bmwy_num = bmwy_num;	
+	bmwy_num = bmwy_num;
 
 end;
 //
 delimiter ;
+
+
 
 delimiter //
 DROP procedure IF EXISTS stat_zzsh//

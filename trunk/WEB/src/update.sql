@@ -202,7 +202,7 @@ CREATE TABLE IF NOT EXISTS `pc_parent_stats` (
   `ejdw_num` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '二级党委数量',
   `dzj_num` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '党总支数量',
   `dzb_num` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '党支部数',
-  `2year_num` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '支部改选时间满两年的支部数',
+  `more2year_num` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '支部改选时间满两年的支部数',
   `less7_num` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '党员人数不足7人的党支部数量',
   `no_fsj_zbwy_num` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '只设支部书记未设支部副书记、支部委员的支部数量',
   `dxz_num` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '党小组数量',

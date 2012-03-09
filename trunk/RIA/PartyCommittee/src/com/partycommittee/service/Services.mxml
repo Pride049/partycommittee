@@ -93,6 +93,9 @@
 	<mx:RemoteObject id="pcParentStat"
 					 destination="PcParentStatRo"
 					 channelSet="{channelSet}"/>	
+	<mx:RemoteObject id="pcStat"
+					 destination="PcStatRo"
+					 channelSet="{channelSet}"/>		
 	
     <!-- HTTPService example
 	<mx:HTTPService

@@ -9,8 +9,8 @@ package com.partycommittee.events
 		private var _agencyId:Number;
 		private var _year:Number;
 		private var _quarter:Number;
+		private var _month:Number;
 		private var _kind:String;
-
 
 		public function get quarter():Number
 		{
@@ -31,6 +31,17 @@ package com.partycommittee.events
 		{
 			_year = value;
 		}
+		
+		public function get month():Number
+		{
+			return _month;
+		}
+		
+		public function set month(value:Number):void
+		{
+			_month = value;
+		}
+		
 
 		public function get agencyId():Number
 		{
