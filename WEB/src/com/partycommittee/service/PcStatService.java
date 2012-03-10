@@ -25,9 +25,21 @@ public class PcStatService {
 	public List<PcAgencyStatsVo> getAgencyStatsByParentId(Integer id) {
 		List<PcAgencyStatsVo> list = new ArrayList<PcAgencyStatsVo>();
 		
-		List<PcAgencyStats> y = pcAgencyStatsDaoImpl.getAgencyStatsByParentId(id);
-		for (PcAgencyStats item : y) {
-			list.add(PcAgencyStatsVo.fromPcAgencyStats(item));
+		if (id == 1) {
+			List<PcAgencyStats> list_admin = pcAgencyStatsDaoImpl.getAgencyStatsById(id);
+			for (PcAgencyStats item : list_admin) {
+				list.add(PcAgencyStatsVo.fromPcAgencyStats(item));
+			}		
+			
+			List<PcAgencyStats> list_child = pcAgencyStatsDaoImpl.getAgencyStatsByParentId(id);
+			for (PcAgencyStats item : list_child) {
+				list.add(PcAgencyStatsVo.fromPcAgencyStats(item));
+			}			
+		} else {
+			List<PcAgencyStats> y = pcAgencyStatsDaoImpl.getAgencyStatsByParentCode(id);
+			for (PcAgencyStats item : y) {
+				list.add(PcAgencyStatsVo.fromPcAgencyStats(item));
+			}
 		}
 		return list;
 	}		
