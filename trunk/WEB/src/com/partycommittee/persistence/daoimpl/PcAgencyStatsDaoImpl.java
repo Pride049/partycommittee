@@ -18,7 +18,7 @@ public class PcAgencyStatsDaoImpl extends JpaDaoBase implements PcAgencyStatsDao
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<PcAgencyStats> getAgencyStatsByParentId(Integer id) {
+	public List<PcAgencyStats> getAgencyStatsByParentCode(Integer id) {
 		try {
 			if (id == null) {
 				return null;
@@ -28,15 +28,10 @@ public class PcAgencyStatsDaoImpl extends JpaDaoBase implements PcAgencyStatsDao
 
 			// 获取直属党支部
 			String query_sql;
-			if (id == 1) {
-				query_sql = "from  PcAgencyStats where parent_id = 1 Order by agency_id ASC ";
-			} else {
-				Query sql = em.createQuery("select code from PcAgency where id = " + id);
-				List<String> rs = sql.getResultList();
-				String code = rs.get(0);	
-				query_sql = "from PcAgencyStats where code like '"+code+"%' Order by agency_id ASC ";
-			}
-			
+			Query sql = em.createQuery("select code from PcAgency where id = " + id);
+			List<String> rs = sql.getResultList();
+			String code = rs.get(0);	
+			query_sql = "from PcAgencyStats where code like '"+code+"%' Order by agency_id ASC ";
 			Query query=em.createQuery(query_sql);
 			List<PcAgencyStats> list =  query.getResultList();
 	
@@ -46,6 +41,45 @@ public class PcAgencyStatsDaoImpl extends JpaDaoBase implements PcAgencyStatsDao
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<PcAgencyStats> getAgencyStatsById(Integer id) {
+		try {
+			if (id == null) {
+				return null;
+			}
+			EntityManager em = super.getEntityManager();
+
+			Query query=em.createQuery("from PcAgencyStats where agencyId = "+id+" Order by agency_id ASC ");
+			List<PcAgencyStats> list =  query.getResultList();
+	
+			return list;
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}	
+	
+	@Override
+	public List<PcAgencyStats> getAgencyStatsByParentId(Integer id) {
+		try {
+			if (id == null) {
+				return null;
+			}
+			EntityManager em = super.getEntityManager();
+
+			Query query=em.createQuery("from PcAgencyStats where parent_id = "+id+" Order by agency_id ASC ");
+			List<PcAgencyStats> list =  query.getResultList();
+	
+			return list;
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}		
 
 }

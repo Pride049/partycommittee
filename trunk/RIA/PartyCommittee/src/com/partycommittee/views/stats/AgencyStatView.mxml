@@ -43,9 +43,6 @@
 
 			}
 			
-
-
-			
 			public function updateData():void {
 				if (model && model.focusAgencyVo) {
 					if (model.focusAgencyVo && model.focusAgencyVo.codeId == 10) {
@@ -67,8 +64,8 @@
 			private function onGetAgencyStatSuccess(data:Object, evt:PcStatEvent):void {
 				this.enabled = true;
 				if (!data) return;
-				var dp:ArrayCollection = data as ArrayCollection;
-				agencystatsDG.dataProvider = dp;
+				datas = data as ArrayCollection;
+//				agencystatsDG.dataProvider = dp;
 			}
 			
 			private function onGetAgencyStatFailure(info:Object, evt:PcStatEvent):void {
@@ -76,9 +73,14 @@
 			}			
 			
 			private function exportToExcel():void {
-				ExportExcel.loadDGInExcel(agencystatsDG,'excelExport.jsp', "统计表");
+				ExportExcel.loadDGInExcel(agencystatsDG,'excelExport.jsp', "基本情况统计表");
 			}
-
+			
+			private function indexLabelFunction(oItem:Object,iCol:int):String	{
+				var iIndex:int = datas.getItemIndex(oItem) + 1;
+				return String(iIndex);
+			}			
+			
 		]]>
 	</fx:Script>
 	
@@ -95,12 +97,12 @@
 
 		<mx:AdvancedDataGrid id="agencystatsDG" designViewDataType="flat"   
 							 width="100%" height="100%" color="0x323232"  
-							 minWidth="640" minHeight="480"   
+							 minWidth="640" minHeight="480" dataProvider="{datas}"
 							 sortableColumns="false" sortExpertMode="true"
 							 variableRowHeight="true"
 							 >  
 			<mx:groupedColumns>   
-				<mx:AdvancedDataGridColumn dataField="num" headerText="序号" width="25" headerWordWrap="true" textAlign="center"/>
+				<mx:AdvancedDataGridColumn dataField="num" headerText="序号" labelFunction="indexLabelFunction" width="25" headerWordWrap="true" textAlign="center"/>
 				<mx:AdvancedDataGridColumn dataField="name" width="140" headerRenderer="com.partycommittee.renderers.headRenderer" textAlign="left" headerWordWrap="true" wordWrap="true"/>
 				<mx:AdvancedDataGridColumn dataField="ejdwNum" headerText="二级党委数量" width="40" headerWordWrap="true" textAlign="right"/>
 				<mx:AdvancedDataGridColumn dataField="dzjNum" headerText="党总支数量" width="40" headerWordWrap="true" textAlign="right"/>

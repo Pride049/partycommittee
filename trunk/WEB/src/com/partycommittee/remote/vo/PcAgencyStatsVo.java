@@ -141,7 +141,7 @@ public class PcAgencyStatsVo implements Serializable {
 	}
 
 	public void setNoFsjZbwyNum(Integer noFsjZbwyNum) {
-		noFsjZbwyNum = noFsjZbwyNum;
+		this.noFsjZbwyNum = noFsjZbwyNum;
 	}
 	
 	@Column(name = "dxz_num")
