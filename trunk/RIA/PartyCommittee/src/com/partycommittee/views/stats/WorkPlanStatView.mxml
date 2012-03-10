@@ -14,6 +14,7 @@
 		<![CDATA[
 			import com.lnczx.utils.ExportExcel;
 			import com.partycommittee.events.PcParentStatEvent;
+			import com.partycommittee.events.PcStatEvent;
 			import com.partycommittee.manager.popup.PopupMgr;
 			import com.partycommittee.model.ModelLocator;
 			import com.partycommittee.util.CRUDEventType;
@@ -45,45 +46,63 @@
 					yearCmb.selectedItem = model.reportYear = new Date().getFullYear();
 				}
 				
-				if (quarterCmb) {
-					quarterCmb.dataProvider = DataproviderFactory.createQuarterDp();
-					quarterCmb.selectedIndex = 0;
+				if (startMonthCmb) {
+					startMonthCmb.dataProvider = createMonthDp();
+					startMonthCmb.selectedIndex = 0;
+				}	
+				
+				if (endMonthCmb) {
+					endMonthCmb.dataProvider = createMonthDp();
+					endMonthCmb.selectedIndex = new Date().getMonth() + 1;
 				}				
 //				onNavigateIn();
 			}
 			
-			override protected function onNavigateIn():void {
-				model.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, onModelChanged);
-				updateData();
-			}
+			private function createMonthDp():ArrayCollection {
+				var monthCollection:ArrayCollection = new ArrayCollection();
+				for (var i:Number = 1; i <= 12; i++) {
+					monthCollection.addItem(i);
+				}
+				return monthCollection;
+			}			
 			
-			override protected function onNavigateOut():void {
-				model.removeEventListener(PropertyChangeEvent.PROPERTY_CHANGE, onModelChanged);
-			}
-			
-			private function onModelChanged(event:PropertyChangeEvent):void {
-				if (event.property == "focusAgencyVo" ) {
-					updateData();
-				} 
-			}		
 
-			
 			public function updateData():void {
-					
+				if (model && model.focusAgencyVo) {
+					if (model.focusAgencyVo && model.focusAgencyVo.codeId == 10) {
+						// todo;
+					} else {
+						if (model.focusAgencyVo) {
+							var evt:PcStatEvent = new PcStatEvent(PcStatEvent.GET_WORKPLAN_STATS_BY_ID);
+							evt.agencyId = model.focusAgencyVo.id;
+							evt.successCallback = onGetStatSuccess;
+							evt.failureCallback = onGetStatFailure;
+							this.enabled = false;
+							evt.dispatch();
+						}
+					}
+				}					
 			}
 			
-
-			private function onGetParentStatFailure(info:Object, evt:PcParentStatEvent):void {
+			private function onGetStatSuccess(data:Object, evt:PcStatEvent):void {
+				this.enabled = true;
+				if (!data) return;
+				datas = data as ArrayCollection;
+			}
+			
+			private function onGetStatFailure(info:Object, evt:PcParentStatEvent):void {
 				this.enabled = true;
 			}			
 			
-			private function onRefresh(data:Object, event:PcParentStatEvent):void {
-	
-			}
 			
 			private function exportToExcel():void {
-				ExportExcel.loadDGInExcel(parentstatsDG,'excelExport.jsp', "统计表");
+				ExportExcel.loadDGInExcel(workPlanStatsDG,'excelExport.jsp', "统计表");
 			}
+
+			private function indexLabelFunction(oItem:Object,iCol:int):String	{
+				var iIndex:int = datas.getItemIndex(oItem) + 1;
+				return String(iIndex);
+			}				
 
 		]]>
 	</fx:Script>
@@ -97,25 +116,80 @@
 		<mx:HBox >		
 			<mx:Label text="选择年份:"/>
 			<mx:ComboBox id="yearCmb"/>
-			<mx:Label text="季度:"/>
-			<mx:ComboBox id="quarterCmb" />		
-			<mx:Button label="重新统计" click="updateData()"/>
+			<mx:Label text="开始月份:"/>
+			<mx:ComboBox id="startMonthCmb" />
+			<mx:Label text="结束月份:"/>
+			<mx:ComboBox id="endMonthCmb" />
+			<mx:Button label="统计" click="updateData()"/>
 			<mx:Button label="导出到Excel" click="exportToExcel()"/>
 		</mx:HBox>		
 
-		<mx:AdvancedDataGrid id="parentstatsDG" designViewDataType="flat"   
+		<mx:AdvancedDataGrid id="workPlanStatsDG" designViewDataType="flat"   
 							 width="100%" height="100%" color="0x323232"  
 							 minWidth="640" minHeight="480"   
 							 sortableColumns="false" sortExpertMode="true"
 							 variableRowHeight="true"
 							 >  
 			<mx:groupedColumns>   
-				<mx:AdvancedDataGridColumn dataField="num" headerText="序号" width="25" headerWordWrap="true" textAlign="center"/>
-				<mx:AdvancedDataGridColumn dataField="name" headerText="单位" width="140" textAlign="left" headerWordWrap="true" wordWrap="true"/>
-				<mx:AdvancedDataGridColumn dataField="agencyNum" headerText="党支部数量" width="40" headerWordWrap="true" textAlign="right"/>
-				<mx:AdvancedDataGridColumn dataField="pCount" headerText="党小组数量" width="40" headerWordWrap="true" textAlign="right"/>
-				<mx:AdvancedDataGridColumn dataField="zbNum" headerText="党员总数" width="40" headerWordWrap="true" textAlign="right"/>
-				<mx:AdvancedDataGridColumn dataField="zbsjNum" headerText="支部书记总数" width="40" headerWordWrap="true" textAlign="right"/>
+				<mx:AdvancedDataGridColumn dataField="num" headerText="序号" labelFunction="indexLabelFunction" width="25" headerWordWrap="true" textAlign="center"/>
+				<mx:AdvancedDataGridColumn dataField="name" width="140" headerRenderer="com.partycommittee.renderers.headRenderer" textAlign="left" headerWordWrap="true" wordWrap="true"/>
+				
+			
+				<mx:AdvancedDataGridColumnGroup headerText="年度计划" headerWordWrap="true">  
+					<mx:AdvancedDataGridColumn dataField="zbsjNum" headerText="规范报送率" width="30" headerWordWrap="true" textAlign="right" />
+					<mx:AdvancedDataGridColumn dataField="zbsjNum" headerText="规范报送支部数" width="30" headerWordWrap="true" textAlign="right" />
+					<mx:AdvancedDataGridColumn dataField="zbfsjNum" headerText="驳回后上报率" width="30" headerWordWrap="true" textAlign="right"/>  
+					<mx:AdvancedDataGridColumn dataField="zbfsjNum" headerText="逾期授权后上报率" width="30" headerWordWrap="true" textAlign="right"/>
+					<mx:AdvancedDataGridColumn dataField="zbfsjNum" headerText="上级评价率" width="30" headerWordWrap="true" textAlign="right"/>
+					<mx:AdvancedDataGridColumnGroup headerText="评价等次分布率" headerWordWrap="true"> 
+						<mx:AdvancedDataGridColumn dataField="zbsjNum" headerText="好" width="30" headerWordWrap="true" textAlign="right" />
+						<mx:AdvancedDataGridColumn dataField="zbsjNum" headerText="较好" width="30" headerWordWrap="true" textAlign="right" />
+						<mx:AdvancedDataGridColumn dataField="zbsjNum" headerText="一般" width="30" headerWordWrap="true" textAlign="right" />
+						<mx:AdvancedDataGridColumn dataField="zbsjNum" headerText="差" width="30" headerWordWrap="true" textAlign="right" />
+					</mx:AdvancedDataGridColumnGroup>
+				</mx:AdvancedDataGridColumnGroup>
+				
+				<mx:AdvancedDataGridColumnGroup headerText="季度计划" headerWordWrap="true">  
+					<mx:AdvancedDataGridColumn dataField="zbsjNum" headerText="规范报送率" width="30" headerWordWrap="true" textAlign="right" />
+					<mx:AdvancedDataGridColumn dataField="zbsjNum" headerText="规范报送支部数" width="30" headerWordWrap="true" textAlign="right" />
+					<mx:AdvancedDataGridColumn dataField="zbfsjNum" headerText="驳回后上报率" width="30" headerWordWrap="true" textAlign="right"/>  
+					<mx:AdvancedDataGridColumn dataField="zbfsjNum" headerText="逾期授权后上报率" width="30" headerWordWrap="true" textAlign="right"/>
+					<mx:AdvancedDataGridColumn dataField="zbfsjNum" headerText="上级评价率" width="30" headerWordWrap="true" textAlign="right"/>
+					<mx:AdvancedDataGridColumnGroup headerText="评价等次分布率" headerWordWrap="true"> 
+						<mx:AdvancedDataGridColumn dataField="zbsjNum" headerText="好" width="30" headerWordWrap="true" textAlign="right" />
+						<mx:AdvancedDataGridColumn dataField="zbsjNum" headerText="较好" width="30" headerWordWrap="true" textAlign="right" />
+						<mx:AdvancedDataGridColumn dataField="zbsjNum" headerText="一般" width="30" headerWordWrap="true" textAlign="right" />
+						<mx:AdvancedDataGridColumn dataField="zbsjNum" headerText="差" width="30" headerWordWrap="true" textAlign="right" />
+					</mx:AdvancedDataGridColumnGroup>
+				</mx:AdvancedDataGridColumnGroup>
+				
+				<mx:AdvancedDataGridColumnGroup headerText="季度执行情况" headerWordWrap="true">  
+					<mx:AdvancedDataGridColumn dataField="zbsjNum" headerText="规范报送率" width="30" headerWordWrap="true" textAlign="right" />
+					<mx:AdvancedDataGridColumn dataField="zbsjNum" headerText="规范报送支部数" width="30" headerWordWrap="true" textAlign="right" />
+					<mx:AdvancedDataGridColumn dataField="zbfsjNum" headerText="驳回后上报率" width="30" headerWordWrap="true" textAlign="right"/>  
+					<mx:AdvancedDataGridColumn dataField="zbfsjNum" headerText="逾期授权后上报率" width="30" headerWordWrap="true" textAlign="right"/>
+					<mx:AdvancedDataGridColumn dataField="zbfsjNum" headerText="上级评价率" width="30" headerWordWrap="true" textAlign="right"/>
+					<mx:AdvancedDataGridColumnGroup headerText="评价等次分布率" headerWordWrap="true"> 
+						<mx:AdvancedDataGridColumn dataField="zbsjNum" headerText="好" width="30" headerWordWrap="true" textAlign="right" />
+						<mx:AdvancedDataGridColumn dataField="zbsjNum" headerText="较好" width="30" headerWordWrap="true" textAlign="right" />
+						<mx:AdvancedDataGridColumn dataField="zbsjNum" headerText="一般" width="30" headerWordWrap="true" textAlign="right" />
+						<mx:AdvancedDataGridColumn dataField="zbsjNum" headerText="差" width="30" headerWordWrap="true" textAlign="right" />
+					</mx:AdvancedDataGridColumnGroup>
+				</mx:AdvancedDataGridColumnGroup>
+				
+				<mx:AdvancedDataGridColumnGroup headerText="年终总结" headerWordWrap="true">  
+					<mx:AdvancedDataGridColumn dataField="zbsjNum" headerText="规范报送率" width="30" headerWordWrap="true" textAlign="right" />
+					<mx:AdvancedDataGridColumn dataField="zbsjNum" headerText="规范报送支部数" width="30" headerWordWrap="true" textAlign="right" />
+					<mx:AdvancedDataGridColumn dataField="zbfsjNum" headerText="驳回后上报率" width="30" headerWordWrap="true" textAlign="right"/>  
+					<mx:AdvancedDataGridColumn dataField="zbfsjNum" headerText="逾期授权后上报率" width="30" headerWordWrap="true" textAlign="right"/>
+					<mx:AdvancedDataGridColumn dataField="zbfsjNum" headerText="上级评价率" width="30" headerWordWrap="true" textAlign="right"/>
+					<mx:AdvancedDataGridColumnGroup headerText="评价等次分布率" headerWordWrap="true"> 
+						<mx:AdvancedDataGridColumn dataField="zbsjNum" headerText="好" width="30" headerWordWrap="true" textAlign="right" />
+						<mx:AdvancedDataGridColumn dataField="zbsjNum" headerText="较好" width="30" headerWordWrap="true" textAlign="right" />
+						<mx:AdvancedDataGridColumn dataField="zbsjNum" headerText="一般" width="30" headerWordWrap="true" textAlign="right" />
+						<mx:AdvancedDataGridColumn dataField="zbsjNum" headerText="差" width="30" headerWordWrap="true" textAlign="right" />
+					</mx:AdvancedDataGridColumnGroup>
+				</mx:AdvancedDataGridColumnGroup>				
 			</mx:groupedColumns>  
 		</mx:AdvancedDataGrid>
 		

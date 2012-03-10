@@ -11,7 +11,7 @@ import java.sql.Date;
  * 
  */
 @Entity
-@Table(name="pc_parent_stats")
+@Table(name="pc_agency_stats")
 public class PcAgencyStats implements Serializable {
 	private static final long serialVersionUID = 485572770721967499L;
 

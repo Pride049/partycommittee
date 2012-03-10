@@ -192,7 +192,7 @@ INSERT INTO `pc_roles` (`id`, `role`, `name`, `enable`) VALUES
 (6, 'delete', '删除', 1);
 
 
-CREATE TABLE IF NOT EXISTS `pc_parent_stats` (
+CREATE TABLE IF NOT EXISTS `pc_agency_stats` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `agency_id` int(11) unsigned NOT NULL COMMENT '党支部ID',
   `name` varchar(255) NOT NULL COMMENT '党支部名称',
@@ -222,25 +222,6 @@ CREATE TABLE IF NOT EXISTS `pc_parent_stats` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='党建办党支部基本情况统计表' AUTO_INCREMENT=1 ;
 
 
-CREATE TABLE IF NOT EXISTS `pc_agency_stats` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
-  `agency_id` int(11) unsigned NOT NULL COMMENT '党支部ID',
-  `name` varchar(255) NOT NULL COMMENT '党支部名称',
-  `code_id` int(11) NOT NULL DEFAULT '0' COMMENT '党支部类型',
-  `code` varchar(10) NOT NULL,
-  `parent_id` int(11) unsigned NOT NULL COMMENT '上级党支部ID',
-  `setup_datetime` datetime NOT NULL COMMENT '设选时间',
-  `dxz_num` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '党小组数量',
-  `dy_num` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '党员人数',
-  `zbsj_num` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '支部书记数',
-  `zbfsj_num` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '支部副书记数',
-  `zb_num` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '支部委员数(不含书记副书记)',
-  `updatetime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `agency_id` (`agency_id`,`code_id`,`parent_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='党支部基本情况统计表' AUTO_INCREMENT=1 ;
-
-
 CREATE TABLE IF NOT EXISTS `pc_zzsh_stat` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `agency_id` int(11) unsigned NOT NULL COMMENT '党支部ID',
@@ -254,19 +235,25 @@ CREATE TABLE IF NOT EXISTS `pc_zzsh_stat` (
   `type_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '会议类型',
   `total` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '实际召开数',
   `total_success` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '一次成功上报数',
-  `total_return` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '一次成功上报数',
+  `total_return` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '驳回上报数',
   `total_delay` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '补开补报情况',  
   `reported` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '规范执行情况',
   `reported_rate` decimal(6,4) NOT NULL DEFAULT '0.0000' COMMENT '规范执行率',
+  `return_rate` decimal(6,4) NOT NULL DEFAULT '0.0000' COMMENT '驳回后上报率',
+  `delay_rate` decimal(6,4) NOT NULL DEFAULT '0.0000' COMMENT '逾期上报率',
   `attend` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '应出席人数',
   `asence` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '缺席人数',
   `attend_rate` decimal(6,4) NOT NULL DEFAULT '0.0000' COMMENT '出席率',
   `eva` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '已评价数',
   `eva_rate` decimal(6,4) NOT NULL DEFAULT '0.0000' COMMENT '评价率',
-  `eva_1` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '好',
-  `eva_2` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '较好',
-  `eva_3` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '一般',
-  `eva_4` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '差',
+  `eva_1` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '评价次数:好',
+  `eva_2` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '评价次数:较好',
+  `eva_3` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '评价次数:一般',
+  `eva_4` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '评价次数:差',
+  `eva_1_rate` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '评价率:好',
+  `eva_2_rate` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '评价率:较好',
+  `eva_3_rate` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '评价率:一般',
+  `eva_4_rate` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '评价率:差',  
   `agency_goodjob` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `agency_id` (`agency_id`,`code_id`,`parent_id`,`year`,`quarter`, `month`,`type_id`)
