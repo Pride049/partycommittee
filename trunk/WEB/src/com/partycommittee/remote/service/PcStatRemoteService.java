@@ -9,6 +9,7 @@ import org.springframework.flex.remoting.RemotingInclude;
 import org.springframework.stereotype.Service;
 
 import com.partycommittee.remote.vo.PcAgencyStatsVo;
+import com.partycommittee.remote.vo.PcStatsVo;
 import com.partycommittee.service.PcStatService;
 
 @Service("PcStatRo")
@@ -24,6 +25,11 @@ public class PcStatRemoteService {
 	@RemotingInclude
 	public List<PcAgencyStatsVo> getAgencyStatById(Integer id) {
 		return pcStatService.getAgencyStatsByParentId(id);
+	}
+	
+	@RemotingInclude
+	public List<PcStatsVo> getWorkPlanStatsById(Integer id, Integer year, Integer startM, Integer endM) {
+		return pcStatService.getWorkPlanStatsById(id, year, startM, endM);
 	}
 
 }
