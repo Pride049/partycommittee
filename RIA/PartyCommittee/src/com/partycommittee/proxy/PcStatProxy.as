@@ -18,5 +18,9 @@ package com.partycommittee.proxy
 		public function getAgencyStatById(agencyId:Number):void {
 			service.getAgencyStatById(agencyId);
 		}
+		
+		public function getWorkPlanStatsById(agencyId:Number, year:Number, startMonth:Number, endMonth:Number) {
+			service.getWorkPlanStatsById(agencyId, year, startMonth, endMonth);
+		}
 	}
 }

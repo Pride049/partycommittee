@@ -20,13 +20,15 @@ package com.partycommittee.commands
 				case PcStatEvent.GET_AGENCY_STATS_BY_ID :
 					proxy.getAgencyStatById(evt.agencyId);
 					break;
+				case PcStatEvent.GET_WORKPLAN_STATS_BY_ID:
+					proxy.getWorkPlanStatsById(evt.agencyId, evt.year, evt.startMonth, evt.endMonth);
+					break;
 				default :
 					break;
 			}
 		}
 		
 		public function result(data:Object):void {
-			var model:ModelLocator = ModelLocator.getInstance();
 			onSuccess(data);
 		}
 		

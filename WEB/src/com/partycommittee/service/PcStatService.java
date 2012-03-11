@@ -8,8 +8,11 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import com.partycommittee.persistence.daoimpl.PcAgencyStatsDaoImpl;
+import com.partycommittee.persistence.daoimpl.PcStatsDaoImpl;
 import com.partycommittee.persistence.po.PcAgencyStats;
+import com.partycommittee.persistence.po.PcStats;
 import com.partycommittee.remote.vo.PcAgencyStatsVo;
+import com.partycommittee.remote.vo.PcStatsVo;
 
 
 
@@ -21,6 +24,12 @@ public class PcStatService {
 	public void setPcStatDaoImpl(PcAgencyStatsDaoImpl pcAgencyStatsDaoImpl) {
 		this.pcAgencyStatsDaoImpl = pcAgencyStatsDaoImpl;
 	}
+	
+	@Resource(name="PcStatsDaoImpl")
+	private PcStatsDaoImpl pcStatsDaoImpl;
+	public void setPcStatsDaoImpl(PcStatsDaoImpl pcStatsDaoImpl) {
+		this.pcStatsDaoImpl = pcStatsDaoImpl;
+	}	
 	
 	public List<PcAgencyStatsVo> getAgencyStatsByParentId(Integer id) {
 		List<PcAgencyStatsVo> list = new ArrayList<PcAgencyStatsVo>();
@@ -42,5 +51,66 @@ public class PcStatService {
 			}
 		}
 		return list;
+	}	
+	
+	
+	public List<PcStatsVo> getWorkPlanStatsById(Integer id, Integer year, Integer startM, Integer endM) {
+		List<PcStatsVo> list = new ArrayList<PcStatsVo>();
+		try {
+			List<Integer> qs = new ArrayList<Integer>() ;
+			
+			for(Integer i = startM; i <= endM; i++) {
+				if (  qs.indexOf(getQuarter(i)) == -1 ){
+					qs.add(getQuarter(i));
+				}
+			}
+			
+			Integer i = 1;
+	
+			for(i = 1; i < 5; i++) {
+				List<Integer> qs_tmp = new ArrayList<Integer>() ;
+				if (i == 1 || i == 4) {
+					qs_tmp.add(0);
+				} else {
+					qs_tmp = qs;
+				}
+				List<PcStats> list_admin = pcStatsDaoImpl.getStatsById(id, year, qs_tmp, i);
+				for(PcStats item : list_admin) {
+					list.add(PcStatsVo.fromPcStats(item));
+				}
+			}
+				
+			for(i = 1; i< 5; i++) {
+				List<Integer> qs_tmp = new ArrayList<Integer>() ;
+				if (i == 1 || i == 4) {
+					qs_tmp.add(0);
+				} else {
+					qs_tmp = qs;
+				}			
+				List<PcStats> list_admin = pcStatsDaoImpl.getStatsByParentId(id, year, qs_tmp, i);
+				for(PcStats item : list_admin) {
+					list.add(PcStatsVo.fromPcStats(item));
+				}
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return list;
 	}		
+	
+	
+	public Integer getQuarter(Integer month) {
+		
+		if (month <= 3) {
+			return 1;
+		} else if (month <= 6) {
+			return 2;
+		} else if (month <= 9) {
+			return 3;
+		} else {
+			return 4;
+		}
+	}
+	
 }
