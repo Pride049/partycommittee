@@ -22,5 +22,13 @@ package com.partycommittee.proxy
 		public function getWorkPlanStatsById(agencyId:Number, year:Number, startMonth:Number, endMonth:Number) {
 			service.getWorkPlanStatsById(agencyId, year, startMonth, endMonth);
 		}
+		
+		public function getMeetingStatsById(agencyId:Number, year:Number, startMonth:Number, endMonth:Number) {
+			service.getMeetingStatsById(agencyId, year, startMonth, endMonth);
+		}
+		
+		public function getZbStatsById(agencyId:Number, year:Number, startMonth:Number, endMonth:Number) {
+			service.getZbStatsById(agencyId, year, startMonth, endMonth);
+		}		
 	}
 }

@@ -8,7 +8,7 @@ package com.partycommittee.events
 		public static const GET_AGENCY_STATS_BY_ID:String = "getAgencyStatSById";		
 		public static const GET_WORKPLAN_STATS_BY_ID:String = "getWorkPlanStatSById";
 		public static const GET_MEETING_STATS_BY_ID:String = "getMeetingStatSById";
-		public static const GET_STAT_STAT_BY_ID:String = "getStatById";
+		public static const GET_ZB_STAT_BY_ID:String = "getZbStatById";
 		private var _agencyId:Number;
 		private var _year:Number;
 		private var _quarter:Number;

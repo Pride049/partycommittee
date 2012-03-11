@@ -16,7 +16,7 @@ package com.partycommittee.renderers
 			} else {
 				
 				try {
-					var percent:Number = Math.round(Number(txt) * 1000) / 10;
+					var percent:Number = Math.round(Number(txt) * 10000) / 100;
 					if (percent > 100) percent = 100;
 					htmlText = percent.toString() + '%'; 
 				} catch(e:Error) {
