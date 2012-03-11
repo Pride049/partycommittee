@@ -97,7 +97,7 @@
 					TreeContextMenuMgr.getInstance().editEnable = false;
 					treeControlBar.visible = treeControlBar.includeInLayout = false;
 					mainViewStack.removeChild(systemManagerView);
-					mainViewStack.removeChild(statView);
+//					mainViewStack.removeChild(statView);
 				}
 				
 				

@@ -13,6 +13,7 @@
 	<fx:Script>
 		<![CDATA[
 			import com.lnczx.utils.ExportExcel;
+			import com.lnczx.utils.ExportExcelExtend;
 			import com.partycommittee.events.PcParentStatEvent;
 			import com.partycommittee.events.PcStatEvent;
 			import com.partycommittee.manager.popup.PopupMgr;
@@ -54,7 +55,7 @@
 					endMonthCmb.dataProvider = createMonthDp();
 					endMonthCmb.selectedIndex = new Date().getMonth();
 				}				
-//				onNavigateIn();
+
 			}
 			
 			private function createMonthDp():ArrayCollection {
@@ -91,6 +92,11 @@
 				if (!data) return;
 				initDp(data as ArrayCollection);
 			}
+			
+			private function onGetStatFailure(info:Object, evt:PcStatEvent):void {
+				this.enabled = true;
+			}			
+						
 			
 			public function initDp(dp:ArrayCollection):void {
 				
@@ -228,15 +234,8 @@
 				return vo;
 			}			
 			
-			
-			
-			private function onGetStatFailure(info:Object, evt:PcStatEvent):void {
-				this.enabled = true;
-			}			
-			
-			
 			private function exportToExcel():void {
-				ExportExcel.loadDGInExcel(workPlanStatsDG,'excelExport.jsp', "工作计划统计表");
+				ExportExcelExtend.loadDGInExcel(workPlanStatsDG,'excelExport.jsp', "工作计划统计表");
 			}
 			
 			private function indexLabelFunction(oItem:Object,iCol:int):String	{
@@ -330,7 +329,8 @@
 						<mx:AdvancedDataGridColumn dataField="yz_eva_3_rate" headerText="一般" width="50" headerWordWrap="true" textAlign="right" itemRenderer="com.partycommittee.renderers.DataGridPercentRenderer"/>
 						<mx:AdvancedDataGridColumn dataField="yz_eva_4_rate" headerText="差" width="50" headerWordWrap="true" textAlign="right" itemRenderer="com.partycommittee.renderers.DataGridPercentRenderer"/>
 					</mx:AdvancedDataGridColumnGroup>
-				</mx:AdvancedDataGridColumnGroup>				
+				</mx:AdvancedDataGridColumnGroup>	
+				
 			</mx:groupedColumns>  
 		</mx:AdvancedDataGrid>
 		

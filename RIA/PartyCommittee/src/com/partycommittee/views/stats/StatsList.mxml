@@ -31,8 +31,23 @@
 			}
 			
 			private function onCreationCompleted():void {
-				
+				model.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, onPropertyChanged);
 			}
+			
+			private function onPropertyChanged(event:PropertyChangeEvent):void {
+				if (event.property == "isLeafUser") {
+					model.removeEventListener(PropertyChangeEvent.PROPERTY_CHANGE, onPropertyChanged);
+					if (model.isLeafUser) {
+						tab.removeChild(agencyStatView);
+						tab.removeChild(workPlanStatView);
+						tab.removeChild(meetingStatView);
+					} 
+				} else if (event.property == "focusAgencyVo") {
+					if (model.focusAgencyVo.codeId != 10) {
+						tab.removeChild(zbStatView);
+					}
+				}
+			}			
 			
 			
 			
@@ -44,10 +59,12 @@
 	
 	<mx:TabNavigator id="tab" width="100%" height="100%" >
 		<stats:AgencyStatView id="agencyStatView" width="100%" height="100%" 
-									   label="统计表1" tab="{this.tab}"/>
+									   label="基本情况统计表" tab="{this.tab}"/>
 		<stats:WorkPlanStatView id="workPlanStatView" width="100%" height="100%" 
-									  label="统计表二" tab="{this.tab}"/>
+									  label="工作计划统计表" tab="{this.tab}"/>
 		<stats:MeetingStatView id="meetingStatView" width="100%" height="100%" 
-									label="统计表三" tab="{this.tab}"/>
+									label="组织会议统计表" tab="{this.tab}"/>
+		<stats:ZbStatView id="zbStatView" width="100%" height="100%" 
+							   label="组织生活统计表" tab="{this.tab}"/>		
 	</mx:TabNavigator>
 </navigation:NavigationView>

@@ -31,5 +31,15 @@ public class PcStatRemoteService {
 	public List<PcStatsVo> getWorkPlanStatsById(Integer id, Integer year, Integer startM, Integer endM) {
 		return pcStatService.getWorkPlanStatsById(id, year, startM, endM);
 	}
+	
+	@RemotingInclude
+	public List<PcStatsVo> getMeetingStatsById(Integer id, Integer year, Integer startM, Integer endM) {
+		return pcStatService.getMeetingStatsById(id, year, startM, endM);
+	}	
+	
+	@RemotingInclude
+	public List<PcStatsVo> getZbStatsById(Integer id, Integer year, Integer startM, Integer endM) {
+		return pcStatService.getZbStatsById(id, year, startM, endM);
+	}	
 
 }

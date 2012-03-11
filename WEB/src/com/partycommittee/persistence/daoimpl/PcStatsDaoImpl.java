@@ -20,6 +20,7 @@ import com.partycommittee.persistence.dao.PcStatsDao;
 import com.partycommittee.persistence.po.PcRemind;
 import com.partycommittee.persistence.po.PcStats;
 import com.partycommittee.remote.vo.FilterVo;
+import com.partycommittee.remote.vo.PcStatsVo;
 
 @Repository("PcStatsDaoImpl")
 public class PcStatsDaoImpl extends JpaDaoBase implements PcStatsDao {
@@ -27,7 +28,7 @@ public class PcStatsDaoImpl extends JpaDaoBase implements PcStatsDao {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<PcStats> getStatsById(Integer id, Integer year,
+	public List<PcStatsVo> getStatsById(Integer id, Integer year,
 			List<Integer> qs, Integer typeId) {
 		java.sql.Connection conn = null;
 		try {
@@ -48,7 +49,7 @@ public class PcStatsDaoImpl extends JpaDaoBase implements PcStatsDao {
 			where = where + " AND year =" + year;
 			where = where + " AND quarter in (" + ids + ")";
 			where = where + " AND type_id = " + typeId;
-			List<PcStats> list = getResult(where, avg);
+			List<PcStatsVo> list = getResult(where, avg);
 			return list;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -56,7 +57,7 @@ public class PcStatsDaoImpl extends JpaDaoBase implements PcStatsDao {
 		return null;
 	}
 
-	public List<PcStats> getStatsByParentId(Integer id, Integer year,
+	public List<PcStatsVo> getStatsByParentId(Integer id, Integer year,
 			List<Integer> qs, Integer typeId) {
 
 		try {
@@ -78,7 +79,7 @@ public class PcStatsDaoImpl extends JpaDaoBase implements PcStatsDao {
 			where = where + " AND quarter in (" + ids + ")";
 			where = where + " AND type_id = " + typeId;
 
-			List<PcStats> list = getResult(where, avg);
+			List<PcStatsVo> list = getResult(where, avg);
 			return list;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -88,7 +89,7 @@ public class PcStatsDaoImpl extends JpaDaoBase implements PcStatsDao {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<PcStats> getStatsByParentCode(Integer id, Integer year,
+	public List<PcStatsVo> getStatsByParentCode(Integer id, Integer year,
 			List<Integer> qs, Integer typeId) {
 
 		try {
@@ -116,7 +117,7 @@ public class PcStatsDaoImpl extends JpaDaoBase implements PcStatsDao {
 			where = where + " AND quarter in (" + ids + ")";
 			where = where + " AND type_id = " + typeId;
 
-			List<PcStats> list = getResult(where, avg);
+			List<PcStatsVo> list = getResult(where, avg);
 			return list;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -127,7 +128,7 @@ public class PcStatsDaoImpl extends JpaDaoBase implements PcStatsDao {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<PcStats> getZwhStatsById(Integer id, Integer year,
+	public List<PcStatsVo> getZwhStatsById(Integer id, Integer year,
 			Integer startM, Integer endM) {
 
 		try {
@@ -140,7 +141,7 @@ public class PcStatsDaoImpl extends JpaDaoBase implements PcStatsDao {
 			where = where + " AND month >= " + startM + " AND month <=" + endM;
 			where = where + " AND type_id = 8";
 
-			List<PcStats> list = getResult(where, avg);
+			List<PcStatsVo> list = getResult(where, avg);
 			return list;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -148,7 +149,7 @@ public class PcStatsDaoImpl extends JpaDaoBase implements PcStatsDao {
 		return null;
 	}
 
-	public List<PcStats> getZwhStatsByParentId(Integer id, Integer year,
+	public List<PcStatsVo> getZwhStatsByParentId(Integer id, Integer year,
 			Integer startM, Integer endM) {
 
 		try {
@@ -161,7 +162,7 @@ public class PcStatsDaoImpl extends JpaDaoBase implements PcStatsDao {
 			where = where + " AND month >= " + startM + " AND month <=" + endM;
 			where = where + " AND type_id = 8";
 
-			List<PcStats> list = getResult(where, avg);
+			List<PcStatsVo> list = getResult(where, avg);
 			return list;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -171,7 +172,7 @@ public class PcStatsDaoImpl extends JpaDaoBase implements PcStatsDao {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<PcStats> getZwhStatsByParentCode(Integer id, Integer year,
+	public List<PcStatsVo> getZwhStatsByParentCode(Integer id, Integer year,
 			Integer startM, Integer endM) {
 
 		try {
@@ -189,7 +190,7 @@ public class PcStatsDaoImpl extends JpaDaoBase implements PcStatsDao {
 			where = where + " AND month >= " + startM + " AND month <=" + endM;
 			where = where + " AND type_id = 8";
 
-			List<PcStats> list = getResult(where, avg);
+			List<PcStatsVo> list = getResult(where, avg);
 			return list;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -198,7 +199,7 @@ public class PcStatsDaoImpl extends JpaDaoBase implements PcStatsDao {
 	}
 	
 	
-	public List<PcStats> getResult(String where, Integer avg) throws SQLException {
+	public List<PcStatsVo> getResult(String where, Integer avg) throws SQLException {
 		java.sql.Connection conn = null;
 		try {
 
@@ -218,8 +219,10 @@ public class PcStatsDaoImpl extends JpaDaoBase implements PcStatsDao {
 					+ "SUM(agency_goodjob) as agency_goodjob FROM pc_zzsh_stat "
 					+ where + " GROUP BY agency_id, name, YEAR, type_id";
 
-			 List<PcStats> list = new ArrayList<PcStats>();
+			 List<PcStatsVo> list = new ArrayList<PcStatsVo>();
 			 EntityManager em = super.getEntityManager();
+			 em.getTransaction().begin();
+
 			 HibernateEntityManager hem = (HibernateEntityManager)em;
 			 conn = hem.getSession().connection();
 			 
@@ -227,12 +230,13 @@ public class PcStatsDaoImpl extends JpaDaoBase implements PcStatsDao {
 			    ResultSet rows = statement.executeQuery(sql);  
 			    while (rows.next()) {
 //			    	System.out.println(rows.getString("name"));
-			    	PcStats pevo = new PcStats();
+			    	PcStatsVo pevo = new PcStatsVo();
 			    	pevo.setAgencyId(rows.getInt("agency_id"));
 			    	pevo.setName(rows.getString("name"));
 			    	pevo.setYear(rows.getInt("YEAR"));
 			    	pevo.setTypeId(rows.getInt("type_id"));
 			    	pevo.setTotal(rows.getInt("total"));
+			    	pevo.setTotalSuccess(rows.getInt("total_success"));
 			    	pevo.setTotalReturn(rows.getInt("total_return"));
 			    	pevo.setTotalDelay(rows.getInt("total_delay"));
 			    	pevo.setReported(rows.getInt("reported"));
@@ -256,7 +260,7 @@ public class PcStatsDaoImpl extends JpaDaoBase implements PcStatsDao {
 			    	
 			    	list.add(pevo);
 			    }
-			    
+			    em.getTransaction().commit();
 //			 statement.close();
 //			 conn.close();
 			return list;

@@ -23,6 +23,13 @@ package com.partycommittee.commands
 				case PcStatEvent.GET_WORKPLAN_STATS_BY_ID:
 					proxy.getWorkPlanStatsById(evt.agencyId, evt.year, evt.startMonth, evt.endMonth);
 					break;
+				case PcStatEvent.GET_MEETING_STATS_BY_ID:
+					proxy.getMeetingStatsById(evt.agencyId, evt.year, evt.startMonth, evt.endMonth);
+					break;	
+				case PcStatEvent.GET_ZB_STAT_BY_ID:
+					proxy.getZbStatsById(evt.agencyId, evt.year, evt.startMonth, evt.endMonth);
+					break;				
+				
 				default :
 					break;
 			}
