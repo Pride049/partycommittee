@@ -355,7 +355,18 @@ begin
 			  END IF;
 			  
 --			党员人数不足7人的党支部数量			  
-				SELECT (CASE WHEN COUNT(*) < 7 THEN 1 ELSE 0 END) INTO stat_less7_num FROM pc_member where agency_id = c_id;
+				SELECT COUNT(*) INTO stat_less7_num FROM pc_member where agency_id = c_id;
+				
+				IF stat_less7_num = 0 THEN
+					SET stat_less7_num = 0;
+				ELSE 				
+					IF stat_less7_num < 7 THEN
+						SET stat_less7_num = 1;
+					ELSE 
+						SET stat_less7_num = 0;
+					END IF;
+				END IF;
+
 				
 				SELECT COUNT(*) INTO stat_zbsj_num FROM pc_member where agency_id = c_id AND duty_id = 1;
 				SELECT COUNT(*) INTO stat_zbfsj_num FROM pc_member where agency_id = c_id AND duty_id = 2;
@@ -468,7 +479,7 @@ begin
 			SUM(fnwy_num) as fnwy_num,
 			SUM(bmwy_num) as bmwy_num
 			FROM pc_agency_stats 
-			WHERE code like CONCAT (c_code, '%')
+			WHERE code like CONCAT (c_code, '%') AND code_id = 10
 			ON DUPLICATE KEY UPDATE 
 			name = c_name, 
 			code_id = c_code_id, 
@@ -498,7 +509,8 @@ begin
 	
 	
 	INSERT INTO pc_agency_stats (agency_id, name, code_id, code, parent_id, ejdw_num, dzj_num, dzb_num, more2year_num, less7_num, no_fsj_zbwy_num, dxz_num, dy_num, zbsj_num, zbfsj_num, zzwy_num, xcwy_num, jjwy_num, qnwy_num, ghwy_num, fnwy_num, bmwy_num)
-	SELECT  T1.parent_id as agency_id, T2.name, T2.code_id, T2.code, 0 as  parent_id,
+	SELECT  T1.parent_id as agency_id, T2.name, T2.code_id, T2.code, 0 as  parent_id, T1.ejdw_num, T1.dzj_num, T1.dzb_num, T1.more2year_num, T1.less7_num, T1.no_fsj_zbwy_num, T1.dxz_num, T1.dy_num, T1.zbsj_num, T1.zbfsj_num, T1.zzwy_num, T1.xcwy_num, T1.jjwy_num, T1.qnwy_num, T1.ghwy_num, T1.fnwy_num, T1.bmwy_num FROM
+	(SELECT 1 as parent_id,
 	SUM(ejdw_num) as ejdw_num,
 	SUM(dzj_num) as dzj_num,
 	SUM(dzb_num) as dzb_num,
@@ -516,27 +528,27 @@ begin
 	SUM(ghwy_num) as ghwy_num,
 	SUM(fnwy_num) as fnwy_num,
 	SUM(bmwy_num) as bmwy_num
-	FROM pc_agency_stats as T1
-	LEFT JOIN pc_agency as T2 on T1.parent_id = T2.id
-	WHERE parent_id = 1
+	FROM pc_agency_stats WHERE code_id = 10) as T1
+	LEFT JOIN pc_agency  as T2 ON T1.parent_id = T2.id
 	ON DUPLICATE KEY UPDATE 
-	ejdw_num = ejdw_num, 
-	dzj_num = dzj_num, 
-	dzb_num = dzb_num, 
-	more2year_num = more2year_num, 
-	less7_num = less7_num, 
-	no_fsj_zbwy_num = no_fsj_zbwy_num, 
-	dxz_num = dxz_num, 
-	dy_num = dy_num, 
-	zbsj_num = zbsj_num, 
-	zbfsj_num = zbfsj_num, 
-	zzwy_num = zzwy_num, 
-	xcwy_num = xcwy_num, 
-	jjwy_num = jjwy_num, 
-	qnwy_num = qnwy_num, 
-	ghwy_num = ghwy_num, 
-	fnwy_num = fnwy_num, 
-	bmwy_num = bmwy_num;
+	name = T2.name,
+	ejdw_num = T1.ejdw_num, 
+	dzj_num = T1.dzj_num, 
+	dzb_num = T1.dzb_num, 
+	more2year_num = T1.more2year_num, 
+	less7_num = T1.less7_num, 
+	no_fsj_zbwy_num = T1.no_fsj_zbwy_num, 
+	dxz_num = T1.dxz_num, 
+	dy_num = T1.dy_num, 
+	zbsj_num = T1.zbsj_num, 
+	zbfsj_num = T1.zbfsj_num, 
+	zzwy_num = T1.zzwy_num, 
+	xcwy_num = T1.xcwy_num, 
+	jjwy_num = T1.jjwy_num, 
+	qnwy_num = T1.qnwy_num, 
+	ghwy_num = T1.ghwy_num, 
+	fnwy_num = T1.fnwy_num, 
+	bmwy_num = T1.bmwy_num;
 
 end;
 //

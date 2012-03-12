@@ -17,6 +17,7 @@
 			import com.partycommittee.events.PcMeetingEvent;
 			import com.partycommittee.manager.popup.PopupMgr;
 			import com.partycommittee.model.ModelLocator;
+			import com.partycommittee.util.DateUtil;
 			import com.partycommittee.util.UserUtil;
 			import com.partycommittee.views.agencymgmt.agencyactivity.BrowseMeetingView;
 			import com.partycommittee.views.agencymgmt.agencyactivity.workplan.component.ReturnFormWindow;
@@ -178,10 +179,13 @@
 					var contentVo:PcMeetingContentVo = data as PcMeetingContentVo;
 					this.handlePersonTxt.text = contentVo.memberName;
 					this.handleTextArea.htmlText = contentVo.content;
-					
-//					if (meeting.statusId == 5) {
+					if (meeting.statusId >=4) {
+						dateTxt_eva.text = "日期:" + DateUtil.toISOString(contentVo.updatetime);
+						dateTxt_eva.visible = true;
+					}
+
 						getRateInfo();
-//					}
+
 				}
 			}
 			
@@ -208,6 +212,11 @@
 					//this.rateTextArea.htmlText = contentVo.content;
 					rateGroup.selectedValue = contentVo.content;
 					
+					if (meeting.statusId == 5) {
+						dateTxt_rate.text = "日期:" + DateUtil.toISOString(contentVo.updatetime);
+						dateTxt_rate.visible = true;
+					}
+					
 				}
 			}
 			
@@ -228,6 +237,11 @@
 				}
 				
 				if (UserUtil.checkRole(4, model.loginUser.roles) == true) {
+					if (!rateGroup.selectedValue) {
+						Alert.show("请选择评价!");
+						return false;						
+					}
+					
 					if (ratePersonTxt.text.length == 0) {
 						Alert.show("评价主体不能为空!");
 						return false;
@@ -412,10 +426,22 @@
 			<mx:VBox width="50%" height="100%"
 					 horizontalScrollPolicy="off" verticalScrollPolicy="off">
 				
+				<mx:HBox width="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off">
+					<mx:Label text="评语主体:"/>
+					
+					<mx:TextInput id="handlePersonTxt" width="200"
+								  editable="{meeting.statusId == 3}"/>
+					<mx:Spacer width="100%"/>
+					<mx:Label left="0"   id="dateTxt_eva" visible="false"/>
+				</mx:HBox>
+				<richtexttoolbar:PopupRichTextToolBar width="100%" target="{handleTextArea}"/>
+				<mx:TextArea id="handleTextArea" width="100%" height="100%"
+							 editable="{meeting.statusId == 3}"/>				
+				
 				<mx:VBox id="rate_box" horizontalScrollPolicy="off" verticalScrollPolicy="off">
 					<mx:HBox width="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off">
 						<mx:Label text="评价:      "/>
-						<s:RadioButton groupName="rateGroup" fontFamily="宋体" id="rate1" selected="true" label="好" value="1" /> 
+						<s:RadioButton groupName="rateGroup" fontFamily="宋体" id="rate1" label="好" value="1" /> 
 						<s:RadioButton groupName="rateGroup" fontFamily="宋体" id="rate2" label="较好" value="2"/>
 						<s:RadioButton groupName="rateGroup" fontFamily="宋体" id="rate3" label="一般" value="3"/>
 						<s:RadioButton groupName="rateGroup" fontFamily="宋体" id="rate4" label="差" value="4"/>
@@ -424,17 +450,12 @@
 						<mx:Label text="评价主体:"/>
 						<mx:TextInput id="ratePersonTxt" width="200"
 									  editable="true"/>
+						<mx:Spacer width="100%"/>
+						<mx:Label left="0"   id="dateTxt_rate" visible="false"/>
 					</mx:HBox>
 				</mx:VBox>					
 				
-				<mx:HBox width="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off">
-					<mx:Label text="评语主体:"/>
-					<mx:TextInput id="handlePersonTxt" width="200"
-								  editable="{meeting.statusId == 3}"/>
-				</mx:HBox>
-				<richtexttoolbar:PopupRichTextToolBar width="100%" target="{handleTextArea}"/>
-				<mx:TextArea id="handleTextArea" width="100%" height="100%"
-							 editable="{meeting.statusId == 3}"/>
+
 							
 			</mx:VBox>
 

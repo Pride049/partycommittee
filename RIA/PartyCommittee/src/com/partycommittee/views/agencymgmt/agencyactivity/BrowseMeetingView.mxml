@@ -68,10 +68,12 @@
 			}
 			
 			public function refreshData():void {
-				if (agency.children && agency.children.length) {
+				//if (agency.children && agency.children.length) {
+				if (agency.codeId != 10) {
 					getCommitMeeting();
 					return;
 				}
+				//}
 //				var pcAgencyEvt:PcAgencyEvent = new PcAgencyEvent(PcAgencyEvent.GET_CHILDREN, agency);
 //				pcAgencyEvt.successCallback = onGetChildrenSuccess;
 //				pcAgencyEvt.failureCallback = onGetChildrenFailure;
@@ -88,6 +90,7 @@
 			}
 			
 			private function getCommitMeeting():void {
+				if (agency.id == 1) return;
 				var pcMeetingEvent:PcMeetingEvent = new PcMeetingEvent(PcMeetingEvent.GET_COMMIT_CHILDREN_MEETING);
 				pcMeetingEvent.agency = agency;
 				if (this.year == 0) this.year = new Date().getFullYear();
