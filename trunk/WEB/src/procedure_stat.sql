@@ -459,58 +459,60 @@ begin
 				SELECT COUNT(*) INTO stat_ejdw_num  FROM pc_agency WHERE code like CONCAT (c_code, '%') and code_id = 15;
 				SELECT COUNT(*) INTO stat_dzj_num FROM pc_agency WHERE code like CONCAT (c_code, '%') and code_id = 8;
 			END IF;
-			INSERT INTO pc_agency_stats (agency_id, name, code_id, code, parent_id, ejdw_num, dzj_num, dzb_num, more2year_num, less7_num, no_fsj_zbwy_num, dxz_num, dy_num, zbsj_num, zbfsj_num, zzwy_num, xcwy_num, jjwy_num, qnwy_num, ghwy_num, fnwy_num, bmwy_num)
-			SELECT  c_id as agency_id, c_name as name, c_code_id as code_id, c_code as  code, c_parent_id as  parent_id,
-			stat_ejdw_num as ejdw_num,
-			stat_dzj_num as dzj_num,
-			SUM(dzb_num) as dzb_num,
-			SUM(more2year_num) as more2year_num,
-			SUM(less7_num) as less7_num,
-			SUM(no_fsj_zbwy_num) as no_fsj_zbwy_num,
-			SUM(dxz_num) as dxz_num,
-			SUM(dy_num) as dy_num,
-			SUM(zbsj_num) as zbsj_num,
-			SUM(zbfsj_num) as zbfsj_num,
-			SUM(zzwy_num) as zzwy_num,
-			SUM(xcwy_num) as xcwy_num, 
-			SUM(jjwy_num) as jjwy_num,
-			SUM(qnwy_num) as qnwy_num,
-			SUM(ghwy_num) as ghwy_num,
-			SUM(fnwy_num) as fnwy_num,
-			SUM(bmwy_num) as bmwy_num
-			FROM pc_agency_stats 
-			WHERE code like CONCAT (c_code, '%') AND code_id = 10
-			ON DUPLICATE KEY UPDATE 
-			name = c_name, 
-			code_id = c_code_id, 
-			code = c_code, 
-			parent_id = c_parent_id, 
-			ejdw_num = stat_ejdw_num, 
-			dzj_num = stat_dzj_num, 
-			dzb_num = dzb_num, 
-			more2year_num = more2year_num, 
-			less7_num = less7_num, 
-			no_fsj_zbwy_num = no_fsj_zbwy_num, 
-			dxz_num = dxz_num, 
-			dy_num = dy_num, 
-			zbsj_num = zbsj_num, 
-			zbfsj_num = zbfsj_num, 
-			zzwy_num = zzwy_num, 
-			xcwy_num = xcwy_num, 
-			jjwy_num = jjwy_num, 
-			qnwy_num = qnwy_num, 
-			ghwy_num = ghwy_num, 
-			fnwy_num = fnwy_num, 
-			bmwy_num = bmwy_num;
-
+			
+			IF c_parent_id is not null THEN
+				INSERT INTO pc_agency_stats (agency_id, name, code_id, code, parent_id, ejdw_num, dzj_num, dzb_num, more2year_num, less7_num, no_fsj_zbwy_num, dxz_num, dy_num, zbsj_num, zbfsj_num, zzwy_num, xcwy_num, jjwy_num, qnwy_num, ghwy_num, fnwy_num, bmwy_num)
+				SELECT  c_id as agency_id, c_name as name, c_code_id as code_id, c_code as  code, c_parent_id as  parent_id,
+				stat_ejdw_num as ejdw_num,
+				stat_dzj_num as dzj_num,
+				SUM(dzb_num) as dzb_num,
+				SUM(more2year_num) as more2year_num,
+				SUM(less7_num) as less7_num,
+				SUM(no_fsj_zbwy_num) as no_fsj_zbwy_num,
+				SUM(dxz_num) as dxz_num,
+				SUM(dy_num) as dy_num,
+				SUM(zbsj_num) as zbsj_num,
+				SUM(zbfsj_num) as zbfsj_num,
+				SUM(zzwy_num) as zzwy_num,
+				SUM(xcwy_num) as xcwy_num, 
+				SUM(jjwy_num) as jjwy_num,
+				SUM(qnwy_num) as qnwy_num,
+				SUM(ghwy_num) as ghwy_num,
+				SUM(fnwy_num) as fnwy_num,
+				SUM(bmwy_num) as bmwy_num
+				FROM pc_agency_stats 
+				WHERE code like CONCAT (c_code, '%')
+				ON DUPLICATE KEY UPDATE 
+				name = c_name, 
+				code_id = c_code_id, 
+				code = c_code, 
+				parent_id = c_parent_id, 
+				ejdw_num = stat_ejdw_num, 
+				dzj_num = stat_dzj_num, 
+				dzb_num = dzb_num, 
+				more2year_num = more2year_num, 
+				less7_num = less7_num, 
+				no_fsj_zbwy_num = no_fsj_zbwy_num, 
+				dxz_num = dxz_num, 
+				dy_num = dy_num, 
+				zbsj_num = zbsj_num, 
+				zbfsj_num = zbfsj_num, 
+				zzwy_num = zzwy_num, 
+				xcwy_num = xcwy_num, 
+				jjwy_num = jjwy_num, 
+				qnwy_num = qnwy_num, 
+				ghwy_num = ghwy_num, 
+				fnwy_num = fnwy_num, 
+				bmwy_num = bmwy_num;
+			END IF;
 			SET row = row + 1;
 	end loop cursor_loop;
 	close s_cursor;
 	
 	
 	INSERT INTO pc_agency_stats (agency_id, name, code_id, code, parent_id, ejdw_num, dzj_num, dzb_num, more2year_num, less7_num, no_fsj_zbwy_num, dxz_num, dy_num, zbsj_num, zbfsj_num, zzwy_num, xcwy_num, jjwy_num, qnwy_num, ghwy_num, fnwy_num, bmwy_num)
-	SELECT  T1.parent_id as agency_id, T2.name, T2.code_id, T2.code, 0 as  parent_id, T1.ejdw_num, T1.dzj_num, T1.dzb_num, T1.more2year_num, T1.less7_num, T1.no_fsj_zbwy_num, T1.dxz_num, T1.dy_num, T1.zbsj_num, T1.zbfsj_num, T1.zzwy_num, T1.xcwy_num, T1.jjwy_num, T1.qnwy_num, T1.ghwy_num, T1.fnwy_num, T1.bmwy_num FROM
-	(SELECT 1 as parent_id,
+	SELECT * FROM
+	(SELECT  T1.parent_id as agency_id, T2.name, T2.code_id, T2.code, 0 as  parent_id,
 	SUM(ejdw_num) as ejdw_num,
 	SUM(dzj_num) as dzj_num,
 	SUM(dzb_num) as dzb_num,
@@ -528,28 +530,29 @@ begin
 	SUM(ghwy_num) as ghwy_num,
 	SUM(fnwy_num) as fnwy_num,
 	SUM(bmwy_num) as bmwy_num
-	FROM pc_agency_stats WHERE code_id = 10) as T1
-	LEFT JOIN pc_agency  as T2 ON T1.parent_id = T2.id
+	FROM pc_agency_stats as T1
+	LEFT JOIN pc_agency as T2 on T1.parent_id = T2.id
+	WHERE parent_id = 1 ) as T3
 	ON DUPLICATE KEY UPDATE 
-	name = T2.name,
-	ejdw_num = T1.ejdw_num, 
-	dzj_num = T1.dzj_num, 
-	dzb_num = T1.dzb_num, 
-	more2year_num = T1.more2year_num, 
-	less7_num = T1.less7_num, 
-	no_fsj_zbwy_num = T1.no_fsj_zbwy_num, 
-	dxz_num = T1.dxz_num, 
-	dy_num = T1.dy_num, 
-	zbsj_num = T1.zbsj_num, 
-	zbfsj_num = T1.zbfsj_num, 
-	zzwy_num = T1.zzwy_num, 
-	xcwy_num = T1.xcwy_num, 
-	jjwy_num = T1.jjwy_num, 
-	qnwy_num = T1.qnwy_num, 
-	ghwy_num = T1.ghwy_num, 
-	fnwy_num = T1.fnwy_num, 
-	bmwy_num = T1.bmwy_num;
-
+	name = T3.name,
+	ejdw_num = T3.ejdw_num, 
+	dzj_num = T3.dzj_num, 
+	dzb_num = T3.dzb_num, 
+	more2year_num = T3.more2year_num, 
+	less7_num = T3.less7_num, 
+	no_fsj_zbwy_num = T3.no_fsj_zbwy_num, 
+	dxz_num = T3.dxz_num, 
+	dy_num = T3.dy_num, 
+	zbsj_num = T3.zbsj_num, 
+	zbfsj_num = T3.zbfsj_num, 
+	zzwy_num = T3.zzwy_num, 
+	xcwy_num = T3.xcwy_num, 
+	jjwy_num = T3.jjwy_num, 
+	qnwy_num = T3.qnwy_num, 
+	ghwy_num = T3.ghwy_num, 
+	fnwy_num = T3.fnwy_num, 
+	bmwy_num = T3.bmwy_num;
+	
 end;
 //
 delimiter ;
