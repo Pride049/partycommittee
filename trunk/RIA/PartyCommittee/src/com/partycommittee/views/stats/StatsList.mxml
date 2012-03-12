@@ -38,13 +38,18 @@
 				if (event.property == "isLeafUser") {
 					model.removeEventListener(PropertyChangeEvent.PROPERTY_CHANGE, onPropertyChanged);
 					if (model.isLeafUser) {
-						tab.removeChild(agencyStatView);
-						tab.removeChild(workPlanStatView);
-						tab.removeChild(meetingStatView);
+						if (tab.getChildren().length > 3) {
+							tab.removeChild(agencyStatView);
+							tab.removeChild(workPlanStatView);
+							tab.removeChild(meetingStatView);
+						}
+						
 					} 
 				} else if (event.property == "focusAgencyVo") {
 					if (model.focusAgencyVo.codeId != 10) {
-						tab.removeChild(zbStatView);
+						if (tab.getChildren().length > 3) {
+							tab.removeChild(zbStatView);
+						}
 					}
 				}
 			}			

@@ -19,6 +19,7 @@
 			import com.partycommittee.model.ModelLocator;
 			import com.partycommittee.util.CRUDEventType;
 			import com.partycommittee.util.DataproviderFactory;
+			import com.partycommittee.util.DateUtil;
 			import com.partycommittee.util.UserUtil;
 			import com.partycommittee.util.WorkPlanCodeUtil;
 			import com.partycommittee.views.agencymgmt.agencyactivity.BrowseWorkplanView;
@@ -157,6 +158,12 @@
 				var workPlanContent:PcWorkPlanContentVo = data as PcWorkPlanContentVo;
 				personTxt.text = workPlanContent.memberName;
 				textArea.htmlText = workPlanContent.content;
+				
+				if (workPlan.statusId >=4) {
+					dateTxt_eva.text = "日期:" + DateUtil.toISOString(workPlanContent.updatetime);
+					dateTxt_eva.visible = true;
+				}
+				
 //				if (workPlan.statusId >=4) {
 					getEvaluateInfo();
 //				}
@@ -207,6 +214,10 @@
 					//this.rateTextArea.htmlText = contentVo.content;
 					rateGroup.selectedValue = contentVo.content;
 					
+					if (workPlan.statusId == 5) {
+						dateTxt_rate.text = "日期:" + DateUtil.toISOString(contentVo.updatetime);
+						dateTxt_rate.visible = true;
+					}					
 				}
 			}
 			
@@ -253,17 +264,26 @@
 			
 			
 			private function formValidate():Boolean {
-				if (handlePersonTxt.text.length == 0) {
-					Alert.show("评语主体不能为空!");
-					return false;
-				}
-				
-				if (handleTextArea.htmlText.length == 0) {
-					Alert.show("评语不能为空!");
-					return false;
+				if (workPlan.statusId == 3) {
+					if (handlePersonTxt.text.length == 0) {
+						Alert.show("评语主体不能为空!");
+						return false;
+					}
+					
+					if (handleTextArea.htmlText.length == 0) {
+						Alert.show("评语不能为空!");
+						return false;
+					}
 				}
 				
 				if (UserUtil.checkRole(4, model.loginUser.roles) == true) {
+					
+					if (!rateGroup.selectedValue) {
+						Alert.show("请选择评价!");
+						return false;						
+					}
+										
+					
 					if (ratePersonTxt.text.length == 0) {
 						Alert.show("评价主体不能为空!");
 						return false;
@@ -405,6 +425,8 @@
 					<mx:Label id="handlePersonLbl" text="评语主体:"/>
 					<mx:TextInput id="handlePersonTxt" width="200"
 								  editable="{workPlan.statusId == 3}"/>
+					<mx:Spacer width="100%"/>
+					<mx:Label left="0"   id="dateTxt_eva" visible="false"/>
 				</mx:HBox>
 				
 				<richtexttoolbar:PopupRichTextToolBar width="100%" height="22" target="{handleTextArea}" visible="{!workPlan || workPlan.statusId == 3 }"/>
@@ -415,7 +437,7 @@
 				<mx:VBox id="rate_box" horizontalScrollPolicy="off" verticalScrollPolicy="off">
 					<mx:HBox width="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off">
 						<mx:Label text="评价:      "/>
-						<s:RadioButton groupName="rateGroup" fontFamily="宋体" id="rate1" selected="true" label="好" value="1" /> 
+						<s:RadioButton groupName="rateGroup" fontFamily="宋体" id="rate1" label="好" value="1" /> 
 						<s:RadioButton groupName="rateGroup" fontFamily="宋体" id="rate2" label="较好" value="2"/>
 						<s:RadioButton groupName="rateGroup" fontFamily="宋体" id="rate3" label="一般" value="3"/>
 						<s:RadioButton groupName="rateGroup" fontFamily="宋体" id="rate4" label="差" value="4"/>
@@ -424,6 +446,8 @@
 						<mx:Label text="评价主体:"/>
 						<mx:TextInput id="ratePersonTxt" width="200"
 									  editable="true"/>
+						<mx:Spacer width="100%"/>
+						<mx:Label left="0"   id="dateTxt_rate" visible="false"/>
 					</mx:HBox>
 				</mx:VBox>				
 				

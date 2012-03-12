@@ -75,10 +75,12 @@
 				if (!agency) {
 					return;
 				}
-				if (agency.children && agency.children.length) {
+				//if (agency.children && agency.children.length) {
+				if (agency.codeId != 10) {
 					getCommitWorkPlan();
 					return;
 				}
+				//}
 //				var pcAgencyEvt:PcAgencyEvent = new PcAgencyEvent(PcAgencyEvent.GET_CHILDREN, agency);
 //				pcAgencyEvt.successCallback = onGetChildrenSuccess;
 //				pcAgencyEvt.failureCallback = onGetChildrenFailure;
@@ -97,6 +99,7 @@
 			}
 			
 			private function getCommitWorkPlan():void {
+				if (agency.id == 1) return;
 				var pcWorkPlanEvent:PcWorkPlanEvent = new PcWorkPlanEvent(PcWorkPlanEvent.GET_COMMIT_CHILDREN_WORKPLAN);
 				pcWorkPlanEvent.agency = agency;
 				
@@ -105,6 +108,7 @@
 				pcWorkPlanEvent.failureCallback = getWorkPlanFailure;
 				pcWorkPlanEvent.successCallback = getWorkPlanSuccess;
 				pcWorkPlanEvent.dispatch();
+		
 			}
 			
 			private function getWorkPlanSuccess(data:Object, evt:PcWorkPlanEvent):void {
