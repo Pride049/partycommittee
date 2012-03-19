@@ -14,9 +14,9 @@
 			
 			
 			
-			private const leftText:String = "项目"; 
+			private const leftText:String = "单位"; 
 			
-			private const rightText:String = "单位"; 
+			private const rightText:String = "项目"; 
 			
 			
 			
@@ -90,13 +90,13 @@
 			
 			private function resetLabel():void{ 
 				
-				leftLabel.x = 5; 
+				leftLabel.x = 10; 
 				
-				leftLabel.y = this.height - leftLabel.height - 5; 
+				leftLabel.y = this.height - leftLabel.height - 20; 
 				
-				rightLabel.x = this.width - rightLabel.width; 
+				rightLabel.x = this.width - rightLabel.width - 10; 
 				
-				rightLabel.y = 10; 
+				rightLabel.y = 15; 
 				
 			} 
 			

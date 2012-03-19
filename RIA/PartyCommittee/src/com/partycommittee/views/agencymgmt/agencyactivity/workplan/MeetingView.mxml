@@ -196,7 +196,7 @@
 				}
 				
 				if (meeting.statusId >= 3) {
-					dateTxt.text = "日期:" + DateUtil.toISOString(meeting.content.updatetime);
+					dateTxt.text = "日期:" + DateUtil.toISOString(meeting.content.updatetime, false);
 				} 
 				
 				if (meeting.statusId >= 4) {
@@ -230,7 +230,7 @@
 				browseForm_evaluate.visible = true;
 				b_textArea_eva.htmlText = meetingContent.content;
 				b_personTxt_eva.text = "评语主体:" + meetingContent.memberName;
-				dateTxt_eva.text = "日期:" + DateUtil.toISOString(meetingContent.updatetime);
+				dateTxt_eva.text = "日期:" + DateUtil.toISOString(meetingContent.updatetime, false);
 				
 				if (meeting.statusId == 5) {
 					getRateInfo();

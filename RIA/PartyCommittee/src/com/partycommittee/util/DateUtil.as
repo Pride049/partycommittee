@@ -25,7 +25,7 @@ package com.partycommittee.util
 			return targetDate.getTime() == sourceDate.getTime();
 		}
 		
-		public static function toISOString(date:Date, isDateTime:Boolean = true):String {
+		public static function toISOString(date:Date, isDateTime:Boolean = false):String {
 			if (!date) {
 				return "";
 			}
