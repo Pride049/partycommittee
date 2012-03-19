@@ -21,4 +21,6 @@ public interface PcMemberDao {
 	public void updatePcMember(PcMember member);
 	
 	public void deletePcMember(PcMember member);
+	
+	public List<PcMember> getMemberByDutyId(int id, int dutyId);
 }
