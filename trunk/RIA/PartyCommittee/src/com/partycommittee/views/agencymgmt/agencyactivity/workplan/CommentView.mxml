@@ -87,7 +87,7 @@
 				}
 				textArea.htmlText = workplanContent.content;
 				personTxt.text = workplanContent.memberName;
-				dateTxt.text = DateUtil.toISOString(workplanContent.updatetime);
+				dateTxt.text = DateUtil.toISOString(workplanContent.updatetime, false);
 			}
 			
 			private function onGetEvaluateInfoFailure(info:Object, evt:PcWorkPlanEvent):void {

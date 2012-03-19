@@ -118,6 +118,7 @@
 					if (meeting.content) {
 						personTxt.text = meeting.content.memberName;
 						textArea.htmlText = meeting.content.content;
+						dateTxt.text = "日期:" + DateUtil.toISOString(meeting.content.updatetime);
 					} else {
 						loadMeetingContent();
 					}
@@ -157,7 +158,7 @@
 				var meetingContent:PcMeetingContentVo = data as PcMeetingContentVo;
 				personTxt.text = meetingContent.memberName;
 				textArea.htmlText = meetingContent.content;
-				
+				dateTxt.text = "日期:" + DateUtil.toISOString(meetingContent.updatetime)
 //				if (meeting.statusId >=4) {
 					getEvaluateInfo();
 //				}
@@ -180,7 +181,7 @@
 					this.handlePersonTxt.text = contentVo.memberName;
 					this.handleTextArea.htmlText = contentVo.content;
 					if (meeting.statusId >=4) {
-						dateTxt_eva.text = "日期:" + DateUtil.toISOString(contentVo.updatetime);
+						dateTxt_eva.text = "日期:" + DateUtil.toISOString(contentVo.updatetime, false);
 						dateTxt_eva.visible = true;
 					}
 
@@ -421,6 +422,7 @@
 				<richtexttoolbar:PopupRichTextToolBar width="100%" target="{textArea}"/>
 				<mx:TextArea id="textArea" width="100%" height="100%"
 							 editable="false"/>
+				<mx:Label left="0"   id="dateTxt" visible="true"/>
 			</mx:VBox>
 			<mx:VRule height="100%"/>
 			<mx:VBox width="50%" height="100%"

@@ -158,11 +158,8 @@
 				var workPlanContent:PcWorkPlanContentVo = data as PcWorkPlanContentVo;
 				personTxt.text = workPlanContent.memberName;
 				textArea.htmlText = workPlanContent.content;
-				
-				if (workPlan.statusId >=4) {
-					dateTxt_eva.text = "日期:" + DateUtil.toISOString(workPlanContent.updatetime);
-					dateTxt_eva.visible = true;
-				}
+				dateTxt.text = "日期:" + DateUtil.toISOString(workPlanContent.updatetime);
+
 				
 //				if (workPlan.statusId >=4) {
 					getEvaluateInfo();
@@ -185,6 +182,10 @@
 					var contentVo:PcWorkPlanContentVo = data as PcWorkPlanContentVo;
 					this.handlePersonTxt.text = contentVo.memberName;
 					this.handleTextArea.htmlText = contentVo.content;
+					if (workPlan.statusId >=4) {
+						dateTxt_eva.text = "日期:" + DateUtil.toISOString(contentVo.updatetime);
+						dateTxt_eva.visible = true;
+					}					
 //					if (workPlan.statusId == 5) {
 						getRateInfo();
 //					}
@@ -413,6 +414,8 @@
 					<mx:Label text="填写人："/>
 					<mx:TextInput id="personTxt" width="200"
 								  editable="false"/>
+					<mx:Spacer width="100%"/>
+					<mx:Label left="0"   id="dateTxt" visible="true"/>
 				</mx:HBox>
 				<mx:TextArea id="textArea" width="100%" height="100%"
 							 editable="false"/>
