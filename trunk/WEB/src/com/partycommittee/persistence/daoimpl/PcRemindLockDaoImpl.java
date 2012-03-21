@@ -56,11 +56,15 @@ public class PcRemindLockDaoImpl extends JpaDaoBase implements PcRemindLockDao {
 				
 				if (item.getId().equals("agencyId")) {
 					where = where + " AND agencyId=" + item.getData();
-				}	
+				}
 				
 				if (item.getId().equals("parentId")) {
 					where = where + " AND parentId=" + item.getData();
 				}		
+				
+				if (item.getId().equals("parentCode")) {
+					where = where + " AND code like '" + item.getData() + "%'";
+				}	
 				
 				if (item.getId().equals("typeId")) {
 					where = where + " AND typeId=" + item.getData();

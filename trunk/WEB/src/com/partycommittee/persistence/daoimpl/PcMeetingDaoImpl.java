@@ -101,6 +101,24 @@ public class PcMeetingDaoImpl extends JpaDaoBase implements PcMeetingDao {
 	}
 	
 	@SuppressWarnings("unchecked")
+	public List<PcMeeting> getCommitMeetingListByAgencyId(
+			Integer agencyId, Integer year) {
+		try {
+			
+			if (year == 0)  {
+				Calendar calendar=Calendar.getInstance();  
+				calendar.setTime(new Date()); 
+				year = calendar.get(Calendar.YEAR);
+			}			
+			return super.find("from PcMeeting where agency_id = " + agencyId + " AND year = " + year + " AND status_id >= 3 Order by quarter, month DESC");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}	
+	
+	
+	@SuppressWarnings("unchecked")
 	public PcMeeting getMeeting(Integer agencyId, Integer year, Integer quarter, Integer typeId) {
 		try {
 			List<PcMeeting> list = new ArrayList<PcMeeting>();

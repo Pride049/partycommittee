@@ -123,6 +123,25 @@ public class PcWorkPlanDaoImpl extends JpaDaoBase implements PcWorkPlanDao {
 		}
 		return null;
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<PcWorkPlan> getCommitWorkPlanListByAgencyId(Integer agencyId, Integer year) {
+		try {
+
+			if (year == 0)  {
+				Calendar calendar=Calendar.getInstance();  
+				calendar.setTime(new Date()); 
+				year = calendar.get(Calendar.YEAR);
+			}
+			return super.find("from PcWorkPlan where agency_id = " + agencyId + " AND year = " + year + " AND status_id >= 3");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	
+	
 
 	@SuppressWarnings("unchecked")
 	public PcWorkPlan getWorkPlanQuarterByAgencyId(Integer agencyId,

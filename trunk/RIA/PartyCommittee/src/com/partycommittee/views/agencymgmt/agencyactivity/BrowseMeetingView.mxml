@@ -98,13 +98,16 @@
 				pcMeetingEvent.failureCallback = getMeetingFailure;
 				pcMeetingEvent.successCallback = getMeetingSuccess;
 				pcMeetingEvent.dispatch();
+				this.enabled = false;
 			}
 			
 			private function getMeetingSuccess(data:Object, evt:PcMeetingEvent):void {
+				this.enabled = true;
 				dp = data as ArrayCollection;
 			}
 			
 			private function getMeetingFailure(info:Object, evt:PcMeetingEvent):void {
+				this.enabled = true;
 				Alert.show(info.toString());
 			}
 			
@@ -197,8 +200,8 @@
 				<!--<mx:AdvancedDataGridColumn headerText="序号" dataField="id"/>-->
 				<mx:AdvancedDataGridColumn headerText="会议类型" dataField="typeId"
 										   labelFunction="typeLblFunc"/>
-				<mx:AdvancedDataGridColumn headerText="党组织" dataField="agencyId"
-										   labelFunction="agencyLblFunc"/>
+				<mx:AdvancedDataGridColumn headerText="党组织" dataField="agencyName"
+										   />
 				<mx:AdvancedDataGridColumn headerText="年度" dataField="year"/>
 				<mx:AdvancedDataGridColumn headerText="季度" dataField="quarter"
 										   labelFunction="quarterLblFunc"/>

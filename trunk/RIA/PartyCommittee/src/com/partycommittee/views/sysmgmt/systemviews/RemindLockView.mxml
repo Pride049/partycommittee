@@ -55,15 +55,7 @@
 			
 			private function onCreationCompleted():void {
 //				onNavigateIn();
-				if (this.tab && this.tab.selectedChild == this) {
-					
-					refreshData();
-				}	
-			}
-			
-			override protected function onNavigateIn():void {
-				model.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, onModelChanged);
-				pagebar.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, onPageBarChanged);
+				
 				
 				if (yearCmb) {
 					yearCmb.dataProvider = DataproviderFactory.getRangeYearForReport();
@@ -79,7 +71,10 @@
 				}				
 				
 				if (typeCmb) {
-					typeCmb.dataProvider = DataproviderFactory.createTypeDp();
+					var tq:Array = DataproviderFactory.createTypeDp();
+					tq.unshift("全部");
+					typeCmb.dataProvider = tq;
+					
 					typeCmb.selectedIndex = 0;
 				}
 				
@@ -88,7 +83,19 @@
 					q.addItemAt("全部", 0);					
 					monthCmb.dataProvider = q;
 					monthCmb.selectedIndex = 0;
-				}
+				}				
+				
+				if (this.tab && this.tab.selectedChild == this) {
+					
+					refreshData();
+				}	
+			}
+			
+			override protected function onNavigateIn():void {
+				model.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, onModelChanged);
+				pagebar.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, onPageBarChanged);
+				
+
 				
 				refreshData();
 			}
@@ -114,7 +121,7 @@
 			
 			private function refreshData():void {
 				if (!model.focusAgencyVo) return;
-				if (model.focusAgencyVo.id == 1) return;
+//				if (model.focusAgencyVo.id == 1) return;
 				var evt:PcRemindLockEvent = new PcRemindLockEvent(PcRemindLockEvent.GET_REMIND_LOCK_BY_FILTERS);
 				evt.page = page;
 				
@@ -129,20 +136,24 @@
 						vo.data = model.focusAgencyVo.id.toString();
 						filters.push(vo);
 					} else {
-						var vo:FilterVo = new FilterVo();
-						vo.id = 'parentId';
-						vo.data = model.focusAgencyVo.id.toString();
-						filters.push(vo);
+						if (model.focusAgencyVo.id != 1) {
+							var vo:FilterVo = new FilterVo();
+							vo.id = 'parentCode';
+							vo.data = model.focusAgencyVo.code;
+							filters.push(vo);							
+						}
+
 					}
 					
 					
 				}
 				// 类型:
-				
-				var t_vo:FilterVo = new FilterVo();
-				t_vo.id = 'typeId';
-				t_vo.data = (typeCmb.selectedItem as Object).typeId;
-				filters.push(t_vo);
+				if (typeCmb.selectedIndex > 0) {				
+					var t_vo:FilterVo = new FilterVo();
+					t_vo.id = 'typeId';
+					t_vo.data = (typeCmb.selectedItem as Object).typeId;
+					filters.push(t_vo);
+				}
 				
 				
 				var y_vo:FilterVo = new FilterVo();
@@ -237,9 +248,7 @@
 										   headerStyleName="dataGridHeader"
 										   allowMultipleSelection="true"
 										   dataProvider="{dp}"
-										   horizontalScrollPolicy="auto"
-										   doubleClickEnabled="true"
-										   doubleClick="onItemDoubleClick()">
+										   horizontalScrollPolicy="auto">
 			<mx:columns>
 				<mx:AdvancedDataGridColumn headerText="支部名称" dataField="name" width="120"/>
 				<mx:AdvancedDataGridColumn headerText="年度" dataField="year" width="80"/>

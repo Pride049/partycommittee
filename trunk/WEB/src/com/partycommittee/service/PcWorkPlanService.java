@@ -8,9 +8,11 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.partycommittee.persistence.daoimpl.PcAgencyDaoImpl;
 import com.partycommittee.persistence.daoimpl.PcAgencyRelationDaoImpl;
 import com.partycommittee.persistence.daoimpl.PcWorkPlanDaoImpl;
 import com.partycommittee.persistence.daoimpl.PcWorkPlanContentDaoImpl;
+import com.partycommittee.persistence.po.PcAgency;
 import com.partycommittee.persistence.po.PcAgencyRelation;
 import com.partycommittee.persistence.po.PcWorkPlan;
 import com.partycommittee.persistence.po.PcWorkPlanContent;
@@ -38,6 +40,12 @@ public class PcWorkPlanService {
 	public void setPcAgencyRelationDaoImpl(PcAgencyRelationDaoImpl pcAgencyRelationDaoImpl) {
 		this.pcAgencyRelationDaoImpl = pcAgencyRelationDaoImpl;
 	}
+	
+	@Resource(name="PcAgencyDaoImpl")
+	private PcAgencyDaoImpl pcAgencyDaoImpl;
+	public void setPcAgencyDaoImpl(PcAgencyDaoImpl pcAgencyDaoImpl) {
+		this.pcAgencyDaoImpl = pcAgencyDaoImpl;
+	}	
 	
 	public void createWorkPlan(PcWorkPlanVo workPlan) throws Exception {
 		if (workPlan == null) {
@@ -107,15 +115,30 @@ public class PcWorkPlanService {
 		if (agencyRelationList == null || agencyRelationList.size() == 0) {
 			return null;
 		}
-		List<Integer> agencyIds = new ArrayList<Integer>();
+//		List<Integer> agencyIds = new ArrayList<Integer>();
+//		for (PcAgencyRelation agencyRelation : agencyRelationList) {
+//			agencyIds.add(agencyRelation.getAgencyId());
+//		}
+//		List<PcWorkPlan> workPlanList = new ArrayList<PcWorkPlan>();
+//		workPlanList = pcWorkPlanDaoImpl.getCommitWorkPlanListByAgencyIds(agencyIds, year);
+//		for (PcWorkPlan workPlan : workPlanList) {
+//			list.add(PcWorkPlanVo.fromPcWorkPlan(workPlan));
+//		}
+		
+
 		for (PcAgencyRelation agencyRelation : agencyRelationList) {
-			agencyIds.add(agencyRelation.getAgencyId());
+			List<PcWorkPlan> workPlanList = new ArrayList<PcWorkPlan>();
+			workPlanList = pcWorkPlanDaoImpl.getCommitWorkPlanListByAgencyId(agencyRelation.getAgencyId(), year);
+			PcAgency agency = pcAgencyDaoImpl.getAgencyById(agencyRelation.getAgencyId());
+			
+			for (PcWorkPlan workPlan : workPlanList) {
+				PcWorkPlanVo vo = PcWorkPlanVo.fromPcWorkPlan(workPlan);
+				vo.setAgencyName(agency.getName());
+				list.add(vo);
+			}			
 		}
-		List<PcWorkPlan> workPlanList = new ArrayList<PcWorkPlan>();
-		workPlanList = pcWorkPlanDaoImpl.getCommitWorkPlanListByAgencyIds(agencyIds, year);
-		for (PcWorkPlan workPlan : workPlanList) {
-			list.add(PcWorkPlanVo.fromPcWorkPlan(workPlan));
-		}
+		
+
 		return list;
 	}
 	
