@@ -8,6 +8,7 @@ package com.partycommittee.vo
 		
 		public var id:Number;
 		public var agencyId:Number;
+		public var agencyName:String;
 		public var typeId:Number;
 		public var year:Number;
 		public var quarter:Number;

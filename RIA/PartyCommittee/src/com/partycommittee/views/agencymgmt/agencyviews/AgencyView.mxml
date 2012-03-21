@@ -334,7 +334,7 @@
 								 doubleClickEnabled="true"
 								 doubleClick="onItemDoubleClick()">
 				<mx:columns>
-					<mx:AdvancedDataGridColumn headerText="支部名称" dataField="name" />
+					<mx:AdvancedDataGridColumn headerText="组织名称" dataField="name" />
 					<mx:AdvancedDataGridColumn headerText="改选时间" dataField="setupDatetime" itemRenderer="com.partycommittee.renderers.setupDateTimeRenderer"/>
 					<mx:AdvancedDataGridColumn headerText="党小组数" dataField="pcount" />
 					<mx:AdvancedDataGridColumn headerText="支部人数" dataField="zbnum" />

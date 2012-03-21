@@ -8,10 +8,12 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.partycommittee.persistence.daoimpl.PcAgencyDaoImpl;
 import com.partycommittee.persistence.daoimpl.PcAgencyRelationDaoImpl;
 import com.partycommittee.persistence.daoimpl.PcMeetingAsenceDaoImpl;
 import com.partycommittee.persistence.daoimpl.PcMeetingContentDaoImpl;
 import com.partycommittee.persistence.daoimpl.PcMeetingDaoImpl;
+import com.partycommittee.persistence.po.PcAgency;
 import com.partycommittee.persistence.po.PcAgencyRelation;
 import com.partycommittee.persistence.po.PcMeeting;
 import com.partycommittee.persistence.po.PcMeetingContent;
@@ -45,6 +47,12 @@ public class PcMeetingService {
 	public void setPcAgencyRelationDaoImpl(PcAgencyRelationDaoImpl pcAgencyRelationDaoImpl) {
 		this.pcAgencyRelationDaoImpl = pcAgencyRelationDaoImpl;
 	}
+	
+	@Resource(name="PcAgencyDaoImpl")
+	private PcAgencyDaoImpl pcAgencyDaoImpl;
+	public void setPcAgencyDaoImpl(PcAgencyDaoImpl pcAgencyDaoImpl) {
+		this.pcAgencyDaoImpl = pcAgencyDaoImpl;
+	}		
 	
 	private List<PcMeetingVo> createOriginalMeetingList(Integer agencyId, Integer year, Integer typeId) {
 		List<PcMeetingVo> list = new ArrayList<PcMeetingVo>();
@@ -161,19 +169,37 @@ public class PcMeetingService {
 		if (agencyRelationList == null || agencyRelationList.size() == 0) {
 			return null;
 		}
+//		List<Integer> agencyIds = new ArrayList<Integer>();
+//		for (PcAgencyRelation agencyRelation : agencyRelationList) {
+//			agencyIds.add(agencyRelation.getAgencyId());
+//		}
+//		List<PcMeeting> meetingList = new ArrayList<PcMeeting>();
+//		meetingList = pcMeetingDaoImpl.getCommitMeetingListByAgencyIds(agencyIds, year);
+//		if (meetingList != null && meetingList.size() > 0) {
+//			for (PcMeeting meeting : meetingList) {
+//				PcMeetingVo meetingVoItem = PcMeetingVo.fromPcMeeting(meeting);
+//				String asenceMemberIds = pcMeetingAsenceDaoImpl.getMemberIdsByMeetingId(meetingVoItem.getId());
+//				meetingVoItem.setAsenceMemberIds(asenceMemberIds);
+//				list.add(meetingVoItem);
+//			}
+//		}
+
 		List<Integer> agencyIds = new ArrayList<Integer>();
 		for (PcAgencyRelation agencyRelation : agencyRelationList) {
-			agencyIds.add(agencyRelation.getAgencyId());
-		}
-		List<PcMeeting> meetingList = new ArrayList<PcMeeting>();
-		meetingList = pcMeetingDaoImpl.getCommitMeetingListByAgencyIds(agencyIds, year);
-		if (meetingList != null && meetingList.size() > 0) {
-			for (PcMeeting meeting : meetingList) {
-				PcMeetingVo meetingVoItem = PcMeetingVo.fromPcMeeting(meeting);
-				String asenceMemberIds = pcMeetingAsenceDaoImpl.getMemberIdsByMeetingId(meetingVoItem.getId());
-				meetingVoItem.setAsenceMemberIds(asenceMemberIds);
-				list.add(meetingVoItem);
-			}
+			List<PcMeeting> meetingList = new ArrayList<PcMeeting>();
+			PcAgency agency = pcAgencyDaoImpl.getAgencyById(agencyRelation.getAgencyId());
+			
+			meetingList = pcMeetingDaoImpl.getCommitMeetingListByAgencyId(agencyRelation.getAgencyId(), year);
+			
+			if (meetingList != null && meetingList.size() > 0) {
+				for (PcMeeting meeting : meetingList) {
+					PcMeetingVo meetingVoItem = PcMeetingVo.fromPcMeeting(meeting);
+					String asenceMemberIds = pcMeetingAsenceDaoImpl.getMemberIdsByMeetingId(meetingVoItem.getId());
+					meetingVoItem.setAsenceMemberIds(asenceMemberIds);
+					meetingVoItem.setAgencyName(agency.getName());
+					list.add(meetingVoItem);
+				}
+			}				
 		}
 
 		return list;

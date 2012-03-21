@@ -9,6 +9,7 @@ public class PcWorkPlanVo implements Serializable {
 
 	private Integer id;
 	private Integer agencyId;
+	private String  agencyName;
 	private Integer typeId;
 	private Integer year;
 	private Integer quarter;
@@ -31,6 +32,14 @@ public class PcWorkPlanVo implements Serializable {
 
 	public void setAgencyId(Integer agencyId) {
 		this.agencyId = agencyId;
+	}
+	
+	public String getAgencyName() {
+		return agencyName;
+	}
+
+	public void setAgencyName(String agencyName) {
+		this.agencyName = agencyName;
 	}
 
 	public Integer getTypeId() {

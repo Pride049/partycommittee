@@ -106,8 +106,8 @@ public class PcRemindLockVo implements Serializable {
 		return this.month;
 	}
 
-	public void setMonth(Integer quarter) {
-		this.quarter = quarter;
+	public void setMonth(Integer month) {
+		this.month = month;
 	}
 	
 	public Integer getStatusId() {

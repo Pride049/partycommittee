@@ -10,7 +10,7 @@ update `pc_meeting_content` set type = 3 where type = 2;
 
 update pc_meeting set month = month(meeting_datetime);
 
-
+update `pc_meeting` as t1,pc_meeting_content as t2 set t2.updatetime =t1.`meeting_datetime` where   t1.id = t2.meeting_id
 
 ALTER TABLE  `pc_agency` ADD INDEX (  `code_id` ) ;
 

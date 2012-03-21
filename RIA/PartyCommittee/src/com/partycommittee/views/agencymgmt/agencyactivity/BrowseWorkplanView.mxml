@@ -108,15 +108,17 @@
 				pcWorkPlanEvent.failureCallback = getWorkPlanFailure;
 				pcWorkPlanEvent.successCallback = getWorkPlanSuccess;
 				pcWorkPlanEvent.dispatch();
+				this.enabled = false;
 		
 			}
 			
 			private function getWorkPlanSuccess(data:Object, evt:PcWorkPlanEvent):void {
+				this.enabled = true;
 				dp = data as ArrayCollection;
 			}
 			
 			private function getWorkPlanFailure(info:Object, evt:PcWorkPlanEvent):void {
-				Alert.show(info.toString());
+				this.enabled = true;
 			}
 			
 			private function typeLblFunc(item:Object, col:*):String {
@@ -212,8 +214,8 @@
 				<!--<mx:AdvancedDataGridColumn headerText="序号" dataField="id"/>-->
 				<mx:AdvancedDataGridColumn headerText="类型" dataField="typeId"
 										   labelFunction="typeLblFunc"/>
-				<mx:AdvancedDataGridColumn headerText="党组织" dataField="agencyId"
-										   labelFunction="agencyLblFunc"/>
+				<mx:AdvancedDataGridColumn headerText="党组织" dataField="agencyName"
+										   />
 				<mx:AdvancedDataGridColumn headerText="年度" dataField="year"/>
 				<mx:AdvancedDataGridColumn headerText="季度" dataField="quarter"
 										   labelFunction="quarterLblFunc"/>

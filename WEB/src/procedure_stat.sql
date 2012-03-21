@@ -355,17 +355,17 @@ begin
 			  END IF;
 			  
 --			党员人数不足7人的党支部数量			  
-				SELECT COUNT(*) INTO stat_less7_num FROM pc_member where agency_id = c_id;
-				
-				IF stat_less7_num = 0 THEN
+--				SELECT COUNT(*) INTO stat_less7_num FROM pc_member where agency_id = c_id;
+				IF stat_dy_num IS null THEN
+					SET stat_dy_num = 0;
+				END IF; 
+			
+				IF stat_dy_num < 7 THEN
+					SET stat_less7_num = 1;
+				ELSE 
 					SET stat_less7_num = 0;
-				ELSE 				
-					IF stat_less7_num < 7 THEN
-						SET stat_less7_num = 1;
-					ELSE 
-						SET stat_less7_num = 0;
-					END IF;
 				END IF;
+
 
 				
 				SELECT COUNT(*) INTO stat_zbsj_num FROM pc_member where agency_id = c_id AND duty_id = 1;
@@ -663,7 +663,7 @@ begin
 									SET q = 0;
 								END IF;	
 												SELECT COUNT(*) into stat_total FROM pc_workplan WHERE agency_id = c_id AND type_id = i AND year =y AND quarter = q AND status_id >= 3;
-												SELECT COUNT(*) into stat_total_delay FROM pc_remind_lock WHERE agency_id = c_id  AND year =y AND quarter = q AND type_id = i;
+												SELECT COUNT(*) into stat_total_delay FROM pc_remind_lock WHERE agency_id = c_id  AND year =y AND quarter = q AND type_id = i AND status = 8;
 												SELECT COUNT(*) into stat_total_return FROM pc_workplan as a left join pc_workplan_content as b on a.id = b.workplan_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = q AND a.status_id >= 3 AND b.type = 2;
 
 												SELECT COUNT(*) into stat_eva FROM pc_workplan WHERE agency_id = c_id AND type_id = i AND year = y AND quarter = q AND status_id = 5;
@@ -721,7 +721,7 @@ begin
 --					会议类						
 						IF (i = 5 OR i = 6 OR i =7 OR i = 9 )  THEN
 												SELECT COUNT(*), sum(attend), sum(asence) into stat_total, stat_attend, stat_asence FROM pc_meeting WHERE agency_id = c_id AND type_id = i AND year =y AND quarter = q AND status_id >= 3;
-												SELECT COUNT(*) into stat_total_delay FROM pc_remind_lock WHERE agency_id = c_id  AND year =y AND quarter = q AND type_id = i;
+												SELECT COUNT(*) into stat_total_delay FROM pc_remind_lock WHERE agency_id = c_id  AND year =y AND quarter = q AND type_id = i AND status = 8;
 												SELECT COUNT(*) into stat_total_return FROM pc_meeting as a left join pc_meeting_content as b on a.id = b.meeting_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = q AND a.status_id >= 3 AND b.type = 2;
 
 												SELECT COUNT(*) into stat_eva FROM pc_meeting WHERE agency_id = c_id AND type_id = i AND year = y AND quarter = q AND status_id = 5;
@@ -793,7 +793,7 @@ begin
 						
 						IF i = 8 THEN
 												SELECT COUNT(*), sum(attend), sum(asence) into stat_total, stat_attend, stat_asence FROM pc_meeting WHERE agency_id = c_id AND type_id = i AND year =y AND quarter = q AND month = m AND status_id >= 3;
-												SELECT COUNT(*) into stat_total_delay FROM pc_remind_lock WHERE agency_id = c_id  AND year =y AND quarter = q AND month = m AND type_id = i;
+												SELECT COUNT(*) into stat_total_delay FROM pc_remind_lock WHERE agency_id = c_id  AND year =y AND quarter = q AND month = m AND type_id = i AND status = 8;
 												SELECT COUNT(*) into stat_total_return FROM pc_meeting as a left join pc_meeting_content as b on a.id = b.meeting_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = q AND month = m AND a.status_id >= 3 AND b.type = 2;
 
 												SELECT COUNT(*) into stat_eva FROM pc_meeting WHERE agency_id = c_id AND type_id = i AND year = y AND quarter = q AND month = m AND status_id = 5;
@@ -877,7 +877,7 @@ begin
 						END IF;										
 							
 						INSERT INTO pc_zzsh_stat (agency_id, name, code_id, code, parent_id, year, quarter, month, type_id, total, total_success, total_return, total_delay, reported, reported_rate, return_rate, delay_rate,  attend, asence, attend_rate, eva, eva_rate, eva_1, eva_2, eva_3, eva_4, eva_1_rate, eva_2_rate, eva_3_rate, eva_4_rate, agency_goodjob) VALUES
-						(c_id, c_name, c_code_id, c_code, c_parent_id, y, q, m, i, stat_total, stat_total_success, stat_total_return, stat_total_delay, stat_reported, stat_reported_rate, stat_return_rate, stat_delay_rate, stat_attend, stat_asence, stat_attend_rate, stat_eva, stat_eva_rate, stat_eva_1, stat_eva_2, stat_eva_3, stat_eva_4, stat_agency_goodjob, stat_eva_1_rate, stat_eva_2_rate, stat_eva_3_rate, stat_eva_4_rate)
+						(c_id, c_name, c_code_id, c_code, c_parent_id, y, q, m, i, stat_total, stat_total_success, stat_total_return, stat_total_delay, stat_reported, stat_reported_rate, stat_return_rate, stat_delay_rate, stat_attend, stat_asence, stat_attend_rate, stat_eva, stat_eva_rate, stat_eva_1, stat_eva_2, stat_eva_3, stat_eva_4, stat_eva_1_rate, stat_eva_2_rate, stat_eva_3_rate, stat_eva_4_rate, stat_agency_goodjob)
 						ON DUPLICATE KEY UPDATE 
 						name = c_name, code_id = c_code_id, code = c_code, parent_id = c_parent_id,
 						total = stat_total, total_success = stat_total_success,  total_return = stat_total_return,  total_delay = stat_total_delay,  
@@ -955,7 +955,7 @@ begin
 							
 							
 										SELECT COUNT(*) into stat_total FROM pc_workplan WHERE agency_id = c_id AND type_id = i AND year =y AND quarter = q AND status_id >= 3;
-										SELECT COUNT(*) into stat_total_delay FROM pc_remind_lock WHERE agency_id = c_id  AND year =y AND quarter = q AND type_id = i;
+										SELECT COUNT(*) into stat_total_delay FROM pc_remind_lock WHERE agency_id = c_id  AND year =y AND quarter = q AND type_id = i AND status = 8;
 										SELECT COUNT(*) into stat_total_return FROM pc_workplan as a left join pc_workplan_content as b on a.id = b.workplan_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = q AND a.status_id >= 3 AND b.type = 2;
 										SELECT COUNT(*) into stat_eva FROM pc_workplan WHERE agency_id = c_id AND type_id = i AND year = y AND quarter = q AND status_id = 5;
 										SELECT COUNT(CASE WHEN b.content = 1 THEN a.id END) into stat_eva_1 FROM pc_workplan as a left join pc_workplan_content as b on a.id = b.workplan_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = q AND a.status_id = 5 AND b.type = 4;
@@ -1020,7 +1020,7 @@ begin
 												END IF;
 										
 									INSERT INTO pc_zzsh_stat (agency_id, name, code_id, code, parent_id, year, quarter, month, type_id, total, total_success, total_return, total_delay, reported, reported_rate, return_rate, delay_rate,  attend, asence, attend_rate, eva, eva_rate, eva_1, eva_2, eva_3, eva_4, eva_1_rate, eva_2_rate, eva_3_rate, eva_4_rate, agency_goodjob) VALUES
-									(c_id, c_name, c_code_id, c_code, c_parent_id, y, q, m, i, stat_total, stat_total_success, stat_total_return, stat_total_delay, stat_reported, stat_reported_rate, stat_return_rate, stat_delay_rate, stat_attend, stat_asence, stat_attend_rate, stat_eva, stat_eva_rate, stat_eva_1, stat_eva_2, stat_eva_3, stat_eva_4, stat_agency_goodjob, stat_eva_1_rate, stat_eva_2_rate, stat_eva_3_rate, stat_eva_4_rate)
+									(c_id, c_name, c_code_id, c_code, c_parent_id, y, q, m, i, stat_total, stat_total_success, stat_total_return, stat_total_delay, stat_reported, stat_reported_rate, stat_return_rate, stat_delay_rate, stat_attend, stat_asence, stat_attend_rate, stat_eva, stat_eva_rate, stat_eva_1, stat_eva_2, stat_eva_3, stat_eva_4, stat_eva_1_rate, stat_eva_2_rate, stat_eva_3_rate, stat_eva_4_rate, stat_agency_goodjob)
 									ON DUPLICATE KEY UPDATE 
 									name = c_name, code_id = c_code_id, code = c_code, parent_id = c_parent_id,
 									total = stat_total, total_success = stat_total_success,  total_return = stat_total_return,  total_delay = stat_total_delay,  
@@ -1040,7 +1040,7 @@ begin
 										SET q = 4;
 									
 										SELECT COUNT(*) into stat_total FROM pc_workplan WHERE agency_id = c_id AND type_id = i AND year =y AND quarter = q AND status_id >= 3;
-										SELECT COUNT(*) into stat_total_delay FROM pc_remind_lock WHERE agency_id = c_id  AND year =y AND quarter = q AND type_id = i;
+										SELECT COUNT(*) into stat_total_delay FROM pc_remind_lock WHERE agency_id = c_id  AND year =y AND quarter = q AND type_id = i AND status = 8;
 										SELECT COUNT(*) into stat_total_return FROM pc_workplan as a left join pc_workplan_content as b on a.id = b.workplan_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = q AND a.status_id >= 3 AND b.type = 2;
 										SELECT COUNT(*) into stat_eva FROM pc_workplan WHERE agency_id = c_id AND type_id = i AND year = y AND quarter = q AND status_id = 5;
 										SELECT COUNT(CASE WHEN b.content = 1 THEN a.id END) into stat_eva_1 FROM pc_workplan as a left join pc_workplan_content as b on a.id = b.workplan_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = q AND a.status_id = 5 AND b.type = 4;
@@ -1106,7 +1106,7 @@ begin
 								
 										
 									INSERT INTO pc_zzsh_stat (agency_id, name, code_id, code, parent_id, year, quarter, month, type_id, total, total_success, total_return, total_delay, reported, reported_rate, return_rate, delay_rate,  attend, asence, attend_rate, eva, eva_rate, eva_1, eva_2, eva_3, eva_4, eva_1_rate, eva_2_rate, eva_3_rate, eva_4_rate, agency_goodjob) VALUES
-									(c_id, c_name, c_code_id, c_code, c_parent_id, y, q, m, i, stat_total, stat_total_success, stat_total_return, stat_total_delay, stat_reported, stat_reported_rate, stat_return_rate, stat_delay_rate, stat_attend, stat_asence, stat_attend_rate, stat_eva, stat_eva_rate, stat_eva_1, stat_eva_2, stat_eva_3, stat_eva_4, stat_agency_goodjob, stat_eva_1_rate, stat_eva_2_rate, stat_eva_3_rate, stat_eva_4_rate)
+									(c_id, c_name, c_code_id, c_code, c_parent_id, y, q, m, i, stat_total, stat_total_success, stat_total_return, stat_total_delay, stat_reported, stat_reported_rate, stat_return_rate, stat_delay_rate, stat_attend, stat_asence, stat_attend_rate, stat_eva, stat_eva_rate, stat_eva_1, stat_eva_2, stat_eva_3, stat_eva_4, stat_eva_1_rate, stat_eva_2_rate, stat_eva_3_rate, stat_eva_4_rate, stat_agency_goodjob )
 									ON DUPLICATE KEY UPDATE 
 									name = c_name, code_id = c_code_id, code = c_code, parent_id = c_parent_id,
 									total = stat_total, total_success = stat_total_success,  total_return = stat_total_return,  total_delay = stat_total_delay,  
