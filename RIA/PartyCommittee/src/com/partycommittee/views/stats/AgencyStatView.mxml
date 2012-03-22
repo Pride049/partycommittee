@@ -64,6 +64,7 @@
 			private function onGetAgencyStatSuccess(data:Object, evt:PcStatEvent):void {
 				this.enabled = true;
 				if (!data) return;
+				datas.removeAll();
 				var dp:ArrayCollection = data as ArrayCollection;
 				for(var i:int = 0; i<dp.length; i++) {
 					var vo:Object = dp.getItemAt(i);

@@ -296,6 +296,8 @@ begin
 	DECLARE row int default 0;
 	DECLARE i int;
 	
+  DECLARE stat_zz_num int(10) unsigned;
+  DECLARE stat_jc_num int(10) unsigned;	
   DECLARE stat_ejdw_num int(10) unsigned;
   DECLARE stat_dzj_num int(10) unsigned;
   DECLARE stat_dzb_num int(10) unsigned;
@@ -324,6 +326,8 @@ begin
 	cursor_loop:loop
 			FETCH s_cursor into c_id, c_name, c_code_id, c_code, c_parent_id, c_setup_datetime, stat_dxz_num, stat_dy_num;
 
+		  SET stat_zz_num = 1;
+		  SET stat_jc_num = 0;
 		  SET stat_ejdw_num = 0;
 		  SET stat_dzj_num = 0;
 		  SET stat_dzb_num = 0;
@@ -389,13 +393,15 @@ begin
 				END IF;
 				
 			IF c_parent_id is not null THEN
-				INSERT INTO pc_agency_stats (agency_id, name, code_id, code, parent_id, ejdw_num, dzj_num, dzb_num, more2year_num, less7_num, no_fsj_zbwy_num, dxz_num, dy_num, zbsj_num, zbfsj_num, zzwy_num, xcwy_num, jjwy_num, qnwy_num, ghwy_num, fnwy_num, bmwy_num) VALUES
-				(c_id, c_name, c_code_id, c_code, c_parent_id, stat_ejdw_num, stat_dzj_num, stat_dzb_num, stat_more2year_num, stat_less7_num, stat_no_fsj_zbwy_num, stat_dxz_num, stat_dy_num, stat_zbsj_num, stat_zbfsj_num, stat_zzwy_num, stat_xcwy_num, stat_jjwy_num, stat_qnwy_num, stat_ghwy_num, stat_fnwy_num, stat_bmwy_num)
+				INSERT INTO pc_agency_stats (agency_id, name, code_id, code, parent_id, zz_num, jc_num, ejdw_num, dzj_num, dzb_num, more2year_num, less7_num, no_fsj_zbwy_num, dxz_num, dy_num, zbsj_num, zbfsj_num, zzwy_num, xcwy_num, jjwy_num, qnwy_num, ghwy_num, fnwy_num, bmwy_num) VALUES
+				(c_id, c_name, c_code_id, c_code, c_parent_id, stat_zz_num, stat_jc_num, stat_ejdw_num, stat_dzj_num, stat_dzb_num, stat_more2year_num, stat_less7_num, stat_no_fsj_zbwy_num, stat_dxz_num, stat_dy_num, stat_zbsj_num, stat_zbfsj_num, stat_zzwy_num, stat_xcwy_num, stat_jjwy_num, stat_qnwy_num, stat_ghwy_num, stat_fnwy_num, stat_bmwy_num)
 				ON DUPLICATE KEY UPDATE 
 				name = c_name, 
 				code_id = c_code_id, 
 				code = c_code, 
 				parent_id = c_parent_id, 
+				zz_num = stat_zz_num,
+				jc_num = stat_jc_num,
 				ejdw_num = stat_ejdw_num, 
 				dzj_num = stat_dzj_num, 
 				dzb_num = stat_dzb_num, 
@@ -436,9 +442,14 @@ begin
 	DECLARE rows int default 0;
 	DECLARE row int default 0;
 	DECLARE i int;
-		
+	
+	
+	DECLARE stat_zz_num int(10) unsigned;
+  DECLARE stat_jc_num int(10) unsigned;		
+  	
   DECLARE stat_ejdw_num int(10) unsigned;
   DECLARE stat_dzj_num int(10) unsigned;		
+  
 		
 	DECLARE s_cursor CURSOR FOR SELECT a.id, a.name, a.code_id, a.code, b.parent_id FROM  pc_agency as a left join pc_agency_relation as b on a.id = b.agency_id WHERE a.code_id in (7,8,15);
 	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done=1;
@@ -448,7 +459,9 @@ begin
   SET row = 0;
 	cursor_loop:loop
 			FETCH s_cursor into c_id, c_name, c_code_id, c_code, c_parent_id;
-
+			
+		  SET stat_zz_num = 0;
+		  SET stat_jc_num = 0;
 		  SET stat_ejdw_num = 0;
 		  SET stat_dzj_num = 0;
 
@@ -461,8 +474,10 @@ begin
 			END IF;
 			
 			IF c_parent_id is not null THEN
-				INSERT INTO pc_agency_stats (agency_id, name, code_id, code, parent_id, ejdw_num, dzj_num, dzb_num, more2year_num, less7_num, no_fsj_zbwy_num, dxz_num, dy_num, zbsj_num, zbfsj_num, zzwy_num, xcwy_num, jjwy_num, qnwy_num, ghwy_num, fnwy_num, bmwy_num)
+				INSERT INTO pc_agency_stats (agency_id, name, code_id, code, parent_id, zz_num, jc_num, ejdw_num, dzj_num, dzb_num, more2year_num, less7_num, no_fsj_zbwy_num, dxz_num, dy_num, zbsj_num, zbfsj_num, zzwy_num, xcwy_num, jjwy_num, qnwy_num, ghwy_num, fnwy_num, bmwy_num)
 				SELECT  c_id as agency_id, c_name as name, c_code_id as code_id, c_code as  code, c_parent_id as  parent_id,
+				(stat_jc_num + stat_ejdw_num + stat_dzj_num + SUM(dzb_num) ) as zz_num,
+				stat_jc_num as jc_num,
 				stat_ejdw_num as ejdw_num,
 				stat_dzj_num as dzj_num,
 				SUM(dzb_num) as dzb_num,
@@ -474,7 +489,7 @@ begin
 				SUM(zbsj_num) as zbsj_num,
 				SUM(zbfsj_num) as zbfsj_num,
 				SUM(zzwy_num) as zzwy_num,
-				SUM(xcwy_num) as xcwy_num, 
+				SUM(xcwy_num) as xcwy_num,
 				SUM(jjwy_num) as jjwy_num,
 				SUM(qnwy_num) as qnwy_num,
 				SUM(ghwy_num) as ghwy_num,
@@ -487,32 +502,36 @@ begin
 				code_id = c_code_id, 
 				code = c_code, 
 				parent_id = c_parent_id, 
-				ejdw_num = stat_ejdw_num, 
-				dzj_num = stat_dzj_num, 
-				dzb_num = dzb_num, 
-				more2year_num = more2year_num, 
-				less7_num = less7_num, 
-				no_fsj_zbwy_num = no_fsj_zbwy_num, 
-				dxz_num = dxz_num, 
-				dy_num = dy_num, 
-				zbsj_num = zbsj_num, 
+				zz_num = zz_num,
+				ejdw_num = ejdw_num,
+				dzj_num = dzj_num,
+				dzb_num = dzb_num,
+				more2year_num = more2year_num,
+				less7_num = less7_num,
+				no_fsj_zbwy_num = no_fsj_zbwy_num,
+				dxz_num = dxz_num,
+				dy_num = dy_num,
+				zbsj_num = zbsj_num,
 				zbfsj_num = zbfsj_num, 
-				zzwy_num = zzwy_num, 
+				zzwy_num = zzwy_num,
 				xcwy_num = xcwy_num, 
-				jjwy_num = jjwy_num, 
-				qnwy_num = qnwy_num, 
-				ghwy_num = ghwy_num, 
-				fnwy_num = fnwy_num, 
+				jjwy_num = jjwy_num,
+				qnwy_num = qnwy_num,
+				ghwy_num = ghwy_num,
+				fnwy_num = fnwy_num,
 				bmwy_num = bmwy_num;
 			END IF;
 			SET row = row + 1;
 	end loop cursor_loop;
 	close s_cursor;
 	
+	SELECT COUNT(CASE WHEN code_id = 7 THEN a.id END) INTO stat_jc_num FROM pc_agency as a left join pc_agency_relation as b on a.id = b.agency_id where b.parent_id = 1;
 	
-	INSERT INTO pc_agency_stats (agency_id, name, code_id, code, parent_id, ejdw_num, dzj_num, dzb_num, more2year_num, less7_num, no_fsj_zbwy_num, dxz_num, dy_num, zbsj_num, zbfsj_num, zzwy_num, xcwy_num, jjwy_num, qnwy_num, ghwy_num, fnwy_num, bmwy_num)
+	INSERT INTO pc_agency_stats (agency_id, name, code_id, code, parent_id, zz_num, jc_num, ejdw_num, dzj_num, dzb_num, more2year_num, less7_num, no_fsj_zbwy_num, dxz_num, dy_num, zbsj_num, zbfsj_num, zzwy_num, xcwy_num, jjwy_num, qnwy_num, ghwy_num, fnwy_num, bmwy_num)
 	SELECT * FROM
 	(SELECT  T1.parent_id as agency_id, T2.name, T2.code_id, T2.code, 0 as  parent_id,
+	( stat_jc_num + SUM(ejdw_num) + SUM(dzj_num) + SUM(dzb_num) ) as zz_num,
+	stat_jc_num as jc_num,
 	SUM(ejdw_num) as ejdw_num,
 	SUM(dzj_num) as dzj_num,
 	SUM(dzb_num) as dzb_num,
@@ -535,22 +554,24 @@ begin
 	WHERE parent_id = 1 ) as T3
 	ON DUPLICATE KEY UPDATE 
 	name = T3.name,
-	ejdw_num = T3.ejdw_num, 
-	dzj_num = T3.dzj_num, 
-	dzb_num = T3.dzb_num, 
-	more2year_num = T3.more2year_num, 
-	less7_num = T3.less7_num, 
-	no_fsj_zbwy_num = T3.no_fsj_zbwy_num, 
-	dxz_num = T3.dxz_num, 
-	dy_num = T3.dy_num, 
-	zbsj_num = T3.zbsj_num, 
+	zz_num = T3.zz_num,
+	jc_num = stat_jc_num,
+	ejdw_num = T3.ejdw_num,
+	dzj_num = T3.dzj_num,
+	dzb_num = T3.dzb_num,
+	more2year_num = T3.more2year_num,
+	less7_num = T3.less7_num,
+	no_fsj_zbwy_num = T3.no_fsj_zbwy_num,
+	dxz_num = T3.dxz_num,
+	dy_num = T3.dy_num,
+	zbsj_num = T3.zbsj_num,
 	zbfsj_num = T3.zbfsj_num, 
-	zzwy_num = T3.zzwy_num, 
+	zzwy_num = T3.zzwy_num,
 	xcwy_num = T3.xcwy_num, 
-	jjwy_num = T3.jjwy_num, 
-	qnwy_num = T3.qnwy_num, 
-	ghwy_num = T3.ghwy_num, 
-	fnwy_num = T3.fnwy_num, 
+	jjwy_num = T3.jjwy_num,
+	qnwy_num = T3.qnwy_num,
+	ghwy_num = T3.ghwy_num,
+	fnwy_num = T3.fnwy_num,
 	bmwy_num = T3.bmwy_num;
 	
 end;
