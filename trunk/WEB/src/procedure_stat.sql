@@ -719,7 +719,7 @@ begin
 						END IF;
 												
 --					会议类						
-						IF (i = 5 OR i = 6 OR i =7 OR i = 9 )  THEN
+						IF (i = 5 OR i = 6 OR i =7)  THEN
 												SELECT COUNT(*), sum(attend), sum(asence) into stat_total, stat_attend, stat_asence FROM pc_meeting WHERE agency_id = c_id AND type_id = i AND year =y AND quarter = q AND status_id >= 3;
 												SELECT COUNT(*) into stat_total_delay FROM pc_remind_lock WHERE agency_id = c_id  AND year =y AND quarter = q AND type_id = i AND status = 8;
 												SELECT COUNT(*) into stat_total_return FROM pc_meeting as a left join pc_meeting_content as b on a.id = b.meeting_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = q AND a.status_id >= 3 AND b.type = 2;
@@ -791,7 +791,7 @@ begin
 						
 						END IF;
 						
-						IF i = 8 THEN
+						IF (i = 8 OR i = 9) THEN
 												SELECT COUNT(*), sum(attend), sum(asence) into stat_total, stat_attend, stat_asence FROM pc_meeting WHERE agency_id = c_id AND type_id = i AND year =y AND quarter = q AND month = m AND status_id >= 3;
 												SELECT COUNT(*) into stat_total_delay FROM pc_remind_lock WHERE agency_id = c_id  AND year =y AND quarter = q AND month = m AND type_id = i AND status = 8;
 												SELECT COUNT(*) into stat_total_return FROM pc_meeting as a left join pc_meeting_content as b on a.id = b.meeting_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = q AND month = m AND a.status_id >= 3 AND b.type = 2;
@@ -1311,7 +1311,7 @@ BEGIN
         		CALL proc_parent_stats();
         		CALL check_remind_lock();
             CALL stat_zzsh();
-            CALL stat_zzsh_stat();            
+--            CALL stat_zzsh_stat();            
         END IF;
         SELECT RELEASE_LOCK('event_stats_lock_isfree');
     END IF;

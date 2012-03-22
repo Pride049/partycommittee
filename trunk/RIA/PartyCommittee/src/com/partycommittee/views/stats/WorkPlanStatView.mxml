@@ -124,7 +124,11 @@
 						vo = initObject();
 						tmpId = dp.getItemAt(i).agencyId;
 					}
-					vo.name = dp.getItemAt(i).name;
+					if (i < 5) {
+						vo.name = dp.getItemAt(i).name;	
+					} else {
+						vo.name = "    " + dp.getItemAt(i).name;
+					}
 					vo.agencyId = dp.getItemAt(i).agencyId;
 					//年度计划
 					if (dp.getItemAt(i).typeId == 1) {
@@ -263,16 +267,17 @@
 			<mx:Button label="导出到Excel" click="exportToExcel()"/>
 		</mx:HBox>		
 
-		<mx:AdvancedDataGrid id="workPlanStatsDG" designViewDataType="flat" horizontalScrollPolicy="auto"   
+		<mx:AdvancedDataGrid id="workPlanStatsDG" designViewDataType="flat" horizontalScrollPolicy="auto"
+							 verticalScrollPolicy="auto"
 							 width="100%" height="100%" color="0x323232"  
 							 minWidth="640" minHeight="480"   
 							 sortableColumns="false" sortExpertMode="true"
 							 variableRowHeight="true"
-							 lockedColumnCount="1"
+							 lockedColumnCount="2"
 							 >  
 			<mx:groupedColumns>   
 				<mx:AdvancedDataGridColumn dataField="num" headerText="序号" labelFunction="indexLabelFunction" width="25" headerWordWrap="true" textAlign="center"/>
-				<mx:AdvancedDataGridColumn dataField="name" width="140" headerRenderer="com.partycommittee.renderers.headRenderer" textAlign="left" headerWordWrap="true" wordWrap="true"/>
+				<mx:AdvancedDataGridColumn dataField="name" width="160" headerRenderer="com.partycommittee.renderers.headRenderer" textAlign="left" headerWordWrap="true" wordWrap="true"/>
 				
 			
 				<mx:AdvancedDataGridColumnGroup headerText="年度计划" headerWordWrap="true">  

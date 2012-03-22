@@ -29,6 +29,8 @@ UPDATE  `partycommittee`.`pc_agency` SET  `code_id` =  '8' WHERE  `pc_agency`.`i
 
 
 
+update pc_meeting set month = month(meeting_datetime) where type_id = 9;
+
 浏览权，上报权，评语权，评价权、驳回权
 
 browse
@@ -572,7 +574,7 @@ begin
 
 						
 												
-						IF i = 8 THEN
+						IF (i = 8 OR i = 9) THEN
 												SELECT COUNT(*), sum(attend), sum(asence) into stat_total, stat_attend, stat_asence FROM pc_meeting WHERE agency_id = c_id AND type_id = i AND year =y AND quarter = q AND month = m AND status_id >= 3;
 												SELECT COUNT(*) into stat_total_delay FROM pc_remind_lock WHERE agency_id = c_id  AND year =y AND quarter = q AND month = m AND type_id = i;
 												SELECT COUNT(*) into stat_total_return FROM pc_meeting as a left join pc_meeting_content as b on a.id = b.meeting_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = q AND month = m AND a.status_id >= 3 AND b.type = 2;
