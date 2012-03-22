@@ -29,8 +29,9 @@ public class PcAgencyStats implements Serializable {
 
 	private Integer parentId;
 
-
-
+	private Integer zzNum;
+	private Integer jcNum;	
+	
 	private Integer ejdwNum;
 	private Integer dzjNum;
 	private Integer dzbNum;
@@ -109,6 +110,24 @@ public class PcAgencyStats implements Serializable {
 		this.code = code;
 	}
 
+	@Column(name = "zz_num")
+	public Integer getZzNum() {
+		return zzNum;
+	}
+	
+	public void setZzNum(Integer zzNum) {
+		this.zzNum = zzNum;
+	}
+
+	@Column(name = "jc_num")
+	public Integer getJcNum() {
+		return jcNum;
+	}
+
+	public void setJcNum(Integer jcNum) {
+		this.jcNum = jcNum;
+	}	
+	
 	@Column(name = "ejdw_num")
 	public Integer getEjdwNum() {
 		return ejdwNum;

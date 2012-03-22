@@ -201,6 +201,8 @@ CREATE TABLE IF NOT EXISTS `pc_agency_stats` (
   `code_id` int(11) NOT NULL DEFAULT '0' COMMENT '党支部类型',
   `code` varchar(10) NOT NULL,
   `parent_id` int(11) unsigned NOT NULL COMMENT '上级党支部ID',
+  `zz_num` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '组织总数',
+  `jc_num` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '基层党委数',
   `ejdw_num` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '二级党委数量',
   `dzj_num` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '党总支数量',
   `dzb_num` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '党支部数',

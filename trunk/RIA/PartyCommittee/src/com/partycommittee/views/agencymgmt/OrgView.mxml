@@ -13,10 +13,12 @@
 						   xmlns:partymember="com.partycommittee.views.partymember.*">
 	<fx:Script>
 		<![CDATA[
+			import com.partycommittee.events.PcStatEvent;
 			import com.partycommittee.model.ModelLocator;
 			import com.partycommittee.views.MainContainer;
 			import com.partycommittee.vo.PcAgencyVo;
 			
+			import mx.collections.ArrayCollection;
 			import mx.events.PropertyChangeEvent;
 			
 			private var _editEnable:Boolean = true;
@@ -36,6 +38,9 @@
 			public function set agency(value:PcAgencyVo):void {
 				this._agency = value;
 			}
+			
+			[Bindable]
+			private var datas:ArrayCollection = new ArrayCollection();
 			
 			[Bindable]
 			private var model:ModelLocator = ModelLocator.getInstance();
@@ -71,23 +76,88 @@
 				if (!this._agency) {
 					return;
 				}
-				
-				agencyView.updateData();
-				memberView.updateData();
+				if (agency.codeId == 10) {
+					agencyBaseViewStack.selectedChild = agencyBase;
+					agencyView.updateData();
+					memberView.updateData();
+				} else {
+					agencyBaseViewStack.selectedChild = agencyStats;
+					if (model.focusAgencyVo) {
+						var evt:PcStatEvent = new PcStatEvent(PcStatEvent.GET_AGENCY_STATS_BY_ID);
+						evt.agencyId = model.focusAgencyVo.id;
+						evt.successCallback = onGetAgencyStatSuccess;
+						evt.failureCallback = onGetAgencyStatFailure;
+						this.enabled = false;
+						evt.dispatch();
+					}
+				}
 			}
+			
+			private function onGetAgencyStatSuccess(data:Object, evt:PcStatEvent):void {
+				this.enabled = true;
+				if (!data) return;
+				datas.removeAll();
+				var dp:ArrayCollection = data as ArrayCollection;
+				for(var i:int = 0; i<dp.length; i++) {
+					var vo:Object = dp.getItemAt(i);
+					if (i > 0 ) {
+						vo.name = "  " + vo.name; 
+					}
+					datas.addItem(vo);
+				}
+				//				agencystatsDG.dataProvider = dp;
+			}
+			
+			private function onGetAgencyStatFailure(info:Object, evt:PcStatEvent):void {
+				this.enabled = true;
+			}			
 		]]>
 	</fx:Script>
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
-	<mx:TabNavigator width="100%" height="100%">
-		<agencyviews:AgencyView id="agencyView" width="100%" height="100%" 
-								label="基本情况" agency="{agency}" editEnable="{editEnable}"/>
-		<!--
-		<agencyviews:ChildrenAgencyView id="childrenView" width="100%" height="100%"
-										label="下级党组织管理" agency="{agency}"/>
-		-->
-		<partymember:PartyMemberView id="memberView" width="100%" height="100%" 
-									 label="支委管理" agency="{agency}" editEnable="{editEnable}"/>
-	</mx:TabNavigator>
+	<mx:ViewStack id="agencyBaseViewStack" width="100%" height="100%" creationPolicy="all"
+				  left="6" right="6" top="6" bottom="6">
+		
+		<mx:VBox id="agencyBase" width="100%" height="100%"
+				 horizontalAlign="center" verticalAlign="middle"
+				 horizontalScrollPolicy="off" verticalScrollPolicy="off">
+			
+			<mx:TabNavigator width="100%" height="100%">
+				<agencyviews:AgencyView id="agencyView" width="100%" height="100%" 
+										label="基本情况" agency="{agency}" editEnable="{editEnable}"/>
+				<!--
+				<agencyviews:ChildrenAgencyView id="childrenView" width="100%" height="100%"
+												label="下级党组织管理" agency="{agency}"/>
+				-->
+				<partymember:PartyMemberView id="memberView" width="100%" height="100%" 
+											 label="支委管理" agency="{agency}" editEnable="{editEnable}"/>
+			</mx:TabNavigator>
+		</mx:VBox>
+		
+		<mx:VBox id="agencyStats" width="100%" height="100%"
+				 horizontalAlign="center" verticalAlign="middle"
+				 horizontalScrollPolicy="off" verticalScrollPolicy="off">
+			
+			<mx:AdvancedDataGrid id="agencystatsDG" designViewDataType="flat"   
+								 width="100%" height="100%" color="0x323232"  
+								 minWidth="640" minHeight="480" dataProvider="{datas}"
+								 sortableColumns="false" sortExpertMode="true"
+								 variableRowHeight="true"
+								 >  
+				<mx:groupedColumns>   
+					
+					<mx:AdvancedDataGridColumn dataField="name" width="160" headerText="组织名称" textAlign="left" headerWordWrap="true" wordWrap="true"/>
+					<mx:AdvancedDataGridColumn dataField="zzNum" headerText="组织总数" width="80" headerWordWrap="true" textAlign="right"/>
+					<mx:AdvancedDataGridColumn dataField="jcNum" headerText="基层党委数" width="100" headerWordWrap="true" textAlign="right"/>
+					<mx:AdvancedDataGridColumn dataField="ejdwNum" headerText="二级党委数量" width="80" headerWordWrap="true" textAlign="right"/>
+					<mx:AdvancedDataGridColumn dataField="dzjNum" headerText="党总支数量" width="80" headerWordWrap="true" textAlign="right"/>
+					<mx:AdvancedDataGridColumn dataField="dzbNum" headerText="党支部数量" width="80" headerWordWrap="true" textAlign="right"/>
+					<mx:AdvancedDataGridColumn dataField="zbsjNum" headerText="支部书记数" width="80" headerWordWrap="true" textAlign="right" />
+					<mx:AdvancedDataGridColumn dataField="zbfsjNum" headerText="支部副书记数" width="100" headerWordWrap="true" textAlign="right"/>  
+		
+				</mx:groupedColumns>  
+			</mx:AdvancedDataGrid>
+		</mx:VBox>
+	</mx:ViewStack>
 </navigation:NavigationView>

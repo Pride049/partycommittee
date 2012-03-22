@@ -22,6 +22,8 @@ public class PcAgencyStatsVo implements Serializable {
 
 	private Integer parentId;
 
+	private Integer zzNum;
+	private Integer jcNum;	
 	private Integer ejdwNum;
 	private Integer dzjNum;
 	private Integer dzbNum;
@@ -90,7 +92,22 @@ public class PcAgencyStatsVo implements Serializable {
 		this.parentId = parentId;
 	}
 	
-	@Column(name = "ejdw_num")
+	public Integer getZzNum() {
+		return zzNum;
+	}
+
+	public void setZzNum(Integer zzNum) {
+		this.zzNum = zzNum;
+	}
+
+	public Integer getJcNum() {
+		return jcNum;
+	}
+
+	public void setJcNum(Integer jcNum) {
+		this.jcNum = jcNum;
+	}	
+	
 	public Integer getEjdwNum() {
 		return ejdwNum;
 	}
@@ -99,7 +116,6 @@ public class PcAgencyStatsVo implements Serializable {
 		this.ejdwNum = ejdwNum;
 	}
 
-	@Column(name = "dzj_num")
 	public Integer getDzjNum() {
 		return dzjNum;
 	}
@@ -108,7 +124,6 @@ public class PcAgencyStatsVo implements Serializable {
 		this.dzjNum = dzjNum;
 	}
 
-	@Column(name = "dzb_num")
 	public Integer getDzbNum() {
 		return dzbNum;
 	}
@@ -117,7 +132,6 @@ public class PcAgencyStatsVo implements Serializable {
 		this.dzbNum = dzbNum;
 	}
 
-	@Column(name = "more2year_num")
 	public Integer getMore2yearNum() {
 		return more2yearNum;
 	}
@@ -126,7 +140,6 @@ public class PcAgencyStatsVo implements Serializable {
 		this.more2yearNum = more2yearNum;
 	}
 
-	@Column(name = "less7_num")
 	public Integer getLess7Num() {
 		return less7Num;
 	}
@@ -135,7 +148,6 @@ public class PcAgencyStatsVo implements Serializable {
 		this.less7Num = less7Num;
 	}
 
-	@Column(name = "no_fsj_zbwy_num")
 	public Integer getNoFsjZbwyNum() {
 		return noFsjZbwyNum;
 	}
@@ -144,7 +156,6 @@ public class PcAgencyStatsVo implements Serializable {
 		this.noFsjZbwyNum = noFsjZbwyNum;
 	}
 	
-	@Column(name = "dxz_num")
 	public Integer getDxzNum() {
 		return dxzNum;
 	}
@@ -153,7 +164,6 @@ public class PcAgencyStatsVo implements Serializable {
 		this.dxzNum = dxzNum;
 	}
 
-	@Column(name = "dy_num")
 	public Integer getDyNum() {
 		return dyNum;
 	}
@@ -162,7 +172,6 @@ public class PcAgencyStatsVo implements Serializable {
 		this.dyNum = dyNum;
 	}
 
-	@Column(name = "zbsj_num")
 	public Integer getZbsjNum() {
 		return zbsjNum;
 	}
@@ -171,7 +180,6 @@ public class PcAgencyStatsVo implements Serializable {
 		this.zbsjNum = zbsjNum;
 	}
 
-	@Column(name = "zbfsj_num")
 	public Integer getZbfsjNum() {
 		return zbfsjNum;
 	}
@@ -180,7 +188,6 @@ public class PcAgencyStatsVo implements Serializable {
 		this.zbfsjNum = zbfsjNum;
 	}
 
-	@Column(name = "zzwy_num")
 	public Integer getZzwyNum() {
 		return zzwyNum;
 	}
@@ -189,7 +196,6 @@ public class PcAgencyStatsVo implements Serializable {
 		this.zzwyNum = zzwyNum;
 	}
 
-	@Column(name = "xcwy_num")
 	public Integer getXcwyNum() {
 		return xcwyNum;
 	}
@@ -199,7 +205,6 @@ public class PcAgencyStatsVo implements Serializable {
 		this.xcwyNum = xcwyNum;
 	}
 
-	@Column(name = "jjwy_num")
 	public Integer getJjwyNum() {
 		return jjwyNum;
 	}
@@ -208,8 +213,7 @@ public class PcAgencyStatsVo implements Serializable {
 	public void setJjwyNum(Integer jjwyNum) {
 		this.jjwyNum = jjwyNum;
 	}
-	
-	@Column(name = "qnwy_num")
+
 	public Integer getQnwyNum() {
 		return qnwyNum;
 	}
@@ -219,7 +223,6 @@ public class PcAgencyStatsVo implements Serializable {
 		this.qnwyNum = qnwyNum;
 	}
 
-	@Column(name = "ghwy_num")
 	public Integer getGhwyNum() {
 		return ghwyNum;
 	}
@@ -229,7 +232,6 @@ public class PcAgencyStatsVo implements Serializable {
 		this.ghwyNum = ghwyNum;
 	}
 
-	@Column(name = "fnwy_num")
 	public Integer getFnwyNum() {
 		return fnwyNum;
 	}
@@ -239,7 +241,6 @@ public class PcAgencyStatsVo implements Serializable {
 		this.fnwyNum = fnwyNum;
 	}
 
-	@Column(name = "bmwy_num")
 	public Integer getBmwyNum() {
 		return bmwyNum;
 	}
@@ -248,7 +249,6 @@ public class PcAgencyStatsVo implements Serializable {
 		this.bmwyNum = bmwyNum;
 	}
 
-	@Column(name = "updatetime")
 	public Date getUpdatetime() {
 		return updatetime;
 	}
@@ -266,6 +266,8 @@ public class PcAgencyStatsVo implements Serializable {
 		vo.setId(pevo.getId());
 		vo.setName(pevo.getName());
 		vo.setParentId(pevo.getParentId());
+		vo.setZzNum(pevo.getZzNum());
+		vo.setJcNum(pevo.getJcNum());
 		vo.setEjdwNum(pevo.getEjdwNum());
 		vo.setDzjNum(pevo.getDzjNum());
 		vo.setDzbNum(pevo.getDzbNum());
@@ -294,6 +296,8 @@ public class PcAgencyStatsVo implements Serializable {
 		vo.setId(pevo.getId());
 		vo.setName(pevo.getName());
 		vo.setParentId(pevo.getParentId());
+		vo.setZzNum(pevo.getZzNum());
+		vo.setJcNum(pevo.getJcNum());		
 		vo.setEjdwNum(pevo.getEjdwNum());
 		vo.setDzjNum(pevo.getDzjNum());
 		vo.setDzbNum(pevo.getDzbNum());
