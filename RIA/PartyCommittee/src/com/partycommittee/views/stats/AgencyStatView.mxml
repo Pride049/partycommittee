@@ -64,7 +64,14 @@
 			private function onGetAgencyStatSuccess(data:Object, evt:PcStatEvent):void {
 				this.enabled = true;
 				if (!data) return;
-				datas = data as ArrayCollection;
+				var dp:ArrayCollection = data as ArrayCollection;
+				for(var i:int = 0; i<dp.length; i++) {
+					var vo:Object = dp.getItemAt(i);
+					if (i > 0 ) {
+						vo.name = "  " + vo.name; 
+					}
+					datas.addItem(vo);
+				}
 //				agencystatsDG.dataProvider = dp;
 			}
 			
@@ -103,7 +110,7 @@
 							 >  
 			<mx:groupedColumns>   
 				<mx:AdvancedDataGridColumn dataField="num" headerText="序号" labelFunction="indexLabelFunction" width="25" headerWordWrap="true" textAlign="center"/>
-				<mx:AdvancedDataGridColumn dataField="name" width="140" headerRenderer="com.partycommittee.renderers.headRenderer" textAlign="left" headerWordWrap="true" wordWrap="true"/>
+				<mx:AdvancedDataGridColumn dataField="name" width="160" headerRenderer="com.partycommittee.renderers.headRenderer" textAlign="left" headerWordWrap="true" wordWrap="true"/>
 				<mx:AdvancedDataGridColumn dataField="ejdwNum" headerText="二级党委数量" width="40" headerWordWrap="true" textAlign="right"/>
 				<mx:AdvancedDataGridColumn dataField="dzjNum" headerText="党总支数量" width="40" headerWordWrap="true" textAlign="right"/>
 				<mx:AdvancedDataGridColumn dataField="dzbNum" headerText="党支部数量" width="40" headerWordWrap="true" textAlign="right"/>

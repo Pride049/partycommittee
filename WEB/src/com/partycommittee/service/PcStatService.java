@@ -7,8 +7,10 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import com.partycommittee.persistence.daoimpl.PcAgencyRelationDaoImpl;
 import com.partycommittee.persistence.daoimpl.PcAgencyStatsDaoImpl;
 import com.partycommittee.persistence.daoimpl.PcStatsDaoImpl;
+import com.partycommittee.persistence.po.PcAgencyRelation;
 import com.partycommittee.persistence.po.PcAgencyStats;
 import com.partycommittee.persistence.po.PcStats;
 import com.partycommittee.remote.vo.PcAgencyStatsVo;
@@ -29,6 +31,12 @@ public class PcStatService {
 	private PcStatsDaoImpl pcStatsDaoImpl;
 	public void setPcStatsDaoImpl(PcStatsDaoImpl pcStatsDaoImpl) {
 		this.pcStatsDaoImpl = pcStatsDaoImpl;
+	}	
+	
+	@Resource(name="PcAgencyRelationDaoImpl")
+	private PcAgencyRelationDaoImpl pcAgencyRelationDaoImpl;
+	public void setPcAgencyRelationDaoImpl(PcAgencyRelationDaoImpl pcAgencyRelationDaoImpl) {
+		this.pcAgencyRelationDaoImpl = pcAgencyRelationDaoImpl;
 	}	
 	
 	public List<PcAgencyStatsVo> getAgencyStatsByParentId(Integer id) {
@@ -74,22 +82,35 @@ public class PcStatService {
 				} else {
 					qs_tmp = qs;
 				}
-				List<PcStatsVo> list_admin = pcStatsDaoImpl.getStatsById(id, year, qs_tmp, i);
+				List<PcStatsVo> list_admin = new ArrayList<PcStatsVo>();
+				if (id == 1) {
+					list_admin = pcStatsDaoImpl.getStatsByIdForAdmin(id, year, qs_tmp, i);
+				} else {
+					list_admin = pcStatsDaoImpl.getStatsById(id, year, qs_tmp, i);
+				}
 				for(PcStatsVo item : list_admin) {
 					list.add(item);
 				}
 			}
-				
-			for(i = 1; i< 5; i++) {
-				List<Integer> qs_tmp = new ArrayList<Integer>() ;
-				if (i == 1 || i == 4) {
-					qs_tmp.add(0);
-				} else {
-					qs_tmp = qs;
-				}			
-				List<PcStatsVo> list_admin = pcStatsDaoImpl.getStatsByParentId(id, year, qs_tmp, i);
-				for(PcStatsVo item : list_admin) {
-					list.add(item);
+			
+			
+			List<PcAgencyRelation> agencyRelationList = pcAgencyRelationDaoImpl.getChildrenByParentId(id);
+			if (agencyRelationList == null || agencyRelationList.size() == 0) {
+				return null;
+			}
+			
+			for (PcAgencyRelation agencyRelation : agencyRelationList) {
+				for(i = 1; i< 5; i++) {
+					List<Integer> qs_tmp = new ArrayList<Integer>() ;
+					if (i == 1 || i == 4) {
+						qs_tmp.add(0);
+					} else {
+						qs_tmp = qs;
+					}
+					List<PcStatsVo> list_admin = pcStatsDaoImpl.getStatsById(agencyRelation.getAgencyId(), year, qs_tmp, i);
+					for(PcStatsVo item : list_admin) {
+						list.add(item);
+					}
 				}
 			}
 		} catch(Exception e) {
@@ -111,34 +132,53 @@ public class PcStatService {
 			}
 			
 			Integer i = 1;
-	
+
 			for(i = 5; i <= 9; i++) {
 				
-				if (i == 8) {
-					List<PcStatsVo> list_zwh = pcStatsDaoImpl.getZwhStatsById(id, year, startM, endM);
+				if (i >= 8) {
+					List<PcStatsVo> list_zwh = new ArrayList<PcStatsVo>();
+					if (id == 1) {
+						list_zwh = pcStatsDaoImpl.getZwhStatsByIdForAdmin(id, year, i, startM, endM);
+					} else {
+						list_zwh = pcStatsDaoImpl.getZwhStatsById(id, year, i, startM, endM);
+					}
+					
 					for(PcStatsVo item : list_zwh) {
 						list.add(item);
 					}
 				} else {
-					List<PcStatsVo> list_admin = pcStatsDaoImpl.getStatsById(id, year, qs, i);
+					List<PcStatsVo> list_admin = new ArrayList<PcStatsVo>();
+					if (id == 1) {
+						list_admin = pcStatsDaoImpl.getStatsByIdForAdmin(id, year, qs, i);
+					} else {
+						list_admin = pcStatsDaoImpl.getStatsById(id, year, qs, i);
+					}
+					
 					for(PcStatsVo item : list_admin) {
 						list.add(item);
 					}					
 				}
 
 			}
-				
-			for(i = 5; i<= 9; i++) {
-				List<Integer> qs_tmp = new ArrayList<Integer>() ;
-				if (i == 8) {
-					List<PcStatsVo> list_zwh = pcStatsDaoImpl.getZwhStatsByParentId(id, year, startM, endM);
-					for(PcStatsVo item : list_zwh) {
-						list.add(item);
-					}
-				} else {
-					List<PcStatsVo> list_admin = pcStatsDaoImpl.getStatsByParentId(id, year, qs, i);
-					for(PcStatsVo item : list_admin) {
-						list.add(item);
+
+			List<PcAgencyRelation> agencyRelationList = pcAgencyRelationDaoImpl.getChildrenByParentId(id);
+			if (agencyRelationList == null || agencyRelationList.size() == 0) {
+				return null;
+			}
+			
+			for (PcAgencyRelation agencyRelation : agencyRelationList) {
+				for(i = 5; i<= 9; i++) {
+					List<Integer> qs_tmp = new ArrayList<Integer>() ;
+					if (i >= 8) {
+						List<PcStatsVo> list_zwh = pcStatsDaoImpl.getZwhStatsById(agencyRelation.getAgencyId(), year, i, startM, endM);
+						for(PcStatsVo item : list_zwh) {
+							list.add(item);
+						}
+					} else {
+						List<PcStatsVo> list_admin = pcStatsDaoImpl.getStatsById(agencyRelation.getAgencyId(), year, qs, i);
+						for(PcStatsVo item : list_admin) {
+							list.add(item);
+						}
 					}
 				}
 			}
