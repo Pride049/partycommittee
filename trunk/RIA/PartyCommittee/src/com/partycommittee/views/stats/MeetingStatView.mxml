@@ -297,7 +297,7 @@
 			<mx:ComboBox id="endMonthCmb" />
 			<mx:Button label="统计" click="updateData()"/>
 			<mx:Button label="导出到Excel" click="exportToExcel()"/>
-		</mx:HBox>		
+		</mx:HBox>
 
 		<mx:AdvancedDataGrid id="meetingStatsDG" designViewDataType="flat" horizontalScrollPolicy="auto" verticalScrollPolicy="auto"   
 							 width="100%" height="100%" color="0x323232"    
@@ -314,7 +314,7 @@
 					<mx:AdvancedDataGridColumn dataField="zwh_total" headerText="开会总次数" width="50" headerWordWrap="true" textAlign="right" />  
 					<mx:AdvancedDataGridColumn dataField="zwh_total_return" headerText="驳回后上报" width="50" headerWordWrap="true" textAlign="right" />
 					<mx:AdvancedDataGridColumn dataField="zwh_total_delay" headerText="逾期授权后上报" width="50" headerWordWrap="true" textAlign="right" />
-					<mx:AdvancedDataGridColumn dataField="zwh_eva_rate" headerText="上级评价率" width="50" headerWordWrap="true" textAlign="right" />
+					<mx:AdvancedDataGridColumn dataField="zwh_eva_rate" headerText="上级评价率" width="50" headerWordWrap="true" textAlign="right" itemRenderer="com.partycommittee.renderers.DataGridPercentRenderer"  />
 					<mx:AdvancedDataGridColumnGroup headerText="评价等次分布率" headerWordWrap="true"> 
 						<mx:AdvancedDataGridColumn dataField="zwh_eva_1_rate" headerText="好" width="50" headerWordWrap="true" textAlign="right" itemRenderer="com.partycommittee.renderers.DataGridPercentRenderer" />
 						<mx:AdvancedDataGridColumn dataField="zwh_eva_2_rate" headerText="较好" width="50" headerWordWrap="true" textAlign="right" itemRenderer="com.partycommittee.renderers.DataGridPercentRenderer" />
@@ -329,7 +329,7 @@
 					<mx:AdvancedDataGridColumn dataField="dydh_total" headerText="开会总次数" width="50" headerWordWrap="true" textAlign="right" />  
 					<mx:AdvancedDataGridColumn dataField="dydh_total_return" headerText="驳回后上报" width="50" headerWordWrap="true" textAlign="right" />
 					<mx:AdvancedDataGridColumn dataField="dydh_total_delay" headerText="逾期授权后上报" width="50" headerWordWrap="true" textAlign="right" />
-					<mx:AdvancedDataGridColumn dataField="dydh_eva_rate" headerText="上级评价率" width="50" headerWordWrap="true" textAlign="right" />
+					<mx:AdvancedDataGridColumn dataField="dydh_eva_rate" headerText="上级评价率" width="50" headerWordWrap="true" textAlign="right" itemRenderer="com.partycommittee.renderers.DataGridPercentRenderer" />
 					<mx:AdvancedDataGridColumnGroup headerText="评价等次分布率" headerWordWrap="true"> 
 						<mx:AdvancedDataGridColumn dataField="dydh_eva_1_rate" headerText="好" width="50" headerWordWrap="true" textAlign="right" itemRenderer="com.partycommittee.renderers.DataGridPercentRenderer" />
 						<mx:AdvancedDataGridColumn dataField="dydh_eva_2_rate" headerText="较好" width="50" headerWordWrap="true" textAlign="right" itemRenderer="com.partycommittee.renderers.DataGridPercentRenderer" />

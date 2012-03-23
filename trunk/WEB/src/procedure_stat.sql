@@ -766,29 +766,51 @@ begin
 													END IF;
 												END IF;
 												
-												IF (stat_eva > 0) THEN
-													SET stat_eva = 1;
-													SET stat_eva_rate = 1;
-												ELSE 
+												IF stat_eva is null THEN
 													SET stat_eva = 0;
-													SET stat_eva_rate = 0;
-												END IF;
+												END IF;												
 												
-												IF stat_eva_1 > 0 THEN 
-													SET stat_eva_1_rate = 1;
-												END IF;
+												IF stat_eva_1 is null THEN
+													SET stat_eva_1 = 0;
+												END IF;	
 												
-												IF stat_eva_2 > 0 THEN 
-													SET stat_eva_2_rate = 1;
-												END IF;
+												IF stat_eva_2 is null THEN
+													SET stat_eva_2 = 0;
+												END IF;			
 												
-												IF stat_eva_3 > 0 THEN 
-													SET stat_eva_3_rate = 1;
-												END IF;
+												IF stat_eva_3 is null THEN
+													SET stat_eva_3 = 0;
+												END IF;			
+
+												IF stat_eva_4 is null THEN
+													SET stat_eva_4 = 0;
+												END IF;																																												
 												
-												IF stat_eva_4 > 0 THEN 
-													SET stat_eva_4_rate = 1;
-												END IF;					
+												
+												SET stat_eva_rate = ROUND(stat_eva/stat_total, 4);
+												SET stat_eva_1_rate = ROUND(stat_eva_1/stat_eva, 4);
+												SET stat_eva_2_rate = ROUND(stat_eva_2/stat_eva, 4);
+												SET stat_eva_3_rate = ROUND(stat_eva_3/stat_eva, 4);
+												SET stat_eva_4_rate = ROUND(stat_eva_4/stat_eva, 4);					
+												
+												
+			
+												IF stat_eva_1_rate is null THEN
+													SET stat_eva_1_rate = 0;
+												END IF;	
+												
+												IF stat_eva_2_rate is null THEN
+													SET stat_eva_2_rate = 0;
+												END IF;			
+												
+												IF stat_eva_3_rate is null THEN
+													SET stat_eva_3_rate = 0;
+												END IF;			
+
+												IF stat_eva_4_rate is null THEN
+													SET stat_eva_4_rate = 0;
+												END IF;												
+												
 												
 												IF stat_attend is null THEN
 													SET stat_attend = 0;
@@ -838,29 +860,49 @@ begin
 													END IF;
 												END IF;
 												
-												IF (stat_eva > 0) THEN
-													SET stat_eva = 1;
-													SET stat_eva_rate = 1;
-												ELSE 
+												
+												IF stat_eva is null THEN
 													SET stat_eva = 0;
-													SET stat_eva_rate = 0;
-												END IF;
+												END IF;												
 												
-												IF stat_eva_1 > 0 THEN 
-													SET stat_eva_1_rate = 1;
-												END IF;
+												IF stat_eva_1 is null THEN
+													SET stat_eva_1 = 0;
+												END IF;	
 												
-												IF stat_eva_2 > 0 THEN 
-													SET stat_eva_2_rate = 1;
-												END IF;
+												IF stat_eva_2 is null THEN
+													SET stat_eva_2 = 0;
+												END IF;			
 												
-												IF stat_eva_3 > 0 THEN 
-													SET stat_eva_3_rate = 1;
-												END IF;
+												IF stat_eva_3 is null THEN
+													SET stat_eva_3 = 0;
+												END IF;			
+
+												IF stat_eva_4 is null THEN
+													SET stat_eva_4 = 0;
+												END IF;														
 												
-												IF stat_eva_4 > 0 THEN 
-													SET stat_eva_4_rate = 1;
-												END IF;				
+												SET stat_eva_rate = ROUND(stat_eva/stat_total, 4);
+												SET stat_eva_1_rate = ROUND(stat_eva_1/stat_eva, 4);
+												SET stat_eva_2_rate = ROUND(stat_eva_2/stat_eva, 4);
+												SET stat_eva_3_rate = ROUND(stat_eva_3/stat_eva, 4);
+												SET stat_eva_4_rate = ROUND(stat_eva_4/stat_eva, 4);					
+												
+												IF stat_eva_1_rate is null THEN
+													SET stat_eva_1_rate = 0;
+												END IF;	
+												
+												IF stat_eva_2_rate is null THEN
+													SET stat_eva_2_rate = 0;
+												END IF;			
+												
+												IF stat_eva_3_rate is null THEN
+													SET stat_eva_3_rate = 0;
+												END IF;			
+
+												IF stat_eva_4_rate is null THEN
+													SET stat_eva_4_rate = 0;
+												END IF;													
+												
 												
 												IF stat_attend is null THEN
 													SET stat_attend = 0;
@@ -1155,6 +1197,7 @@ begin
 end;
 //
 delimiter ;
+
 
 
 delimiter //
