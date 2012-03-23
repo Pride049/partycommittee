@@ -215,7 +215,7 @@
 							 minWidth="640" minHeight="480"   
 							 sortableColumns="false" sortExpertMode="true"
 							 variableRowHeight="true"
-							 lockedColumnCount="2"
+							 lockedColumnCount="1"
 							 >  
 			<mx:groupedColumns>   
 				

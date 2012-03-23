@@ -63,6 +63,8 @@ package com.partycommittee.commands
 				case PcUserEvent.GET_ROLES:
 					pcUserProxy.getRoleList();
 					break;
+				case PcUserEvent.CHECKONLY:
+					pcUserProxy.checkUserOnly(pcUserEvent.user);
 				default :
 					break;
 			}

@@ -1347,7 +1347,7 @@ delimiter //
 SET GLOBAL event_scheduler = OFF //
 DROP EVENT IF EXISTS `event_stats`//
 CREATE EVENT IF NOT EXISTS `event_stats`
-ON SCHEDULE EVERY 3 HOUR
+ON SCHEDULE EVERY 10 MINUTE
 ON COMPLETION PRESERVE
 DO
    BEGIN
@@ -1364,7 +1364,7 @@ delimiter //
 SET GLOBAL event_scheduler = OFF //
 DROP EVENT IF EXISTS `event_stats_remind`//
 CREATE EVENT IF NOT EXISTS `event_stats_remind`
-ON SCHEDULE EVERY 1 HOUR
+ON SCHEDULE EVERY 10 MINUTE
 ON COMPLETION PRESERVE
 DO
    BEGIN
@@ -1376,5 +1376,34 @@ SET GLOBAL event_scheduler = ON;
 
 
 
+delimiter //
+DROP TRIGGER IF EXISTS `up_stats_tri`//
+CREATE TRIGGER up_stats_tri AFTER UPDATE ON pc_agency
+FOR EACH ROW 
+BEGIN
+     CALL stat_remind();
+     CALL stat_remind_stat();
+     
+END//
+delimiter ;
 
+delimiter //
+DROP TRIGGER IF EXISTS `in_stats_tri`//
+CREATE TRIGGER in_stats_tri AFTER INSERT ON pc_agency
+FOR EACH ROW 
+BEGIN
+     CALL stat_remind();
+     CALL stat_remind_stat();
+END//
+delimiter ;
+
+delimiter //
+DROP TRIGGER IF EXISTS `del_stats_tri`//
+CREATE TRIGGER del_stats_tri AFTER DELETE ON pc_agency
+FOR EACH ROW 
+BEGIN
+     CALL stat_remind();
+     CALL stat_remind_stat();
+END//
+delimiter ;
 

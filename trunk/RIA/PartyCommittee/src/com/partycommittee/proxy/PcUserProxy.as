@@ -17,6 +17,10 @@ package com.partycommittee.proxy
 			this.responder = responder;
 		}
 		
+		public function checkUserOnly(user:PcUserVo):void {
+			service.checkUserOnly(user);
+		}		
+		
 		public function createPcUser(user:PcUserVo):void {
 			service.createPcUser(user);
 		}

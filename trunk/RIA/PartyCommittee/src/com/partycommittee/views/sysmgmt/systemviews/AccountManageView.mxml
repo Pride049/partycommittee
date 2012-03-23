@@ -55,9 +55,12 @@
 				if (agency != model.focusAgencyVo) {
 					agency = model.focusAgencyVo;
 				}
-				refreshData();
+				
 				model.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, onModelChanged);
+				pageBar.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, onPageBarChanged);
+				refreshData();
 			}
+			
 			
 			override protected function onNavigateOut():void {
 				model.removeEventListener(PropertyChangeEvent.PROPERTY_CHANGE, onModelChanged);
@@ -73,6 +76,13 @@
 					}
 				}
 			}
+			
+			private function onPageBarChanged(event:PropertyChangeEvent):void {
+				if (event.property == "pageChange") {
+					page = pageBar.page;
+					refreshData();
+				}
+			}			
 			
 			private function onCreationCompleted():void {
 				if (!page) {

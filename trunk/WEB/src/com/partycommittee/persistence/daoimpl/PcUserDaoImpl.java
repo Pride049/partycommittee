@@ -31,7 +31,7 @@ public class PcUserDaoImpl extends JpaDaoBase implements PcUserDao {
 	public PageResultVo<PcUser> getUserListByPage(PageHelperVo page) {
 		try {
 			PageResultVo<PcUser> pageResult = new PageResultVo<PcUser>();
-			String sql = "from PcUser where 1 = 1 order by agencyCodeId asc";
+			String sql = "from PcUser where 1 = 1 order by id asc";
 			String totalSql = "select count (*) from PcUser";
 			List<Long> totalList = super.find(totalSql);
 			if (totalList != null) {
@@ -73,6 +73,20 @@ public class PcUserDaoImpl extends JpaDaoBase implements PcUserDao {
 		return null;
 	}
 
+	public List<PcUser> checkUser(PcUser user) {
+		try {
+			if (user.getId() == null || user.getId() == 0 ) {
+				return super.getJpaTemplate().find("from PcUser where username = '"+user.getUsername()+"'");
+			} else {
+				return super.getJpaTemplate().find("from PcUser where id <> "+user.getId()+" AND username = '"+user.getUsername()+"'");
+			}
+			
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return null;
+	}	
+	
 	@Override
 	public void updateUser(PcUser user) {
 		try {
@@ -111,7 +125,7 @@ public class PcUserDaoImpl extends JpaDaoBase implements PcUserDao {
 			Integer agencyId) {
 		try {
 			PageResultVo<PcUser> pageResult = new PageResultVo<PcUser>();
-			String sql = "from PcUser where privilege = '" + agencyId + "' order by agencyCodeId asc";
+			String sql = "from PcUser where privilege = '" + agencyId + "' order by id asc";
 			String totalSql = "select count (*) from PcUser where privilege = '" + agencyId + "'";
 			List<Long> totalList = super.find(totalSql);
 			if (totalList != null) {
@@ -163,5 +177,9 @@ public class PcUserDaoImpl extends JpaDaoBase implements PcUserDao {
 		}
 		return null;
 	}	
+	
+	
+	
+	
 
 }

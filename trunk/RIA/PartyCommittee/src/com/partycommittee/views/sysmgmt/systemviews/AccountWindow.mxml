@@ -98,6 +98,7 @@
 					Alert.show("两次密码输入不一致！");
 					return;
 				}
+
 				if (type == CRUDEventType.CREATE) {
 					doCreate();
 				} else {
@@ -114,11 +115,16 @@
 					Alert.show("密码不能为空！");
 					return;
 				}
-				var userEvt:PcUserEvent = new PcUserEvent(CRUDEventType.CREATE, newUser);
-				userEvt.successCallback = onSuccessCallback;
-				userEvt.failureCallback = onFailureCallback;
+				
+				// 检查用户唯一性:
+				var userEvt:PcUserEvent = new PcUserEvent(PcUserEvent.CHECKONLY, newUser);
+				userEvt.successCallback = onCheckOnlySuccessCallback;
+				userEvt.failureCallback = onCheckOnlyFailureCallback;
 				this.enabled = false;
-				userEvt.dispatch();
+				userEvt.dispatch();				
+				
+				
+
 			}
 			
 			private function doUpdate():void {
@@ -126,12 +132,46 @@
 				if (!updateUser) {
 					return;
 				}
-				var userEvt:PcUserEvent = new PcUserEvent(CRUDEventType.UPDATE, updateUser);
-				userEvt.successCallback = onSuccessCallback;
-				userEvt.failureCallback = onFailureCallback;
+				// 检查用户唯一性:
+				var userEvt:PcUserEvent = new PcUserEvent(PcUserEvent.CHECKONLY, updateUser);
+				userEvt.successCallback = onCheckOnlySuccessCallback;
+				userEvt.failureCallback = onCheckOnlyFailureCallback;
 				this.enabled = false;
-				userEvt.dispatch();
+				userEvt.dispatch();	
 			}
+			
+			private function onCheckOnlySuccessCallback(data:Object, evt:PcUserEvent):void {
+				this.enabled = true;
+				var dp:ArrayCollection = data as ArrayCollection;
+				if (dp.length > 0) {
+					Alert.show("用户名重复,请重新填写！");
+					return;
+				}
+				
+				
+				if (type == CRUDEventType.CREATE) {
+					var newUser:PcUserVo = getNewUser();
+					var userEvt:PcUserEvent = new PcUserEvent(CRUDEventType.CREATE, newUser);
+					userEvt.successCallback = onSuccessCallback;
+					userEvt.failureCallback = onFailureCallback;
+					this.enabled = false;
+					userEvt.dispatch();					
+				} else {
+					var updateUser:PcUserVo = getUpdateUser();
+					var userEvt:PcUserEvent = new PcUserEvent(CRUDEventType.UPDATE, updateUser);
+					userEvt.successCallback = onSuccessCallback;
+					userEvt.failureCallback = onFailureCallback;
+					this.enabled = false;
+					userEvt.dispatch();					
+				}
+			}
+			
+			private function onCheckOnlyFailureCallback(info:Object, evt:PcUserEvent):void {
+				this.enabled = true;
+				Alert.show(info.toString());
+			}			
+			
+			
 			
 			private function getNewUser():PcUserVo {
 				var newUser:PcUserVo = new PcUserVo();

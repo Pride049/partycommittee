@@ -152,6 +152,18 @@ public class PcUserService {
 //		userVo.setAgencyList(list);
 	}
 	
+	public List<PcUserVo> checkUserOnly(PcUserVo userVo) {
+		List<PcUserVo> list = new ArrayList<PcUserVo>();
+		PcUser user = PcUserVo.toPCUser(userVo);
+		List<PcUser> userList = pcUserDaoImpl.checkUser(user);
+		if (userList != null && userList.size() > 0) {
+			for (PcUser vo : userList) {
+				list.add(PcUserVo.fromPCUser(vo));
+			}
+		}
+		return list;
+	}	
+	
 	public void createUser(PcUserVo userVo) {
 		PcUser user = PcUserVo.toPCUser(userVo);
 		updateAgencyCodeId(user);
