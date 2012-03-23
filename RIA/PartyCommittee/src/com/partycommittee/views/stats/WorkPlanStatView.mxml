@@ -8,7 +8,9 @@
 							xmlns:datagrid="com.partycommittee.control.datagrid.*"
 							xmlns:navigation="com.partycommittee.manager.navigation.*" 
 							xmlns:pagebar="com.partycommittee.control.pagebar.*"
-							creationComplete="onCreationCompleted()">
+							creationComplete="onCreationCompleted()"
+							horizontalScrollPolicy="off"
+							verticalScrollPolicy="off">							
 	
 	<fx:Script>
 		<![CDATA[
@@ -68,6 +70,7 @@
 			
 
 			public function updateData():void {
+				if (model.isLeafUser) return;
 				if (model && model.focusAgencyVo) {
 					if (model.focusAgencyVo && model.focusAgencyVo.codeId == 10) {
 						// todo;
@@ -255,7 +258,7 @@
 	</fx:Declarations>
 	
 	<mx:VBox width="100%" height="100%"
-			 horizontalScrollPolicy="off" verticalScrollPolicy="off">
+			 horizontalScrollPolicy="auto" verticalScrollPolicy="off">
 		<mx:HBox >		
 			<mx:Label text="选择年份:"/>
 			<mx:ComboBox id="yearCmb"/>
@@ -267,10 +270,10 @@
 			<mx:Button label="导出到Excel" click="exportToExcel()"/>
 		</mx:HBox>		
 
-		<mx:AdvancedDataGrid id="workPlanStatsDG" designViewDataType="flat" horizontalScrollPolicy="auto"
+		<mx:AdvancedDataGrid id="workPlanStatsDG" designViewDataType="flat" 
+							 horizontalScrollPolicy="auto"
 							 verticalScrollPolicy="auto"
 							 width="100%" height="100%" color="0x323232"  
-							 minWidth="640" minHeight="480"   
 							 sortableColumns="false" sortExpertMode="true"
 							 variableRowHeight="true"
 							 lockedColumnCount="2"

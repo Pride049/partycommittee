@@ -8,7 +8,9 @@
 							xmlns:datagrid="com.partycommittee.control.datagrid.*"
 							xmlns:navigation="com.partycommittee.manager.navigation.*" 
 							xmlns:pagebar="com.partycommittee.control.pagebar.*"
-							creationComplete="onCreationCompleted()">
+							creationComplete="onCreationCompleted()"
+							horizontalScrollPolicy="off"
+							verticalScrollPolicy="off">
 	
 	<fx:Script>
 		<![CDATA[
@@ -44,6 +46,7 @@
 			}
 			
 			public function updateData():void {
+				if (model.isLeafUser) return;
 				if (model && model.focusAgencyVo) {
 					if (model.focusAgencyVo && model.focusAgencyVo.codeId == 10) {
 						// todo;
@@ -97,7 +100,7 @@
 	</fx:Declarations>
 	
 	<mx:VBox width="100%" height="100%"
-			 horizontalScrollPolicy="off" verticalScrollPolicy="off">
+			 horizontalScrollPolicy="auto" verticalScrollPolicy="auto">
 		<mx:HBox >
 			<mx:Button label="统计" click="updateData()"/>
 			<mx:Button label="导出到Excel" click="exportToExcel()"/>

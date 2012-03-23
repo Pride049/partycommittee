@@ -67,6 +67,7 @@
 			
 			private function onModelChanged(event:PropertyChangeEvent):void {
 				if (event.property == "focusAgencyVo") {
+					if (model.isLeafUser && model.focusAgencyVo.codeId != 10) return;
 					agency = model.focusAgencyVo;
 					updateData();
 				}
@@ -76,11 +77,13 @@
 				if (!this._agency) {
 					return;
 				}
-				if (agency.codeId == 10) {
+				
+				if (model.isLeafUser && agency.codeId == 10) {
 					agencyBaseViewStack.selectedChild = agencyBase;
 					agencyView.updateData();
 					memberView.updateData();
 				} else {
+					if (model.isLeafUser) return;
 					agencyBaseViewStack.selectedChild = agencyStats;
 					if (model.focusAgencyVo) {
 						var evt:PcStatEvent = new PcStatEvent(PcStatEvent.GET_AGENCY_STATS_BY_ID);

@@ -70,6 +70,13 @@ public class PcUserRemoteService {
 		return pCUserService.getUserListByPageAndParentId(page, agencyId);
 	}
 	
+	
+	@RemotingInclude
+	public List<PcUserVo> checkUserOnly(PcUserVo userVo) {
+		return pCUserService.checkUserOnly(userVo);
+	}	
+	
+	
 	@RemotingInclude
 	public void createPcUser(PcUserVo userVo) {
 		pCUserService.createUser(userVo);
