@@ -100,6 +100,14 @@ public class PcAgencyRemoteService {
 		return pcAgencyService.getChildrenAgencyListByCode(agencyId);
 	}
 	
+	
+	// 取出有管理下级职能的部门
+	@RemotingInclude
+	public List<PcAgencyVo> getChildrenOnlyParent(int agencyId) {
+		return pcAgencyService.getChildrenAgencyListByCodeOnlyParent(agencyId);
+	}	
+	
+	
 	@RemotingInclude
 	public PcAgencyVo getAgencyById(int agencyId) {
 		return pcAgencyService.getAgencyById(agencyId);

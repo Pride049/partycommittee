@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="utf-8"?>
+<control:EscapeWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					  xmlns:s="library://ns.adobe.com/flex/spark" 
+					  xmlns:mx="library://ns.adobe.com/flex/mx" 
+					  xmlns:control="com.partycommittee.control.*"
+					  horizontalAlign="center" verticalAlign="middle"
+					  showCloseButton="true" titleStyleName="panelTitle"
+					  close="PopupMgr.instance.removeWindow(this)" 
+					  xmlns:button="com.partycommittee.control.button.*"
+					  horizontalScrollPolicy="off" verticalScrollPolicy="off"
+					  creationComplete="onCreationCompleted()" 
+					  xmlns:tree="com.partycommittee.control.tree.*"
+					  xmlns:component="com.partycommittee.views.agencymgmt.component.*">
+	<fx:Script>
+		<![CDATA[
+			import com.partycommittee.control.tree.classes.Node;
+			import com.partycommittee.control.tree.classes.TreeOperationEvent;
+			import com.partycommittee.events.PcAgencyEvent;
+			import com.partycommittee.manager.popup.PopupMgr;
+			import com.partycommittee.manager.tree.TreeMgr;
+			import com.partycommittee.model.ModelLocator;
+			import com.partycommittee.util.AgencyCodeUtil;
+			import com.partycommittee.util.CRUDEventType;
+			import com.partycommittee.vo.PcAgencyVo;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.events.CollectionEvent;
+			import mx.events.PropertyChangeEvent;
+			import mx.managers.PopUpManager;
+			
+			[Bindable]
+			public var type:String = CRUDEventType.CREATE;
+			
+			[Bindable]
+			private var codeDescription:String;
+			
+			private var _agencyCodeId:Number;
+			[Bindable]
+			public function get agencyCodeId():Number {
+				return this._agencyCodeId;
+			}
+			public function set agencyCodeId(value:Number):void {
+				this._agencyCodeId = value;
+				codeDescription = AgencyCodeUtil.getAgencyCodeDes(this._agencyCodeId);
+			}
+			
+			private var _parentAgency:PcAgencyVo;
+			[Bindable]
+			public function get parentAgency():PcAgencyVo {
+				return this._parentAgency;
+			}
+			public function set parentAgency(value:PcAgencyVo):void {
+				this._parentAgency = value;
+			}
+			
+			private var _agency:PcAgencyVo;
+			[Bindable]
+			public function get agency():PcAgencyVo {
+				return this._agency;
+			}
+			public function set agency(value:PcAgencyVo):void {
+				this._agency = value;
+			}
+			
+			[Bindable]
+			private var model:ModelLocator = ModelLocator.getInstance();
+			
+			[Bindable]
+			private var dp:ArrayCollection;			
+			
+			private function onCreationCompleted():void {
+				if (this._agency) {
+					updateData();
+				}
+			}
+			
+			private function updateData():void {
+				if (!this._agency) {
+					return;
+				}
+				
+				codeDescription = AgencyCodeUtil.getAgencyCodeDes(agency.codeId);
+				nameTxt.text = agency.name;
+//				personChooseBox.member = agency.member;
+				telTxt.text = agency.tel;
+				commentTxt.text = agency.comment;
+				
+				var agencyEvent:PcAgencyEvent = new PcAgencyEvent(PcAgencyEvent.GET_ROOT_AGENCY_FOR_PRIVILEGE);
+				agencyEvent.userId = 1;
+				agencyEvent.successCallback = onGetRootAgency;
+				agencyEvent.dispatch();				
+				
+			}
+			
+			private function onGetRootAgency(data:Object, evt:PcAgencyEvent):void {
+				dp = new ArrayCollection();
+				var rootItem:Node = TreeMgr.getInstance().createItem(data as PcAgencyVo);
+				dp.addItem(rootItem);
+				dp.addEventListener(CollectionEvent.COLLECTION_CHANGE, onCollectionChanged);
+				updateTreeData();
+				//				dpHandler(dp);
+			}			
+			
+			private function onCollectionChanged(event:CollectionEvent):void {
+				// If is "ckSelected" changed, do nothing. 
+				// Else call updateData() to update new items' selection.
+				var needUpdate:Boolean = true;
+				if (event.items && event.items.length > 0) {
+					for each (var evtItem:PropertyChangeEvent in event.items) {
+						if (evtItem.property == "ckSelected") {
+							needUpdate = false;
+							break;
+						}
+					}
+				}
+				if (needUpdate) {
+					updateTreeData();
+				}
+			}		
+			
+			private function updateTreeData():void {
+				
+				updateSelection(dp);
+			}			
+			
+			private function updateSelection(nodes:ArrayCollection):void {
+				for each (var node:Node in nodes) {
+					if (node.children && node.children.length) {
+						updateSelection(node.children);
+					}
+				}
+			}
+			
+			private function getSelection(nodes:ArrayCollection):void {
+				for each (var node:Node in nodes) {
+					if (node.children && node.children.length) {
+						getSelection(node.children);
+					}
+//					var agency:PcAgencyVo = node.entity as PcAgencyVo;
+//					if (node.ckSelected) {
+//						this._agencyIdArry.push(agency.id);
+//					} else {
+//						if (!this._cloneIdArry || !this._cloneIdArry.length) {
+//							continue;
+//						}
+//						var len:int = this._cloneIdArry.length;
+//						while (len--) {
+//							if (this._cloneIdArry[len] == agency.id) {
+//								this._cloneIdArry.splice(len, 1);
+//								continue;
+//							}
+//						}
+//					}
+				}
+			}			
+			
+			
+			private function save():void {
+				doUpdate();
+			}
+			
+			private function doUpdate():void {
+				var updateAgency:PcAgencyVo = getUpdateAgency();
+				if (updateAgency) {
+					var evt:PcAgencyEvent = new PcAgencyEvent(CRUDEventType.UPDATE, updateAgency);
+					evt.successCallback = onCallbackSuccessed;
+					evt.failureCallback = onCallbackFailure;
+					evt.dispatch();
+				}
+				this.enabled = false;
+			}
+			
+			private function onCallbackSuccessed(data:Object, evt:PcAgencyEvent):void {
+				this.enabled = true;
+				// Dispatch event to update tree.
+				model.tree.dispatchEvent(new TreeOperationEvent(
+				TreeOperationEvent.NODE_CHANGED, model.tree.selectedItem));
+				
+				
+				
+//				var agencyEvent:PcAgencyEvent = new PcAgencyEvent(PcAgencyEvent.GET_ROOT_AGENCY_BY_USERID);
+//				agencyEvent.userId = model.loginUser.id;
+//				agencyEvent.dispatch();		
+				close();
+			}
+						
+			private function onCallbackFailure(info:Object, evt:PcAgencyEvent):void {
+				this.enabled = true;
+				Alert.show(info.toString());
+			}
+			
+			private function getNewAgency():PcAgencyVo {
+				var agencyVo:PcAgencyVo = new PcAgencyVo();
+				agencyVo.parentId = parentAgency.id;
+				agencyVo.codeId = agencyCodeId;
+//				agencyVo.code = agency.code;
+				agencyVo.name = nameTxt.text;
+				agencyVo.tel = telTxt.text;
+				agencyVo.comment = commentTxt.text;
+				return agencyVo;
+			}
+			
+			private function getUpdateAgency():PcAgencyVo {
+				if (!agency) {
+					return null;
+				}
+				var agencyVo:PcAgencyVo = new PcAgencyVo();
+				agencyVo.parentId = agency.parentId;
+				agencyVo.id = agency.id;
+				agencyVo.codeId = agency.codeId;
+				agencyVo.code = agency.code;
+				agencyVo.name = nameTxt.text;
+//				if (personChooseBox.member) {
+//					agencyVo.memberId = personChooseBox.member.id;
+//				}
+				agencyVo.setupDatetime = agency.setupDatetime;
+				agencyVo.tel = telTxt.text;
+				agencyVo.comment = commentTxt.text;
+				return agencyVo;
+			}
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<mx:VBox height="100%" width="100%"
+			 horizontalAlign="center" verticalAlign="middle"
+			 horizontalScrollPolicy="off" verticalScrollPolicy="off">
+		<mx:Form width="450" height="100%"
+				 minWidth="200">
+			<mx:FormItem label="组织性质:" width="100%">
+				<mx:Label width="100%" text="{codeDescription}"/>
+			</mx:FormItem>
+			<mx:FormItem label="组织名称:" required="true" width="100%">
+				<mx:TextInput id="nameTxt" width="100%" enabled="false"/>
+			</mx:FormItem>
+
+			<mx:FormItem label="电话号码:" width="100%">
+				<mx:TextInput id="telTxt" width="150" restrict="0-9\-" enabled="false"/>
+			</mx:FormItem>
+			<mx:FormItem label="描述:" width="100%">
+				<mx:TextArea id="commentTxt" width="100%" height="80" enabled="false"/>
+			</mx:FormItem>
+		</mx:Form>
+		<tree:LoadingParentTree id="privilegeTree" width="100%" height="100%" dataProvider="{dp}"
+						  />
+		<mx:ControlBar width="100%" horizontalAlign="center">
+			<button:PcButton label="保存" click="save()"/>
+			<button:PcButton label="取消" click="close()"/>
+		</mx:ControlBar>
+	</mx:VBox>
+</control:EscapeWindow>

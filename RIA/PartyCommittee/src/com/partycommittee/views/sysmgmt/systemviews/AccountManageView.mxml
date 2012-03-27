@@ -226,7 +226,7 @@
 										   labelFunction="{LblFunctionHelper.userStatusLblFunc}"/>
 				<!--<mx:AdvancedDataGridColumn headerText="权限"
 										   labelFunction="{LblFunctionHelper.userPrivilegeLblFunc}"/>-->
-				<mx:AdvancedDataGridColumn headerText="最近登录时间" dataField="lastLoginTime" textAlign="left"/>
+				<mx:AdvancedDataGridColumn headerText="最近登录时间" dataField="lastlogintime" itemRenderer="com.partycommittee.renderers.setupDateTimeRenderer" textAlign="left"/>
 			</mx:columns>
 		</mx:AdvancedDataGrid>
 		<pagebar:PageBar id="pageBar" width="100%" page="{page}"/>

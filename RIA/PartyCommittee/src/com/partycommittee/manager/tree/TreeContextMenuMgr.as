@@ -8,6 +8,7 @@ package com.partycommittee.manager.tree
 	import com.partycommittee.util.AgencyCodeUtil;
 	import com.partycommittee.util.CRUDEventType;
 	import com.partycommittee.views.agencymgmt.agencyviews.AgencyWindow;
+	import com.partycommittee.views.agencymgmt.agencyviews.AgencyMoveWindow;
 	import com.partycommittee.vo.PcAgencyVo;
 	
 	import flash.events.ContextMenuEvent;
@@ -85,6 +86,7 @@ package com.partycommittee.manager.tree
 			createTeamMenuItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, onCreateChildren);
 			
 			updateMenuItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, onUpdate);
+//			moveMenuItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, onMove);
 			deleteMenuItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, onDelete);
 			revacationMenuItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, onRevacation);
 		}
@@ -103,6 +105,7 @@ package com.partycommittee.manager.tree
 		
 //		private var createFirstBranchMenuItem:ContextMenuItem = new ContextMenuItem("建立第一党支部");
 		private var createBasicMenuItem:ContextMenuItem = new ContextMenuItem("建立基层党委");
+		private var createEJDWMenuItem:Object = new ContextMenuItem("建立二级党委");
 		private var createBranchMenuItem:ContextMenuItem = new ContextMenuItem("建立党支部");
 		private var createGaneralBranchMenuItem:ContextMenuItem = new ContextMenuItem("建立党总支部");
 		private var createTeamMenuItem:ContextMenuItem = new ContextMenuItem("建立党小组");
@@ -110,6 +113,7 @@ package com.partycommittee.manager.tree
 		private var refreshMenuItem:ContextMenuItem = new ContextMenuItem("刷 新", true);
 		
 		private var updateMenuItem:ContextMenuItem = new ContextMenuItem("修 改", true);
+//		private var moveMenuItem:ContextMenuItem = new ContextMenuItem("划 转", true);
 		private var deleteMenuItem:ContextMenuItem = new ContextMenuItem("删 除", true);
 		private var revacationMenuItem:ContextMenuItem = new ContextMenuItem("撤 销", true, false);
 		
@@ -126,7 +130,7 @@ package com.partycommittee.manager.tree
 					menuItems.push(createBasicMenuItem, createBranchMenuItem);
 					break;
 				case PCConst.AGENCY_CODE_BASICCOMMITTEES:
-					menuItems.push(createGaneralBranchMenuItem, createBranchMenuItem);
+					menuItems.push(createGaneralBranchMenuItem, createEJDWMenuItem, createBranchMenuItem);
 					break;
 				case PCConst.AGENCY_CODE_BRANCH:
 //					menuItems.push(createTeamMenuItem);
@@ -144,6 +148,7 @@ package com.partycommittee.manager.tree
 				menuItems.push(refreshMenuItem);
 			}
 			if (codeId != PCConst.AGENCY_CODE_BOARDCOMMITTEES) {
+//				menuItems.push(updateMenuItem, moveMenuItem, deleteMenuItem, revacationMenuItem);
 				menuItems.push(updateMenuItem, deleteMenuItem, revacationMenuItem);
 			}
 			return menuItems;
@@ -176,6 +181,9 @@ package com.partycommittee.manager.tree
 					break;
 				case createTeamMenuItem:
 					agencyCodeId = PCConst.AGENCY_CODE_TEAM;
+					break;
+				case createEJDWMenuItem:
+					agencyCodeId = PCConst.AGENCY_CODE_EJDW;					
 					break;
 			}
 			if (!agencyCodeId) {
@@ -213,6 +221,24 @@ package com.partycommittee.manager.tree
 				PopupMgr.instance.popupWindow(win);
 			}
 		}
+		
+		public function onMove(event:ContextMenuEvent):void {
+			var node:Node = tree.selectedItem as Node;
+			if (!node || !node.entity) {
+				return;
+			}
+			var agencyCodeId:Number = (node.entity as PcAgencyVo).codeId;
+			var title:String = AgencyCodeUtil.getAgencyCodeDes(agencyCodeId) + "划转";
+			var selectedAgency:PcAgencyVo = node.entity as PcAgencyVo;
+			if (selectedAgency) {
+				var win:AgencyMoveWindow = new AgencyMoveWindow();
+				win.type = CRUDEventType.UPDATE;
+				win.title = title;
+				win.agency = selectedAgency;
+				PopupMgr.instance.popupWindow(win);
+			}
+		}		
+		
 		
 		public function onDelete(event:ContextMenuEvent):void {
 			var node:Node = tree.selectedItem as Node;

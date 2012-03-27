@@ -9,6 +9,7 @@ package com.partycommittee.events
 		public static const GET_ROOT_AGENCY_FOR_PRIVILEGE:String = "getRootAgencyForPrivilege";
 		public static const GET_ROOT_AGENCY_BY_USERID:String = "getRootAgencyByUserId";
 		public static const GET_CHILDREN:String = "getChildren";
+		public static const GET_CHILDREN_ONLY_PARENT:String = "getChildrenOnlyParent";
 		public static const GET_PARENT:String = "getParent";
 		public static const GET_AGENCY_INFO:String = "getAgencyInfo";
 		
