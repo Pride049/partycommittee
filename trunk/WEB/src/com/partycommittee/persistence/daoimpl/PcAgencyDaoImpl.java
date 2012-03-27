@@ -88,6 +88,16 @@ public class PcAgencyDaoImpl extends JpaDaoBase implements PcAgencyDao {
 		return null;
 	}	
 	
+	public List<PcAgency> getChildrenAgencyByCodeOnly(String code) {
+		try {
+			Integer childCodeLen = code.length() + 2;
+			return  super.find("from PcAgency where code like '" + code + "%' and length(code) = " + childCodeLen + " AND code_id <> 10");
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return null;
+	}	
+		
 	
 	@SuppressWarnings("unchecked")
 	@Override

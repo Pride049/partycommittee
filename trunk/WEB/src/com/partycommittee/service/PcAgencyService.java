@@ -63,21 +63,35 @@ public class PcAgencyService {
 		PcAgency agency =  pcAgencyDaoImpl.getAgencyById(agencyId);
 		List<PcAgency> agencyList = pcAgencyDaoImpl.getChildrenAgencyByCode(agency.getCode());
 		for (PcAgency item : agencyList) {
-			item.setZbsj(" ");
+			PcAgencyVo vo = PcAgencyVo.fromPcAgency(item);
+			vo.setZbsj(" ");
 			List<PcMember> list_mem = pcMemberDaoImpl.getMemberByDutyId(item.getId(), 1);
 			if (list_mem != null && list_mem.size() > 0) {
 				String zbsj = "";
 				for(PcMember m: list_mem) {
 					zbsj+= m.getName() + ' ';
 				}
-				item.setZbsj(zbsj);
+				vo.setZbsj(zbsj);
 			}
 			
 			
-			list.add(PcAgencyVo.fromPcAgency(item));
+			list.add(vo);
 		}
 		return list;
 	}	
+	
+	public List<PcAgencyVo> getChildrenAgencyListByCodeOnlyParent(int agencyId) {
+		List<PcAgencyVo> list = new ArrayList<PcAgencyVo>();
+		PcAgency agency =  pcAgencyDaoImpl.getAgencyById(agencyId);
+		List<PcAgency> agencyList = pcAgencyDaoImpl.getChildrenAgencyByCodeOnly(agency.getCode());
+		for (PcAgency item : agencyList) {
+			PcAgencyVo vo = PcAgencyVo.fromPcAgency(item);
+			list.add(vo);
+		}
+		return list;
+	}		
+	
+	
 	
 	public PcAgencyVo getAgencyById(int agencyId) {
 		PcAgency agency = pcAgencyDaoImpl.getAgencyById(agencyId);

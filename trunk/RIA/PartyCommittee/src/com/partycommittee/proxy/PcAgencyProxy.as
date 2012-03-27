@@ -22,6 +22,10 @@ package com.partycommittee.proxy
 			service.getChildren(agencyId);
 		}
 		
+		public function getChildrenOnlyParent(agencyId:Number):void {
+			service.getChildrenOnlyParent(agencyId);
+		}		
+		
 		public function getAgencyInfo(agencyId:Number):void {
 			service.getAgencyInfo(agencyId);
 		}

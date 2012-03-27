@@ -76,7 +76,6 @@
 			}
 			
 			private function getAgencyInfo(vo:PcAgencyVo):void {
-				if (!model.isLeafUser) return;
 				var agencyEvt:PcAgencyEvent = new PcAgencyEvent(PcAgencyEvent.GET_AGENCY_INFO);
 				agencyEvt.agency = vo;
 				agencyEvt.successCallback = onGetAgencyInfoSuccess;

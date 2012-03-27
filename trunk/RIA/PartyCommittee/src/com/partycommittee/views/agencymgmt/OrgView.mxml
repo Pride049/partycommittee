@@ -78,7 +78,7 @@
 					return;
 				}
 				
-				if (model.isLeafUser && agency.codeId == 10) {
+				if (agency.codeId == 10) {
 					agencyBaseViewStack.selectedChild = agencyBase;
 					agencyView.updateData();
 					memberView.updateData();

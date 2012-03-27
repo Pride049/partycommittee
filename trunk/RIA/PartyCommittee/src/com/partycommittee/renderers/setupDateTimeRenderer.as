@@ -16,8 +16,8 @@ package com.partycommittee.renderers
 			var datas:Object = data;
 			if (datas.hasOwnProperty('setupDatetime')) {
 				htmlText = DateUtil.toISOString(data.setupDatetime as Date);
-			} else {
-				htmlText = '';
+			} else if (datas.hasOwnProperty('lastlogintime')) {
+				htmlText = DateUtil.toISOString(data.lastlogintime as Date, true);
 			} 
 				
 		}

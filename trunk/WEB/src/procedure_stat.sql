@@ -1426,6 +1426,8 @@ FOR EACH ROW
 BEGIN
      CALL stat_remind();
      CALL stat_remind_stat();
+		 CALL proc_agency_stats();
+		 CALL proc_parent_stats();     
      
 END//
 delimiter ;
@@ -1437,6 +1439,8 @@ FOR EACH ROW
 BEGIN
      CALL stat_remind();
      CALL stat_remind_stat();
+		 CALL proc_agency_stats();
+		 CALL proc_parent_stats();      
 END//
 delimiter ;
 
@@ -1447,6 +1451,8 @@ FOR EACH ROW
 BEGIN
      CALL stat_remind();
      CALL stat_remind_stat();
+		 CALL proc_agency_stats();
+		 CALL proc_parent_stats();      
 END//
 delimiter ;
 
