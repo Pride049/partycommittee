@@ -139,6 +139,19 @@
 				return "";
 			}
 			
+			private function monthLblFunc(item:Object, col:*):String {
+				
+				
+				if (item is PcMeetingVo) {
+					if ( (item as PcMeetingVo).meetingDatetime is Date) {
+						return String( ( (item as PcMeetingVo).meetingDatetime as Date).getMonth() + 1 );
+					}
+				}
+				
+				return '0';
+			}			
+			
+			
 			public function evaluateMeeting(meeting:PcMeetingVo):void {
 				var win:MeetingHandlerView = new MeetingHandlerView();
 				win.agency = agency;
@@ -206,7 +219,7 @@
 				<mx:AdvancedDataGridColumn headerText="季度" dataField="quarter"
 										   labelFunction="quarterLblFunc"/>
 				<mx:AdvancedDataGridColumn headerText="月份" dataField="month"
-										   />
+										   labelFunction="monthLblFunc"/>
 				<mx:AdvancedDataGridColumn headerText="操作">
 					<mx:itemRenderer>
 						<fx:Component>
