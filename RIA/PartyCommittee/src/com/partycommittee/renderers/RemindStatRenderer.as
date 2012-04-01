@@ -232,21 +232,21 @@ package com.partycommittee.renderers
 					htmlText = datas.mzshh1;
 				}	
 				
-			} else if(_listData.columnIndex == 13)	{
+			} else if(_listData.columnIndex == 12)	{
 				if (datas.mzshh1 > 0) {
 					htmlText = '<u><font color="#0000ff"><a href="event:getRemindList&7&3&'+datas.agencyId+'">'+datas.mzshh2+'</a></font></u>';
 				} else {
 					htmlText = datas.mzshh2;
 				}	
 				
-			} else if(_listData.columnIndex == 12)	{
+			} else if(_listData.columnIndex == 13)	{
 				if (datas.zbwyh1 > 0) {
 					htmlText = '<u><font color="#0000ff"><a href="event:getRemindList&8&1&'+datas.agencyId+'">'+datas.zbwyh1+'</a></font></u>';
 				} else {
 					htmlText = datas.zbwyh1;
 				}	
 				
-			} else if(_listData.columnIndex == 12)	{
+			} else if(_listData.columnIndex == 14)	{
 				if (datas.zbwyh2 > 0) {
 					htmlText = '<u><font color="#0000ff"><a href="event:getRemindList&8&3&'+datas.agencyId+'">'+datas.zbwyh2+'</a></font></u>';
 				} else {
@@ -254,9 +254,6 @@ package com.partycommittee.renderers
 				}				
 				
 			}
-			
-			
-			
 		}
 		
 		

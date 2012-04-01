@@ -717,3 +717,71 @@ end;
 //
 delimiter ;
 
+
+
+
+去掉重复的计划:
+
+
+
+delimiter //
+DROP procedure IF EXISTS remove_dup_workplan//
+CREATE PROCEDURE remove_dup_workplan()
+begin
+	DECLARE c_id int(11) unsigned;
+	DECLARE c_type_id int(11) unsigned;
+	DECLARE c_y VARCHAR(255);
+	DECLARE c_q VARCHAR(20);
+	DECLARE c_workplan_id int(11) unsigned;
+	DECLARE done int default 0;
+	
+	DECLARE y year(4);
+	DECLARE q tinyint(1) unsigned;
+
+
+	DECLARE rows int default 0;
+	DECLARE row int default 0;
+	DECLARE i int;
+		
+	DECLARE s_cursor CURSOR FOR select agency_id, type_id,year, quarter FROM (SELECT agency_id, type_id,year, quarter,count(*) as c FROM pc_workplan group by agency_id, type_id,year, quarter) as T where c > 1;
+	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done=1;
+	
+	  open s_cursor; 
+	  SELECT FOUND_ROWS() into rows;
+	  SET row = 0;
+		cursor_loop:loop
+		
+				SET c_workplan_id = 0;
+		
+				FETCH s_cursor into c_id, c_type_id, c_y, c_q;
+--				SELECT c_id, c_type_id, c_y, c_q;
+
+				IF row >= rows then
+					leave cursor_loop;
+				end if;
+				
+				SELECT min(id) into c_workplan_id FROM  pc_workplan WHERE agency_id =c_id AND type_id = c_type_id AND YEAR = c_y AND quarter = c_q AND status_id >= 3;
+				IF c_workplan_id is NULL THEN
+					SELECT min(id) into c_workplan_id FROM  pc_workplan WHERE agency_id =c_id AND type_id = c_type_id AND YEAR = c_y AND quarter = c_q;
+				END IF;
+				
+				SELECT c_workplan_id;
+				
+				IF c_workplan_id is not NULL THEN
+					DELETE FROM pc_workplan_content WHERE workplan_id in ( SELECT id FROM  pc_workplan WHERE agency_id =c_id AND type_id = c_type_id AND YEAR = c_y AND quarter = c_q and id <> c_workplan_id  );
+					DELETE FROM pc_workplan WHERE agency_id =c_id AND type_id = c_type_id AND YEAR = c_y AND quarter = c_q and id <> c_workplan_id;
+				END IF;
+				
+				
+
+				SET row = row + 1;
+		end loop cursor_loop;
+		close s_cursor;
+		
+		
+		DELETE FROM pc_workplan_content WHERE workplan_id in ( SELECT id FROM  pc_workplan WHERE YEAR = 0000 );
+		DELETE FROM pc_workplan  WHERE YEAR = 0000;
+		
+end;
+//
+delimiter ;

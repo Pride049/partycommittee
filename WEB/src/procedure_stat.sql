@@ -90,6 +90,7 @@ delimiter //
 DROP procedure IF EXISTS stat_remind_stat//
 CREATE PROCEDURE stat_remind_stat()
 begin
+	
 	DECLARE done int default 0;
 	DECLARE c_id int(11) unsigned;
 	DECLARE c_name VARCHAR(255);
@@ -105,9 +106,11 @@ begin
 	DECLARE i int;
 	
 	DECLARE zb_num int(11) unsigned;
-	
-  DECLARE s_cursor CURSOR FOR SELECT a.id, a.name, a.code_id, a.code, b.parent_id FROM  pc_agency as a left join pc_agency_relation as b on a.id = b.agency_id WHERE a.code_id in (7,8,15);
+
+  DECLARE s_cursor CURSOR FOR SELECT a.id, a.name, a.code_id, a.code, b.parent_id FROM  pc_agency as a left join pc_agency_relation as b on a.id = b.agency_id WHERE a.code_id in (7,8,15);  
 	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done=1;
+
+	
 
   open s_cursor; 
   SELECT FOUND_ROWS() into rows;
@@ -119,12 +122,13 @@ begin
 				leave cursor_loop;
 			end if;
 			
-			INSERT INTO pc_remind_stat (agency_id ,name ,code_id ,parent_id ,year ,quarter ,type_id ,status ,c)
-			SELECT c_id as agency_id, c_name as name, c_code_id as code_id, c_parent_id as parent_id, year, quarter, type_id, status, SUM(c) as c FROM
+			INSERT INTO pc_remind_stat (agency_id ,name ,code_id , code,parent_id ,year ,quarter ,type_id ,status ,c)
+			SELECT * FROM
+			(SELECT c_id as agency_id, c_name as name, c_code_id as code_id, c_code as code, c_parent_id as parent_id, year, quarter, type_id, status, SUM(c) as c FROM
 			(select year ,quarter, type_id, status, count(*) as c FROM pc_remind 
 			WHERE code like CONCAT(c_code, '%') GROUP BY code_id, parent_id, year ,quarter, type_id, status) as T1
-			GROUP BY year ,quarter, type_id, status
-			ON DUPLICATE KEY UPDATE c = c, name = c_name, code = c_code, code_id = c_code_id;			
+			GROUP BY year ,quarter, type_id, status) AS T2
+			ON DUPLICATE KEY UPDATE c = T2.c, name = T2.name, code = T2.code, code_id = T2.code_id;
 
 			SET row = row + 1;
 	end loop cursor_loop;
@@ -475,7 +479,8 @@ begin
 			
 			IF c_parent_id is not null THEN
 				INSERT INTO pc_agency_stats (agency_id, name, code_id, code, parent_id, zz_num, jc_num, ejdw_num, dzj_num, dzb_num, more2year_num, less7_num, no_fsj_zbwy_num, dxz_num, dy_num, zbsj_num, zbfsj_num, zzwy_num, xcwy_num, jjwy_num, qnwy_num, ghwy_num, fnwy_num, bmwy_num)
-				SELECT  c_id as agency_id, c_name as name, c_code_id as code_id, c_code as  code, c_parent_id as  parent_id,
+				SELECT * FROM
+				(SELECT  c_id as agency_id, c_name as name, c_code_id as code_id, c_code as  code, c_parent_id as  parent_id,
 				(stat_jc_num + stat_ejdw_num + stat_dzj_num + SUM(dzb_num) ) as zz_num,
 				stat_jc_num as jc_num,
 				stat_ejdw_num as ejdw_num,
@@ -496,30 +501,30 @@ begin
 				SUM(fnwy_num) as fnwy_num,
 				SUM(bmwy_num) as bmwy_num
 				FROM pc_agency_stats 
-				WHERE code like CONCAT (c_code, '%')
+				WHERE code like CONCAT (c_code, '%') ) AS T1
 				ON DUPLICATE KEY UPDATE 
 				name = c_name, 
 				code_id = c_code_id, 
 				code = c_code, 
 				parent_id = c_parent_id, 
-				zz_num = zz_num,
-				ejdw_num = ejdw_num,
-				dzj_num = dzj_num,
-				dzb_num = dzb_num,
-				more2year_num = more2year_num,
-				less7_num = less7_num,
-				no_fsj_zbwy_num = no_fsj_zbwy_num,
-				dxz_num = dxz_num,
-				dy_num = dy_num,
-				zbsj_num = zbsj_num,
-				zbfsj_num = zbfsj_num, 
-				zzwy_num = zzwy_num,
-				xcwy_num = xcwy_num, 
-				jjwy_num = jjwy_num,
-				qnwy_num = qnwy_num,
-				ghwy_num = ghwy_num,
-				fnwy_num = fnwy_num,
-				bmwy_num = bmwy_num;
+				zz_num = T1.zz_num,
+				ejdw_num = T1.ejdw_num,
+				dzj_num = T1.dzj_num,
+				dzb_num = T1.dzb_num,
+				more2year_num = T1.more2year_num,
+				less7_num = T1.less7_num,
+				no_fsj_zbwy_num = T1.no_fsj_zbwy_num,
+				dxz_num = T1.dxz_num,
+				dy_num = T1.dy_num,
+				zbsj_num = T1.zbsj_num,
+				zbfsj_num = T1.zbfsj_num, 
+				zzwy_num = T1.zzwy_num,
+				xcwy_num = T1.xcwy_num, 
+				jjwy_num = T1.jjwy_num,
+				qnwy_num = T1.qnwy_num,
+				ghwy_num = T1.ghwy_num,
+				fnwy_num = T1.fnwy_num,
+				bmwy_num = T1.bmwy_num;
 			END IF;
 			SET row = row + 1;
 	end loop cursor_loop;
@@ -1407,7 +1412,7 @@ delimiter //
 SET GLOBAL event_scheduler = OFF //
 DROP EVENT IF EXISTS `event_stats_remind`//
 CREATE EVENT IF NOT EXISTS `event_stats_remind`
-ON SCHEDULE EVERY 10 MINUTE
+ON SCHEDULE EVERY 2 MINUTE
 ON COMPLETION PRESERVE
 DO
    BEGIN

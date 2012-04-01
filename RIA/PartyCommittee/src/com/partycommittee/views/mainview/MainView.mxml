@@ -40,7 +40,7 @@
 			import mx.events.PropertyChangeEvent;
 			
 			import spark.collections.Sort;
-			
+						
 			[Bindable]
 			private var model:ModelLocator = ModelLocator.getInstance();
 			
@@ -406,7 +406,7 @@
 				c1.dataField = "name";
 				c1.headerText = "支部名称";
 				//c1.wordWrap = true;
-				c1.width = 120;
+				c1.width = 160;
 				dateGridColumnArray.push(c1);
 
 				// 年度计划
@@ -418,7 +418,7 @@
 				var c_y_1:AdvancedDataGridColumn = new AdvancedDataGridColumn();
 				c_y_1.dataField = "y1";
 				c_y_1.headerText = "未报";
-				c_y_1.width = 60;
+//				c_y_1.width = 60;
 				c_y_1.itemRenderer = new ClassFactory(com.partycommittee.renderers.RemindStatRenderer);
 				
 				c_y_ChildArray.push(c_y_1);
@@ -426,7 +426,7 @@
 				var c_y_2:AdvancedDataGridColumn = new AdvancedDataGridColumn();
 				c_y_2.dataField = "y2";
 				c_y_2.headerText = "未评";
-				c_y_2.width = 60;
+//				c_y_2.width = 60;
 				c_y_2.itemRenderer = new ClassFactory(com.partycommittee.renderers.RemindStatRenderer);
 				c_y_ChildArray.push(c_y_2);
 
@@ -445,14 +445,14 @@
 					var c_last_q_1:AdvancedDataGridColumn = new AdvancedDataGridColumn();
 					c_last_q_1.dataField = "lq1";
 					c_last_q_1.headerText = "未报";
-					c_last_q_1.width = 80;
+//					c_last_q_1.width = 80;
 					c_last_q_1.itemRenderer = new ClassFactory(com.partycommittee.renderers.RemindStatRenderer);
 					c_last_q_ChildArray.push(c_last_q_1);
 					
 					var c_last_q_2:AdvancedDataGridColumn = new AdvancedDataGridColumn();
 					c_last_q_2.dataField = "lq2";
 					c_last_q_2.headerText = "未评";
-					c_last_q_2.width = 80;
+//					c_last_q_2.width = 80;
 					c_last_q_2.itemRenderer = new ClassFactory(com.partycommittee.renderers.RemindStatRenderer);
 					c_last_q_ChildArray.push(c_last_q_2);
 
@@ -470,14 +470,14 @@
 					var c_last_y_1:AdvancedDataGridColumn = new AdvancedDataGridColumn();
 					c_last_y_1.dataField = "ly1";
 					c_last_y_1.headerText = "未报";
-					c_last_y_1.width = 80;
+//					c_last_y_1.width = 80;
 					c_last_y_1.itemRenderer = new ClassFactory(com.partycommittee.renderers.RemindStatRenderer);
 					c_last_y_ChildArray.push(c_last_y_1);
 					
 					var c_last_y_2:AdvancedDataGridColumn = new AdvancedDataGridColumn();
 					c_last_y_2.dataField = "ly2";
 					c_last_y_2.headerText = "未评";
-					c_last_y_2.width = 80;
+//					c_last_y_2.width = 80;
 					c_last_y_2.itemRenderer = new ClassFactory(com.partycommittee.renderers.RemindStatRenderer);
 					c_last_y_ChildArray.push(c_last_y_2);
 
@@ -496,14 +496,14 @@
 					var c_last_q_1:AdvancedDataGridColumn = new AdvancedDataGridColumn();
 					c_last_q_1.dataField = "lq1";
 					c_last_q_1.headerText = "未报";
-					c_last_q_1.width = 80;
+//					c_last_q_1.width = 80;
 					c_last_q_1.itemRenderer = new ClassFactory(com.partycommittee.renderers.RemindStatRenderer);
 					c_last_q_ChildArray.push(c_last_q_1);
 					
 					var c_last_q_2:AdvancedDataGridColumn = new AdvancedDataGridColumn();
 					c_last_q_2.dataField = "lq2";
 					c_last_q_2.headerText = "未评";
-					c_last_q_2.width = 80;
+//					c_last_q_2.width = 80;
 					c_last_q_2.itemRenderer = new ClassFactory(com.partycommittee.renderers.RemindStatRenderer);
 					c_last_q_ChildArray.push(c_last_q_2);
 
@@ -521,14 +521,14 @@
 				var c_q_1:AdvancedDataGridColumn = new AdvancedDataGridColumn();
 				c_q_1.dataField = "q1";
 				c_q_1.headerText = "未报";
-				c_q_1.width = 70;
+//				c_q_1.width = 70;
 				c_q_1.itemRenderer = new ClassFactory(com.partycommittee.renderers.RemindStatRenderer);
 				c_q_ChildArray.push(c_q_1);
 				
 				var c_q_2:AdvancedDataGridColumn = new AdvancedDataGridColumn();
 				c_q_2.dataField = "q2";
 				c_q_2.headerText = "未评";
-				c_q_2.width = 70;
+//				c_q_2.width = 70;
 				c_q_2.itemRenderer = new ClassFactory(com.partycommittee.renderers.RemindStatRenderer);
 				c_q_ChildArray.push(c_q_2);
 
@@ -544,14 +544,14 @@
 				var c_dk_1:AdvancedDataGridColumn = new AdvancedDataGridColumn();
 				c_dk_1.dataField = "dk1";
 				c_dk_1.headerText = "未报";
-				c_dk_1.width = 50;
+//				c_dk_1.width = 50;
 				c_dk_1.itemRenderer = new ClassFactory(com.partycommittee.renderers.RemindStatRenderer);
 				c_dk_ChildArray.push(c_dk_1);
 				
 				var c_dk_2:AdvancedDataGridColumn = new AdvancedDataGridColumn();
 				c_dk_2.dataField = "dk2";
 				c_dk_2.headerText = "未评";
-				c_dk_2.width = 50;
+//				c_dk_2.width = 50;
 				c_dk_2.itemRenderer = new ClassFactory(com.partycommittee.renderers.RemindStatRenderer);
 				c_dk_ChildArray.push(c_dk_2);
 			
@@ -568,14 +568,14 @@
 				var c_dydh_1:AdvancedDataGridColumn = new AdvancedDataGridColumn();
 				c_dydh_1.dataField = "dydh1";
 				c_dydh_1.headerText = "未报";
-				c_dydh_1.width = 50;
+//				c_dydh_1.width = 50;
 				c_dydh_1.itemRenderer = new ClassFactory(com.partycommittee.renderers.RemindStatRenderer);
 				c_dydh_ChildArray.push(c_dydh_1);
 				
 				var c_dydh_2:AdvancedDataGridColumn = new AdvancedDataGridColumn();
 				c_dydh_2.dataField = "dydh2";
 				c_dydh_2.headerText = "未评";
-				c_dydh_2.width = 50;
+//				c_dydh_2.width = 50;
 				c_dydh_2.itemRenderer = new ClassFactory(com.partycommittee.renderers.RemindStatRenderer);
 				c_dydh_ChildArray.push(c_dydh_2);
 			
@@ -593,15 +593,14 @@
 				var c_mzshh_1:AdvancedDataGridColumn = new AdvancedDataGridColumn();
 				c_mzshh_1.dataField = "mzshh1";
 				c_mzshh_1.headerText = "未报";
-				c_mzshh_1.width = 50;
+//				c_mzshh_1.width = 50;
 				c_mzshh_1.itemRenderer = new ClassFactory(com.partycommittee.renderers.RemindStatRenderer);
 				c_mzshh_ChildArray.push(c_mzshh_1);	
 				
 				var c_mzshh_2:AdvancedDataGridColumn = new AdvancedDataGridColumn();
 				c_mzshh_2.dataField = "mzshh1";
 				c_mzshh_2.headerText = "未评";
-				c_mzshh_1.width = 50;
-				c_mzshh_2.itemRenderer = new ClassFactory(com.partycommittee.renderers.RemindStatRenderer);
+//				c_mzshh_1.width = 50;
 				c_mzshh_2.itemRenderer = new ClassFactory(com.partycommittee.renderers.RemindStatRenderer);
 				c_mzshh_ChildArray.push(c_mzshh_2);					
 				
@@ -615,14 +614,14 @@
 				var c_zbwyh_1:AdvancedDataGridColumn = new AdvancedDataGridColumn();
 				c_zbwyh_1.dataField = "zbwyh1";
 				c_zbwyh_1.headerText = "未报";
-				c_zbwyh_1.width = 50;
+//				c_zbwyh_1.width = 50;
 				c_zbwyh_1.itemRenderer = new ClassFactory(com.partycommittee.renderers.RemindStatRenderer);
 				c_zbwyh_ChildArray.push(c_zbwyh_1);
 				
 				var c_zbwyh_2:AdvancedDataGridColumn = new AdvancedDataGridColumn();
 				c_zbwyh_2.dataField = "zbwyh2";
 				c_zbwyh_2.headerText = "未评";
-				c_zbwyh_2.width = 50;
+//				c_zbwyh_2.width = 50;
 				c_zbwyh_2.itemRenderer = new ClassFactory(com.partycommittee.renderers.RemindStatRenderer);
 				c_zbwyh_ChildArray.push(c_zbwyh_2);
 		
@@ -640,7 +639,7 @@
 			}
 
 			private function getQuarter():Number {
-				var month:Number = new Date().getMonth();
+				var month:Number = new Date().getMonth() + 1;
 				if (month <= 3) {
 					return 1;
 				} else if (month <= 6) {
@@ -914,7 +913,7 @@
 				<mx:VBox id="detail" width="100%" height="100%"
 						 left="6" right="6" top="6" bottom="6"
 						 horizontalScrollPolicy="auto" verticalScrollPolicy="auto">				
-
+					<mx:Button icon="@Embed('/assets/images/icon_arrowleft.png')"  click="{StatsViewStack.selectedChild = stats}" toolTip="返回" />
 					<mx:AdvancedDataGrid id="detailDg" 
 										 width="100%" height="100%" 
 										 variableRowHeight="true"
@@ -923,10 +922,6 @@
 										 lockedColumnCount="1"
 										 headerStyleName="centerAligned"
 										 sortableColumns="false"/>
-		
-					<mx:Button label="返回" click="{StatsViewStack.selectedChild = stats;}"/>
-					
-					
 				</mx:VBox>				
 				
 			</mx:ViewStack>	
