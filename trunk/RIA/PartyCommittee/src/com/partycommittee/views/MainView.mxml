@@ -3,7 +3,6 @@
            xmlns:s="library://ns.adobe.com/flex/spark"
            xmlns:mx="library://ns.adobe.com/flex/mx" 
            xmlns:controls="com.hp.client.controls.*"
-		   maxWidth="960"
 		   horizontalCenter="0" verticalCenter="0"
            creationComplete="onCreationCompleted()" 
 		   xmlns:control="com.partycommittee.control.*" 
