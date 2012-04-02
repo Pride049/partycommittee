@@ -143,7 +143,7 @@
 						vo.y_eva_1_rate = dp.getItemAt(i).eva1Rate;
 						vo.y_eva_2_rate = dp.getItemAt(i).eva2Rate;
 						vo.y_eva_3_rate = dp.getItemAt(i).eva3Rate;
-						vo.y_eva_4_rate = dp.getItemAt(i).eva2Rate;
+						vo.y_eva_4_rate = dp.getItemAt(i).eva4Rate;
 					}
 					
 					//季度计划
@@ -156,7 +156,7 @@
 						vo.q_eva_1_rate = dp.getItemAt(i).eva1Rate;
 						vo.q_eva_2_rate = dp.getItemAt(i).eva2Rate;
 						vo.q_eva_3_rate = dp.getItemAt(i).eva3Rate;
-						vo.q_eva_4_rate = dp.getItemAt(i).eva2Rate;
+						vo.q_eva_4_rate = dp.getItemAt(i).eva4Rate;
 					}		
 					
 					//季度执行情况
@@ -169,7 +169,7 @@
 						vo.qz_eva_1_rate = dp.getItemAt(i).eva1Rate;
 						vo.qz_eva_2_rate = dp.getItemAt(i).eva2Rate;
 						vo.qz_eva_3_rate = dp.getItemAt(i).eva3Rate;
-						vo.qz_eva_4_rate = dp.getItemAt(i).eva2Rate;
+						vo.qz_eva_4_rate = dp.getItemAt(i).eva4Rate;
 					}
 					
 					//年终总结
@@ -182,7 +182,7 @@
 						vo.yz_eva_1_rate = dp.getItemAt(i).eva1Rate;
 						vo.yz_eva_2_rate = dp.getItemAt(i).eva2Rate;
 						vo.yz_eva_3_rate = dp.getItemAt(i).eva3Rate;
-						vo.yz_eva_4_rate = dp.getItemAt(i).eva2Rate;
+						vo.yz_eva_4_rate = dp.getItemAt(i).eva4Rate;
 					}	
 					
 

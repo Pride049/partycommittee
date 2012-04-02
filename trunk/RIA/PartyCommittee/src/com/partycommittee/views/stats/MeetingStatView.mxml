@@ -55,7 +55,7 @@
 				
 				if (endMonthCmb) {
 					endMonthCmb.dataProvider = createMonthDp();
-					endMonthCmb.selectedIndex = new Date().getMonth() + 1;
+					endMonthCmb.selectedIndex = new Date().getMonth();
 				}			
 
 			}
@@ -145,7 +145,7 @@
 						vo.dk_eva_1_rate = dp.getItemAt(i).eva1Rate;
 						vo.dk_eva_2_rate = dp.getItemAt(i).eva2Rate;
 						vo.dk_eva_3_rate = dp.getItemAt(i).eva3Rate;
-						vo.dk_eva_4_rate = dp.getItemAt(i).eva2Rate;						
+						vo.dk_eva_4_rate = dp.getItemAt(i).eva4Rate;						
 					}
 
 					if (dp.getItemAt(i).typeId == 6) {
@@ -158,7 +158,7 @@
 						vo.dydh_eva_1_rate = dp.getItemAt(i).eva1Rate;
 						vo.dydh_eva_2_rate = dp.getItemAt(i).eva2Rate;
 						vo.dydh_eva_3_rate = dp.getItemAt(i).eva3Rate;
-						vo.dydh_eva_4_rate = dp.getItemAt(i).eva2Rate;
+						vo.dydh_eva_4_rate = dp.getItemAt(i).eva4Rate;
 					}		
 
 					if (dp.getItemAt(i).typeId == 7) {
@@ -171,7 +171,7 @@
 						vo.mzshh_eva_1_rate = dp.getItemAt(i).eva1Rate;
 						vo.mzshh_eva_2_rate = dp.getItemAt(i).eva2Rate;
 						vo.mzshh_eva_3_rate = dp.getItemAt(i).eva3Rate;
-						vo.mzshh_eva_4_rate = dp.getItemAt(i).eva2Rate;
+						vo.mzshh_eva_4_rate = dp.getItemAt(i).eva4Rate;
 					}
 
 					if (dp.getItemAt(i).typeId == 8) {
@@ -184,7 +184,7 @@
 						vo.zwh_eva_1_rate = dp.getItemAt(i).eva1Rate;
 						vo.zwh_eva_2_rate = dp.getItemAt(i).eva2Rate;
 						vo.zwh_eva_3_rate = dp.getItemAt(i).eva3Rate;
-						vo.zwh_eva_4_rate = dp.getItemAt(i).eva2Rate;
+						vo.zwh_eva_4_rate = dp.getItemAt(i).eva4Rate;
 					}
 
 					if (dp.getItemAt(i).typeId == 9) {
@@ -197,7 +197,7 @@
 						vo.qt_eva_1_rate = dp.getItemAt(i).eva1Rate;
 						vo.qt_eva_2_rate = dp.getItemAt(i).eva2Rate;
 						vo.qt_eva_3_rate = dp.getItemAt(i).eva3Rate;
-						vo.qt_eva_4_rate = dp.getItemAt(i).eva2Rate;
+						vo.qt_eva_4_rate = dp.getItemAt(i).eva4Rate;
 					}					
 
 					if ( (i+1) == dp.length) {

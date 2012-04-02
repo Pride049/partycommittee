@@ -227,14 +227,16 @@
 			}				
 			
 			private function formValidate():Boolean {
-				if (handlePersonTxt.text.length == 0) {
-					Alert.show("评语主体不能为空!");
-					return false;
-				}
-				
-				if (handleTextArea.htmlText.length == 0) {
-					Alert.show("评语不能为空!");
-					return false;
+				if (meeting.statusId == 3) {
+					if (handlePersonTxt.text.length == 0) {
+						Alert.show("评语主体不能为空!");
+						return false;
+					}
+					
+					if (handleTextArea.htmlText.length == 0) {
+						Alert.show("评语不能为空!");
+						return false;
+					}
 				}
 				
 				if (UserUtil.checkRole(4, model.loginUser.roles) == true) {
