@@ -583,11 +583,9 @@ end;
 //
 delimiter ;
 
-
-
 delimiter //
-DROP procedure IF EXISTS stat_zzsh//
-CREATE PROCEDURE stat_zzsh()
+DROP procedure IF EXISTS stat_zzsh_year//
+CREATE PROCEDURE stat_zzsh_year()
 begin
 	DECLARE c_id int(11) unsigned;
 	DECLARE c_parent_id int(11) unsigned;
@@ -649,7 +647,7 @@ begin
 				end if;
 				SET i = 1;
 				IF c_parent_id is not null THEN
-					while i <= 9 do	
+					while i < 5 do	
 					
 						SET  stat_reported = 0;
 						SET  stat_reported_rate = 0;
@@ -677,17 +675,15 @@ begin
 						SET  stat_eva_4_rate = 0;								
 					  SET  stat_agency_goodjob = 0;
 						SET y = year(now());
-						SET q = quarter(now());
+						SET q = 0;
 						SET m = month(now());
 						
 						
 -- 				年度计划	q = 1 AND i = 1	
 --			  年终总结	q = 4 AND i = 4					
 --				季度计划和季度执行情况					
-						IF ( i = 2 OR i = 3 OR (q = 1 AND i = 1) OR  (q = 4 AND i = 4)) THEN
-								IF (i = 1 OR i = 4) THEN
-									SET q = 0;
-								END IF;	
+
+						IF (i = 1 OR i = 4) THEN
 												SELECT COUNT(*) into stat_total FROM pc_workplan WHERE agency_id = c_id AND type_id = i AND year =y AND quarter = q AND status_id >= 3;
 												SELECT COUNT(*) into stat_total_delay FROM pc_remind_lock WHERE agency_id = c_id  AND year =y AND quarter = q AND type_id = i AND status = 8;
 												SELECT COUNT(*) into stat_total_return FROM pc_workplan as a left join pc_workplan_content as b on a.id = b.workplan_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = q AND a.status_id >= 3 AND b.type = 2;
@@ -742,19 +738,240 @@ begin
 												END IF;
 												
 												SET m = 0;
-						END IF;
-												
---					会议类						
-						IF (i = 5 OR i = 6 OR i =7)  THEN
-												SELECT COUNT(*), sum(attend), sum(asence) into stat_total, stat_attend, stat_asence FROM pc_meeting WHERE agency_id = c_id AND type_id = i AND year =y AND quarter = q AND status_id >= 3;
-												SELECT COUNT(*) into stat_total_delay FROM pc_remind_lock WHERE agency_id = c_id  AND year =y AND quarter = q AND type_id = i AND status = 8;
-												SELECT COUNT(*) into stat_total_return FROM pc_meeting as a left join pc_meeting_content as b on a.id = b.meeting_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = q AND a.status_id >= 3 AND b.type = 2;
 
-												SELECT COUNT(*) into stat_eva FROM pc_meeting WHERE agency_id = c_id AND type_id = i AND year = y AND quarter = q AND status_id = 5;
-												SELECT COUNT(CASE WHEN b.content = 1 THEN a.id END) into stat_eva_1 FROM pc_meeting as a left join pc_meeting_content as b on a.id = b.meeting_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = q AND a.status_id = 5 AND b.type = 4;
-												SELECT COUNT(CASE WHEN b.content = 2 THEN a.id END) into stat_eva_2 FROM pc_meeting as a left join pc_meeting_content as b on a.id = b.meeting_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = q AND a.status_id = 5 AND b.type = 4;
-												SELECT COUNT(CASE WHEN b.content = 3 THEN a.id END) into stat_eva_3 FROM pc_meeting as a left join pc_meeting_content as b on a.id = b.meeting_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = q AND a.status_id = 5 AND b.type = 4;
-												SELECT COUNT(CASE WHEN b.content = 4 THEN a.id END) into stat_eva_4 FROM pc_meeting as a left join pc_meeting_content as b on a.id = b.meeting_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = q AND a.status_id = 5 AND b.type = 4;
+
+												IF stat_reported_rate is null THEN
+													SET stat_reported_rate = 0;
+												END IF;	
+												
+												IF stat_eva_rate is null THEN
+													SET stat_eva_rate = 0;
+												END IF;		
+												
+												IF stat_attend_rate is null THEN
+													SET stat_attend_rate = 0;
+												END IF;	
+																		
+												INSERT INTO pc_zzsh_stat (agency_id, name, code_id, code, parent_id, year, quarter, month, type_id, total, total_success, total_return, total_delay, reported, reported_rate, return_rate, delay_rate,  attend, asence, attend_rate, eva, eva_rate, eva_1, eva_2, eva_3, eva_4, eva_1_rate, eva_2_rate, eva_3_rate, eva_4_rate, agency_goodjob) VALUES
+												(c_id, c_name, c_code_id, c_code, c_parent_id, y, q, m, i, stat_total, stat_total_success, stat_total_return, stat_total_delay, stat_reported, stat_reported_rate, stat_return_rate, stat_delay_rate, stat_attend, stat_asence, stat_attend_rate, stat_eva, stat_eva_rate, stat_eva_1, stat_eva_2, stat_eva_3, stat_eva_4, stat_eva_1_rate, stat_eva_2_rate, stat_eva_3_rate, stat_eva_4_rate, stat_agency_goodjob)
+												ON DUPLICATE KEY UPDATE 
+												name = c_name, code_id = c_code_id, code = c_code, parent_id = c_parent_id,
+												total = stat_total, total_success = stat_total_success,  total_return = stat_total_return,  total_delay = stat_total_delay,  
+												reported = stat_reported, reported_rate = stat_reported_rate,
+												return_rate = stat_return_rate, delay_rate = stat_delay_rate,
+												attend = stat_attend, asence = stat_asence, attend_rate = stat_attend_rate ,
+												eva = stat_eva, eva_rate = stat_eva_rate,  eva_1 = stat_eva_1, eva_2 = stat_eva_2, eva_3 = stat_eva_3, eva_4 = stat_eva_4,
+												eva_1_rate = stat_eva_1_rate, eva_2_rate = stat_eva_2_rate, eva_3_rate = stat_eva_3_rate, eva_4_rate = stat_eva_4_rate,
+												agency_goodjob = stat_agency_goodjob;
+						END IF;
+						set i=i+1;
+					end while;
+
+				END IF;
+				SET row = row + 1;
+		end loop cursor_loop;
+		close s_cursor;
+		
+end;
+//
+delimiter ;
+
+
+delimiter //
+DROP procedure IF EXISTS stat_zzsh_quarter//
+CREATE PROCEDURE stat_zzsh_quarter()
+begin
+	DECLARE c_id int(11) unsigned;
+	DECLARE c_parent_id int(11) unsigned;
+	DECLARE c_name VARCHAR(255);
+	DECLARE c_code VARCHAR(20);
+	DECLARE c_code_id int(11) unsigned;
+	DECLARE done int default 0;
+	
+	DECLARE y year(4);
+	DECLARE q tinyint(1) unsigned;
+	DECLARE m smallint(5) unsigned;
+
+	DECLARE rows int default 0;
+	DECLARE row int default 0;
+	DECLARE i int;
+	DECLARE j int;
+	
+	DECLARE stat_reported int(10) unsigned;
+	DECLARE stat_reported_rate DECIMAL(6,4) unsigned;	
+	
+	DECLARE stat_total int(10) unsigned;
+	DECLARE stat_total_success int(10) unsigned;
+	DECLARE stat_total_return int(10) unsigned;
+	DECLARE stat_total_delay int(10) unsigned;
+	DECLARE stat_return_rate DECIMAL(6,4) unsigned;
+	DECLARE stat_delay_rate DECIMAL(6,4) unsigned;
+	
+	
+	DECLARE stat_attend int(10) unsigned;
+	DECLARE stat_asence int(10) unsigned;
+	DECLARE stat_attend_rate DECIMAL(6,4) unsigned;
+
+	DECLARE stat_eva int(10) unsigned;
+	DECLARE stat_eva_rate DECIMAL(6,4) unsigned;
+	DECLARE stat_eva_1 int(10) unsigned;
+	DECLARE stat_eva_2 int(10) unsigned;
+	DECLARE stat_eva_3 int(10) unsigned;
+	DECLARE stat_eva_4 int(10) unsigned;
+	
+	DECLARE stat_eva_1_rate DECIMAL(6,4) unsigned;
+	DECLARE stat_eva_2_rate DECIMAL(6,4) unsigned;
+	DECLARE stat_eva_3_rate DECIMAL(6,4) unsigned;
+	DECLARE stat_eva_4_rate DECIMAL(6,4) unsigned;
+
+	DECLARE stat_agency_goodjob int(10) unsigned;
+
+	
+	DECLARE s_cursor CURSOR FOR SELECT a.id, a.name, a.code_id, a.code, b.parent_id FROM  pc_agency as a left join pc_agency_relation as b on a.id = b.agency_id WHERE a. code_id = 10;
+	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done=1;
+	
+	  open s_cursor; 
+	  SELECT FOUND_ROWS() into rows;
+	  SET row = 0;
+		cursor_loop:loop
+				FETCH s_cursor into c_id, c_name, c_code_id, c_code, c_parent_id;
+--				SELECT c_id, c_name;
+
+				IF row >= rows then
+					leave cursor_loop;
+				end if;
+				SET i = 1;
+				IF c_parent_id is not null THEN
+					while i < 9 do	
+						SET y = year(now());
+						SET q = quarter(now());
+						SET m = 0;
+					
+					
+						SET j = 1;
+						WHILE j <= q DO
+										SET  stat_reported = 0;
+										SET  stat_reported_rate = 0;
+										
+										SET  stat_total = 0;
+										SET  stat_total_success = 0;
+										SET  stat_total_return = 0;
+										SET  stat_total_delay = 0;
+										SET  stat_return_rate = 0;
+										SET  stat_delay_rate = 0;
+				
+										SET  stat_attend = 0;
+										SET  stat_asence = 0;
+										SET  stat_attend_rate  = 0;
+									
+										SET  stat_eva = 0;
+										SET  stat_eva_rate  = 0;
+										SET  stat_eva_1 = 0;
+										SET  stat_eva_2 = 0;
+										SET  stat_eva_3 = 0;
+										SET  stat_eva_4 = 0;
+										SET  stat_eva_1_rate = 0;
+										SET  stat_eva_2_rate = 0;
+										SET  stat_eva_3_rate = 0;
+										SET  stat_eva_4_rate = 0;								
+									  SET  stat_agency_goodjob = 0;
+				
+										
+										
+				-- 				年度计划	q = 1 AND i = 1	
+				--			  年终总结	q = 4 AND i = 4					
+				--				季度计划和季度执行情况					
+				
+										IF (i = 2 OR i = 3) THEN
+																SELECT COUNT(*) into stat_total FROM pc_workplan WHERE agency_id = c_id AND type_id = i AND year =y AND quarter = j AND status_id >= 3;
+																SELECT COUNT(*) into stat_total_delay FROM pc_remind_lock WHERE agency_id = c_id  AND year =y AND quarter = j AND type_id = i AND status = 8;
+																SELECT COUNT(*) into stat_total_return FROM pc_workplan as a left join pc_workplan_content as b on a.id = b.workplan_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = j AND a.status_id >= 3 AND b.type = 2;
+				
+																SELECT COUNT(*) into stat_eva FROM pc_workplan WHERE agency_id = c_id AND type_id = i AND year = y AND quarter = j AND status_id = 5;
+																SELECT COUNT(CASE WHEN b.content = 1 THEN a.id END) into stat_eva_1 FROM pc_workplan as a left join pc_workplan_content as b on a.id = b.workplan_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = j AND a.status_id = 5 AND b.type = 4;
+																SELECT COUNT(CASE WHEN b.content = 2 THEN a.id END) into stat_eva_2 FROM pc_workplan as a left join pc_workplan_content as b on a.id = b.workplan_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = j AND a.status_id = 5 AND b.type = 4;
+																SELECT COUNT(CASE WHEN b.content = 3 THEN a.id END) into stat_eva_3 FROM pc_workplan as a left join pc_workplan_content as b on a.id = b.workplan_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = j AND a.status_id = 5 AND b.type = 4;
+																SELECT COUNT(CASE WHEN b.content = 4 THEN a.id END) into stat_eva_4 FROM pc_workplan as a left join pc_workplan_content as b on a.id = b.workplan_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = j AND a.status_id = 5 AND b.type = 4;
+				
+																									
+																IF (stat_total > 0) THEN
+																	SELECT 1 - stat_total_delay, ROUND( (1 - stat_total_delay)/1 , 4) into stat_reported, stat_reported_rate;
+																	SET stat_total_success = stat_total - stat_total_delay;
+																	
+																	IF stat_total_return > 0 THEN
+																		SET stat_return_rate = 1;
+																	END IF;
+																	
+																	IF stat_total_delay > 0 THEN
+																		SET stat_delay_rate = 1;
+																		SET stat_reported_rate = 0;
+																	END IF;
+																END IF;
+																
+																IF (stat_eva > 0) THEN
+																	SET stat_eva = 1;
+																	SET stat_eva_rate = 1;
+																ELSE 
+																	SET stat_eva = 0;
+																	SET stat_eva_rate = 0;
+																END IF;
+																
+																IF stat_eva_1 > 0 THEN 
+																	SET stat_eva_1_rate = 1;
+																END IF;
+																
+																IF stat_eva_2 > 0 THEN 
+																	SET stat_eva_2_rate = 1;
+																END IF;
+																
+																IF stat_eva_3 > 0 THEN 
+																	SET stat_eva_3_rate = 1;
+																END IF;
+																
+																IF stat_eva_4 > 0 THEN 
+																	SET stat_eva_4_rate = 1;
+																END IF;																																				
+																
+																IF  stat_reported_rate = 1 THEN
+																		SET stat_agency_goodjob = 1;
+																END IF;
+																
+																IF stat_reported_rate is null THEN
+																	SET stat_reported_rate = 0;
+																END IF;	
+																
+																IF stat_eva_rate is null THEN
+																	SET stat_eva_rate = 0;
+																END IF;		
+																
+																IF stat_attend_rate is null THEN
+																	SET stat_attend_rate = 0;
+																END IF;	
+																
+																INSERT INTO pc_zzsh_stat (agency_id, name, code_id, code, parent_id, year, quarter, month, type_id, total, total_success, total_return, total_delay, reported, reported_rate, return_rate, delay_rate,  attend, asence, attend_rate, eva, eva_rate, eva_1, eva_2, eva_3, eva_4, eva_1_rate, eva_2_rate, eva_3_rate, eva_4_rate, agency_goodjob) VALUES
+																(c_id, c_name, c_code_id, c_code, c_parent_id, y, j, m, i, stat_total, stat_total_success, stat_total_return, stat_total_delay, stat_reported, stat_reported_rate, stat_return_rate, stat_delay_rate, stat_attend, stat_asence, stat_attend_rate, stat_eva, stat_eva_rate, stat_eva_1, stat_eva_2, stat_eva_3, stat_eva_4, stat_eva_1_rate, stat_eva_2_rate, stat_eva_3_rate, stat_eva_4_rate, stat_agency_goodjob)
+																ON DUPLICATE KEY UPDATE 
+																name = c_name, code_id = c_code_id, code = c_code, parent_id = c_parent_id,
+																total = stat_total, total_success = stat_total_success,  total_return = stat_total_return,  total_delay = stat_total_delay,  
+																reported = stat_reported, reported_rate = stat_reported_rate,
+																return_rate = stat_return_rate, delay_rate = stat_delay_rate,
+																attend = stat_attend, asence = stat_asence, attend_rate = stat_attend_rate ,
+																eva = stat_eva, eva_rate = stat_eva_rate,  eva_1 = stat_eva_1, eva_2 = stat_eva_2, eva_3 = stat_eva_3, eva_4 = stat_eva_4,
+																eva_1_rate = stat_eva_1_rate, eva_2_rate = stat_eva_2_rate, eva_3_rate = stat_eva_3_rate, eva_4_rate = stat_eva_4_rate,
+																agency_goodjob = stat_agency_goodjob;	
+
+										END IF;
+										
+										IF (i = 5 OR i = 6 OR i =7)  THEN
+												SELECT COUNT(*), sum(attend), sum(asence) into stat_total, stat_attend, stat_asence FROM pc_meeting WHERE agency_id = c_id AND type_id = i AND year =y AND quarter = j AND status_id >= 3;
+												SELECT COUNT(*) into stat_total_delay FROM pc_remind_lock WHERE agency_id = c_id  AND year =y AND quarter = j AND type_id = i AND status = 8;
+												SELECT COUNT(*) into stat_total_return FROM pc_meeting as a left join pc_meeting_content as b on a.id = b.meeting_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = j AND a.status_id >= 3 AND b.type = 2;
+
+												SELECT COUNT(*) into stat_eva FROM pc_meeting WHERE agency_id = c_id AND type_id = i AND year = y AND quarter = j AND status_id = 5;
+												SELECT COUNT(CASE WHEN b.content = 1 THEN a.id END) into stat_eva_1 FROM pc_meeting as a left join pc_meeting_content as b on a.id = b.meeting_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = j AND a.status_id = 5 AND b.type = 4;
+												SELECT COUNT(CASE WHEN b.content = 2 THEN a.id END) into stat_eva_2 FROM pc_meeting as a left join pc_meeting_content as b on a.id = b.meeting_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = j AND a.status_id = 5 AND b.type = 4;
+												SELECT COUNT(CASE WHEN b.content = 3 THEN a.id END) into stat_eva_3 FROM pc_meeting as a left join pc_meeting_content as b on a.id = b.meeting_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = j AND a.status_id = 5 AND b.type = 4;
+												SELECT COUNT(CASE WHEN b.content = 4 THEN a.id END) into stat_eva_4 FROM pc_meeting as a left join pc_meeting_content as b on a.id = b.meeting_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = j AND a.status_id = 5 AND b.type = 4;
 
 												
 												IF (stat_total > 0) THEN
@@ -835,127 +1052,38 @@ begin
 														SET stat_agency_goodjob = 1;
 												END IF;
 														
-												SET m = 0;
-						
-						END IF;
-						
-						IF (i = 8 OR i = 9) THEN
-												SELECT COUNT(*), sum(attend), sum(asence) into stat_total, stat_attend, stat_asence FROM pc_meeting WHERE agency_id = c_id AND type_id = i AND year =y AND quarter = q AND month = m AND status_id >= 3;
-												SELECT COUNT(*) into stat_total_delay FROM pc_remind_lock WHERE agency_id = c_id  AND year =y AND quarter = q AND month = m AND type_id = i AND status = 8;
-												SELECT COUNT(*) into stat_total_return FROM pc_meeting as a left join pc_meeting_content as b on a.id = b.meeting_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = q AND month = m AND a.status_id >= 3 AND b.type = 2;
-
-												SELECT COUNT(*) into stat_eva FROM pc_meeting WHERE agency_id = c_id AND type_id = i AND year = y AND quarter = q AND month = m AND status_id = 5;
-												SELECT COUNT(CASE WHEN b.content = 1 THEN a.id END) into stat_eva_1 FROM pc_meeting as a left join pc_meeting_content as b on a.id = b.meeting_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = q AND month = m AND a.status_id = 5 AND b.type = 4;
-												SELECT COUNT(CASE WHEN b.content = 2 THEN a.id END) into stat_eva_2 FROM pc_meeting as a left join pc_meeting_content as b on a.id = b.meeting_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = q AND month = m AND a.status_id = 5 AND b.type = 4;
-												SELECT COUNT(CASE WHEN b.content = 3 THEN a.id END) into stat_eva_3 FROM pc_meeting as a left join pc_meeting_content as b on a.id = b.meeting_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = q AND month = m AND a.status_id = 5 AND b.type = 4;
-												SELECT COUNT(CASE WHEN b.content = 4 THEN a.id END) into stat_eva_4 FROM pc_meeting as a left join pc_meeting_content as b on a.id = b.meeting_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = q AND month = m AND a.status_id = 5 AND b.type = 4;
-
-												
-												IF (stat_total > 0) THEN
-													SELECT 1 - stat_total_delay, ROUND( (1 - stat_total_delay)/1 , 4) into stat_reported, stat_reported_rate;
-													SET stat_total_success = stat_total - stat_total_delay;
-													
-													IF stat_total_return > 0 THEN
-														SET stat_return_rate = 1;
-													END IF;
-													
-													IF stat_total_delay > 0 THEN
-														SET stat_delay_rate = 1;
-														SET stat_reported_rate = 0;
-													END IF;
-												END IF;
-												
-												
-												IF stat_eva is null THEN
-													SET stat_eva = 0;
-												END IF;												
-												
-												IF stat_eva_1 is null THEN
-													SET stat_eva_1 = 0;
+												IF stat_reported_rate is null THEN
+													SET stat_reported_rate = 0;
 												END IF;	
 												
-												IF stat_eva_2 is null THEN
-													SET stat_eva_2 = 0;
-												END IF;			
-												
-												IF stat_eva_3 is null THEN
-													SET stat_eva_3 = 0;
-												END IF;			
-
-												IF stat_eva_4 is null THEN
-													SET stat_eva_4 = 0;
-												END IF;														
-												
-												SET stat_eva_rate = ROUND(stat_eva/stat_total, 4);
-												SET stat_eva_1_rate = ROUND(stat_eva_1/stat_eva, 4);
-												SET stat_eva_2_rate = ROUND(stat_eva_2/stat_eva, 4);
-												SET stat_eva_3_rate = ROUND(stat_eva_3/stat_eva, 4);
-												SET stat_eva_4_rate = ROUND(stat_eva_4/stat_eva, 4);					
-												
-												IF stat_eva_1_rate is null THEN
-													SET stat_eva_1_rate = 0;
-												END IF;	
-												
-												IF stat_eva_2_rate is null THEN
-													SET stat_eva_2_rate = 0;
-												END IF;			
-												
-												IF stat_eva_3_rate is null THEN
-													SET stat_eva_3_rate = 0;
-												END IF;			
-
-												IF stat_eva_4_rate is null THEN
-													SET stat_eva_4_rate = 0;
-												END IF;													
-												
-												
-												IF stat_attend is null THEN
-													SET stat_attend = 0;
-												END IF;
-												
-												IF stat_asence is null THEN
-													SET stat_asence = 0;
-												END IF;			
-												
-												IF stat_attend >= stat_asence THEN
-													SELECT ROUND(  (stat_attend - stat_asence)/ stat_attend , 4) into stat_attend_rate;
-												ELSEIF stat_attend = 0 THEN
-													SET stat_attend_rate = 0;
+												IF stat_eva_rate is null THEN
+													SET stat_eva_rate = 0;
 												END IF;		
 												
-												IF  stat_reported_rate = 1 THEN
-														SET stat_agency_goodjob = 1;
-												END IF;
-																											
-																
-						END IF;
+												IF stat_attend_rate is null THEN
+													SET stat_attend_rate = 0;
+												END IF;	
+												
+												INSERT INTO pc_zzsh_stat (agency_id, name, code_id, code, parent_id, year, quarter, month, type_id, total, total_success, total_return, total_delay, reported, reported_rate, return_rate, delay_rate,  attend, asence, attend_rate, eva, eva_rate, eva_1, eva_2, eva_3, eva_4, eva_1_rate, eva_2_rate, eva_3_rate, eva_4_rate, agency_goodjob) VALUES
+												(c_id, c_name, c_code_id, c_code, c_parent_id, y, j, m, i, stat_total, stat_total_success, stat_total_return, stat_total_delay, stat_reported, stat_reported_rate, stat_return_rate, stat_delay_rate, stat_attend, stat_asence, stat_attend_rate, stat_eva, stat_eva_rate, stat_eva_1, stat_eva_2, stat_eva_3, stat_eva_4, stat_eva_1_rate, stat_eva_2_rate, stat_eva_3_rate, stat_eva_4_rate, stat_agency_goodjob)
+												ON DUPLICATE KEY UPDATE 
+												name = c_name, code_id = c_code_id, code = c_code, parent_id = c_parent_id,
+												total = stat_total, total_success = stat_total_success,  total_return = stat_total_return,  total_delay = stat_total_delay,  
+												reported = stat_reported, reported_rate = stat_reported_rate,
+												return_rate = stat_return_rate, delay_rate = stat_delay_rate,
+												attend = stat_attend, asence = stat_asence, attend_rate = stat_attend_rate ,
+												eva = stat_eva, eva_rate = stat_eva_rate,  eva_1 = stat_eva_1, eva_2 = stat_eva_2, eva_3 = stat_eva_3, eva_4 = stat_eva_4,
+												eva_1_rate = stat_eva_1_rate, eva_2_rate = stat_eva_2_rate, eva_3_rate = stat_eva_3_rate, eva_4_rate = stat_eva_4_rate,
+												agency_goodjob = stat_agency_goodjob;															
 						
---						SELECT c_id, c_name, stat_attend_rate, i;
-						
-						IF stat_reported_rate is null THEN
-							SET stat_reported_rate = 0;
-						END IF;	
-						
-						IF stat_eva_rate is null THEN
-							SET stat_eva_rate = 0;
-						END IF;		
-						
-						IF stat_attend_rate is null THEN
-							SET stat_attend_rate = 0;
-						END IF;										
-							
-						INSERT INTO pc_zzsh_stat (agency_id, name, code_id, code, parent_id, year, quarter, month, type_id, total, total_success, total_return, total_delay, reported, reported_rate, return_rate, delay_rate,  attend, asence, attend_rate, eva, eva_rate, eva_1, eva_2, eva_3, eva_4, eva_1_rate, eva_2_rate, eva_3_rate, eva_4_rate, agency_goodjob) VALUES
-						(c_id, c_name, c_code_id, c_code, c_parent_id, y, q, m, i, stat_total, stat_total_success, stat_total_return, stat_total_delay, stat_reported, stat_reported_rate, stat_return_rate, stat_delay_rate, stat_attend, stat_asence, stat_attend_rate, stat_eva, stat_eva_rate, stat_eva_1, stat_eva_2, stat_eva_3, stat_eva_4, stat_eva_1_rate, stat_eva_2_rate, stat_eva_3_rate, stat_eva_4_rate, stat_agency_goodjob)
-						ON DUPLICATE KEY UPDATE 
-						name = c_name, code_id = c_code_id, code = c_code, parent_id = c_parent_id,
-						total = stat_total, total_success = stat_total_success,  total_return = stat_total_return,  total_delay = stat_total_delay,  
-						reported = stat_reported, reported_rate = stat_reported_rate,
-						return_rate = stat_return_rate, delay_rate = stat_delay_rate,
-						attend = stat_attend, asence = stat_asence, attend_rate = stat_attend_rate ,
-						eva = stat_eva, eva_rate = stat_eva_rate,  eva_1 = stat_eva_1, eva_2 = stat_eva_2, eva_3 = stat_eva_3, eva_4 = stat_eva_4,
-						eva_1_rate = stat_eva_1_rate, eva_2_rate = stat_eva_2_rate, eva_3_rate = stat_eva_3_rate, eva_4_rate = stat_eva_4_rate,
-						agency_goodjob = stat_agency_goodjob;
-						
+										END IF;										
+										
+									
+										
+										
+								
+								SET j = j + 1;		
+								end while;
 						set i=i+1;
 					end while;
 
@@ -964,7 +1092,312 @@ begin
 		end loop cursor_loop;
 		close s_cursor;
 		
+end;
+//
+delimiter ;
+
+
+delimiter //
+DROP procedure IF EXISTS stat_zzsh_month//
+CREATE PROCEDURE stat_zzsh_month()
+begin
+	DECLARE c_id int(11) unsigned;
+	DECLARE c_parent_id int(11) unsigned;
+	DECLARE c_name VARCHAR(255);
+	DECLARE c_code VARCHAR(20);
+	DECLARE c_code_id int(11) unsigned;
+	DECLARE done int default 0;
+	
+	DECLARE y year(4);
+	DECLARE q tinyint(1) unsigned;
+	DECLARE m smallint(5) unsigned;
+
+	DECLARE rows int default 0;
+	DECLARE row int default 0;
+	DECLARE i int;
+	DECLARE j int;
+	
+	DECLARE stat_reported int(10) unsigned;
+	DECLARE stat_reported_rate DECIMAL(6,4) unsigned;	
+	
+	DECLARE stat_total int(10) unsigned;
+	DECLARE stat_total_success int(10) unsigned;
+	DECLARE stat_total_return int(10) unsigned;
+	DECLARE stat_total_delay int(10) unsigned;
+	DECLARE stat_return_rate DECIMAL(6,4) unsigned;
+	DECLARE stat_delay_rate DECIMAL(6,4) unsigned;
+	
+	
+	DECLARE stat_attend int(10) unsigned;
+	DECLARE stat_asence int(10) unsigned;
+	DECLARE stat_attend_rate DECIMAL(6,4) unsigned;
+
+	DECLARE stat_eva int(10) unsigned;
+	DECLARE stat_eva_rate DECIMAL(6,4) unsigned;
+	DECLARE stat_eva_1 int(10) unsigned;
+	DECLARE stat_eva_2 int(10) unsigned;
+	DECLARE stat_eva_3 int(10) unsigned;
+	DECLARE stat_eva_4 int(10) unsigned;
+	
+	DECLARE stat_eva_1_rate DECIMAL(6,4) unsigned;
+	DECLARE stat_eva_2_rate DECIMAL(6,4) unsigned;
+	DECLARE stat_eva_3_rate DECIMAL(6,4) unsigned;
+	DECLARE stat_eva_4_rate DECIMAL(6,4) unsigned;
+
+	DECLARE stat_agency_goodjob int(10) unsigned;
+
+	
+	DECLARE s_cursor CURSOR FOR SELECT a.id, a.name, a.code_id, a.code, b.parent_id FROM  pc_agency as a left join pc_agency_relation as b on a.id = b.agency_id WHERE a. code_id = 10;
+	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done=1;
+	
+	  open s_cursor; 
+	  SELECT FOUND_ROWS() into rows;
+	  SET row = 0;
+		cursor_loop:loop
+				FETCH s_cursor into c_id, c_name, c_code_id, c_code, c_parent_id;
+--				SELECT c_id, c_name;
+
+				IF row >= rows then
+					leave cursor_loop;
+				end if;
+				SET i = 8;
+				IF c_parent_id is not null THEN
+					while i <= 9 do	
+						SET y = year(now());
+						SET q = quarter(now());
+						SET m = month(now());
+					
+					  IF (i = 8 OR i = 9) THEN
+							SET j = 1;
+							WHILE j <= m DO
+											SET  stat_reported = 0;
+											SET  stat_reported_rate = 0;
+											
+											SET  stat_total = 0;
+											SET  stat_total_success = 0;
+											SET  stat_total_return = 0;
+											SET  stat_total_delay = 0;
+											SET  stat_return_rate = 0;
+											SET  stat_delay_rate = 0;
+					
+											SET  stat_attend = 0;
+											SET  stat_asence = 0;
+											SET  stat_attend_rate  = 0;
+										
+											SET  stat_eva = 0;
+											SET  stat_eva_rate  = 0;
+											SET  stat_eva_1 = 0;
+											SET  stat_eva_2 = 0;
+											SET  stat_eva_3 = 0;
+											SET  stat_eva_4 = 0;
+											SET  stat_eva_1_rate = 0;
+											SET  stat_eva_2_rate = 0;
+											SET  stat_eva_3_rate = 0;
+											SET  stat_eva_4_rate = 0;								
+										  SET  stat_agency_goodjob = 0;
+					
+											
+											
+											
+													IF j < 4 THEN
+														SET q = 1;
+													END IF;
+													
+													IF (j > 3 AND j < 7) THEN
+														SET q = 2;
+													END IF;
+													
+													IF (j > 6 AND j < 10) THEN
+														SET q = 3;
+													END IF;
+													
+													IF (j > 9) THEN
+														SET q = 4;
+													END IF;									
+													
+											
+													SELECT COUNT(*), sum(attend), sum(asence) into stat_total, stat_attend, stat_asence FROM pc_meeting WHERE agency_id = c_id AND type_id = i AND year =y AND quarter = q AND month = j AND status_id >= 3;
+													SELECT COUNT(*) into stat_total_delay FROM pc_remind_lock WHERE agency_id = c_id  AND year =y AND quarter = q AND month = j AND type_id = i AND status = 8;
+													SELECT COUNT(*) into stat_total_return FROM pc_meeting as a left join pc_meeting_content as b on a.id = b.meeting_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = q AND month = j AND a.status_id >= 3 AND b.type = 2;
+	
+													SELECT COUNT(*) into stat_eva FROM pc_meeting WHERE agency_id = c_id AND type_id = i AND year = y AND quarter = q AND month = j AND status_id = 5;
+													SELECT COUNT(CASE WHEN b.content = 1 THEN a.id END) into stat_eva_1 FROM pc_meeting as a left join pc_meeting_content as b on a.id = b.meeting_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = q AND month = j AND a.status_id = 5 AND b.type = 4;
+													SELECT COUNT(CASE WHEN b.content = 2 THEN a.id END) into stat_eva_2 FROM pc_meeting as a left join pc_meeting_content as b on a.id = b.meeting_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = q AND month = j AND a.status_id = 5 AND b.type = 4;
+													SELECT COUNT(CASE WHEN b.content = 3 THEN a.id END) into stat_eva_3 FROM pc_meeting as a left join pc_meeting_content as b on a.id = b.meeting_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = q AND month = j AND a.status_id = 5 AND b.type = 4;
+													SELECT COUNT(CASE WHEN b.content = 4 THEN a.id END) into stat_eva_4 FROM pc_meeting as a left join pc_meeting_content as b on a.id = b.meeting_id WHERE a.agency_id = c_id AND a.type_id = i AND a.year =y AND a.quarter = q AND month = j AND a.status_id = 5 AND b.type = 4;
+					
+													
+													IF (stat_total > 0) THEN
+														SELECT 1 - stat_total_delay, ROUND( (1 - stat_total_delay)/1 , 4) into stat_reported, stat_reported_rate;
+														SET stat_total_success = stat_total - stat_total_delay;
+														
+														IF stat_total_return > 0 THEN
+															SET stat_return_rate = 1;
+														END IF;
+														
+														IF stat_total_delay > 0 THEN
+															SET stat_delay_rate = 1;
+															SET stat_reported_rate = 0;
+														END IF;
+													END IF;
+													
+																	
+													IF stat_eva is null THEN
+														SET stat_eva = 0;
+													END IF;												
+													
+													IF stat_eva_1 is null THEN
+														SET stat_eva_1 = 0;
+													END IF;	
+													
+													IF stat_eva_2 is null THEN
+														SET stat_eva_2 = 0;
+													END IF;			
+													
+													IF stat_eva_3 is null THEN
+														SET stat_eva_3 = 0;
+													END IF;			
+	
+													IF stat_eva_4 is null THEN
+														SET stat_eva_4 = 0;
+													END IF;														
+																	
+													SET stat_eva_rate = ROUND(stat_eva/stat_total, 4);
+													SET stat_eva_1_rate = ROUND(stat_eva_1/stat_eva, 4);
+													SET stat_eva_2_rate = ROUND(stat_eva_2/stat_eva, 4);
+													SET stat_eva_3_rate = ROUND(stat_eva_3/stat_eva, 4);
+													SET stat_eva_4_rate = ROUND(stat_eva_4/stat_eva, 4);					
+													
+													IF stat_eva_1_rate is null THEN
+														SET stat_eva_1_rate = 0;
+													END IF;	
+													
+													IF stat_eva_2_rate is null THEN
+														SET stat_eva_2_rate = 0;
+													END IF;			
+													
+													IF stat_eva_3_rate is null THEN
+														SET stat_eva_3_rate = 0;
+													END IF;			
+	
+													IF stat_eva_4_rate is null THEN
+														SET stat_eva_4_rate = 0;
+													END IF;													
+													
+													
+													IF stat_attend is null THEN
+														SET stat_attend = 0;
+													END IF;
+													
+													IF stat_asence is null THEN
+														SET stat_asence = 0;
+													END IF;			
+													
+													IF stat_attend >= stat_asence THEN
+														SELECT ROUND(  (stat_attend - stat_asence)/ stat_attend , 4) into stat_attend_rate;
+													ELSEIF stat_attend = 0 THEN
+														SET stat_attend_rate = 0;
+													END IF;		
+													
+													IF  stat_reported_rate = 1 THEN
+															SET stat_agency_goodjob = 1;
+													END IF;
+																
+																
+													IF stat_reported_rate is null THEN
+														SET stat_reported_rate = 0;
+													END IF;	
+													
+													IF stat_eva_rate is null THEN
+														SET stat_eva_rate = 0;
+													END IF;		
+													
+													IF stat_attend_rate is null THEN
+														SET stat_attend_rate = 0;
+													END IF;										
+																		
+													INSERT INTO pc_zzsh_stat (agency_id, name, code_id, code, parent_id, year, quarter, month, type_id, total, total_success, total_return, total_delay, reported, reported_rate, return_rate, delay_rate,  attend, asence, attend_rate, eva, eva_rate, eva_1, eva_2, eva_3, eva_4, eva_1_rate, eva_2_rate, eva_3_rate, eva_4_rate, agency_goodjob) VALUES
+													(c_id, c_name, c_code_id, c_code, c_parent_id, y, q, j, i, stat_total, stat_total_success, stat_total_return, stat_total_delay, stat_reported, stat_reported_rate, stat_return_rate, stat_delay_rate, stat_attend, stat_asence, stat_attend_rate, stat_eva, stat_eva_rate, stat_eva_1, stat_eva_2, stat_eva_3, stat_eva_4, stat_eva_1_rate, stat_eva_2_rate, stat_eva_3_rate, stat_eva_4_rate, stat_agency_goodjob)
+													ON DUPLICATE KEY UPDATE 
+													name = c_name, code_id = c_code_id, code = c_code, parent_id = c_parent_id,
+													total = stat_total, total_success = stat_total_success,  total_return = stat_total_return,  total_delay = stat_total_delay,  
+													reported = stat_reported, reported_rate = stat_reported_rate,
+													return_rate = stat_return_rate, delay_rate = stat_delay_rate,
+													attend = stat_attend, asence = stat_asence, attend_rate = stat_attend_rate ,
+													eva = stat_eva, eva_rate = stat_eva_rate,  eva_1 = stat_eva_1, eva_2 = stat_eva_2, eva_3 = stat_eva_3, eva_4 = stat_eva_4,
+													eva_1_rate = stat_eva_1_rate, eva_2_rate = stat_eva_2_rate, eva_3_rate = stat_eva_3_rate, eva_4_rate = stat_eva_4_rate,
+													agency_goodjob = stat_agency_goodjob;										
+	
+									
+									SET j = j + 1;		
+									end while;
+							END IF;
+						set i=i+1;
+					end while;
+
+				END IF;
+				SET row = row + 1;
+		end loop cursor_loop;
+		close s_cursor;
 		
+end;
+//
+delimiter ;
+
+
+delimiter //
+DROP procedure IF EXISTS stat_zzsh_new_year//
+CREATE PROCEDURE stat_zzsh_new_year()
+begin
+	DECLARE c_id int(11) unsigned;
+	DECLARE c_parent_id int(11) unsigned;
+	DECLARE c_name VARCHAR(255);
+	DECLARE c_code VARCHAR(20);
+	DECLARE c_code_id int(11) unsigned;
+	DECLARE done int default 0;
+	
+	DECLARE y year(4);
+	DECLARE q tinyint(1) unsigned;
+	DECLARE m smallint(5) unsigned;
+
+	DECLARE rows int default 0;
+	DECLARE row int default 0;
+	DECLARE i int;
+	DECLARE j int;
+	
+	DECLARE stat_reported int(10) unsigned;
+	DECLARE stat_reported_rate DECIMAL(6,4) unsigned;	
+	
+	DECLARE stat_total int(10) unsigned;
+	DECLARE stat_total_success int(10) unsigned;
+	DECLARE stat_total_return int(10) unsigned;
+	DECLARE stat_total_delay int(10) unsigned;
+	DECLARE stat_return_rate DECIMAL(6,4) unsigned;
+	DECLARE stat_delay_rate DECIMAL(6,4) unsigned;
+	
+	
+	DECLARE stat_attend int(10) unsigned;
+	DECLARE stat_asence int(10) unsigned;
+	DECLARE stat_attend_rate DECIMAL(6,4) unsigned;
+
+	DECLARE stat_eva int(10) unsigned;
+	DECLARE stat_eva_rate DECIMAL(6,4) unsigned;
+	DECLARE stat_eva_1 int(10) unsigned;
+	DECLARE stat_eva_2 int(10) unsigned;
+	DECLARE stat_eva_3 int(10) unsigned;
+	DECLARE stat_eva_4 int(10) unsigned;
+	
+	DECLARE stat_eva_1_rate DECIMAL(6,4) unsigned;
+	DECLARE stat_eva_2_rate DECIMAL(6,4) unsigned;
+	DECLARE stat_eva_3_rate DECIMAL(6,4) unsigned;
+	DECLARE stat_eva_4_rate DECIMAL(6,4) unsigned;
+
+	DECLARE stat_agency_goodjob int(10) unsigned;
+
+	
+	DECLARE s_cursor CURSOR FOR SELECT a.id, a.name, a.code_id, a.code, b.parent_id FROM  pc_agency as a left join pc_agency_relation as b on a.id = b.agency_id WHERE a. code_id = 10;
+	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done=1;
+	
 --  处理跨年和跨季度的情况 开始
 	  open s_cursor; 
 	  SELECT FOUND_ROWS() into rows;
@@ -1185,8 +1618,7 @@ begin
 									eva_1_rate = stat_eva_1_rate, eva_2_rate = stat_eva_2_rate, eva_3_rate = stat_eva_3_rate, eva_4_rate = stat_eva_4_rate,
 									agency_goodjob = stat_agency_goodjob;			
 
-						END IF;						
-						
+						END IF;	
 						
 						set i=i+1;
 					end while;
@@ -1197,11 +1629,10 @@ begin
 		close s_cursor;		
 		
 --  处理跨年和跨季度的情况 结束		
-		
-
 end;
 //
 delimiter ;
+
 
 
 
@@ -1379,7 +1810,10 @@ BEGIN
         		CALL proc_agency_stats();
         		CALL proc_parent_stats();
         		CALL check_remind_lock();
-            CALL stat_zzsh();
+            CALL stat_zzsh_year();
+            CALL stat_zzsh_quarter();
+            CALL stat_zzsh_month();
+            CALL stat_zzsh_new_year();
 --            CALL stat_zzsh_stat();            
         END IF;
         SELECT RELEASE_LOCK('event_stats_lock_isfree');
