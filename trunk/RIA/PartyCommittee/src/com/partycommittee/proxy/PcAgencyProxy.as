@@ -45,6 +45,11 @@ package com.partycommittee.proxy
 		public function updateAgency(agency:PcAgencyVo):void {
 			service.updateAgency(agency);
 		}
+
+		public function moveAgency(agency:PcAgencyVo):void {
+			service.moveAgency(agency);
+		}
+		
 		
 	}
 }

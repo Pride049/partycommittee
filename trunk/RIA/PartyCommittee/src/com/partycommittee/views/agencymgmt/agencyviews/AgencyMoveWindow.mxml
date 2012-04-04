@@ -25,6 +25,8 @@
 			
 			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
+			import mx.core.FlexGlobals;
+			import mx.events.CloseEvent;
 			import mx.events.CollectionEvent;
 			import mx.events.PropertyChangeEvent;
 			import mx.managers.PopUpManager;
@@ -62,7 +64,7 @@
 			public function set agency(value:PcAgencyVo):void {
 				this._agency = value;
 			}
-			
+						
 			[Bindable]
 			private var model:ModelLocator = ModelLocator.getInstance();
 			
@@ -82,9 +84,7 @@
 				
 				codeDescription = AgencyCodeUtil.getAgencyCodeDes(agency.codeId);
 				nameTxt.text = agency.name;
-//				personChooseBox.member = agency.member;
-				telTxt.text = agency.tel;
-				commentTxt.text = agency.comment;
+
 				
 				var agencyEvent:PcAgencyEvent = new PcAgencyEvent(PcAgencyEvent.GET_ROOT_AGENCY_FOR_PRIVILEGE);
 				agencyEvent.userId = 1;
@@ -97,73 +97,59 @@
 				dp = new ArrayCollection();
 				var rootItem:Node = TreeMgr.getInstance().createItem(data as PcAgencyVo);
 				dp.addItem(rootItem);
-				dp.addEventListener(CollectionEvent.COLLECTION_CHANGE, onCollectionChanged);
-				updateTreeData();
-				//				dpHandler(dp);
 			}			
-			
-			private function onCollectionChanged(event:CollectionEvent):void {
-				// If is "ckSelected" changed, do nothing. 
-				// Else call updateData() to update new items' selection.
-				var needUpdate:Boolean = true;
-				if (event.items && event.items.length > 0) {
-					for each (var evtItem:PropertyChangeEvent in event.items) {
-						if (evtItem.property == "ckSelected") {
-							needUpdate = false;
-							break;
-						}
-					}
-				}
-				if (needUpdate) {
-					updateTreeData();
-				}
-			}		
-			
-			private function updateTreeData():void {
-				
-				updateSelection(dp);
-			}			
-			
-			private function updateSelection(nodes:ArrayCollection):void {
-				for each (var node:Node in nodes) {
-					if (node.children && node.children.length) {
-						updateSelection(node.children);
-					}
-				}
-			}
-			
-			private function getSelection(nodes:ArrayCollection):void {
-				for each (var node:Node in nodes) {
-					if (node.children && node.children.length) {
-						getSelection(node.children);
-					}
-//					var agency:PcAgencyVo = node.entity as PcAgencyVo;
-//					if (node.ckSelected) {
-//						this._agencyIdArry.push(agency.id);
-//					} else {
-//						if (!this._cloneIdArry || !this._cloneIdArry.length) {
-//							continue;
-//						}
-//						var len:int = this._cloneIdArry.length;
-//						while (len--) {
-//							if (this._cloneIdArry[len] == agency.id) {
-//								this._cloneIdArry.splice(len, 1);
-//								continue;
-//							}
-//						}
-//					}
-				}
-			}			
-			
 			
 			private function save():void {
-				doUpdate();
+				var node:Node = this.privilegeTree.selectedItem as Node;
+				
+				if (!node) {
+					Alert.show("请选择划转目标!");
+					return;
+				}
+				var agencyVo:PcAgencyVo = node.entity as PcAgencyVo;
+				if (!agencyVo) {
+					return;
+				}
+				
+				if (agencyVo.id == parentAgency.id) {
+					Alert.show("当前选择支部与之前支部相同!");
+					return;
+				}
+				
+				Alert.show("确定将要划转到【" + agencyVo.name + "】？", "提示", 
+					Alert.YES | Alert.NO, FlexGlobals.topLevelApplication.root, onMoveAlertClose);
+				
 			}
 			
+			private function onMoveAlertClose(event:CloseEvent):void {
+				if (event.detail == Alert.YES) {
+					doUpdate();
+				}
+			}			
+			
 			private function doUpdate():void {
-				var updateAgency:PcAgencyVo = getUpdateAgency();
+				
+				var node:Node = this.privilegeTree.selectedItem as Node;
+
+				var agencyVo:PcAgencyVo = node.entity as PcAgencyVo;
+				if (!agencyVo) {
+					return;
+				}				
+				
+				
+				var updateAgency:PcAgencyVo = new PcAgencyVo();
+				
+				updateAgency.parentId = agencyVo.id;
+				updateAgency.id = agency.id;				
+				updateAgency.name = agency.name;
+				updateAgency.code = agency.code;
+				updateAgency.codeId = agency.codeId;
+				updateAgency.setupDatetime = agency.setupDatetime;
+				updateAgency.pcount = agency.pcount;
+				updateAgency.zbnum = agency.zbnum;
+				
 				if (updateAgency) {
-					var evt:PcAgencyEvent = new PcAgencyEvent(CRUDEventType.UPDATE, updateAgency);
+					var evt:PcAgencyEvent = new PcAgencyEvent(CRUDEventType.MOVE, updateAgency);
 					evt.successCallback = onCallbackSuccessed;
 					evt.failureCallback = onCallbackFailure;
 					evt.dispatch();
@@ -176,29 +162,13 @@
 				// Dispatch event to update tree.
 				model.tree.dispatchEvent(new TreeOperationEvent(
 				TreeOperationEvent.NODE_CHANGED, model.tree.selectedItem));
-				
-				
-				
-//				var agencyEvent:PcAgencyEvent = new PcAgencyEvent(PcAgencyEvent.GET_ROOT_AGENCY_BY_USERID);
-//				agencyEvent.userId = model.loginUser.id;
-//				agencyEvent.dispatch();		
+
 				close();
 			}
 						
 			private function onCallbackFailure(info:Object, evt:PcAgencyEvent):void {
 				this.enabled = true;
 				Alert.show(info.toString());
-			}
-			
-			private function getNewAgency():PcAgencyVo {
-				var agencyVo:PcAgencyVo = new PcAgencyVo();
-				agencyVo.parentId = parentAgency.id;
-				agencyVo.codeId = agencyCodeId;
-//				agencyVo.code = agency.code;
-				agencyVo.name = nameTxt.text;
-				agencyVo.tel = telTxt.text;
-				agencyVo.comment = commentTxt.text;
-				return agencyVo;
 			}
 			
 			private function getUpdateAgency():PcAgencyVo {
@@ -211,12 +181,8 @@
 				agencyVo.codeId = agency.codeId;
 				agencyVo.code = agency.code;
 				agencyVo.name = nameTxt.text;
-//				if (personChooseBox.member) {
-//					agencyVo.memberId = personChooseBox.member.id;
-//				}
+
 				agencyVo.setupDatetime = agency.setupDatetime;
-				agencyVo.tel = telTxt.text;
-				agencyVo.comment = commentTxt.text;
 				return agencyVo;
 			}
 		]]>
@@ -234,16 +200,10 @@
 				<mx:Label width="100%" text="{codeDescription}"/>
 			</mx:FormItem>
 			<mx:FormItem label="组织名称:" required="true" width="100%">
-				<mx:TextInput id="nameTxt" width="100%" enabled="false"/>
-			</mx:FormItem>
-
-			<mx:FormItem label="电话号码:" width="100%">
-				<mx:TextInput id="telTxt" width="150" restrict="0-9\-" enabled="false"/>
-			</mx:FormItem>
-			<mx:FormItem label="描述:" width="100%">
-				<mx:TextArea id="commentTxt" width="100%" height="80" enabled="false"/>
+				<mx:Label id="nameTxt" width="100%"/>
 			</mx:FormItem>
 		</mx:Form>
+		<mx:Label text="划转到:"/>
 		<tree:LoadingParentTree id="privilegeTree" width="100%" height="100%" dataProvider="{dp}"
 						  />
 		<mx:ControlBar width="100%" horizontalAlign="center">

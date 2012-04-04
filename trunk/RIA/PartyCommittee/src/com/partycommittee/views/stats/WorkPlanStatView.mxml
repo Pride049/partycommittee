@@ -110,8 +110,8 @@
 				
 				var numericDataSort:Sort = new Sort();
 				var dataSortField:SortField = new SortField(); 
-				dataSortField.name = "agencyId"; 
-				dataSortField.numeric = true;
+				dataSortField.name = "code"; 
+//				dataSortField.numeric = true;
 				numericDataSort.fields = [dataSortField];
 				dp.sort = numericDataSort;
 				dp.refresh();
@@ -133,6 +133,7 @@
 						vo.name = "    " + dp.getItemAt(i).name;
 					}
 					vo.agencyId = dp.getItemAt(i).agencyId;
+					vo.code = dp.getItemAt(i).code;
 					//年度计划
 					if (dp.getItemAt(i).typeId == 1) {
 						vo.y_reported_rate = dp.getItemAt(i).reportedRate;
@@ -191,6 +192,14 @@
 					}
 					
 				}
+				
+//				var numericDataSort:Sort = new Sort();
+//				var dataSortField:SortField = new SortField(); 
+//				dataSortField.name = "code"; 
+//				//				dataSortField.numeric = true;
+//				numericDataSort.fields = [dataSortField];
+//				datas.sort = numericDataSort;
+//				datas.refresh();					
 				
 				workPlanStatsDG.dataProvider = datas;
 			}

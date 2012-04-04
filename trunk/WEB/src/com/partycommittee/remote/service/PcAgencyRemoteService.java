@@ -124,6 +124,11 @@ public class PcAgencyRemoteService {
 	}
 	
 	@RemotingInclude
+	public void moveAgency(PcAgencyVo agencyVo) {
+		pcAgencyService.moveAgency(agencyVo);
+	}	
+	
+	@RemotingInclude
 	public void deleteAgency(PcAgencyVo agencyVo) {
 		pcAgencyService.deleteAgency(agencyVo);
 	}

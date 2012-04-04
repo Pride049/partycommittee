@@ -501,7 +501,7 @@ begin
 				SUM(fnwy_num) as fnwy_num,
 				SUM(bmwy_num) as bmwy_num
 				FROM pc_agency_stats 
-				WHERE code like CONCAT (c_code, '%') ) AS T1
+				WHERE code like CONCAT (c_code, '%') and code_id = 10 ) AS T1
 				ON DUPLICATE KEY UPDATE 
 				name = c_name, 
 				code_id = c_code_id, 
@@ -1634,153 +1634,6 @@ end;
 delimiter ;
 
 
-
-
-delimiter //
-DROP procedure IF EXISTS stat_zzsh_stat//
-CREATE PROCEDURE stat_zzsh_stat()
-begin
-	DECLARE done int default 0;
-	DECLARE c_id int(11) unsigned;
-	DECLARE c_name VARCHAR(255);
-	DECLARE c_code VARCHAR(20);
-	DECLARE c_code_id int(11) unsigned;	
-	DECLARE c_parent_id int(11) unsigned;
-	
-	DECLARE y year(4);
-	DECLARE q tinyint(1) unsigned;
-
-	DECLARE rows int default 0;
-	DECLARE row int default 0;
-	DECLARE i int;
-	
-  DECLARE s_cursor CURSOR FOR SELECT a.id, a.name, a.code_id, a.code, b.parent_id FROM  pc_agency as a left join pc_agency_relation as b on a.id = b.agency_id WHERE a.code_id in (7,8,15);
-	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done=1;
-
-  open s_cursor; 
-  SELECT FOUND_ROWS() into rows;
-  SET row = 0;
-	cursor_loop:loop
-			FETCH s_cursor into c_id, c_name, c_code_id, c_code, c_parent_id;
---			SELECT c_id;
-			IF row >= rows then
-				leave cursor_loop;
-			end if;
-						
-			INSERT INTO pc_zzsh_stat (agency_id, name, code_id, code, parent_id, year, quarter, month, type_id, total, total_success, total_return, total_delay, reported, reported_rate, return_rate, delay_rate,  attend, asence, attend_rate, eva, eva_rate, eva_1, eva_2, eva_3, eva_4, eva_1_rate, eva_2_rate, eva_3_rate, eva_4_rate, agency_goodjob)
-			SELECT * FROM
-			(SELECT c_id as agency_id, c_name as name, c_code_id as code_id, c_code as code, c_parent_id as parent_id, T1.year, T1.quarter, T1.month, T1.type_id, T1.total, T1.total_success, T1.total_return, T1.total_delay, T1.reported,
-		  (CASE WHEN T1.reported_rate is NULL THEN 0 ELSE T1.reported_rate END) as reported_rate, 
-		  (CASE WHEN T1.return_rate is NULL THEN 0 ELSE T1.return_rate END) as return_rate, 
-		  (CASE WHEN T1.delay_rate is NULL THEN 0 ELSE T1.delay_rate END) as delay_rate, 
-		  T1.attend, T1.asence, 
-		  (CASE WHEN T1.attend_rate is NULL THEN 0 ELSE T1.attend_rate END) as attend_rate, 
-		  T1.eva, 
-		  (CASE WHEN T1.eva_rate is NULL THEN 0 ELSE T1.eva_rate END) as eva_rate, 
-		  T1.eva_1, T1.eva_2, T1.eva_3, T1.eva_4,
-		  (CASE WHEN T1.eva_1_rate is NULL THEN 0 ELSE T1.eva_1_rate END) as eva_1_rate, 
-		  (CASE WHEN T1.eva_2_rate is NULL THEN 0 ELSE T1.eva_2_rate END) as eva_2_rate, 
-		  (CASE WHEN T1.eva_3_rate is NULL THEN 0 ELSE T1.eva_3_rate END) as eva_3_rate, 
-		  (CASE WHEN T1.eva_4_rate is NULL THEN 0 ELSE T1.eva_4_rate END) as eva_4_rate, 
-		  T1.agency_goodjob FROM 
-			(SELECT YEAR, quarter, month, type_id, 
-					 SUM(total) as total, 
-					 SUM(total_success) as total_success, 
-					 SUM(total_return) as total_return, 
-					 SUM(total_delay) as total_delay, 
-					 SUM(  reported ) as reported , 
-					 ROUND( COUNT(CASE WHEN reported_rate = 1 THEN agency_id END)/COUNT(*), 4) reported_rate,
-					 ROUND( COUNT(CASE WHEN return_rate = 1 THEN agency_id END)/COUNT(*), 4) return_rate,
-					 ROUND( COUNT(CASE WHEN delay_rate = 1 THEN agency_id END)/COUNT(*), 4) delay_rate,
-					 SUM(  attend ) as attend , 
-					 SUM(  asence ) as asence , 
-					 ROUND(SUM(attend_rate)/COUNT(CASE WHEN total > 0 THEN total END), 4) as attend_rate,
-					 SUM(eva) as eva,
-					 ROUND(SUM(eva)/SUM(total), 4) as eva_rate, 
-					 SUM(eva_1) as eva_1,
-					 SUM(eva_2) as eva_2,
-					 SUM(eva_3) as eva_3,
-					 SUM(eva_4) as eva_4,
-					 ROUND(SUM(eva_1)/SUM(eva), 4) as eva_1_rate, 
-					 ROUND(SUM(eva_2)/SUM(eva), 4) as eva_2_rate, 
-					 ROUND(SUM(eva_3)/SUM(eva), 4) as eva_3_rate, 
-					 ROUND(SUM(eva_4)/SUM(eva), 4) as eva_4_rate, 
-					 COUNT(CASE WHEN reported_rate = 1 THEN agency_id END) as agency_goodjob
-			FROM  pc_zzsh_stat where code like CONCAT (c_code, '%') AND code_id = 10
-			GROUP BY YEAR, quarter, month, type_id )  as T1
-			) as T2
-			ON DUPLICATE KEY UPDATE 
-									name = c_name, code_id = c_code_id, code = c_code, parent_id = c_parent_id,
-									total = T2.total, total_success = T2.total_success,  total_return = T2.total_return,  total_delay = T2.total_delay,  
-									reported = T2.reported, reported_rate = T2.reported_rate, 
-									return_rate = T2.return_rate, delay_rate = T2.delay_rate,
-									attend = T2.attend, asence = T2.asence, attend_rate = T2.attend_rate ,
-									eva = T2.eva, eva_rate = T2.eva_rate,  eva_1 = T2.eva_1, eva_2 = T2.eva_2, eva_3 = T2.eva_3, eva_4 = T2.eva_4, 
-									eva_1_rate = T2.eva_1_rate, eva_2_rate = T2.eva_2_rate, eva_3_rate = T2.eva_3_rate, eva_4_rate = T2.eva_4_rate, 
-									agency_goodjob = T2.agency_goodjob;
-									
-			SET row = row + 1;
-	end loop cursor_loop;
-	close s_cursor;
-							
-	INSERT INTO pc_zzsh_stat (agency_id, name, code_id, code, parent_id, year, quarter, month, type_id, total, total_success, total_return, total_delay, reported, reported_rate, return_rate, delay_rate,  attend, asence, attend_rate, eva, eva_rate, eva_1, eva_2, eva_3, eva_4, eva_1_rate, eva_2_rate, eva_3_rate, eva_4_rate, agency_goodjob)
-	SELECT * FROM
-	(SELECT T1.parent_id as agency_id, T2.name, T2.code_id, T2.code,  0 as parent_id, T1.year, T1.quarter, T1.month, T1.type_id, T1.total, T1.total_success, T1.total_return, T1.total_delay, T1.reported,
-  (CASE WHEN T1.reported_rate is NULL THEN 0 ELSE T1.reported_rate END) as reported_rate, 
-  (CASE WHEN T1.return_rate is NULL THEN 0 ELSE T1.return_rate END) as return_rate, 
-  (CASE WHEN T1.delay_rate is NULL THEN 0 ELSE T1.delay_rate END) as delay_rate,   
-  T1.attend, T1.asence, 
-  (CASE WHEN T1.attend_rate is NULL THEN 0 ELSE T1.attend_rate END) as attend_rate, 
-  T1.eva, 
-  (CASE WHEN T1.eva_rate is NULL THEN 0 ELSE T1.eva_rate END) as eva_rate, 
-  T1.eva_1, T1.eva_2, T1.eva_3, T1.eva_4,
-  (CASE WHEN T1.eva_1_rate is NULL THEN 0 ELSE T1.eva_1_rate END) as eva_1_rate, 
-  (CASE WHEN T1.eva_2_rate is NULL THEN 0 ELSE T1.eva_2_rate END) as eva_2_rate, 
-  (CASE WHEN T1.eva_3_rate is NULL THEN 0 ELSE T1.eva_3_rate END) as eva_3_rate, 
-  (CASE WHEN T1.eva_4_rate is NULL THEN 0 ELSE T1.eva_4_rate END) as eva_4_rate,   
-  T1.agency_goodjob FROM 
-	(SELECT 1 as parent_id, YEAR, quarter, month, type_id, 
-					 SUM(total) as total, 
-					 SUM(total_success) as total_success, 
-					 SUM(total_return) as total_return, 
-					 SUM(total_delay) as total_delay, 
-					 SUM(  reported ) as reported , 
-					 ROUND( COUNT(CASE WHEN reported_rate = 1 THEN agency_id END)/COUNT(*), 4) reported_rate,
-					 ROUND( COUNT(CASE WHEN return_rate = 1 THEN agency_id END)/COUNT(*), 4) return_rate,
-					 ROUND( COUNT(CASE WHEN delay_rate = 1 THEN agency_id END)/COUNT(*), 4) delay_rate,
-					 SUM(  attend ) as attend , 
-					 SUM(  asence ) as asence , 
-					 ROUND(SUM(attend_rate)/COUNT(CASE WHEN total > 0 THEN total END), 4) as attend_rate,
-					 SUM(eva) as eva,
-					 ROUND(SUM(eva)/SUM(total), 4) as eva_rate , 
-					 SUM(eva_1) as eva_1,
-					 SUM(eva_2) as eva_2,
-					 SUM(eva_3) as eva_3,
-					 SUM(eva_4) as eva_4,
-					 ROUND(SUM(eva_1)/SUM(eva), 4) as eva_1_rate, 
-					 ROUND(SUM(eva_2)/SUM(eva), 4) as eva_2_rate, 
-					 ROUND(SUM(eva_3)/SUM(eva), 4) as eva_3_rate, 
-					 ROUND(SUM(eva_4)/SUM(eva), 4) as eva_4_rate, 
-					 COUNT(CASE WHEN reported_rate = 1 THEN agency_id END) as agency_goodjob
-	FROM  pc_zzsh_stat WHERE code_id = 10
-	GROUP BY YEAR, quarter, month, type_id )  as T1
-	LEFT JOIN pc_agency as T2 ON T1.parent_id = T2.id ) as T3
-	ON DUPLICATE KEY UPDATE 
-							name = T3.name, code_id = T3.code_id, code = T3.code, parent_id = T3.parent_id,
-							total = T3.total, total_success = T3.total_success,  total_return = T3.total_return,  total_delay = T3.total_delay,  
-							reported = T3.reported, reported_rate = T3.reported_rate, 
-							return_rate = T3.return_rate, delay_rate = T3.delay_rate,
-							attend = T3.attend, asence = T3.asence, attend_rate = T3.attend_rate ,
-							eva = T3.eva, eva_rate = T3.eva_rate,  eva_1 = T3.eva_1, eva_2 = T3.eva_2, eva_3 = T3.eva_3, eva_4 = T3.eva_4, 
-							eva_1_rate = T3.eva_1_rate, eva_2_rate = T3.eva_2_rate, eva_3_rate = T3.eva_3_rate, eva_4_rate = T3.eva_4_rate, 
-							agency_goodjob = T3.agency_goodjob;							
-	
-								
-
-end;
-//
-delimiter ;
-
 delimiter //
 DROP PROCEDURE IF EXISTS `stats_remind_process`//
 CREATE PROCEDURE `stats_remind_process`()
@@ -1792,7 +1645,7 @@ BEGIN
             CALL stat_remind();
             CALL stat_remind_stat();            
         END IF;
-        SELECT RELEASE_LOCK('event_stats_remind_lock_isfree');
+        SELECT RELEASE_LOCK('event_stats_remind_lock');
     END IF;
 END //
 delimiter ;
@@ -1816,7 +1669,7 @@ BEGIN
             CALL stat_zzsh_new_year();
 --            CALL stat_zzsh_stat();            
         END IF;
-        SELECT RELEASE_LOCK('event_stats_lock_isfree');
+        SELECT RELEASE_LOCK('event_stats_lock');
     END IF;
 END //
 delimiter ;
@@ -1863,35 +1716,25 @@ DROP TRIGGER IF EXISTS `up_stats_tri`//
 CREATE TRIGGER up_stats_tri AFTER UPDATE ON pc_agency
 FOR EACH ROW 
 BEGIN
-     CALL stat_remind();
-     CALL stat_remind_stat();
-		 CALL proc_agency_stats();
-		 CALL proc_parent_stats();     
+	  DECLARE c_parent_id int(11) unsigned;
+		IF OLD.code != NEW.code THEN
+		 SELECT parent_id INTO c_parent_id FROM pc_agency_relation where agency_id = NEW.id;
+		 
+		 UPDATE pc_remind SET name = NEW.name, code = NEW.code, parent_id = c_parent_id WHERE agency_id = NEW.id;
+		 CALL stat_remind_stat();
+		 
+		 UPDATE pc_agency_stats SET name = NEW.name, code = NEW.code, parent_id = c_parent_id WHERE agency_id = NEW.id;		 
+		 CALL proc_parent_stats();   
+		 
+		 UPDATE pc_zzsh_stat SET name = NEW.name, code = NEW.code, parent_id = c_parent_id WHERE agency_id = NEW.id;		 
+		ELSEIF OLD.name != NEW.name THEN
+		 UPDATE pc_remind SET name = NEW.name WHERE agency_id = NEW.id;
+		 UPDATE pc_remind_stat SET name = NEW.name WHERE agency_id = NEW.id;
+		 UPDATE pc_remind_lock SET name = NEW.name WHERE agency_id = NEW.id;
+		 UPDATE pc_agency_stats SET name = NEW.name WHERE agency_id = NEW.id;		 
+		 UPDATE pc_zzsh_stat SET name = NEW.name WHERE agency_id = NEW.id;		 
+		
+		END IF;
      
 END//
 delimiter ;
-
-delimiter //
-DROP TRIGGER IF EXISTS `in_stats_tri`//
-CREATE TRIGGER in_stats_tri AFTER INSERT ON pc_agency
-FOR EACH ROW 
-BEGIN
-     CALL stat_remind();
-     CALL stat_remind_stat();
-		 CALL proc_agency_stats();
-		 CALL proc_parent_stats();      
-END//
-delimiter ;
-
-delimiter //
-DROP TRIGGER IF EXISTS `del_stats_tri`//
-CREATE TRIGGER del_stats_tri AFTER DELETE ON pc_agency
-FOR EACH ROW 
-BEGIN
-     CALL stat_remind();
-     CALL stat_remind_stat();
-		 CALL proc_agency_stats();
-		 CALL proc_parent_stats();      
-END//
-delimiter ;
-

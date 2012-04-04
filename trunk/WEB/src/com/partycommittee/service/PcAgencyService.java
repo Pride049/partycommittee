@@ -129,6 +129,21 @@ public class PcAgencyService {
 		pcAgencyDaoImpl.updateAgency(agency);
 	}
 	
+	public void moveAgency(PcAgencyVo agencyVo) {
+		// 做二件事情
+		// 1. PcagencyRelation 做关系调整
+		PcAgencyRelation pcr = pcAgencyRelationDaoImpl.getParentByAgencyId(agencyVo.getId());
+		pcr.setParentId(agencyVo.getParentId());
+		pcAgencyRelationDaoImpl.updateAgencyRelation(pcr);
+		
+		// 2. Code 代码做相应的调整
+		String maxcode = pcAgencyDaoImpl.getMaxCodeByParentId(agencyVo.getParentId());
+		agencyVo.setCode(maxcode);
+		PcAgency agency = PcAgencyVo.toPcAgency(agencyVo);
+		pcAgencyDaoImpl.updateAgency(agency);
+		
+	}	
+	
 	public void deleteAgency(PcAgencyVo agencyVo) {
 		PcAgency agency = PcAgencyVo.toPcAgency(agencyVo);
 		// Delete agency mapping.
