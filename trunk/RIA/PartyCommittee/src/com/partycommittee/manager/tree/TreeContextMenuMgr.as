@@ -89,7 +89,7 @@ package com.partycommittee.manager.tree
 			updateMenuItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, onUpdate);
 			moveMenuItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, onMove);
 			deleteMenuItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, onDelete);
-			revacationMenuItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, onRevacation);
+//			revacationMenuItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, onRevacation);
 		}
 		
 		private function onMenuSelected(event:ContextMenuEvent):void {
@@ -115,8 +115,8 @@ package com.partycommittee.manager.tree
 		
 		private var updateMenuItem:ContextMenuItem = new ContextMenuItem("修 改", true);
 		private var moveMenuItem:ContextMenuItem = new ContextMenuItem("划 转", true);
-		private var deleteMenuItem:ContextMenuItem = new ContextMenuItem("删 除", true);
-		private var revacationMenuItem:ContextMenuItem = new ContextMenuItem("撤 销", true, false);
+		private var deleteMenuItem:ContextMenuItem = new ContextMenuItem("撤 销", true);
+//		private var revacationMenuItem:ContextMenuItem = new ContextMenuItem("撤 销", true, false);
 		
 		private function createMenuItems(codeId:Number):Array {
 			var menuItems:Array = new Array();
@@ -134,7 +134,7 @@ package com.partycommittee.manager.tree
 					menuItems.push(createGaneralBranchMenuItem, createEJDWMenuItem, createBranchMenuItem);
 					break;
 				case PCConst.AGENCY_CODE_BRANCH:
-					menuItems.push(moveMenuItem);
+					menuItems.push(moveMenuItem, deleteMenuItem);
 					break;
 				case PCConst.AGENCY_CODE_FIRSTBRANCH:
 					menuItems.push(createTeamMenuItem);
@@ -150,7 +150,7 @@ package com.partycommittee.manager.tree
 			}
 			if (codeId != PCConst.AGENCY_CODE_BOARDCOMMITTEES) {
 //				menuItems.push(updateMenuItem, moveMenuItem, deleteMenuItem, revacationMenuItem);
-				menuItems.push(updateMenuItem, deleteMenuItem, revacationMenuItem);
+				menuItems.push(updateMenuItem);
 			}
 
 			return menuItems;
@@ -242,8 +242,7 @@ package com.partycommittee.manager.tree
 				PopupMgr.instance.popupWindow(win);
 			}
 		}		
-		
-		
+
 		public function onDelete(event:ContextMenuEvent):void {
 			var node:Node = tree.selectedItem as Node;
 			if (!node) {
@@ -253,7 +252,7 @@ package com.partycommittee.manager.tree
 			if (!selectedAgency) {
 				return;
 			}
-			Alert.show("确定要删除组织【" + selectedAgency.name + "】？", "提示", 
+			Alert.show("确定要撤销组织【" + selectedAgency.name + "】？", "警告", 
 				Alert.YES | Alert.NO, FlexGlobals.topLevelApplication.root, onDeleteAlertClose);
 		}
 		

@@ -27,7 +27,7 @@ ALTER TABLE  `pc_member` ADD INDEX (  `agency_id` ,  `post_id` ) ;
 
 UPDATE  `partycommittee`.`pc_agency` SET  `code_id` =  '8' WHERE  `pc_agency`.`id` =244;
 
-
+ALTER TABLE  `pc_agency` ADD  `exp_date` DATE NOT NULL DEFAULT  '0000-00-00'
 
 update pc_meeting set month = month(meeting_datetime) where type_id = 9;
 
