@@ -109,8 +109,8 @@
 				
 				var numericDataSort:Sort = new Sort();
 				var dataSortField:SortField = new SortField(); 
-				dataSortField.name = "agencyId"; 
-				dataSortField.numeric = true;
+				dataSortField.name = "code"; 
+//				dataSortField.numeric = true;
 				numericDataSort.fields = [dataSortField];
 				dp.sort = numericDataSort;
 				dp.refresh();
@@ -134,7 +134,7 @@
 					}
 					
 					vo.agencyId = dp.getItemAt(i).agencyId;
-
+					vo.code = dp.getItemAt(i).code;
 					if (dp.getItemAt(i).typeId == 5) {
 						vo.dk_attend_rate = dp.getItemAt(i).attendRate;
 						vo.dk_reported_rate = dp.getItemAt(i).reportedRate;
@@ -205,6 +205,14 @@
 					}
 					
 				}
+				
+//				var numericDataSort:Sort = new Sort();
+//				var dataSortField:SortField = new SortField(); 
+//				dataSortField.name = "code"; 
+//				dataSortField.numeric = true;
+//				numericDataSort.fields = [dataSortField];
+//				datas.sort = numericDataSort;
+//				datas.refresh();			
 				
 				meetingStatsDG.dataProvider = datas;
 				

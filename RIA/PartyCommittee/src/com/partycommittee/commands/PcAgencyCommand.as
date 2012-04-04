@@ -28,6 +28,9 @@ package com.partycommittee.commands
 				case CRUDEventType.UPDATE:
 					pcAgencyProxy.updateAgency(pcAgencyEvent.agency);
 					break;
+				case CRUDEventType.MOVE:
+					pcAgencyProxy.moveAgency(pcAgencyEvent.agency);
+					break;				
 				case PcAgencyEvent.GET_ROOT_AGENCY_BY_USERID:
 				case PcAgencyEvent.GET_ROOT_AGENCY_FOR_PRIVILEGE:
 					pcAgencyProxy.getRootAgencyByUserId(pcAgencyEvent.userId);

@@ -205,6 +205,8 @@ public class PcStatsDaoImpl extends JpaDaoBase implements PcStatsDao {
 //			    	System.out.println(rows.getString("name"));
 			    	PcStatsVo pevo = new PcStatsVo();
 			    	pevo.setAgencyId(rows.getInt("agency_id"));
+			    	pevo.setCode(rows.getString("code"));
+			    	pevo.setCodeId(rows.getInt("code_id"));
 			    	pevo.setName(rows.getString("name"));
 			    	pevo.setYear(rows.getInt("YEAR"));
 			    	pevo.setTypeId(rows.getInt("type_id"));

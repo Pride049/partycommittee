@@ -69,6 +69,16 @@
 				if (!data) return;
 				datas.removeAll();
 				var dp:ArrayCollection = data as ArrayCollection;
+				
+				if (dp.length == 0) return;
+				var numericDataSort:Sort = new Sort(); 
+				var dataSortField:SortField = new SortField(); 
+				dataSortField.name = "code"; 
+//				dataSortField.numeric = true;
+				numericDataSort.fields = [dataSortField];
+				dp.sort = numericDataSort;
+				dp.refresh();	
+				
 				for(var i:int = 0; i<dp.length; i++) {
 					var vo:Object = dp.getItemAt(i);
 					if (i > 0 ) {

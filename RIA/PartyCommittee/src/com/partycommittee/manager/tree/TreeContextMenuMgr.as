@@ -5,10 +5,11 @@ package com.partycommittee.manager.tree
 	import com.partycommittee.control.tree.classes.TreeOperationEvent;
 	import com.partycommittee.events.PcAgencyEvent;
 	import com.partycommittee.manager.popup.PopupMgr;
+	import com.partycommittee.proxy.PcAgencyProxy;
 	import com.partycommittee.util.AgencyCodeUtil;
 	import com.partycommittee.util.CRUDEventType;
-	import com.partycommittee.views.agencymgmt.agencyviews.AgencyWindow;
 	import com.partycommittee.views.agencymgmt.agencyviews.AgencyMoveWindow;
+	import com.partycommittee.views.agencymgmt.agencyviews.AgencyWindow;
 	import com.partycommittee.vo.PcAgencyVo;
 	
 	import flash.events.ContextMenuEvent;
@@ -86,7 +87,7 @@ package com.partycommittee.manager.tree
 			createTeamMenuItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, onCreateChildren);
 			
 			updateMenuItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, onUpdate);
-//			moveMenuItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, onMove);
+			moveMenuItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, onMove);
 			deleteMenuItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, onDelete);
 			revacationMenuItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, onRevacation);
 		}
@@ -113,7 +114,7 @@ package com.partycommittee.manager.tree
 		private var refreshMenuItem:ContextMenuItem = new ContextMenuItem("刷 新", true);
 		
 		private var updateMenuItem:ContextMenuItem = new ContextMenuItem("修 改", true);
-//		private var moveMenuItem:ContextMenuItem = new ContextMenuItem("划 转", true);
+		private var moveMenuItem:ContextMenuItem = new ContextMenuItem("划 转", true);
 		private var deleteMenuItem:ContextMenuItem = new ContextMenuItem("删 除", true);
 		private var revacationMenuItem:ContextMenuItem = new ContextMenuItem("撤 销", true, false);
 		
@@ -133,7 +134,7 @@ package com.partycommittee.manager.tree
 					menuItems.push(createGaneralBranchMenuItem, createEJDWMenuItem, createBranchMenuItem);
 					break;
 				case PCConst.AGENCY_CODE_BRANCH:
-//					menuItems.push(createTeamMenuItem);
+					menuItems.push(moveMenuItem);
 					break;
 				case PCConst.AGENCY_CODE_FIRSTBRANCH:
 					menuItems.push(createTeamMenuItem);
@@ -151,6 +152,7 @@ package com.partycommittee.manager.tree
 //				menuItems.push(updateMenuItem, moveMenuItem, deleteMenuItem, revacationMenuItem);
 				menuItems.push(updateMenuItem, deleteMenuItem, revacationMenuItem);
 			}
+
 			return menuItems;
 		}
 		
@@ -229,12 +231,14 @@ package com.partycommittee.manager.tree
 			}
 			var agencyCodeId:Number = (node.entity as PcAgencyVo).codeId;
 			var title:String = AgencyCodeUtil.getAgencyCodeDes(agencyCodeId) + "划转";
+			var parentAgency:PcAgencyVo = node.parentNode.entity as PcAgencyVo;
 			var selectedAgency:PcAgencyVo = node.entity as PcAgencyVo;
 			if (selectedAgency) {
 				var win:AgencyMoveWindow = new AgencyMoveWindow();
-				win.type = CRUDEventType.UPDATE;
+				win.type = CRUDEventType.MOVE;
 				win.title = title;
 				win.agency = selectedAgency;
+				win.parentAgency = parentAgency;
 				PopupMgr.instance.popupWindow(win);
 			}
 		}		
