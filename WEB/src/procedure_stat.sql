@@ -1724,9 +1724,11 @@ BEGIN
 		 CALL stat_remind_stat();
 		 
 		 UPDATE pc_agency_stats SET name = NEW.name, code = NEW.code, parent_id = c_parent_id WHERE agency_id = NEW.id;		 
-		 CALL proc_parent_stats();   
+		 CALL proc_parent_stats();
 		 
 		 UPDATE pc_zzsh_stat SET name = NEW.name, code = NEW.code, parent_id = c_parent_id WHERE agency_id = NEW.id;		 
+		 
+		 UPDATE pc_remind_lock SET name = NEW.name, code = NEW.code, parent_id = c_parent_id WHERE agency_id = NEW.id;
 		ELSEIF OLD.name != NEW.name THEN
 		 UPDATE pc_remind SET name = NEW.name WHERE agency_id = NEW.id;
 		 UPDATE pc_remind_stat SET name = NEW.name WHERE agency_id = NEW.id;
@@ -1736,5 +1738,21 @@ BEGIN
 		
 		END IF;
      
+END//
+delimiter ;
+
+
+delimiter //
+DROP TRIGGER IF EXISTS `del_stats_tri`//
+CREATE TRIGGER del_stats_tri AFTER DELETE ON pc_agency
+FOR EACH ROW 
+BEGIN
+		DELETE FROM pc_remind WHERE agency_id = NEW.id;
+		CALL stat_remind_stat();
+		 
+		DELETE FROM pc_agency_stats WHERE agency_id = NEW.id;		 
+		CALL proc_parent_stats();   
+		 
+		DELETE FROM pc_zzsh_stat WHERE agency_id = NEW.id;	    
 END//
 delimiter ;
