@@ -150,6 +150,7 @@ begin
 	DECLARE c_parent_name VARCHAR(255);
 	DECLARE c_code VARCHAR(20);
 	DECLARE c_code_id int(11) unsigned;
+	DECLARE c_updatetime datetime;
 	DECLARE done int default 0;
 	
 	DECLARE y year(4);
@@ -219,17 +220,31 @@ begin
    				IF  s IS NULL THEN
 	   				SET s = 0;
 					END IF;								
-					
-					IF (c_parent_id is not null AND y >= 2012) THEN
-							if s < 3 THEN
-								CALL set_remind_status(i, s);
-								if s = 9 THEN
-										INSERT INTO  pc_remind_lock (agency_id, name, code_id, code, parent_id, year, quarter, month, type_id, status) 
-										VALUES (c_id, c_name, c_code_id, c_code, c_parent_id, y , q, m, i, s)	ON DUPLICATE KEY UPDATE agency_id = c_id, name = c_name;
-								END IF;		
-							END IF;									
-				  END IF;
 
+					IF (c_parent_id is not null AND y >= 2012) THEN
+							IF s < 2 THEN
+								CALL set_remind_status(i, s);
+							END IF;
+							IF s = 2 THEN
+								IF i<=4 THEN
+									SELECT CONCAT(Date_Format(updatetime, '%Y-%m-%d'), ' 23:59:59') into c_updatetime FROM pc_workplan_content WHERE workplan_id in ( SELECT id FROM pc_workplan WHERE agency_id = c_id AND year = y AND quarter = q AND type_id = i AND status_id = 2) AND type = 2;
+								ELSE
+									SELECT CONCAT(Date_Format(updatetime, '%Y-%m-%d'), ' 23:59:59') into c_updatetime FROM pc_meeting_content WHERE meeting_id in ( SELECT id FROM pc_meeting WHERE agency_id = c_id AND year = y AND quarter = q AND month = m AND type_id = i AND status_id = 2) AND type = 2;
+								END IF;
+								SELECT c_updatetime;
+								IF unix_timestamp(now()) > unix_timestamp(c_updatetime) THEN
+									SET s = 9;
+								END IF;
+							END IF;
+							
+
+							if s = 9 THEN
+									INSERT INTO  pc_remind_lock (agency_id, name, code_id, code, parent_id, year, quarter, month, type_id, status) 
+									VALUES (c_id, c_name, c_code_id, c_code, c_parent_id, y , q, m, i, s)	ON DUPLICATE KEY UPDATE agency_id = c_id, name = c_name;
+							END IF;		
+							
+															
+				  END IF;
 			  set i=i+1;
 				end while;  
 			  
@@ -1747,12 +1762,14 @@ DROP TRIGGER IF EXISTS `del_stats_tri`//
 CREATE TRIGGER del_stats_tri AFTER DELETE ON pc_agency
 FOR EACH ROW 
 BEGIN
-		DELETE FROM pc_remind WHERE agency_id = NEW.id;
+		DELETE FROM pc_remind WHERE agency_id = OLD.id;
 		CALL stat_remind_stat();
 		 
-		DELETE FROM pc_agency_stats WHERE agency_id = NEW.id;		 
+		DELETE FROM pc_agency_stats WHERE agency_id = OLD.id;		 
 		CALL proc_parent_stats();   
 		 
-		DELETE FROM pc_zzsh_stat WHERE agency_id = NEW.id;	    
+		DELETE FROM pc_zzsh_stat WHERE agency_id = OLD.id;	    
+		
+		DELETE FROM pc_remind_lock WHERE agency_id = OLD.id;
 END//
 delimiter ;

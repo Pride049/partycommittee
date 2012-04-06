@@ -1,6 +1,8 @@
 package com.partycommittee.service;
 
+import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -151,6 +153,14 @@ public class PcWorkPlanService {
 		contentVo.setWorkplanId(workPlanId);
 		//contentVo.setType(3);
 		Integer contentType = contentVo.getType();
+		
+		// 如果为驳回，则需要将updateTime 为延后7天日期.
+		if (contentType == 2) {
+			Calendar cal = Calendar.getInstance();
+			 cal.add(Calendar.DATE,7);//把当前系统的日期加7天
+			 contentVo.setUpdatetime(cal.getTime());
+		}
+		
 		PcWorkPlan workPlan = pcWorkPlanDaoImpl.getWorkPlanById(workPlanId);
 		workPlan.setStatusId(statusId);
 		pcWorkPlanDaoImpl.updateWorkPlan(workPlan);
