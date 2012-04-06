@@ -49,7 +49,7 @@ public class PcStatsDaoImpl extends JpaDaoBase implements PcStatsDao {
 			where = where + " AND type_id = " + typeId;
 						
 			String sql = createSql(id, where, avg);
-			System.out.print(sql);
+//			System.out.print(sql);
 			List<PcStatsVo> list = getResult(sql);
 			return list;
 		} catch (Exception e) {
@@ -82,7 +82,7 @@ public class PcStatsDaoImpl extends JpaDaoBase implements PcStatsDao {
 			where = where + " AND quarter in (" + ids + ")";
 			where = where + " AND type_id = " + typeId;
 			String sql = createSql(id, where, avg);
-			System.out.print(sql);
+//			System.out.print(sql);
 			List<PcStatsVo> list = getResult(sql);
 			return list;
 		} catch (Exception e) {
@@ -109,7 +109,7 @@ public class PcStatsDaoImpl extends JpaDaoBase implements PcStatsDao {
 			where = where + " AND month >= " + startM + " AND month <=" + endM;
 			where = where + " AND type_id = " + typeId;
 			String sql = createSql(id, where, avg);
-			System.out.print(sql);
+//			System.out.print(sql);
 			List<PcStatsVo> list = getResult(sql);
 			return list;
 		} catch (Exception e) {
@@ -130,7 +130,7 @@ public class PcStatsDaoImpl extends JpaDaoBase implements PcStatsDao {
 			where = where + " AND month >= " + startM + " AND month <=" + endM;
 			where = where + " AND type_id = " + typeId;
 			String sql = createSql(id, where, avg);
-			System.out.print(sql);
+//			System.out.print(sql);
 			List<PcStatsVo> list = getResult(sql);
 			return list;
 		} catch (Exception e) {

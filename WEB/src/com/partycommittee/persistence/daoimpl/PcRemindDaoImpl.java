@@ -29,7 +29,7 @@ public class PcRemindDaoImpl extends JpaDaoBase implements PcRemindDao {
 			List<String> rs = sql1.getResultList();
 			String code = rs.get(0);
 			// 获取直属党支部
-			Query query=em.createQuery("from PcRemind where code like '"+code+"%' AND year = " + year + " and quarter = " + q + " AND type_id = " + tid + " AND status <= 1 Order by agency_id ASC ");
+			Query query=em.createQuery("from PcRemind where code like '"+code+"%' AND year = " + year + " and quarter = " + q + " AND type_id = " + tid + " AND status < 3 Order by agency_id ASC ");
 			List<PcRemind> list =  query.getResultList();
 			
 			
