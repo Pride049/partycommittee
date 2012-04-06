@@ -35,12 +35,15 @@ public class PcRemindConfig implements Serializable {
 
 	private Integer endMonth;
 
-	private Integer endDay;	
+	private Integer endDay;
 	
-    public PcRemindConfig() {
+	private Integer delayDay;	
+	
+
+	public PcRemindConfig() {
     	
     }
-
+	
 	@Id
 	@Column(name = "id", unique = true, nullable = false)
 	@GeneratedValue(strategy=GenerationType.AUTO)	    
@@ -140,5 +143,14 @@ public class PcRemindConfig implements Serializable {
 
 	public void setEndDay(Integer endDay) {
 		this.endDay = endDay;
+	}	
+	
+	@Column(name = "delay_day")	
+    public Integer getDelayDay() {
+		return delayDay;
+	}
+
+	public void setDelayDay(Integer delayDay) {
+		this.delayDay = delayDay;
 	}	
 }

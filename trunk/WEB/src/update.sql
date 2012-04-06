@@ -29,6 +29,8 @@ UPDATE  `partycommittee`.`pc_agency` SET  `code_id` =  '8' WHERE  `pc_agency`.`i
 
 ALTER TABLE  `pc_agency` ADD  `exp_date` DATE NOT NULL DEFAULT  '0000-00-00'
 
+ALTER TABLE  `pc_remind_config` ADD  `delay_day` MEDIUMINT( 10 ) UNSIGNED NOT NULL DEFAULT  '0'
+
 update pc_meeting set month = month(meeting_datetime) where type_id = 9;
 
 浏览权，上报权，评语权，评价权、驳回权
