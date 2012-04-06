@@ -170,6 +170,7 @@ public class PcWorkPlanService {
 		} else {
 			workPlanContent.setContent(contentVo.getContent());
 			workPlanContent.setMemberName(contentVo.getMemberName());
+			workPlanContent.setUpdatetime(contentVo.getUpdatetime());
 			pcWorkPlanContentDaoImpl.upateContent(workPlanContent);
 		}
 	}

@@ -1,6 +1,7 @@
 package com.partycommittee.service;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -149,6 +150,14 @@ public class PcMeetingService {
 		contentVo.setMeetingId(meetingId);
 		//contentVo.setType(3);
 		Integer contentType = contentVo.getType();
+		
+		// 如果为驳回，则需要将updateTime 为延后7天日期.
+		if (contentType == 2) {
+			Calendar cal = Calendar.getInstance();
+			cal.add(Calendar.DATE,7);//把当前系统的日期加7天
+			contentVo.setUpdatetime(cal.getTime());
+		}		
+		
 		PcMeeting pcMeeting = pcMeetingDaoImpl.getMeetingById(meetingId);
 		pcMeeting.setStatusId(statusId);
 		pcMeetingDaoImpl.updateMeeting(pcMeeting);
@@ -159,6 +168,7 @@ public class PcMeetingService {
 		} else {
 			pcMeetingContent.setContent(contentVo.getContent());
 			pcMeetingContent.setMemberName(contentVo.getMemberName());
+			pcMeetingContent.setUpdatetime(contentVo.getUpdatetime());
 			pcMeetingContentDaoImpl.upateContent(pcMeetingContent);
 		}
 	}
