@@ -88,6 +88,7 @@
 							yp_end_monthCmb.selectedIndex = vo.endMonth - 1;
 							yp_end_dayCmb.selectedIndex = vo.endDay - 1;
 							yp_value.text = vo.value.toString();
+							yp_delay_value.text = vo.delayDay.toString();
 						}
 						
 						if (vo.typeId == 4) {
@@ -96,35 +97,42 @@
 							ys_end_monthCmb.selectedIndex = vo.endMonth - 1;
 							ys_end_dayCmb.selectedIndex = vo.endDay - 1;
 							ys_value.text = vo.value.toString();
+							ys_delay_value.text = vo.delayDay.toString();
 						}		
 						
 						if (vo.typeId == 2) {
 							qp_start_dayCmb.selectedIndex = vo.startDay - 1;
 							qp_end_dayCmb.selectedIndex = vo.endDay - 1;
 							qp_value.text = vo.value.toString();
+							qp_delay_value.text = vo.delayDay.toString();
 						}	
 						
 						if (vo.typeId == 3) {
 							qs_start_dayCmb.selectedIndex = vo.startDay - 1;
 							qs_end_dayCmb.selectedIndex = vo.endDay - 1;
 							qs_value.text = vo.value.toString();
+							qs_delay_value.text = vo.delayDay.toString();
 						}		
 						
 						if (vo.typeId == 5) {
 							dk_value.text = vo.value.toString();
+							dk_delay_value.text = vo.delayDay.toString();
 						}	
 						
 						if (vo.typeId == 6) {
 							dydh_value.text = vo.value.toString();
+							dydh_delay_value.text = vo.delayDay.toString();
 						}	
 						
 						if (vo.typeId == 7) {
 							mzshh_value.text = vo.value.toString();
+							mzshh_delay_value.text = vo.delayDay.toString();
 						}	
 						
 						
 						if (vo.typeId == 8) {
 							zwh_value.text = vo.value.toString();
+							zwh_delay_value.text = vo.delayDay.toString();
 						}						
 						
 						
@@ -159,6 +167,7 @@
 							vo.endMonth = yp_end_monthCmb.selectedIndex + 1;
 							vo.endDay = yp_end_dayCmb.selectedIndex + 1;
 							vo.value = parseFloat(yp_value.text);
+							vo.delayDay = parseFloat(yp_delay_value.text);
 						}
 						
 						if (vo.typeId == 4) {
@@ -167,34 +176,41 @@
 							vo.endMonth = ys_end_monthCmb.selectedIndex + 1;
 							vo.endDay = ys_end_dayCmb.selectedIndex + 1;
 							vo.value = parseFloat(ys_value.text);
+							vo.delayDay = parseFloat(ys_delay_value.text);
 						}		
 						
 						if (vo.typeId == 2) {
 							vo.startDay = qp_start_dayCmb.selectedIndex + 1;
 							vo.endDay = qp_end_dayCmb.selectedIndex + 1;
 							vo.value = parseFloat(qp_value.text);
+							vo.delayDay = parseFloat(qp_delay_value.text);
 						}	
 						
 						if (vo.typeId == 3) {
 							vo.startDay = qs_start_dayCmb.selectedIndex + 1;
 							vo.endDay = qs_end_dayCmb.selectedIndex + 1;
 							vo.value = parseFloat(qs_value.text);
+							vo.delayDay = parseFloat(qs_delay_value.text);
 						}		
 						
 						if (vo.typeId == 5) {
 							vo.value = parseFloat(dk_value.text);
+							vo.delayDay = parseFloat(dk_delay_value.text);
 						}	
 						
 						if (vo.typeId == 6) {
 							vo.value = parseFloat(dydh_value.text);
+							vo.delayDay = parseFloat(dydh_delay_value.text);
 						}	
 						
 						if (vo.typeId == 7) {
 							vo.value = parseFloat(mzshh_value.text);
+							vo.delayDay = parseFloat(mzshh_delay_value.text);
 						}	
 
 						if (vo.typeId == 8) {
 							vo.value = parseFloat(zwh_value.text);
+							vo.delayDay = parseFloat(zwh_delay_value.text);
 						}						
 						
 						datas.push(vo);
@@ -325,6 +341,10 @@
 						<mx:Label text="提示时间:截止前"/>
 						<mx:TextInput id="yp_value" width="100%" restrict="0-9" maxChars="5"  />
 						<mx:Label text="日"/>
+						
+						<mx:Label text="延后:"/>
+						<mx:TextInput id="yp_delay_value" width="100%" restrict="0-9" maxChars="5"  />
+						<mx:Label text="日"/>						
 					</mx:HBox>				
 
 			</components:GroupBox>
@@ -345,6 +365,9 @@
 					<mx:Label text="提示时间:截止前"/>
 					<mx:TextInput id="ys_value" width="100%" restrict="0-9" maxChars="5"  />
 					<mx:Label text="日"/>
+					<mx:Label text="延后:"/>
+					<mx:TextInput id="ys_delay_value" width="100%" restrict="0-9" maxChars="5"  />
+					<mx:Label text="日"/>						
 				</mx:HBox>				
 				
 			</components:GroupBox>
@@ -361,6 +384,9 @@
 					<mx:Label text="提示时间:截止前"/>
 					<mx:TextInput id="qp_value" width="100%" restrict="0-9" maxChars="5"  />
 					<mx:Label text="日"/>
+					<mx:Label text="延后:"/>
+					<mx:TextInput id="qp_delay_value" width="100%" restrict="0-9" maxChars="5"  />
+					<mx:Label text="日"/>	
 				</mx:HBox>				
 				
 			</components:GroupBox>	
@@ -377,6 +403,9 @@
 					<mx:Label text="提示时间:截止前"/>
 					<mx:TextInput id="qs_value" width="100%" restrict="0-9" maxChars="5"  />
 					<mx:Label text="日"/>
+					<mx:Label text="延后:"/>
+					<mx:TextInput id="qs_delay_value" width="100%" restrict="0-9" maxChars="5"  />
+					<mx:Label text="日"/>						
 				</mx:HBox>				
 				
 			</components:GroupBox>
@@ -387,6 +416,9 @@
 					<mx:Label text="提示时间:截止前"/>
 					<mx:TextInput id="dydh_value" width="100%" restrict="0-9" maxChars="5"  />
 					<mx:Label text="日"/>
+					<mx:Label text="延后:"/>
+					<mx:TextInput id="dydh_delay_value" width="100%" restrict="0-9" maxChars="5"  />
+					<mx:Label text="日"/>	
 				</mx:HBox>				
 				
 			</components:GroupBox>	
@@ -397,6 +429,9 @@
 					<mx:Label text="提示时间:截止前"/>
 					<mx:TextInput id="mzshh_value" width="100%" restrict="0-9" maxChars="5"  />
 					<mx:Label text="日"/>
+					<mx:Label text="延后:"/>
+					<mx:TextInput id="mzshh_delay_value" width="100%" restrict="0-9" maxChars="5"  />
+					<mx:Label text="日"/>	
 				</mx:HBox>				
 				
 			</components:GroupBox>	
@@ -408,6 +443,9 @@
 					<mx:Label text="提示时间:截止前"/>
 					<mx:TextInput id="dk_value" width="100%" restrict="0-9" maxChars="5"  />
 					<mx:Label text="日"/>
+					<mx:Label text="延后:"/>
+					<mx:TextInput id="dk_delay_value" width="100%" restrict="0-9" maxChars="5"  />
+					<mx:Label text="日"/>	
 				</mx:HBox>				
 				
 			</components:GroupBox>	
@@ -418,6 +456,9 @@
 					<mx:Label text="提示时间:截止前"/>
 					<mx:TextInput id="zwh_value" width="100%" restrict="0-9" maxChars="5"  />
 					<mx:Label text="日"/>
+					<mx:Label text="延后:"/>
+					<mx:TextInput id="zwh_delay_value" width="100%" restrict="0-9" maxChars="5"  />
+					<mx:Label text="日"/>	
 				</mx:HBox>				
 				
 			</components:GroupBox>		

@@ -34,6 +34,8 @@ public class PcRemindConfigVo implements Serializable {
 	private Integer endMonth;
 
 	private Integer endDay;	
+	
+	private Integer delayDay;	
 
 	public PcRemindConfigVo() {
 		
@@ -130,6 +132,14 @@ public class PcRemindConfigVo implements Serializable {
 		this.endDay = endDay;
 	}	
 	
+    public Integer getDelayDay() {
+		return delayDay;
+	}
+
+	public void setDelayDay(Integer delayDay) {
+		this.delayDay = delayDay;
+	}		
+	
 	public static PcRemindConfigVo fromPcRemindLock(PcRemindConfig pevo) {
 		PcRemindConfigVo vo = new PcRemindConfigVo();
 		vo.setId(pevo.getId());
@@ -143,6 +153,7 @@ public class PcRemindConfigVo implements Serializable {
 		vo.setEndQuarter(pevo.getEndQuarter());
 		vo.setEndMonth(pevo.getEndMonth());
 		vo.setEndDay(pevo.getEndDay());
+		vo.setDelayDay(pevo.getDelayDay());
 		return vo;
 	}
 	
@@ -159,6 +170,7 @@ public class PcRemindConfigVo implements Serializable {
 		vo.setEndQuarter(pevo.getEndQuarter());
 		vo.setEndMonth(pevo.getEndMonth());
 		vo.setEndDay(pevo.getEndDay());
+		vo.setDelayDay(pevo.getDelayDay());
 		return vo;
 	}
 }

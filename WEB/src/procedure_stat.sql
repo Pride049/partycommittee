@@ -231,7 +231,6 @@ begin
 								ELSE
 									SELECT CONCAT(Date_Format(updatetime, '%Y-%m-%d'), ' 23:59:59') into c_updatetime FROM pc_meeting_content WHERE meeting_id in ( SELECT id FROM pc_meeting WHERE agency_id = c_id AND year = y AND quarter = q AND month = m AND type_id = i AND status_id = 2) AND type = 2;
 								END IF;
-								SELECT c_updatetime;
 								IF unix_timestamp(now()) > unix_timestamp(c_updatetime) THEN
 									SET s = 9;
 								END IF;
@@ -269,8 +268,9 @@ begin
 	DECLARE e_m smallint(5) unsigned;
 	DECLARE e_d smallint(5) unsigned;
 	DECLARE e_t varchar(20);
+	DECLARE e_delay_day MEDIUMINT( 10 ) UNSIGNED;
 	SET y = year(now());
-	SELECT end_year, end_quarter, end_month, end_day into e_y, e_q, e_m, e_d FROM pc_remind_config WHERE type_id = t_id;
+	SELECT end_year, end_quarter, end_month, end_day, delay_day into e_y, e_q, e_m, e_d, e_delay_day FROM pc_remind_config WHERE type_id = t_id;
 
 	
 	IF (t_id  = 1 OR t_id = 4)  THEN 
@@ -289,6 +289,7 @@ begin
 		SET e_t = CONCAT(LAST_DAY(now() - interval 1 month), ' 23:59:59');
 	END IF;
 	
+	SET e_t = ADDDATE(e_t, e_delay_day);
 	IF unix_timestamp(now()) > unix_timestamp(e_t) THEN
 		SET status = 9;
 	ELSE 

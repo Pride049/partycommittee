@@ -27,7 +27,9 @@ package com.partycommittee.vo
 		
 		public var endMonth:Number;
 		
-		public var endDay:Number;	
+		public var endDay:Number;
+		
+		public var delayDay:Number;	
 		
 	}
 }
