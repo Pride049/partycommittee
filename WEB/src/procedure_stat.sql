@@ -491,6 +491,7 @@ begin
 			IF c_code_id = 7 THEN
 				SELECT COUNT(*) INTO stat_ejdw_num  FROM pc_agency WHERE code like CONCAT (c_code, '%') and code_id = 15;
 				SELECT COUNT(*) INTO stat_dzj_num FROM pc_agency WHERE code like CONCAT (c_code, '%') and code_id = 8;
+				SET stat_jc_num = 1;
 			END IF;
 			
 			IF c_parent_id is not null THEN
@@ -524,6 +525,7 @@ begin
 				code = c_code, 
 				parent_id = c_parent_id, 
 				zz_num = T1.zz_num,
+				jc_num = T1.jc_num,
 				ejdw_num = T1.ejdw_num,
 				dzj_num = T1.dzj_num,
 				dzb_num = T1.dzb_num,
