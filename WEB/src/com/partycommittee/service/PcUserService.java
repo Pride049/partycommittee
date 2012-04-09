@@ -1,6 +1,8 @@
 package com.partycommittee.service;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -66,6 +68,10 @@ public class PcUserService {
 		}
 		PcUserVo userVo = PcUserVo.fromPCUser(user);
 		userVo.setRoles(getRolesByUserId(userVo.getId()));
+		
+		 Calendar ca = Calendar.getInstance();
+		user.setLastlogintime(ca.getTime());
+		pcUserDaoImpl.updateUser(user);
 		return userVo;
 	}
 	
