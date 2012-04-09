@@ -44,6 +44,23 @@ return
 
 设置my.ini
 event_scheduler=ON
+max_connections= 2048 
+key_buffer_size=512M
+sort_buffer_size=16M
+table_cache=512
+max_allowed_packet = 10M
+wait_timeout=7200
+
+CREATE TABLE IF NOT EXISTS `pc_bulletin` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) NOT NULL,
+  `content` mediumtext NOT NULL,
+  `member` varchar(50) NOT NULL,
+  `is_index` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `expire_time` date NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
 
 --
 -- 表的结构 `pc_agency_stat`
