@@ -31,7 +31,9 @@ public class PcAgencyStatsDaoImpl extends JpaDaoBase implements PcAgencyStatsDao
 			Query sql = em.createQuery("select code from PcAgency where id = " + id);
 			List<String> rs = sql.getResultList();
 			String code = rs.get(0);	
-			query_sql = "from PcAgencyStats where code like '"+code+"%' Order by agency_id ASC ";
+			
+			Integer code_len = code.length();
+			query_sql = "from PcAgencyStats where code = '"+code+"' or (code like '"+code+"%' and length(code) = "+ (code.length() + 2) +") Order by agency_id ASC ";
 			Query query=em.createQuery(query_sql);
 			List<PcAgencyStats> list =  query.getResultList();
 	

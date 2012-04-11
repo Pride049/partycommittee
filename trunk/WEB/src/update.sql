@@ -51,6 +51,14 @@ table_cache=512
 max_allowed_packet = 10M
 wait_timeout=7200
 
+
+JDK 环境变量:
+
+JAVA_HOME  
+
+CLASSPATH: .;%JAVA_HOME%\lib;%JAVA_HOME%\lib\tools.jar
+PATH: %JAVA_HOME%\bin;%JAVA_HOME%\jre\bin;
+
 CREATE TABLE IF NOT EXISTS `pc_bulletin` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `title` varchar(255) NOT NULL,
