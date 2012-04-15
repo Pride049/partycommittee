@@ -339,6 +339,15 @@
 					dateGridColumnArray.push(c2);
 				}
 				
+				if (typeId == 8) {
+					var c_m:AdvancedDataGridColumn = new AdvancedDataGridColumn();
+					c_m.dataField = "month";
+					c_m.headerText = "月份";
+					c_m.itemRenderer = new ClassFactory(com.partycommittee.renderers.CurrentMonthRenderer);
+					//c1.wordWrap = true;
+					dateGridColumnArray.push(c_m);
+				}
+				
 				var c3:AdvancedDataGridColumn = new AdvancedDataGridColumn();
 				c3.dataField = "statusId";
 

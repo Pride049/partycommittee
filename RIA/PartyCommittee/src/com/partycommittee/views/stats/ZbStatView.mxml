@@ -223,23 +223,23 @@
 				
 				<mx:AdvancedDataGridColumnGroup headerText="组织生活落实情况" headerWordWrap="true">  
 					<mx:AdvancedDataGridColumn dataField="standard" headerText="应召开\上报情况" width="140"  textAlign="left" headerWordWrap="true" wordWrap="true"/>
-					<mx:AdvancedDataGridColumn dataField="reported" headerText="规范执行情况" width="50" headerWordWrap="true" textAlign="right" />
-					<mx:AdvancedDataGridColumn dataField="reported_rate" headerText="规范执行率" width="50" headerWordWrap="true" textAlign="right" itemRenderer="com.partycommittee.renderers.DataGridPercentRenderer" />
-					<mx:AdvancedDataGridColumn dataField="total" headerText="实际召开数" width="50" headerWordWrap="true" textAlign="right" />
-					<mx:AdvancedDataGridColumn dataField="total_success" headerText="一次成功上报数" width="50" headerWordWrap="true" textAlign="right"/>
-					<mx:AdvancedDataGridColumn dataField="total_return" headerText="驳回后上报数" width="50" headerWordWrap="true" textAlign="right"/>
-					<mx:AdvancedDataGridColumn dataField="total_delay" headerText="逾期授权后上报数" width="50" headerWordWrap="true" textAlign="right"/>
+					<mx:AdvancedDataGridColumn dataField="reported" headerText="规范执行情况"  headerWordWrap="true" textAlign="right" />
+					<mx:AdvancedDataGridColumn dataField="reported_rate" headerText="规范执行率"  headerWordWrap="true" textAlign="right" itemRenderer="com.partycommittee.renderers.DataGridPercentRenderer" />
+					<mx:AdvancedDataGridColumn dataField="total" headerText="实际召开数"  headerWordWrap="true" textAlign="right" />
+					<mx:AdvancedDataGridColumn dataField="total_success" headerText="一次成功上报数"  headerWordWrap="true" textAlign="right"/>
+					<mx:AdvancedDataGridColumn dataField="total_return" headerText="驳回后上报数"  headerWordWrap="true" textAlign="right"/>
+					<mx:AdvancedDataGridColumn dataField="total_delay" headerText="逾期授权后上报数"  headerWordWrap="true" textAlign="right"/>
 					
-					<mx:AdvancedDataGridColumn dataField="attend_rate" headerText="出席率" width="50" headerWordWrap="true" textAlign="right" itemRenderer="com.partycommittee.renderers.DataGridPercentRenderer"/>
+					<mx:AdvancedDataGridColumn dataField="attend_rate" headerText="出席率"  headerWordWrap="true" textAlign="right" itemRenderer="com.partycommittee.renderers.DataGridPercentRenderer"/>
 				</mx:AdvancedDataGridColumnGroup>
 				
 				<mx:AdvancedDataGridColumnGroup headerText="上级审核评价情况" headerWordWrap="true">  
-					<mx:AdvancedDataGridColumn dataField="eva" headerText="上级评价数" width="50" headerWordWrap="true" textAlign="right"/>
+					<mx:AdvancedDataGridColumn dataField="eva" headerText="上级评价数"  headerWordWrap="true" textAlign="right"/>
 					<mx:AdvancedDataGridColumnGroup headerText="评价等次分布" headerWordWrap="true"> 
-						<mx:AdvancedDataGridColumn dataField="eva_1" headerText="好" width="50" headerWordWrap="true" textAlign="right"/>
-						<mx:AdvancedDataGridColumn dataField="eva_2" headerText="较好" width="50" headerWordWrap="true" textAlign="right"/>
-						<mx:AdvancedDataGridColumn dataField="eva_3" headerText="一般" width="50" headerWordWrap="true" textAlign="right"/>
-						<mx:AdvancedDataGridColumn dataField="eva_4" headerText="差" width="50" headerWordWrap="true" textAlign="right"/>
+						<mx:AdvancedDataGridColumn dataField="eva_1" headerText="好"  headerWordWrap="true" textAlign="right"/>
+						<mx:AdvancedDataGridColumn dataField="eva_2" headerText="较好"  headerWordWrap="true" textAlign="right"/>
+						<mx:AdvancedDataGridColumn dataField="eva_3" headerText="一般"  headerWordWrap="true" textAlign="right"/>
+						<mx:AdvancedDataGridColumn dataField="eva_4" headerText="差"  headerWordWrap="true" textAlign="right"/>
 					</mx:AdvancedDataGridColumnGroup>
 				</mx:AdvancedDataGridColumnGroup>
 			</mx:groupedColumns>  

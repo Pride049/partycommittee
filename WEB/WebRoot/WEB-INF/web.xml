@@ -13,7 +13,7 @@
     <filter-class>com.partycommittee.filter.LoginVerifyFilter</filter-class>
     <init-param>
       <param-name>skip</param-name>
-      <param-value>/login/;/loginVerify;/images/;/css/;/messagebroker/;
+      <param-value>/login/;/loginVerify;/images/;/css/;/messagebroker/;install/;
 			</param-value>
     </init-param>
   </filter>
@@ -34,6 +34,14 @@
     <filter-name>LoginVerifyFilter</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
+	<servlet>
+		<servlet-name>Install</servlet-name>
+		<servlet-class>com.install.InstallServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Install</servlet-name>
+		<url-pattern>/install/install_setup.svl</url-pattern>
+	</servlet-mapping>  
   <welcome-file-list>
     <welcome-file>login/Login.jsp</welcome-file>
   </welcome-file-list>
