@@ -211,8 +211,8 @@ public class PcStatService {
 					qs_tmp = qs;
 				}
 				
-				if (i == 8) {
-					List<PcStatsVo> list_zwh = pcStatsDaoImpl.getZwhStatsById(id, year, startM, endM);
+				if (i >= 8) {
+					List<PcStatsVo> list_zwh = pcStatsDaoImpl.getZwhStatsById(id, year, i, startM, endM);
 					for(PcStatsVo item : list_zwh) {
 						list.add(item);
 					}

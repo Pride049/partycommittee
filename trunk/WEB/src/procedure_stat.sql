@@ -55,7 +55,7 @@ begin
 					END IF;
 					IF i <= 4 THEN
 			   				SELECT max(status_id) into s FROM pc_workplan WHERE agency_id = c_id AND year = y AND quarter = q AND type_id = i;
-			   				IF  s IS NULL THEN
+			   				IF  (s IS NULL OR s < 3) THEN
 				   				SET s = 0;
 								END IF;
 								
@@ -64,7 +64,7 @@ begin
 							 	 SET m = 0;
 							 END IF;
 							 SELECT max(status_id) into s FROM pc_meeting WHERE agency_id = c_id AND year = y AND quarter = q and month = m AND type_id = i;
-							 IF  s IS NULL THEN
+							 IF  (s IS NULL OR s < 3) THEN
 				   				SET s = 0;
 								END IF;
 					END IF;	
@@ -227,9 +227,9 @@ begin
 							END IF;
 							IF s = 2 THEN
 								IF i<=4 THEN
-									SELECT CONCAT(Date_Format(updatetime, '%Y-%m-%d'), ' 23:59:59') into c_updatetime FROM pc_workplan_content WHERE workplan_id in ( SELECT id FROM pc_workplan WHERE agency_id = c_id AND year = y AND quarter = q AND type_id = i AND status_id = 2) AND type = 2;
+									SELECT CONCAT(Date_Format(updatetime, '%Y-%m-%d'), ' 23:59:59') into c_updatetime FROM pc_workplan_content WHERE workplan_id in ( SELECT max(id) FROM pc_workplan WHERE agency_id = c_id AND year = y AND quarter = q AND type_id = i AND status_id = 2) AND type = 2;
 								ELSE
-									SELECT CONCAT(Date_Format(updatetime, '%Y-%m-%d'), ' 23:59:59') into c_updatetime FROM pc_meeting_content WHERE meeting_id in ( SELECT id FROM pc_meeting WHERE agency_id = c_id AND year = y AND quarter = q AND month = m AND type_id = i AND status_id = 2) AND type = 2;
+									SELECT CONCAT(Date_Format(updatetime, '%Y-%m-%d'), ' 23:59:59') into c_updatetime FROM pc_meeting_content WHERE meeting_id in ( SELECT max(id) FROM pc_meeting WHERE agency_id = c_id AND year = y AND quarter = q AND month = m AND type_id = i AND status_id = 2) AND type = 2;
 								END IF;
 								IF unix_timestamp(now()) > unix_timestamp(c_updatetime) THEN
 									SET s = 9;
