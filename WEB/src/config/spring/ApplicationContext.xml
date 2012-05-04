@@ -26,7 +26,7 @@
 	<import resource="classpath:META-INF/cxf/cxf-extension-jaxws.xml" />
 	
     <context:annotation-config/>
-    <context:component-scan base-package="com.partycommittee"/>
+    <context:component-scan base-package="com"/>
     <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true"/>
 
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
@@ -36,7 +36,9 @@
 		<property name="username" value="root" />
 		<property name="password" value="root" />
 		<property name="initialSize" value="10" />
-		<property name="maxActive" value="30" />
+		<property name="maxActive" value="500" />
+		<property name="maxIdle" value="1000" />  
+    	<property name="maxWait" value="30000" />  
 		<!--  
 		<property name="url" value="jdbc:mysql://localhost:3306/partycommittee?characterEncoding=utf-8" />
 		<property name="username" value="root" />
@@ -61,5 +63,16 @@
 	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
 		<property name="entityManagerFactory" ref="entityManagerFactory" />
 	</bean>
-
+	
+	<!--  
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:/config/spring/memcache.properties</value>
+			</list>
+		</property>
+	</bean>	
+	
+	<bean id="springContextHolder" class="com.common.utils.SpringContextHolder"/>
+	-->
 </beans>

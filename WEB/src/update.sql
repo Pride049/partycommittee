@@ -568,3 +568,16 @@ begin
 end;
 //
 delimiter ;
+
+
+
+CREATE TABLE  `partycommittee`.`pc_license` (
+`id` MEDIUMINT( 5 ) NOT NULL AUTO_INCREMENT ,
+`attr` VARCHAR( 20 ) NOT NULL ,
+`value` VARCHAR( 255 ) NOT NULL ,
+PRIMARY KEY (  `id` )
+) ENGINE = MYISAM;
+
+
+INSERT INTO `pc_license` (`id`, `attr`, `value`) VALUES
+(1, 'maxUser', '29A69E71B145E458');
