@@ -8,6 +8,11 @@
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
   		<properties>
   		    <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect"/>
+  		   	<property name="hibernate.cache.provider_class" 
+                value="org.hibernate.cache.SingletonEhCacheProvider" />
+	     	<property name="hibernate.cache.provider_configuration" value="/ehcache.xml" />
+	     	<property name="hibernate.cache.use_second_level_cache" value="true" />
+	     	<property name="hibernate.cache.use_query_cache" value="true" />
 	  	</properties>
-	</persistence-unit>
+	</persistence-unit>	
 </persistence>

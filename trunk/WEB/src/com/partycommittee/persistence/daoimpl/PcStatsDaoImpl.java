@@ -236,8 +236,8 @@ public class PcStatsDaoImpl extends JpaDaoBase implements PcStatsDao {
 			    	list.add(pevo);
 			    }
 			    em.getTransaction().commit();
-//			 statement.close();
-//			 conn.close();
+			 statement.close();
+			 conn.close();
 			return list;
 		} catch (Exception e) {
 			e.printStackTrace();
