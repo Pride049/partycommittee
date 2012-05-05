@@ -1,15 +1,25 @@
 package com.partycommittee.service;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.taglibs.standard.extra.spath.Path;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.common.DocumentHandler;
 import com.partycommittee.persistence.daoimpl.PcAgencyDaoImpl;
 import com.partycommittee.persistence.daoimpl.PcAgencyRelationDaoImpl;
 import com.partycommittee.persistence.daoimpl.PcWorkPlanDaoImpl;
@@ -18,8 +28,13 @@ import com.partycommittee.persistence.po.PcAgency;
 import com.partycommittee.persistence.po.PcAgencyRelation;
 import com.partycommittee.persistence.po.PcWorkPlan;
 import com.partycommittee.persistence.po.PcWorkPlanContent;
+import com.partycommittee.remote.vo.FilterVo;
 import com.partycommittee.remote.vo.PcWorkPlanContentVo;
 import com.partycommittee.remote.vo.PcWorkPlanVo;
+
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
 
 @Transactional
 @Service("PcWorkPlanService")
@@ -111,7 +126,7 @@ public class PcWorkPlanService {
 		return workPlanVo;
 	}
 
-	public List<PcWorkPlanVo> getCommitWorkplanListByParentId(Integer agencyId, Integer year) {
+	public List<PcWorkPlanVo> getCommitWorkplanListByParentId(Integer agencyId, Integer year, List<FilterVo> filters) {
 		List<PcWorkPlanVo> list = new ArrayList<PcWorkPlanVo>();
 		List<PcAgencyRelation> agencyRelationList = pcAgencyRelationDaoImpl.getChildrenByParentId(agencyId);
 		if (agencyRelationList == null || agencyRelationList.size() == 0) {
@@ -130,7 +145,7 @@ public class PcWorkPlanService {
 
 		for (PcAgencyRelation agencyRelation : agencyRelationList) {
 			List<PcWorkPlan> workPlanList = new ArrayList<PcWorkPlan>();
-			workPlanList = pcWorkPlanDaoImpl.getCommitWorkPlanListByAgencyId(agencyRelation.getAgencyId(), year);
+			workPlanList = pcWorkPlanDaoImpl.getCommitWorkPlanListByAgencyId(agencyRelation.getAgencyId(), year, filters);
 			PcAgency agency = pcAgencyDaoImpl.getAgencyById(agencyRelation.getAgencyId());
 			
 			for (PcWorkPlan workPlan : workPlanList) {
@@ -317,4 +332,73 @@ public class PcWorkPlanService {
 		}
 		return list;
 	}
+	
+	
+   private Configuration configuration = null;  
+   public PcWorkPlanService() {  
+      configuration = new Configuration();  
+      configuration.setDefaultEncoding("utf-8");  
+   }  
+  
+   public String exportDoc(Integer workPlanId) {
+	   
+	   PcWorkPlanContentVo vo = this.getContentInfo(workPlanId, 1);
+	   
+	   Map dataMap = new HashMap();
+	   dataMap.put("report_content", vo.getContent());
+	   dataMap.put("report_name", vo.getMemberName());  
+	   dataMap.put("report_date", vo.getUpdatetime());  
+	   
+	   return this.createDoc(workPlanId, dataMap);
+   }
+   
+   public String createDoc(Integer workPlanId, Map dataMap) {  
+      // 设置模本装置方法和路径,FreeMarker支持多种模板装载方法。可以重servlet，classpath，数据库装载，   
+      // 这里我们的模板是放在/com/ybhy/word包下面   
+      configuration.setClassForTemplateLoading(this.getClass(),  
+            "/com/partycommittee/service/templates");  
+      
+      Template t = null;  
+      try {  
+         // test.ftl为要装载的模板   
+    	
+         t = configuration.getTemplate("workplan.ftl");
+         t.setEncoding("utf-8");  
+      } catch (IOException e) {  
+         e.printStackTrace();  
+      }  
+      // 输出文档路径及名称   
+      String path =System.getProperty("zzsh.root") + "/tmp/";
+      
+      String filename = "workplan_" + workPlanId + ".doc";
+      File outFile = new File(path + filename);  
+      Writer out = null;
+      try {  
+         out = new BufferedWriter(new OutputStreamWriter(  
+                new FileOutputStream(outFile), "utf-8"));  
+      } catch (Exception e1) {  
+         e1.printStackTrace();  
+      }  
+      try {  
+         t.process(dataMap, out);  
+         out.close();           
+      } catch (TemplateException e) {  
+         e.printStackTrace();  
+      } catch (IOException e) {  
+         e.printStackTrace();  
+      }  
+      
+      return filename;
+   } 	
+	
+   
+   public static void main(String args[]){
+	   Map dataMap = new HashMap();
+	   dataMap.put("report_name", "张三");  
+	   dataMap.put("report_date", "2009-1-1");  
+	   
+	   PcWorkPlanService dh = new PcWorkPlanService();
+	   dh.createDoc(2214,dataMap);
+   }   
+	
 }

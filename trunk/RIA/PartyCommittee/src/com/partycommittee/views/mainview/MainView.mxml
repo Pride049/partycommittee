@@ -55,7 +55,7 @@
 			private var c_q:Number;
 			
 			private function onCreationCompleted():void {
-					onNavigateIn();
+					
 					if (yearCmb) {
 						yearCmb.dataProvider = DataproviderFactory.getRangeYearForReport();
 						yearCmb.selectedItem = model.reportYear = new Date().getFullYear();
@@ -68,6 +68,7 @@
 					}			
 					c_y = yearCmb.selectedItem as Number;
 					c_q = quarterCmb.selectedItem as Number;
+					onNavigateIn();
 			}
 			
 			private function onPropertyChanged(event:PropertyChangeEvent):void {
@@ -82,7 +83,7 @@
 				model.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, onPropertyChanged);
 				dg.addEventListener(TextEvent.LINK, onEventTextLink, false , 0, true); 				
 				remindDg.addEventListener(TextEvent.LINK, onEventTextLink, false , 0, true);
-				updateData();
+//				updateData();
 			}
 			
 			override protected function onNavigateOut():void {
@@ -881,7 +882,7 @@
 			public function refreshData():void {
 				c_y = yearCmb.selectedItem as Number;
 				c_q = quarterCmb.selectedItem as Number;				
-				onNavigateIn();
+				updateData();
 			}
 			
 
@@ -890,6 +891,14 @@
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
+	<mx:VBox width="100%" height="100%">
+	<mx:HBox >
+		<mx:Label text="选择年份:"/>
+		<mx:ComboBox id="yearCmb"/>
+		<mx:Label text="季度:"/>
+		<mx:ComboBox id="quarterCmb" />
+		<mx:Button label="查看" click="refreshData()"/>
+	</mx:HBox>
 	<mx:ViewStack id="RemindViewStack" width="100%" height="100%"
 				  left="6" right="6" top="6" bottom="6">
 		<mx:VBox id="AGrid" width="100%" height="100%"
@@ -911,7 +920,7 @@
 		<mx:VBox id="MecGrid" width="100%" height="100%"
 				 left="6" right="6" top="6" bottom="6"
 				 horizontalScrollPolicy="off" verticalScrollPolicy="off">
-			<mx:ViewStack id="StatsViewStack" width="100%" height="100%" creationPolicy="all"
+			<mx:ViewStack id="StatsViewStack" width="100%" height="100%" creationPolicy="auto"
 						  left="6" right="6" top="6" bottom="6">
 				<mx:VBox id="stats" width="100%" height="100%"
 						 left="6" right="6" top="6" bottom="6"
@@ -944,13 +953,5 @@
 			</mx:ViewStack>	
 		</mx:VBox>
 	</mx:ViewStack>
-	
-	<mx:HBox visible="false">
-	<mx:Label text="选择年份:"/>
-	<mx:ComboBox id="yearCmb"/>
-	<mx:Label text="季度:"/>
-	<mx:ComboBox id="quarterCmb" />
-	<mx:Button label="更新" click="refreshData()"/>
-	</mx:HBox>
-	
+	</mx:VBox>
 </navigation:NavigationView>

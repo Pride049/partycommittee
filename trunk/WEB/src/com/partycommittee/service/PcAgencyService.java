@@ -65,14 +65,14 @@ public class PcAgencyService {
 		for (PcAgency item : agencyList) {
 			PcAgencyVo vo = PcAgencyVo.fromPcAgency(item);
 			vo.setZbsj(" ");
-			List<PcMember> list_mem = pcMemberDaoImpl.getMemberByDutyId(item.getId(), 1);
-			if (list_mem != null && list_mem.size() > 0) {
-				String zbsj = "";
-				for(PcMember m: list_mem) {
-					zbsj+= m.getName() + ' ';
-				}
-				vo.setZbsj(zbsj);
-			}
+//			List<PcMember> list_mem = pcMemberDaoImpl.getMemberByDutyId(item.getId(), 1);
+//			if (list_mem != null && list_mem.size() > 0) {
+//				String zbsj = "";
+//				for(PcMember m: list_mem) {
+//					zbsj+= m.getName() + ' ';
+//				}
+//				vo.setZbsj(zbsj);
+//			}
 			
 			
 			list.add(vo);

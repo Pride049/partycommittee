@@ -34,8 +34,8 @@ package com.partycommittee.proxy
 			service.updateMeeting(meeting);
 		}
 		
-		public function getCommitChildrenMeeting(agencyId:Number, year:Number):void {
-			service.getCommitChildrenMeeting(agencyId, year);
+		public function getCommitChildrenMeeting(agencyId:Number, year:Number, filters:Array):void {
+			service.getCommitChildrenMeeting(agencyId, year, filters);
 		}
 		
 		public function getContentInfo(meetingId:Number, meetingType:Number):void {

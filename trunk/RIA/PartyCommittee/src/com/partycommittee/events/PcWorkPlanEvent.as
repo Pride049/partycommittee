@@ -21,6 +21,7 @@ package com.partycommittee.events
 		public static const GET_ALERT_INFO:String = "getAlertInfo";
 		public static const GET_CONTENT_INFO:String = "getContentInfo";
 		public static const DELETE_WORKPLAN:String = "deleteWorkPlan";
+		public static const EXPORT_WORKPLAN_TO_DOC:String = "exportWorkPlanToDoc";
 		
 		
 		private var _agency:PcAgencyVo;
@@ -83,7 +84,15 @@ package com.partycommittee.events
 			_contentType = value;
 		}
 		
+		private var _filters:Array;
+		public function get filters():Array	{
+			return _filters;
+		}
 		
+		public function set filters(value:Array):void {
+			_filters = value;
+		}		
+
 		public function PcWorkPlanEvent(kind:String = "READ", agency:PcAgencyVo = null) {
 			super(PCWORKPLAN_EVENT);
 			this.agency = agency;

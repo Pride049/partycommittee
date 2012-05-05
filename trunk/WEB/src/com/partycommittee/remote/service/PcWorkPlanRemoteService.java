@@ -8,6 +8,7 @@ import org.springframework.flex.remoting.RemotingDestination;
 import org.springframework.flex.remoting.RemotingInclude;
 import org.springframework.stereotype.Service;
 
+import com.partycommittee.remote.vo.FilterVo;
 import com.partycommittee.remote.vo.PcWorkPlanContentVo;
 import com.partycommittee.remote.vo.PcWorkPlanVo;
 import com.partycommittee.service.PcWorkPlanService;
@@ -62,8 +63,8 @@ public class PcWorkPlanRemoteService {
 	}	
 	
 	@RemotingInclude
-	public List<PcWorkPlanVo> getCommitWorkplanListByParentId(Integer agencyId, Integer year) {
-		return pcWorkPlanService.getCommitWorkplanListByParentId(agencyId, year);
+	public List<PcWorkPlanVo> getCommitWorkplanListByParentId(Integer agencyId, Integer year, List<FilterVo> filters) {
+		return pcWorkPlanService.getCommitWorkplanListByParentId(agencyId, year, filters);
 	}
 	
 	@RemotingInclude
@@ -105,5 +106,10 @@ public class PcWorkPlanRemoteService {
 	public Boolean deleteWorkPlan(Integer workPlanId) {
 		return pcWorkPlanService.deleteWorkPlan(workPlanId);
 	}	
+	
+	@RemotingInclude
+	public String exportWorkPlanToDoc(Integer workPlanId) {
+		return pcWorkPlanService.exportDoc(workPlanId);
+	}		
 
 }

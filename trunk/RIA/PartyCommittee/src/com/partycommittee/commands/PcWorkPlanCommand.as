@@ -30,7 +30,7 @@ package com.partycommittee.commands
 					proxy.createWorkPlan(pcWorkPlanEvt.workPlan);
 					break;
 				case PcWorkPlanEvent.GET_COMMIT_CHILDREN_WORKPLAN:
-					proxy.getCommitWorkplanListByParentId(pcWorkPlanEvt.agency.id, pcWorkPlanEvt.year);
+					proxy.getCommitWorkplanListByParentId(pcWorkPlanEvt.agency.id, pcWorkPlanEvt.year, pcWorkPlanEvt.filters);
 					break;
 				case PcWorkPlanEvent.GET_WORKPLAN_QUARTER:
 					proxy.getWorkPlanQuarter(pcWorkPlanEvt.agency.id, pcWorkPlanEvt.year, pcWorkPlanEvt.quarter);
@@ -62,7 +62,10 @@ package com.partycommittee.commands
 					break;	
 				case PcWorkPlanEvent.DELETE_WORKPLAN:
 					proxy.deleteWorkPlan(pcWorkPlanEvt.workPlan.id);
-					break;					
+					break;			
+				case PcWorkPlanEvent.EXPORT_WORKPLAN_TO_DOC:
+					proxy.exportWorkPlanToDoc(pcWorkPlanEvt.workPlan.id);
+					break;
 				default :
 					break;
 			}

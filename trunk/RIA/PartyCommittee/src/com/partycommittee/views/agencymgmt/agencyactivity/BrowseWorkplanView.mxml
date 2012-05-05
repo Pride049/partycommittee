@@ -14,11 +14,13 @@
 			import com.partycommittee.events.PcWorkPlanEvent;
 			import com.partycommittee.manager.popup.PopupMgr;
 			import com.partycommittee.model.ModelLocator;
+			import com.partycommittee.util.DataproviderFactory;
 			import com.partycommittee.util.UserUtil;
 			import com.partycommittee.util.WorkPlanCodeUtil;
 			import com.partycommittee.views.agencymgmt.agencyactivity.workplan.QuarterWorkPlanView;
 			import com.partycommittee.views.agencymgmt.agencyactivity.workplan.WorkPlanHandlerView;
 			import com.partycommittee.views.agencymgmt.agencyactivity.workplan.YearWorkPlanView;
+			import com.partycommittee.vo.FilterVo;
 			import com.partycommittee.vo.PcAgencyVo;
 			import com.partycommittee.vo.PcWorkPlanVo;
 			
@@ -27,6 +29,7 @@
 			import mx.controls.Alert;
 			import mx.events.CloseEvent;
 			import mx.events.PropertyChangeEvent;
+			import mx.utils.ObjectUtil;
 			
 			[Bindable]
 			private var model:ModelLocator = ModelLocator.getInstance();
@@ -46,6 +49,30 @@
 			private var year:Number;
 			
 			public function enterView():void {
+				
+				if (quarterCmb) {
+					var q:ArrayCollection =  DataproviderFactory.createQuarterDp();
+					q.addItemAt("全部", 0);
+					quarterCmb.dataProvider = q; 
+					quarterCmb.selectedIndex = 0;
+				}				
+				
+				if (typeCmb) {
+					var tq:Array = DataproviderFactory.createWorkPlanTypeDp();
+					tq.unshift("全部");
+					typeCmb.dataProvider = tq;
+					
+					typeCmb.selectedIndex = 0;
+				}
+				
+				if (statusCmb) {
+					var tq:Array = new Array({statusId:3, label:'未评'},
+											 {statusId:5, label:'已评'});
+					tq.unshift("全部");
+					statusCmb.dataProvider = tq;
+					statusCmb.selectedIndex = 1;
+				}				
+				
 				onNavigateIn();
 				this.year = model.reportYear;
 			}
@@ -102,8 +129,33 @@
 				if (agency.id == 1) return;
 				var pcWorkPlanEvent:PcWorkPlanEvent = new PcWorkPlanEvent(PcWorkPlanEvent.GET_COMMIT_CHILDREN_WORKPLAN);
 				pcWorkPlanEvent.agency = agency;
-				
+
 				if (this.year == 0) this.year = new Date().getFullYear();
+				
+				var filters:Array = new Array();
+				
+				// 类型:
+				if (typeCmb.selectedIndex > 0) {				
+					var t_vo:FilterVo = new FilterVo();
+					t_vo.id = 'typeId';
+					t_vo.data = (typeCmb.selectedItem as Object).typeId;
+					filters.push(t_vo);
+				}
+								
+				if (quarterCmb.selectedIndex > 0) {
+					var vo:FilterVo = new FilterVo();
+					vo.id = "quarter";
+					vo.data  = ObjectUtil.toString(quarterCmb.selectedItem);
+					filters.push(vo);
+				}
+				
+				if (statusCmb.selectedIndex > 0) {
+					var vo:FilterVo = new FilterVo();
+					vo.id = "statusId";
+					vo.data  = (statusCmb.selectedItem as Object).statusId;
+					filters.push(vo);
+				}				
+				pcWorkPlanEvent.filters = filters;
 				pcWorkPlanEvent.year = this.year;
 				pcWorkPlanEvent.failureCallback = getWorkPlanFailure;
 				pcWorkPlanEvent.successCallback = getWorkPlanSuccess;
@@ -204,7 +256,15 @@
 	</fx:Declarations>
 	
 	<mx:VBox width="100%" height="100%">
-
+		<mx:HBox >
+			<mx:Label text="类型:"/>
+			<mx:ComboBox id="typeCmb"/>			
+			<mx:Label text="季度:"/>
+			<mx:ComboBox id="quarterCmb" />		
+			<mx:Label text="状态:"/>
+			<mx:ComboBox id="statusCmb" />
+			<mx:Button label="查找" click="refreshData()"/>
+		</mx:HBox>	
 		<mx:AdvancedDataGrid id="datagrid" width="100%" height="100%" 
 							 headerStyleName="dataGridHeader"
 							 dataProvider="{dp}"

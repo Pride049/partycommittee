@@ -72,6 +72,7 @@ public class PcUserService {
 		 Calendar ca = Calendar.getInstance();
 		user.setLastlogintime(ca.getTime());
 		pcUserDaoImpl.updateUser(user);
+
 		return userVo;
 	}
 	
