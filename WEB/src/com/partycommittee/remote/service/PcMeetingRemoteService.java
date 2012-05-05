@@ -8,6 +8,7 @@ import org.springframework.flex.remoting.RemotingDestination;
 import org.springframework.flex.remoting.RemotingInclude;
 import org.springframework.stereotype.Service;
 
+import com.partycommittee.remote.vo.FilterVo;
 import com.partycommittee.remote.vo.PcMeetingContentVo;
 import com.partycommittee.remote.vo.PcMeetingVo;
 import com.partycommittee.service.PcMeetingService;
@@ -58,8 +59,8 @@ public class PcMeetingRemoteService {
 	}
 	
 	@RemotingInclude
-	public List<PcMeetingVo> getCommitChildrenMeeting(Integer agencyId, Integer year) {
-		return pcMeetingService.getCommitChildrenMeeting(agencyId, year);
+	public List<PcMeetingVo> getCommitChildrenMeeting(Integer agencyId, Integer year, List<FilterVo> filters) {
+		return pcMeetingService.getCommitChildrenMeeting(agencyId, year, filters);
 	}
 
 	@RemotingInclude

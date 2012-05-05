@@ -417,7 +417,7 @@
 			<mx:Label fontSize="20" fontWeight="bold"
 					  text="{workPlanStatusLbl}"/>
 		</mx:HBox>
-		<mx:ViewStack id="yearwpViewStack" width="100%" height="100%" creationPolicy="all">
+		<mx:ViewStack id="yearwpViewStack" width="100%" height="100%" creationPolicy="auto">
 			
 			<mx:VBox id="reportForm" width="100%" height="100%"
 					 left="6" right="6" top="6" bottom="6"

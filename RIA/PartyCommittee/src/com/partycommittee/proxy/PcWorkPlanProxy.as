@@ -58,8 +58,8 @@ package com.partycommittee.proxy
 			service.submitWorkPlan(workPlan);
 		}
 		
-		public function getCommitWorkplanListByParentId(parentId:Number, year:Number):void {
-			service.getCommitWorkplanListByParentId(parentId, year);
+		public function getCommitWorkplanListByParentId(parentId:Number, year:Number, filters:Array):void {
+			service.getCommitWorkplanListByParentId(parentId, year, filters);
 		}
 
 		public function saveContentWrokplan(workPlanId:Number,  statusId:Number, content:PcWorkPlanContentVo):void {
@@ -84,6 +84,10 @@ package com.partycommittee.proxy
 		
 		public function deleteWorkPlan(workPlanId:Number):void {
 			service.deleteWorkPlan(workPlanId);
+		}	
+		
+		public function exportWorkPlanToDoc(workPlanId:Number):void {
+			service.exportWorkPlanToDoc(workPlanId);
 		}		
 		
 	}

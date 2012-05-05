@@ -40,13 +40,22 @@
 			}
 			
 			private function updateDisplay():void {
+				
+				deleteBtn.enabled = false;
+				
+				moveBtn.enabled = false;				
+				
 				if (!agency) {
 					createBtn.enabled = false;
-					deleteBtn.enabled = false;
+					updateBtn.enabled = false;
 					return;
 				}
 				createBtn.enabled = true;
-				deleteBtn.enabled = true;
+				updateBtn.enabled = true;
+				if (agency.codeId == PCConst.AGENCY_CODE_BRANCH) {
+					deleteBtn.enabled = true;
+					moveBtn.enabled = true;
+				}
 			}
 			
 			private function onPropertyChanged(event:PropertyChangeEvent):void {
@@ -126,10 +135,23 @@
 			}
 			
 			private function onDeleteBtnClick():void {
-				TreeContextMenuMgr.getInstance().onDelete(null);
+				if (agency.codeId == PCConst.AGENCY_CODE_BRANCH) {
+					TreeContextMenuMgr.getInstance().onDelete(null);
+				}
 			}
 			
+			private function onUpdateBtnClick():void {
+				TreeContextMenuMgr.getInstance().onUpdate(null);
+			}		
+			
+			private function onMoveBtnClick():void {
+				if (agency.codeId == PCConst.AGENCY_CODE_BRANCH) {
+					TreeContextMenuMgr.getInstance().onMove(null);
+				}
+			}			
+						
 			private function onRevacationBtnClick():void {
+				
 			}
 		]]>
 	</fx:Script>
@@ -138,6 +160,8 @@
 	</fx:Declarations>
 	
 	<button:PcButton id="createBtn" label="建立" enabled="false" click="onCreateBtnClick()"/>
-	<button:PcButton id="deleteBtn" label="删除" enabled="false" click="onDeleteBtnClick()"/>
+	<button:PcButton id="updateBtn" label="修改" enabled="false" click="onUpdateBtnClick()"/>
+	<button:PcButton id="moveBtn" label="划转" enabled="false" click="onMoveBtnClick()"/>
+	<button:PcButton id="deleteBtn" label="撤销" enabled="false" click="onDeleteBtnClick()"/>
 	<!--<button:PcButton id="revacationBtn" label="撤销" enabled="false" click="onRevacationBtnClick()"/>-->
 </mx:HBox>

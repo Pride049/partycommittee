@@ -18,6 +18,7 @@ import com.partycommittee.persistence.po.PcAgency;
 import com.partycommittee.persistence.po.PcAgencyRelation;
 import com.partycommittee.persistence.po.PcMeeting;
 import com.partycommittee.persistence.po.PcMeetingContent;
+import com.partycommittee.remote.vo.FilterVo;
 import com.partycommittee.remote.vo.PcMeetingContentVo;
 import com.partycommittee.remote.vo.PcMeetingVo;
 
@@ -173,7 +174,7 @@ public class PcMeetingService {
 		}
 	}
 
-	public List<PcMeetingVo> getCommitChildrenMeeting(Integer agencyId, Integer year) {
+	public List<PcMeetingVo> getCommitChildrenMeeting(Integer agencyId, Integer year, List<FilterVo> filters) {
 		List<PcMeetingVo> list = new ArrayList<PcMeetingVo>();
 		List<PcAgencyRelation> agencyRelationList = pcAgencyRelationDaoImpl.getChildrenByParentId(agencyId);
 		if (agencyRelationList == null || agencyRelationList.size() == 0) {
@@ -199,7 +200,7 @@ public class PcMeetingService {
 			List<PcMeeting> meetingList = new ArrayList<PcMeeting>();
 			PcAgency agency = pcAgencyDaoImpl.getAgencyById(agencyRelation.getAgencyId());
 			
-			meetingList = pcMeetingDaoImpl.getCommitMeetingListByAgencyId(agencyRelation.getAgencyId(), year);
+			meetingList = pcMeetingDaoImpl.getCommitMeetingListByAgencyId(agencyRelation.getAgencyId(), year, filters);
 			
 			if (meetingList != null && meetingList.size() > 0) {
 				for (PcMeeting meeting : meetingList) {

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 import com.partycommittee.persistence.dao.PcMeetingDao;
 import com.partycommittee.persistence.po.PcMeeting;
 import com.partycommittee.persistence.po.PcWorkPlan;
+import com.partycommittee.remote.vo.FilterVo;
 
 @Repository("PcMeetingDaoImpl")
 public class PcMeetingDaoImpl extends JpaDaoBase implements PcMeetingDao {
@@ -102,7 +103,7 @@ public class PcMeetingDaoImpl extends JpaDaoBase implements PcMeetingDao {
 	
 	@SuppressWarnings("unchecked")
 	public List<PcMeeting> getCommitMeetingListByAgencyId(
-			Integer agencyId, Integer year) {
+			Integer agencyId, Integer year, List<FilterVo> filters) {
 		try {
 			
 			if (year == 0)  {
@@ -110,7 +111,27 @@ public class PcMeetingDaoImpl extends JpaDaoBase implements PcMeetingDao {
 				calendar.setTime(new Date()); 
 				year = calendar.get(Calendar.YEAR);
 			}			
-			return super.find("from PcMeeting where agency_id = " + agencyId + " AND year = " + year + " AND status_id >= 3 Order by quarter, month DESC");
+			
+			String where = " WHERE agency_id = " + agencyId + " AND year = " + year ;
+			for(FilterVo item:filters) {
+
+				if (item.getId().equals("quarter")) {
+					where = where + " AND quarter=" + item.getData();
+				}
+
+				if (item.getId().equals("typeId")) {
+					where = where + " AND typeId=" + item.getData();
+				}	
+				
+				if (item.getId().equals("statusId")) {
+					where = where + " AND status_id=" + item.getData();
+				}				
+			
+			}			
+			
+			where = where + " AND status_id >= 3";			
+			
+			return super.find("from PcMeeting " + where + " Order by quarter, month DESC");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

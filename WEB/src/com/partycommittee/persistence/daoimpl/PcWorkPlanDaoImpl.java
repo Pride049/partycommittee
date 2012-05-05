@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import com.partycommittee.persistence.dao.PcWorkPlanDao;
 import com.partycommittee.persistence.po.PcAgency;
 import com.partycommittee.persistence.po.PcWorkPlan;
+import com.partycommittee.remote.vo.FilterVo;
 
 @Repository("PcWorkPlanDaoImpl")
 public class PcWorkPlanDaoImpl extends JpaDaoBase implements PcWorkPlanDao {
@@ -125,7 +126,7 @@ public class PcWorkPlanDaoImpl extends JpaDaoBase implements PcWorkPlanDao {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<PcWorkPlan> getCommitWorkPlanListByAgencyId(Integer agencyId, Integer year) {
+	public List<PcWorkPlan> getCommitWorkPlanListByAgencyId(Integer agencyId, Integer year, List<FilterVo> filters) {
 		try {
 
 			if (year == 0)  {
@@ -133,7 +134,27 @@ public class PcWorkPlanDaoImpl extends JpaDaoBase implements PcWorkPlanDao {
 				calendar.setTime(new Date()); 
 				year = calendar.get(Calendar.YEAR);
 			}
-			return super.find("from PcWorkPlan where agency_id = " + agencyId + " AND year = " + year + " AND status_id >= 3");
+			
+			String where = " WHERE agency_id = " + agencyId + " AND year = " + year ;
+			for(FilterVo item:filters) {
+
+				if (item.getId().equals("quarter")) {
+					where = where + " AND quarter=" + item.getData();
+				}
+
+				if (item.getId().equals("typeId")) {
+					where = where + " AND typeId=" + item.getData();
+				}	
+				
+				if (item.getId().equals("statusId")) {
+					where = where + " AND status_id=" + item.getData();
+				}				
+			
+			}			
+			
+			where = where + " AND status_id >= 3";
+			
+			return super.find("from PcWorkPlan " + where);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

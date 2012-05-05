@@ -74,6 +74,27 @@ package com.partycommittee.util
 			return typeCollection;
 		}	
 		
+		public static function createWorkPlanTypeDp():Array {
+			var typeCollection:Array = new Array(
+				{typeId:1, label:'年度计划'},
+				{typeId:2, label:'季度计划'},
+				{typeId:3, label:'季度执行情况'},
+				{typeId:4, label:'年终总结'}
+			);
+			return typeCollection;
+		}			
+		
+		public static function createMeetingTypeDp():Array {
+			var typeCollection:Array = new Array(
+				{typeId:5, label:'党课'},
+				{typeId:6, label:'党员大会'},
+				{typeId:7, label:'民主生活会'},
+				{typeId:8, label:'支部委员会'},
+				{typeId:9, label:'其他'}
+			);
+			return typeCollection;
+		}		
+		
 		public static function createStatDateRange():Array {
 			var typeCollection:Array = new Array(
 				{data:0, label:'全部'},

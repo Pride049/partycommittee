@@ -35,7 +35,7 @@ package com.partycommittee.commands
 					proxy.updateMeeting(meeting);
 					break;
 				case PcMeetingEvent.GET_COMMIT_CHILDREN_MEETING:
-					proxy.getCommitChildrenMeeting(pcMeetingEvt.agency.id, pcMeetingEvt.year );
+					proxy.getCommitChildrenMeeting(pcMeetingEvt.agency.id, pcMeetingEvt.year, pcMeetingEvt.filters );
 					break;
 				case PcMeetingEvent.GET_CONTENT_INFO:
 					proxy.getContentInfo(pcMeetingEvt.meeting.id, pcMeetingEvt.meetingType);
