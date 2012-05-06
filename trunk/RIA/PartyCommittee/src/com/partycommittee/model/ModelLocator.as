@@ -83,6 +83,18 @@ package com.partycommittee.model
 		{
 			_roleCollection = value;
 		}
+		
+		private var _dutyCodeCollection:ArrayCollection;
+
+		public function get dutyCodeCollection():ArrayCollection
+		{
+			return _dutyCodeCollection;
+		}
+
+		public function set dutyCodeCollection(value:ArrayCollection):void
+		{
+			_dutyCodeCollection = value;
+		}
 
 		
 	}

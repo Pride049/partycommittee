@@ -13,6 +13,7 @@
 						   xmlns:partymember="com.partycommittee.views.partymember.*">
 	<fx:Script>
 		<![CDATA[
+			import com.partycommittee.events.PcMemberEvent;
 			import com.partycommittee.events.PcStatEvent;
 			import com.partycommittee.model.ModelLocator;
 			import com.partycommittee.views.MainContainer;
@@ -127,7 +128,28 @@
 			
 			private function onGetAgencyStatFailure(info:Object, evt:PcStatEvent):void {
 				this.enabled = true;
+			}		
+			
+			private function onExportToExcel():void {
+				var memberEvt:PcMemberEvent = new PcMemberEvent(PcMemberEvent.EXPORT_MEMBERS_TO_EXCEL, null, model.focusAgencyVo.id);
+				
+				memberEvt.successCallback = onExportMemberSuccess;
+				memberEvt.failureCallback = onExportMemberPlanFailure;	
+				memberEvt.dispatch();
+			}		
+			
+			private function onExportMemberSuccess(data:Object, memberEvt:PcMemberEvent):void {
+				var filename = data as String;
+				var url = 'tmp/' + filename;
+				var u:URLRequest = new URLRequest(url);
+				u.method = URLRequestMethod.GET;   
+				navigateToURL(u,"_self");
+			}	
+			
+			private function onExportMemberPlanFailure(data:Object, memberEvt:PcMemberEvent):void {
+				
 			}			
+			
 		]]>
 	</fx:Script>
 	<fx:Declarations>
@@ -153,9 +175,9 @@
 		</mx:VBox>
 		
 		<mx:VBox id="agencyStats" width="100%" height="100%"
-				 horizontalAlign="center" verticalAlign="middle"
+				 horizontalAlign="right" verticalAlign="middle"
 				 horizontalScrollPolicy="off" verticalScrollPolicy="off">
-			
+			<mx:Button   click="onExportToExcel()" label="导出下级支委委员" />
 			<mx:AdvancedDataGrid id="agencystatsDG" designViewDataType="flat"   
 								 width="100%" height="100%" color="0x323232"  
 								 minWidth="640" minHeight="480" dataProvider="{datas}"

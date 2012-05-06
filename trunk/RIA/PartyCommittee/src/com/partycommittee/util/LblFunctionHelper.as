@@ -1,5 +1,6 @@
 package com.partycommittee.util
 {
+	import com.partycommittee.model.ModelLocator;
 	import com.partycommittee.vo.PcAgencyVo;
 	import com.partycommittee.vo.PcMeetingVo;
 	import com.partycommittee.vo.PcMemberVo;
@@ -37,7 +38,7 @@ package com.partycommittee.util
 		
 		public static function memberDutyLblFunc(item:Object, col:*):String {
 			if (item as PcMemberVo) {
-				return DutyCodeUtil.getDutyCodeDes((item as PcMemberVo).dutyId);
+				return DutyCodeUtil.getDutyCodeDes((item as PcMemberVo).dutyId, ModelLocator.getInstance().dutyCodeCollection);
 			}
 			return "";
 		}

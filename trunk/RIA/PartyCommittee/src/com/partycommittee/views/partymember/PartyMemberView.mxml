@@ -156,6 +156,26 @@
 				this.enabled = true;
 				Alert.show(info.toString());
 			}
+			
+			private function onExportToExcel():void {
+				var memberEvt:PcMemberEvent = new PcMemberEvent(PcMemberEvent.EXPORT_MEMBERS_TO_EXCEL, null, agency.id);
+				
+				memberEvt.successCallback = onExportMemberSuccess;
+				memberEvt.failureCallback = onExportMemberPlanFailure;	
+				memberEvt.dispatch();
+			}		
+			
+			private function onExportMemberSuccess(data:Object, memberEvt:PcMemberEvent):void {
+				var filename = data as String;
+				var url = 'tmp/' + filename;
+				var u:URLRequest = new URLRequest(url);
+				u.method = URLRequestMethod.GET;   
+				navigateToURL(u,"_self");
+			}	
+			
+			private function onExportMemberPlanFailure(data:Object, memberEvt:PcMemberEvent):void {
+
+			}				
 		]]>
 	</fx:Script>
 	
@@ -202,6 +222,7 @@
 		
 		<mx:ControlBar width="100%" horizontalAlign="right">
 			<pagebar:PageBar page="{page}" width="100%" enabled="false"/>
+			<button:PcButton label="导出Excel" click="onExportToExcel()"/>
 			<!--
 			<button:PcButton label="下载Excel模板"/>
 			<button:PcButton label="上传党员Excel"/>

@@ -15,13 +15,16 @@
 		<![CDATA[
 			import com.partycommittee.events.PcMemberEvent;
 			import com.partycommittee.manager.popup.PopupMgr;
+			import com.partycommittee.model.ModelLocator;
 			import com.partycommittee.util.CRUDEventType;
 			import com.partycommittee.util.DutyCodeUtil;
 			import com.partycommittee.util.EduCodeUtil;
 			import com.partycommittee.util.NationCodeUtil;
 			import com.partycommittee.util.SexCodeUtil;
+			import com.partycommittee.vo.PcDutyCodeVo;
 			import com.partycommittee.vo.PcMemberVo;
 			
+			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
 			import mx.managers.PopUpManager;
 			
@@ -49,7 +52,15 @@
 				this._memberVo = value;
 			}
 			
+			private var dutyList:ArrayCollection = new ArrayCollection();
+			
 			private function onCreationCompleted():void {
+				
+				var data:ArrayCollection = ModelLocator.getInstance().dutyCodeCollection;
+				for (var i=0; i< data.length; i++) {
+					var vo:PcDutyCodeVo = data.getItemAt(i) as PcDutyCodeVo;
+					dutyList.addItem(vo.id);
+				}
 				updateData();
 			}
 			
@@ -176,7 +187,7 @@
 			}
 			
 			private function dutyLblFunc(item:Object):String {
-				return DutyCodeUtil.getDutyCodeDes(item as Number);
+				return DutyCodeUtil.getDutyCodeDes(item as Number, ModelLocator.getInstance().dutyCodeCollection);
 			}
 			
 			private function nationLblFunc(item:Object):String {
@@ -205,7 +216,7 @@
 				<mx:HBox width="100%">
 					<mx:ComboBox id="dutyCmb" width="100%" maxWidth="100"
 								 labelFunction="dutyLblFunc"
-								 dataProvider="{PCConst.dutyList}"
+								 dataProvider="{dutyList}"
 								 enabled="{!dutyCk.selected}"/>
 					<mx:CheckBox id="dutyCk" label="清空"/>
 				</mx:HBox>

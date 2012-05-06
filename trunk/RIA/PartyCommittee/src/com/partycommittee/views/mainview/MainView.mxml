@@ -81,8 +81,13 @@
 			override protected function onNavigateIn():void {
 
 				model.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, onPropertyChanged);
-				dg.addEventListener(TextEvent.LINK, onEventTextLink, false , 0, true); 				
-				remindDg.addEventListener(TextEvent.LINK, onEventTextLink, false , 0, true);
+				if (dg) {
+					dg.addEventListener(TextEvent.LINK, onEventTextLink, false , 0, true);
+				}
+				
+				if (remindDg) {
+					remindDg.addEventListener(TextEvent.LINK, onEventTextLink, false , 0, true);
+				}
 //				updateData();
 			}
 			
@@ -885,6 +890,16 @@
 				updateData();
 			}
 			
+			public function onViewStatckChange(event:Event):void {
+				if (dg) {
+					dg.addEventListener(TextEvent.LINK, onEventTextLink, false , 0, true);
+				}
+				
+				if (remindDg) {
+					remindDg.addEventListener(TextEvent.LINK, onEventTextLink, false , 0, true);
+				}				
+			}
+			
 
 		]]>
 	</fx:Script>
@@ -900,7 +915,7 @@
 		<mx:Button label="查看" click="refreshData()"/>
 	</mx:HBox>
 	<mx:ViewStack id="RemindViewStack" width="100%" height="100%"
-				  left="6" right="6" top="6" bottom="6">
+				  left="6" right="6" top="6" bottom="6" change="onViewStatckChange(event)">
 		<mx:VBox id="AGrid" width="100%" height="100%"
 				 left="6" right="6" top="6" bottom="6"
 				 horizontalScrollPolicy="off" verticalScrollPolicy="off" >
