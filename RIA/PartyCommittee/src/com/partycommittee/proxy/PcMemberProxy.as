@@ -37,5 +37,13 @@ package com.partycommittee.proxy
 			service.updateMember(member);
 		}
 		
+		public function getDutyCodeList():void {
+			service.getDutyCodeList();
+		}		
+		
+		public function exportToExcel(agencyId:Number):void {
+			service.exportToexcel(agencyId);
+		}
+		
 	}
 }

@@ -31,6 +31,12 @@ package com.partycommittee.commands
 					pcMemberProxy.getMemberListByAgencyId(pcMemberEvent.agencyId);
 //					pcMemberProxy.getMemberListPageByAgencyId(pcMemberEvent.agencyId, pcMemberEvent.page);
 					break;
+				case PcMemberEvent.EXPORT_MEMBERS_TO_EXCEL:
+					pcMemberProxy.exportToExcel(pcMemberEvent.agencyId);
+					break;
+				case PcMemberEvent.GET_DUTY_CODE:
+					pcMemberProxy.getDutyCodeList();
+					break;				
 				default :
 					break;
 			}

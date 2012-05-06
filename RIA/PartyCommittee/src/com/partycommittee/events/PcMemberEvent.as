@@ -12,6 +12,8 @@ package com.partycommittee.events
 		public static const PCMEMBER_EVENT:String = "com.partycommittee.events.PcMemberEvent";
 		
 		public static const GET_MEMBERS_BY_AGENCYID:String = "getMemberListByAgencyId";
+		public static const EXPORT_MEMBERS_TO_EXCEL:String = "exportMemberListToExcel";
+		public static const GET_DUTY_CODE:String = "getDutyCode";
 		
 		private var _member:PcMemberVo;
 		public function set member(value:PcMemberVo):void {

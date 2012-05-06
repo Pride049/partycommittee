@@ -8,6 +8,7 @@ import org.springframework.flex.remoting.RemotingDestination;
 import org.springframework.flex.remoting.RemotingInclude;
 import org.springframework.stereotype.Service;
 
+import com.partycommittee.remote.vo.PcDutyCodeVo;
 import com.partycommittee.remote.vo.PcMemberVo;
 import com.partycommittee.remote.vo.helper.PageHelperVo;
 import com.partycommittee.remote.vo.helper.PageResultVo;
@@ -52,4 +53,15 @@ public class PcMemberRemoteService {
 			pcMemberService.deleteMember(memberItem);
 		}
 	}
+	
+	@RemotingInclude
+	public List<PcDutyCodeVo> getDutyCodeList() {
+		return pcMemberService.getDutyCodeList();
+	}	
+	
+	@RemotingInclude
+	public String exportToexcel(int agencyId) {
+		return pcMemberService.exportToexcel(agencyId);
+	}
+		
 }

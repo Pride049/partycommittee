@@ -34,6 +34,18 @@ public class PcAgencyDaoImpl extends JpaDaoBase implements PcAgencyDao {
 		return null;
 	}
 	
+	public PcAgency getAgencyByCode(String code) {
+		try {
+			List<PcAgency> list = super.getJpaTemplate().find("from PcAgency where code = '" + code + "'");
+			if (list != null && list.size() > 0) {
+				return list.get(0);
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return null;
+	}	
+	
 	@Override
 	public void createAgency(PcAgency agency) {
 		try {
@@ -97,6 +109,15 @@ public class PcAgencyDaoImpl extends JpaDaoBase implements PcAgencyDao {
 		}
 		return null;
 	}	
+	
+	public List<PcAgency> getChildrenLeafAgencyByCode(String code) {
+		try {
+			return  super.find("from PcAgency where code like '" + code + "%' AND code_id = 10 Order By code asc");
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return null;
+	}		
 		
 	
 	@SuppressWarnings("unchecked")
