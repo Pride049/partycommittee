@@ -181,8 +181,8 @@ public class PcMemberService {
 	        
 	        
 	        List<Object> hl = new ArrayList();
-	        int[] column_attr_width = new int[]{ 5, 20, 10, 10, 10, 30, 20, 30, 20, 50, 30, 30, 30, 20};
-	        String[] columns = new String[]{ "序号","姓名", "党内职务", "性别", "民族", "出生年月", "籍贯", "参加工作时间", "文化程度", "行政职务", "入党时间", "任党内职务时间", "现在家庭住址", "所属上级"}; 
+	        int[] column_attr_width = new int[]{ 8, 15, 15, 8, 10, 15, 15, 15, 15, 40, 15, 20, 20, 20, 20};
+	        String[] columns = new String[]{ "序号","姓名", "党内职务", "性别", "民族", "出生年月", "籍贯", "参加工作时间", "文化程度", "行政职务", "入党时间", "任党内职务时间", "现在家庭住址", "支部名称", "所属上级"}; 
 	        for(int   i=0;i <columns.length;i++){ 	        	  
 	        	 Label head_label = new Label(i, 0, columns[i], wcfF); 
 	        	 sheet.addCell(head_label); 
@@ -199,8 +199,9 @@ public class PcMemberService {
 	        	//获取支部上级名称.
 	        	PcAgency agency_tmp = pcAgencyDaoImpl.getAgencyById(agencyIds.get(i));
 	        	String tmp_code = agency_tmp.getCode();
-	        	index_x_col = 13;
+
 	        	List<String> parentNames = new ArrayList();
+	        	parentNames.add(agency_tmp.getName());
 	        	while(tmp_code.length() > 2) {
 	        		tmp_code = tmp_code.substring(0,  tmp_code.length() -2 );
 	        		PcAgency agency_parent = pcAgencyDaoImpl.getAgencyByCode(tmp_code);

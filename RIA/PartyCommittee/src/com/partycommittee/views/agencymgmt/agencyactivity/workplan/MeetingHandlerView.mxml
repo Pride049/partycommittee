@@ -79,6 +79,7 @@
 			private var model:ModelLocator = ModelLocator.getInstance();			
 			
 			private function onCreationCompleted():void {
+//				t.mx_internal::getTextField().wordWrap = true;
 				updateData();
 			}
 			
@@ -380,7 +381,7 @@
 			 horizontalScrollPolicy="off" verticalScrollPolicy="off">
 		<mx:HBox width="100%" horizontalAlign="center"
 				 horizontalScrollPolicy="off" verticalScrollPolicy="off">
-			<mx:Label fontSize="20" fontWeight="bold" text="{meetingTitle}"/>
+			<mx:Label id="t" fontSize="20" fontWeight="bold" text="{meetingTitle}"/>
 		</mx:HBox>
 		<mx:HBox width="100%" height="100%"
 				 horizontalScrollPolicy="off" verticalScrollPolicy="off">
@@ -473,7 +474,7 @@
 							 visible="{meeting.statusId == 3}"/>
 			<button:PcButton id="handleBtn" label="保存" click="onHandle(meeting.statusId == 4 ? 5 : 4)" visible="{meeting.statusId &lt; 5}" />
 			<button:PcButton label="关闭" click="close()"/>
-			<button:PcButton id="returnBtn" label="驳回" click="doReturn()" visible="{UserUtil.checkRole(5, model.loginUser.roles)}"/>
+			<button:PcButton id="returnBtn" label="驳回" click="doReturn()" visible="{UserUtil.checkRole(5, model.loginUser.roles) ? ( (meeting.statusId &lt; 5) ? true : false ) : false}"/>
 		</mx:ControlBar>
 	</mx:VBox>
 	

@@ -135,10 +135,12 @@
 				
 				memberEvt.successCallback = onExportMemberSuccess;
 				memberEvt.failureCallback = onExportMemberPlanFailure;	
+				exportBtn.enabled = false;
 				memberEvt.dispatch();
 			}		
 			
 			private function onExportMemberSuccess(data:Object, memberEvt:PcMemberEvent):void {
+				exportBtn.enabled = true;
 				var filename = data as String;
 				var url = 'tmp/' + filename;
 				var u:URLRequest = new URLRequest(url);
@@ -147,7 +149,7 @@
 			}	
 			
 			private function onExportMemberPlanFailure(data:Object, memberEvt:PcMemberEvent):void {
-				
+				exportBtn.enabled = true;
 			}			
 			
 		]]>
@@ -177,7 +179,7 @@
 		<mx:VBox id="agencyStats" width="100%" height="100%"
 				 horizontalAlign="right" verticalAlign="middle"
 				 horizontalScrollPolicy="off" verticalScrollPolicy="off">
-			<mx:Button   click="onExportToExcel()" label="导出下级支委委员" />
+			<mx:Button id="exportBtn"  click="onExportToExcel()" label="导出下级支委委员" />
 			<mx:AdvancedDataGrid id="agencystatsDG" designViewDataType="flat"   
 								 width="100%" height="100%" color="0x323232"  
 								 minWidth="640" minHeight="480" dataProvider="{datas}"
