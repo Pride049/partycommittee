@@ -32,6 +32,23 @@
 			
 			private function onCreationCompleted():void {
 				model.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, onPropertyChanged);
+				
+				
+					if (model.isLeafUser) {
+						if (tab.getChildren().length > 3) {
+							tab.removeChild(agencyStatView);
+							tab.removeChild(workPlanStatView);
+							tab.removeChild(meetingStatView);
+						}
+						
+					} 
+				
+					if (model.focusAgencyVo && model.focusAgencyVo.codeId != 10) {
+						if (tab.getChildren().length > 3) {
+							tab.removeChild(zbStatView);
+						}
+					}					
+				
 			}
 			
 			private function onPropertyChanged(event:PropertyChangeEvent):void {

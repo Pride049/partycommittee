@@ -162,10 +162,13 @@
 				
 				memberEvt.successCallback = onExportMemberSuccess;
 				memberEvt.failureCallback = onExportMemberPlanFailure;	
+				
+				exportBtn.enabled = false;
 				memberEvt.dispatch();
 			}		
 			
 			private function onExportMemberSuccess(data:Object, memberEvt:PcMemberEvent):void {
+				exportBtn.enabled = true;
 				var filename = data as String;
 				var url = 'tmp/' + filename;
 				var u:URLRequest = new URLRequest(url);
@@ -174,7 +177,7 @@
 			}	
 			
 			private function onExportMemberPlanFailure(data:Object, memberEvt:PcMemberEvent):void {
-
+				exportBtn.enabled = true;
 			}				
 		]]>
 	</fx:Script>
@@ -222,7 +225,7 @@
 		
 		<mx:ControlBar width="100%" horizontalAlign="right">
 			<pagebar:PageBar page="{page}" width="100%" enabled="false"/>
-			<button:PcButton label="导出Excel" click="onExportToExcel()"/>
+			<button:PcButton id="exportBtn" label="导出Excel" click="onExportToExcel()"/>
 			<!--
 			<button:PcButton label="下载Excel模板"/>
 			<button:PcButton label="上传党员Excel"/>

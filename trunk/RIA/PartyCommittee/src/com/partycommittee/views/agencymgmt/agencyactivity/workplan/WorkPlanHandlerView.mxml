@@ -83,6 +83,7 @@
 			private var model:ModelLocator = ModelLocator.getInstance();
 			
 			private function onCreationCompleted():void {
+//				t.mx_internal::getTextField().wordWrap = true;
 				updateData();
 			}
 			
@@ -463,7 +464,7 @@
 			<button:PcButton id="handleBtn" label="保存" click="onHandle(workPlan.statusId == 4 ? 5 : 4)" visible="{workPlan.statusId &lt; 5}" />
 			
 			<button:PcButton label="关闭" click="close()"/>
-			<button:PcButton id="returnBtn" label="驳回" click="doReturn()" visible="{UserUtil.checkRole(5, model.loginUser.roles)}"/>
+			<button:PcButton id="returnBtn" label="驳回" click="doReturn()" visible="{UserUtil.checkRole(5, model.loginUser.roles) ? ( (workPlan.statusId &lt; 5) ? true : false ) : false}"/>
 		</mx:ControlBar>
 	</mx:VBox>
 	
