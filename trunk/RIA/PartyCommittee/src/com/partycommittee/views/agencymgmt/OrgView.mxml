@@ -157,7 +157,7 @@
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
-	<mx:ViewStack id="agencyBaseViewStack" width="100%" height="100%" creationPolicy="all"
+	<mx:ViewStack id="agencyBaseViewStack" width="100%" height="100%" creationPolicy="auto"
 				  left="6" right="6" top="6" bottom="6">
 		
 		<mx:VBox id="agencyBase" width="100%" height="100%"

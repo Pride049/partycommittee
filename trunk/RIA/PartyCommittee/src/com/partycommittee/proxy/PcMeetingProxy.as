@@ -60,6 +60,10 @@ package com.partycommittee.proxy
 		
 		public function deleteMeeting(meetingId:Number):void {
 			service.deleteMeeting(meetingId);
+		}	
+		
+		public function exportMeetingToDoc(meetingId:Number):void {
+			service.exportMeetingToDoc(meetingId);
 		}		
 		
 	}

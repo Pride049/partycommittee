@@ -417,7 +417,7 @@
 				PopupMgr.instance.popupWindow(win);
 			}	
 			
-			private function onExportToDoc(isCommit:Boolean = false):void {
+			private function onExportToDoc():void {
 				var workPlanEvt:PcWorkPlanEvent = new PcWorkPlanEvent(PcWorkPlanEvent.EXPORT_WORKPLAN_TO_DOC);
 				workPlanEvt.workPlan = workPlan;
 				workPlanEvt.successCallback = onExportWorkPlanSuccess;
@@ -452,7 +452,7 @@
 			<mx:Label fontSize="20" fontWeight="bold"
 					  text="{workPlanStatusLbl}"/>
 		</mx:HBox>
-		<mx:ViewStack id="yearwpViewStack" width="100%" height="100%" creationPolicy="auto"
+		<mx:ViewStack id="yearwpViewStack" width="100%" height="100%" creationPolicy="all"
 					  left="6" right="6" top="6" bottom="6">
 			<mx:VBox id="reportForm" width="100%" height="100%"
 					 left="6" right="6" top="6" bottom="6"
@@ -485,6 +485,7 @@
 			
 			<mx:VBox id="browseForm" width="100%" height="100%"
 					 left="6" right="6" top="6" bottom="6"
+					  creationPolicy="all"
 					 horizontalScrollPolicy="off" verticalScrollPolicy="auto">			
 				
 				
@@ -549,12 +550,12 @@
 						</mx:HBox>
 					</mx:VBox>
 				</mx:HBox>		
-				<!--
+				
 				<mx:ControlBar width="100%" horizontalAlign="center" verticalAlign="middle">
 					<button:PcButton label="导出WORD" click="onExportToDoc()"
 									 visible="{!workPlan || workPlan.statusId == 5}"/>
 				</mx:ControlBar>
-				-->
+				
 			</mx:VBox>		
 			
 		</mx:ViewStack>
