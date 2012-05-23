@@ -82,4 +82,9 @@ public class PcMeetingRemoteService {
 	public Boolean deleteMeeting(Integer meetingId) {
 		return pcMeetingService.deleteMeeting(meetingId);
 	}	
+	
+	@RemotingInclude
+	public String exportMeetingToDoc(Integer meetingId) {
+		return pcMeetingService.exportDoc(meetingId);
+	}	
 }

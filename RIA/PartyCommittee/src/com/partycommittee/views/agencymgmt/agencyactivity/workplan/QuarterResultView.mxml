@@ -439,6 +439,27 @@
 				win.modelType = 'browse';
 				PopupMgr.instance.popupWindow(win);
 			}				
+			
+			private function onExportToDoc():void {
+				var workPlanEvt:PcWorkPlanEvent = new PcWorkPlanEvent(PcWorkPlanEvent.EXPORT_WORKPLAN_TO_DOC);
+				workPlanEvt.workPlan = workPlan;
+				workPlanEvt.successCallback = onExportWorkPlanSuccess;
+				workPlanEvt.failureCallback = onExportWorkPlanFailure;	
+				
+				workPlanEvt.dispatch();
+			}		
+			
+			private function onExportWorkPlanSuccess(data:Object, workPlanEvt:PcWorkPlanEvent):void {
+				var filename = data as String;
+				var url = 'tmp/' + filename;
+				var u:URLRequest = new URLRequest(url);
+				u.method = URLRequestMethod.GET;   
+				navigateToURL(u,"_self");
+			}
+			
+			private function onExportWorkPlanFailure(info:Object, workPlanEvt:PcWorkPlanEvent):void {
+				
+			}				
 		]]>
 	</fx:Script>
 	<fx:Declarations>
@@ -460,7 +481,7 @@
 			<mx:Label text="季    度："/>
 			<mx:Label text="第{quarter.toString()}季度"/>
 		</mx:HBox>		
-		<mx:ViewStack id="QuearterViewStack" width="100%" height="100%" creationPolicy="auto"
+		<mx:ViewStack id="QuearterViewStack" width="100%" height="100%" creationPolicy="all"
 					  left="6" right="6" top="6" bottom="6">
 			<mx:VBox id="reportForm" width="100%" height="100%"
 					 left="6" right="6" top="6" bottom="6"
@@ -549,6 +570,8 @@
 				</mx:HBox>					
 				
 				<mx:ControlBar width="100%" horizontalAlign="center" verticalAlign="middle">
+					<button:PcButton label="导出WORD" click="onExportToDoc()"
+									 visible="{!workPlan || workPlan.statusId == 5}"/>
 					<button:PcButton label="关闭" click="close()"/>
 				</mx:ControlBar>
 			</mx:VBox>

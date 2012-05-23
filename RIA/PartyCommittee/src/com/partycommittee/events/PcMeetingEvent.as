@@ -24,6 +24,8 @@ package com.partycommittee.events
 		public static const GET_ALERT_INFO:String = "getAlertInfo";
 		public static const DELETE_MEETING:String = "deleteMeeting";
 		
+		public static const EXPORT_MEETING_TO_DOC:String = "exportMeetingToDoc";
+		
 		private var _agency:PcAgencyVo;
 
 		public function set agency(value:PcAgencyVo):void {

@@ -54,7 +54,10 @@ package com.partycommittee.commands
 					break;	
 				case PcMeetingEvent.DELETE_MEETING:
 					proxy.deleteMeeting(pcMeetingEvt.meeting.id);
-					break;						
+					break;	
+				case PcMeetingEvent.EXPORT_MEETING_TO_DOC:
+					proxy.exportMeetingToDoc(pcMeetingEvt.meeting.id);
+					break;				
 				default :
 					break;
 			}
