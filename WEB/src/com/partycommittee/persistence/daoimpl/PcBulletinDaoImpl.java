@@ -20,7 +20,7 @@ public class PcBulletinDaoImpl extends JpaDaoBase implements PcBulletinDao {
 
 	@SuppressWarnings("unchecked")
 	public PageResultVo<PcBulletin> getBulletins(PageHelperVo page) {
-		String where = " WHERE 1= 1";
+		String where = " WHERE expire_time >= DATE_FORMAT( NOW( ) ,  '%Y-%m-%d' ) ";
 		PageResultVo<PcBulletin> pageResult = new PageResultVo<PcBulletin>();
 		String sql = "from PcBulletin " + where + " ORDER BY id desc";
 		String totalSql = "select count (*) from PcBulletin " + where;

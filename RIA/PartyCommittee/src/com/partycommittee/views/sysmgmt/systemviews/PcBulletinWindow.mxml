@@ -80,6 +80,11 @@
 					return false;
 				}
 				
+				var cur_date = new Date();
+				if (DateUtilExt.before(expireTime.selectedDate, cur_date)) {
+					Alert.show("过期时间必须大于当前时间!");
+					return false;
+				}
 
 				return true;
 			}			
