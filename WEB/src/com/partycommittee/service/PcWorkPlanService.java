@@ -353,10 +353,7 @@ public class PcWorkPlanService {
 	   try {
 		   
 		   PcWorkPlan workPlan = pcWorkPlanDaoImpl.getWorkPlanById(workPlanId);
-		   
-		   
-		   Integer typeId = workPlan.getTypeId();
-		   PcWorkPlanContentVo vo = this.getContentInfo(workPlanId, 1);
+		   Integer typeId = workPlan.getTypeId();		   
 		   
 		   String report_title = "";
 		   switch(typeId) {
@@ -364,10 +361,10 @@ public class PcWorkPlanService {
 				   report_title = workPlan.getYear() + "年度工作计划";
 				   break;
 			   case 2:
-				   report_title = workPlan.getYear() + "年第"+ workPlan.getQuarter() +"工作计划";
+				   report_title = workPlan.getYear() + "年第"+ workPlan.getQuarter() +"工作计划及执行情况";
 				   break;
 			   case 3:
-				   report_title = workPlan.getYear() + "年第"+ workPlan.getQuarter() +"执行情况";
+				   report_title = workPlan.getYear() + "年第"+ workPlan.getQuarter() +"工作计划及执行情况";
 				   break;	
 			   case 4:
 				   report_title = workPlan.getYear() + "年度工作总结";
@@ -376,20 +373,87 @@ public class PcWorkPlanService {
 		   
 		   
 		   Map dataMap = new HashMap();
-		   String str = vo.getContent();
-		   String content = richTextEditorToHtml.doRichTextEditorToHtml(str);
-//		   String content = "<P ALIGN=\"LEFT\"><FONT FACE=\"ArialBlack\" SIZE=\"12\" COLOR=\"#000000\" LETTERSPACING=\"0\" KERNING=\"1\">  根据市局党委和办公室党委关于加强党建工作的各项部署要求，紧紧围绕党的十八大安保中心工作，以“忠诚、为民、公正、廉政”的人民警察核心价值观、“理性、平和、文明、规范”的执法理念和“爱国、创新、包容、厚德”的北京精神为引领，结合秘书处队伍和业务工作实际，特制定以下工作计划：</FONT></P><P ALIGN=\"LEFT\"><FONT FACE=\"ArialBlack\" SIZE=\"12\" COLOR=\"#000000\" LETTERSPACING=\"0\" KERNING=\"1\">        1.制定年度和季度工作计划。根据市局党委和办公室党委的总体部署，结合秘书处党员队伍和业务工作实际，认真做好年度工作计划和每季度工作计划，确保本年度支部各项工作有条不紊开展。</FONT></P><P ALIGN=\"LEFT\"><FONT FACE=\"ArialBlack\" SIZE=\"12\" COLOR=\"#000000\" LETTERSPACING=\"0\" KERNING=\"1\">        2.强化党组织活动。坚持以党建带队建促工作，认真落实好党支部组织生活制度，开展好主题党日活动，加强办公室第一党支部第二党小组组织活动，始终保持全体党员民警坚定的党性观念。</FONT></P><P ALIGN=\"LEFT\"><FONT FACE=\"ArialBlack\" SIZE=\"12\" COLOR=\"#000000\" LETTERSPACING=\"0\" KERNING=\"1\">        3.加强日常政策理论学习。结合公安工作实际，及时组织学习党和国家的理论方针政策，及时学习中央和市委、市政府、公安部等上级单位的决策部署，及时学习市局党委和办公室党委的部署要求，始终保持全体党员民警在政策理论上的先进性。</FONT></P><P ALIGN=\"LEFT\"><FONT FACE=\"ArialBlack\" SIZE=\"12\" COLOR=\"#000000\" LETTERSPACING=\"0\" KERNING=\"1\">        4.做好战时思想政治动员。围绕春节、五一、十一等重大节日以及六四等重要敏感日，特别是全国“两会”、党的十八大等重大活动安保工作，启动战时思想政治动员机制，确保全体党员民警在思想上、行动上始终与市局党委、办公室党委保持高度一致。</FONT></P><P ALIGN=\"LEFT\"><FONT FACE=\"ArialBlack\" SIZE=\"12\" COLOR=\"#000000\" LETTERSPACING=\"0\" KERNING=\"1\">        5.加强党支部文化建设。以“忠诚、为民、公正、廉洁”人民警察核心价值观、“理性、平和、文明、规范”执法理念和“爱国、创新、包容、厚德”北京精神为引领，组织开展符合秘书处特点的警营文化建设和爱警系统工程，做好青年文明岗和优秀青年警队争创工作，激发队伍活力，保持队伍状态。</FONT></P><P ALIGN=\"LEFT\"><FONT FACE=\"ArialBlack\" SIZE=\"12\" COLOR=\"#000000\" LETTERSPACING=\"0\" KERNING=\"1\">        6.认真开展党风廉政建设。围绕市局党委关于党风廉政建设的部署要求，认真做好廉政风险防范管理各项工作和纪律作风教育整顿工作，始终保持队伍风清气正。</FONT></P><P ALIGN=\"LEFT\"><FONT FACE=\"ArialBlack\" SIZE=\"12\" COLOR=\"#000000\" LETTERSPACING=\"0\" KERNING=\"1\">        7.扎实做好保密工作。严格执行市委、市政府、公安部和市局有关保密规定，定期开展内部保密教育和保密检查，始终做到警钟长鸣，坚决防止发生失泄密问题。</FONT></P><P ALIGN=\"LEFT\"><FONT FACE=\"ArialBlack\" SIZE=\"12\" COLOR=\"#000000\" LETTERSPACING=\"0\" KERNING=\"1\">        8.做好总结和表彰等各项工作。根据市局党委和办公室党委的部署要求，认真做好支部建设工作总结、宣传表彰等各项工作，始终保持队伍良好的精神面貌。</FONT></P>";
 		   SimpleDateFormat formatNowYear = new SimpleDateFormat("yyyy-MM-dd");
-		   
-		   
-		   
-		   dataMap.put("report_title", report_title);
-		   dataMap.put("report_content", content);
-		   dataMap.put("report_name", vo.getMemberName());  
-		   dataMap.put("report_date", formatNowYear.format(vo.getUpdatetime()));  
+		   String str = null;
+		   String content = null;
+		   if (typeId == 1 || typeId == 4) {
+			   
+			   PcWorkPlanContentVo vo = this.getContentInfo(workPlanId, 1);
+			   
+			   str = vo.getContent();
+			   content = richTextEditorToHtml.doRichTextEditorToHtml(str);
+	//		   String content = "<P ALIGN=\"LEFT\"><FONT FACE=\"ArialBlack\" SIZE=\"12\" COLOR=\"#000000\" LETTERSPACING=\"0\" KERNING=\"1\">  根据市局党委和办公室党委关于加强党建工作的各项部署要求，紧紧围绕党的十八大安保中心工作，以“忠诚、为民、公正、廉政”的人民警察核心价值观、“理性、平和、文明、规范”的执法理念和“爱国、创新、包容、厚德”的北京精神为引领，结合秘书处队伍和业务工作实际，特制定以下工作计划：</FONT></P><P ALIGN=\"LEFT\"><FONT FACE=\"ArialBlack\" SIZE=\"12\" COLOR=\"#000000\" LETTERSPACING=\"0\" KERNING=\"1\">        1.制定年度和季度工作计划。根据市局党委和办公室党委的总体部署，结合秘书处党员队伍和业务工作实际，认真做好年度工作计划和每季度工作计划，确保本年度支部各项工作有条不紊开展。</FONT></P><P ALIGN=\"LEFT\"><FONT FACE=\"ArialBlack\" SIZE=\"12\" COLOR=\"#000000\" LETTERSPACING=\"0\" KERNING=\"1\">        2.强化党组织活动。坚持以党建带队建促工作，认真落实好党支部组织生活制度，开展好主题党日活动，加强办公室第一党支部第二党小组组织活动，始终保持全体党员民警坚定的党性观念。</FONT></P><P ALIGN=\"LEFT\"><FONT FACE=\"ArialBlack\" SIZE=\"12\" COLOR=\"#000000\" LETTERSPACING=\"0\" KERNING=\"1\">        3.加强日常政策理论学习。结合公安工作实际，及时组织学习党和国家的理论方针政策，及时学习中央和市委、市政府、公安部等上级单位的决策部署，及时学习市局党委和办公室党委的部署要求，始终保持全体党员民警在政策理论上的先进性。</FONT></P><P ALIGN=\"LEFT\"><FONT FACE=\"ArialBlack\" SIZE=\"12\" COLOR=\"#000000\" LETTERSPACING=\"0\" KERNING=\"1\">        4.做好战时思想政治动员。围绕春节、五一、十一等重大节日以及六四等重要敏感日，特别是全国“两会”、党的十八大等重大活动安保工作，启动战时思想政治动员机制，确保全体党员民警在思想上、行动上始终与市局党委、办公室党委保持高度一致。</FONT></P><P ALIGN=\"LEFT\"><FONT FACE=\"ArialBlack\" SIZE=\"12\" COLOR=\"#000000\" LETTERSPACING=\"0\" KERNING=\"1\">        5.加强党支部文化建设。以“忠诚、为民、公正、廉洁”人民警察核心价值观、“理性、平和、文明、规范”执法理念和“爱国、创新、包容、厚德”北京精神为引领，组织开展符合秘书处特点的警营文化建设和爱警系统工程，做好青年文明岗和优秀青年警队争创工作，激发队伍活力，保持队伍状态。</FONT></P><P ALIGN=\"LEFT\"><FONT FACE=\"ArialBlack\" SIZE=\"12\" COLOR=\"#000000\" LETTERSPACING=\"0\" KERNING=\"1\">        6.认真开展党风廉政建设。围绕市局党委关于党风廉政建设的部署要求，认真做好廉政风险防范管理各项工作和纪律作风教育整顿工作，始终保持队伍风清气正。</FONT></P><P ALIGN=\"LEFT\"><FONT FACE=\"ArialBlack\" SIZE=\"12\" COLOR=\"#000000\" LETTERSPACING=\"0\" KERNING=\"1\">        7.扎实做好保密工作。严格执行市委、市政府、公安部和市局有关保密规定，定期开展内部保密教育和保密检查，始终做到警钟长鸣，坚决防止发生失泄密问题。</FONT></P><P ALIGN=\"LEFT\"><FONT FACE=\"ArialBlack\" SIZE=\"12\" COLOR=\"#000000\" LETTERSPACING=\"0\" KERNING=\"1\">        8.做好总结和表彰等各项工作。根据市局党委和办公室党委的部署要求，认真做好支部建设工作总结、宣传表彰等各项工作，始终保持队伍良好的精神面貌。</FONT></P>";
+			  
+	
+			   dataMap.put("report_title", report_title);
+			   dataMap.put("report_content", content);
+			   dataMap.put("report_name", vo.getMemberName());  
+			   dataMap.put("report_date", formatNowYear.format(vo.getUpdatetime()));  
+			   return this.createDoc(workPlanId, dataMap, "workplan.ftl");
+		   } else {
+			   int agencyId = workPlan.getAgencyId();
+			   int y = workPlan.getYear();
+			   int q = workPlan.getQuarter();
+			   
+			   dataMap.put("report_title", report_title);
+			  			   
+			   PcWorkPlan qp_workplan =  pcWorkPlanDaoImpl.getWorkPlanQuarterByTypeId(agencyId, y, q, 2);
+			   if (qp_workplan != null) {
+				   PcWorkPlanContentVo qpvo = this.getContentInfo(qp_workplan.getId(), 1);
+				   
+				   str = qpvo.getContent();
+				   content = richTextEditorToHtml.doRichTextEditorToHtml(str);				   
+				   dataMap.put("qp_content", content);
+				   dataMap.put("qp_name", qpvo.getMemberName());  
+				   dataMap.put("qp_date", formatNowYear.format(qpvo.getUpdatetime())); 				   
+			   } else {
+				   dataMap.put("qp_content", "");
+				   dataMap.put("qp_name", "");  
+				   dataMap.put("qp_date", ""); 
+			   }
+			   
+			   PcWorkPlan qs_workplan =  pcWorkPlanDaoImpl.getWorkPlanQuarterByTypeId(agencyId, y, q, 3);
+			   
+			   if (qs_workplan != null) {
+				   PcWorkPlanContentVo qsvo = this.getContentInfo(qs_workplan.getId(), 1);
+				   
+				   str = qsvo.getContent();
+				   content = richTextEditorToHtml.doRichTextEditorToHtml(str);				   
+				   dataMap.put("qs_content", content);
+				   dataMap.put("qs_name", qsvo.getMemberName());  
+				   dataMap.put("qs_date", formatNowYear.format(qsvo.getUpdatetime())); 	
+				   
+				   PcWorkPlanContentVo qevo = this.getContentInfo(qs_workplan.getId(), 3);
+				   
+				   if (qevo == null) {
+					   dataMap.put("qe_content", "");
+					   dataMap.put("qe_name", "");  
+					   dataMap.put("qe_date", ""); 
+				   } else {
+					   str = qevo.getContent();
+					   content = richTextEditorToHtml.doRichTextEditorToHtml(str);	
+					   dataMap.put("qe_content", content);
+					   dataMap.put("qe_name", qevo.getMemberName());  
+					   dataMap.put("qe_date", formatNowYear.format(qevo.getUpdatetime())); 	
+				   }
+				   
+				   
+				   
+			   } else {
+				   dataMap.put("qs_content", "");
+				   dataMap.put("qs_name", "");  
+				   dataMap.put("qs_date", ""); 
+				   dataMap.put("qe_content", "");
+				   dataMap.put("qe_name", "");  
+				   dataMap.put("qe_date", "");
+			   }			   
+			   
+			   
+			   return this.createDoc(workPlanId, dataMap, "quarterplan.ftl");
+		   }
 
 		   
-		   return this.createDoc(workPlanId, dataMap, "workplan.ftl");
+		   
 	   }catch(Exception $e) {
 		   
 	   }
