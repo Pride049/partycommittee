@@ -9,24 +9,26 @@ xmlns="http://www.w3.org/TR/REC-html40">
 <meta name=ProgId content=Word.Document>
 <meta name=Generator content="Microsoft Word 12">
 <meta name=Originator content="Microsoft Word 12">
+
 <!--[if gte mso 9]><xml>
  <o:DocumentProperties>
   <o:Author>Windows 用户</o:Author>
   <o:LastAuthor>Windows 用户</o:LastAuthor>
   <o:Revision>2</o:Revision>
-  <o:TotalTime>11</o:TotalTime>
-  <o:Created>2012-05-23T15:55:00Z</o:Created>
-  <o:LastSaved>2012-05-23T15:55:00Z</o:LastSaved>
+  <o:TotalTime>12</o:TotalTime>
+  <o:Created>2012-05-31T15:01:00Z</o:Created>
+  <o:LastSaved>2012-05-31T15:01:00Z</o:LastSaved>
   <o:Pages>1</o:Pages>
-  <o:Words>17</o:Words>
-  <o:Characters>102</o:Characters>
+  <o:Words>18</o:Words>
+  <o:Characters>103</o:Characters>
   <o:Company>微软中国</o:Company>
   <o:Lines>1</o:Lines>
   <o:Paragraphs>1</o:Paragraphs>
-  <o:CharactersWithSpaces>118</o:CharactersWithSpaces>
+  <o:CharactersWithSpaces>120</o:CharactersWithSpaces>
   <o:Version>12.00</o:Version>
  </o:DocumentProperties>
 </xml><![endif]-->
+
 <!--[if gte mso 9]><xml>
  <w:WordDocument>
   <w:TrackMoves>false</w:TrackMoves>
@@ -564,9 +566,10 @@ table.MsoTableGrid
 style='mso-spacerun:yes'> </span></span><b style='mso-bidi-font-weight:normal'><span
 lang=EN-US style='font-size:26.0pt'>${report_title}<o:p></o:p></span></b></p>
 
-<table class=MsoTableGrid border=1 cellspacing=0 cellpadding=0
+<table class=MsoNormalTable border=1 cellspacing=0 cellpadding=0
  style='border-collapse:collapse;border:none;mso-border-alt:solid black .5pt;
- mso-yfti-tbllook:1184;mso-padding-alt:0cm 5.4pt 0cm 5.4pt'>
+ mso-yfti-tbllook:1184;mso-padding-alt:0cm 5.4pt 0cm 5.4pt;mso-border-insideh:
+ .5pt solid black;mso-border-insidev:.5pt solid black'>
  <tr style='mso-yfti-irow:0;mso-yfti-firstrow:yes'>
   <td width=142 valign=top style='width:106.5pt;border:solid black 1.0pt;
   mso-border-alt:solid black .5pt;padding:0cm 5.4pt 0cm 5.4pt'>
@@ -658,8 +661,21 @@ lang=EN-US style='font-size:26.0pt'>${report_title}<o:p></o:p></span></b></p>
 <h1><span style='font-family:宋体;mso-ascii-font-family:Calibri;mso-hansi-font-family:
 Calibri'>会议内容</span></h1>
 
+<table class=MsoNormalTable border=1 cellspacing=0 cellpadding=0
+ style='border-collapse:collapse;border:none;mso-border-alt:solid black .5pt;
+ mso-yfti-tbllook:1184;mso-padding-alt:0cm 5.4pt 0cm 5.4pt;mso-border-insideh:
+ .5pt solid black;mso-border-insidev:.5pt solid black'>
+ <tr style='mso-yfti-irow:0;mso-yfti-firstrow:yes;mso-yfti-lastrow:yes'>
+  <td width=565 valign=top style='width:423.6pt;border:solid black 1.0pt;
+  mso-border-alt:solid black .5pt;padding:0cm 5.4pt 0cm 5.4pt'>
+  <p class=MsoNormal style='text-indent:21.0pt;mso-char-indent-count:2.0'><span
+  lang=EN-US>${report_content}<o:p></o:p></span></p>
+  </td>
+ </tr>
+</table>
+
 <p class=MsoNormal style='text-indent:21.0pt;mso-char-indent-count:2.0'><span
-lang=EN-US>${report_content}</span></p>
+lang=EN-US><o:p>&nbsp;</o:p></span></p>
 
 <p class=MsoNormal><b style='mso-bidi-font-weight:normal'><span lang=EN-US><span
 style='mso-tab-count:1'>         </span></span></b><span lang=EN-US><span

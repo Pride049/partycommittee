@@ -9,22 +9,21 @@ xmlns="http://www.w3.org/TR/REC-html40">
 <meta name=ProgId content=Word.Document>
 <meta name=Generator content="Microsoft Word 12">
 <meta name=Originator content="Microsoft Word 12">
-
 <!--[if gte mso 9]><xml>
  <o:DocumentProperties>
   <o:Author>Windows 用户</o:Author>
   <o:LastAuthor>Windows 用户</o:LastAuthor>
   <o:Revision>2</o:Revision>
-  <o:TotalTime>9</o:TotalTime>
-  <o:Created>2012-05-23T15:39:00Z</o:Created>
-  <o:LastSaved>2012-05-23T15:39:00Z</o:LastSaved>
+  <o:TotalTime>10</o:TotalTime>
+  <o:Created>2012-05-31T14:42:00Z</o:Created>
+  <o:LastSaved>2012-05-31T14:42:00Z</o:LastSaved>
   <o:Pages>1</o:Pages>
-  <o:Words>7</o:Words>
-  <o:Characters>45</o:Characters>
+  <o:Words>12</o:Words>
+  <o:Characters>72</o:Characters>
   <o:Company>微软中国</o:Company>
   <o:Lines>1</o:Lines>
   <o:Paragraphs>1</o:Paragraphs>
-  <o:CharactersWithSpaces>51</o:CharactersWithSpaces>
+  <o:CharactersWithSpaces>83</o:CharactersWithSpaces>
   <o:Version>12.00</o:Version>
  </o:DocumentProperties>
 </xml><![endif]-->
@@ -502,7 +501,6 @@ span.Char1
  @page
 	{mso-page-border-surround-header:no;
 	mso-page-border-surround-footer:no;
-}
 @page Section1
 	{size:595.3pt 841.9pt;
 	margin:72.0pt 90.0pt 72.0pt 90.0pt;
@@ -566,45 +564,23 @@ table.MsoTableGrid
 style='mso-spacerun:yes'> </span></span><b style='mso-bidi-font-weight:normal'><span
 lang=EN-US style='font-size:26.0pt'>${report_title}<o:p></o:p></span></b></p>
 
-<p class=MsoNormal style='margin-left:21.0pt;text-indent:21.0pt'><span
-lang=EN-US>${report_content}</span></p>
-
-<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
-
-<p class=MsoNormal><b style='mso-bidi-font-weight:normal'><span lang=EN-US><span
-style='mso-tab-count:1'>         </span></span></b><span lang=EN-US><span
-style='mso-tab-count:12'>                                                                                                                </span><span
-style='mso-tab-count:1'>         </span><b style='mso-bidi-font-weight:normal'><o:p></o:p></b></span></p>
-
-<table class=MsoNormalTable border=1 cellspacing=0 cellpadding=0
+<table class=MsoTableGrid border=1 cellspacing=0 cellpadding=0
  style='border-collapse:collapse;border:none;mso-border-alt:solid black .5pt;
- mso-yfti-tbllook:1184;mso-padding-alt:0cm 5.4pt 0cm 5.4pt;mso-border-insideh:
- .5pt solid black;mso-border-insidev:.5pt solid black'>
+ mso-yfti-tbllook:1184;mso-padding-alt:0cm 5.4pt 0cm 5.4pt'>
  <tr style='mso-yfti-irow:0;mso-yfti-firstrow:yes;mso-yfti-lastrow:yes'>
-  <td width=142 valign=top style='width:106.5pt;border:solid black 1.0pt;
+  <td width=565 valign=top style='width:423.6pt;border:solid black 1.0pt;
   mso-border-alt:solid black .5pt;padding:0cm 5.4pt 0cm 5.4pt'>
+  <p class=MsoNormal style='text-indent:5.25pt;mso-char-indent-count:.5'><span
+  lang=EN-US>${report_content}</span></p>
+  <p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+  <p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
   <p class=MsoNormal><b style='mso-bidi-font-weight:normal'><span
   style='font-family:宋体;mso-ascii-font-family:Calibri;mso-hansi-font-family:
-  Calibri'>填写人</span><span lang=EN-US>:<o:p></o:p></span></b></p>
-  </td>
-  <td width=142 valign=top style='width:106.5pt;border:solid black 1.0pt;
-  border-left:none;mso-border-left-alt:solid black .5pt;mso-border-alt:solid black .5pt;
-  padding:0cm 5.4pt 0cm 5.4pt'>
-  <p class=MsoNormal><b style='mso-bidi-font-weight:normal'><span lang=EN-US>${report_name}</span></b><span
-  lang=EN-US><span style='mso-tab-count:1'> </span><b style='mso-bidi-font-weight:
-  normal'><o:p></o:p></b></span></p>
-  </td>
-  <td width=142 valign=top style='width:106.55pt;border:solid black 1.0pt;
-  border-left:none;mso-border-left-alt:solid black .5pt;mso-border-alt:solid black .5pt;
-  padding:0cm 5.4pt 0cm 5.4pt'>
-  <p class=MsoNormal align=right style='text-align:right'><b style='mso-bidi-font-weight:
-  normal'><span style='font-family:宋体;mso-ascii-font-family:Calibri;mso-hansi-font-family:
-  Calibri'>日期</span><span lang=EN-US>:<o:p></o:p></span></b></p>
-  </td>
-  <td width=142 valign=top style='width:106.55pt;border:solid black 1.0pt;
-  border-left:none;mso-border-left-alt:solid black .5pt;mso-border-alt:solid black .5pt;
-  padding:0cm 5.4pt 0cm 5.4pt'>
-  <p class=MsoNormal><b style='mso-bidi-font-weight:normal'><span lang=EN-US>${report_date}<o:p></o:p></span></b></p>
+  Calibri'>填写人</span><span lang=EN-US>: ${report_name}<span style='mso-spacerun:yes'> 
+  </span><span
+  style='mso-spacerun:yes'>                                              </span></span></b><b
+  style='mso-bidi-font-weight:normal'><span style='font-family:宋体;mso-ascii-font-family:
+  Calibri;mso-hansi-font-family:Calibri'>日期</span><span lang=EN-US>: ${report_date}</span></b></p>
   </td>
  </tr>
 </table>

@@ -401,6 +401,28 @@
 				win.modelType = 'browse';
 				PopupMgr.instance.popupWindow(win);
 			}				
+			
+			private function onExportToDoc():void {
+				var workPlanEvt:PcWorkPlanEvent = new PcWorkPlanEvent(PcWorkPlanEvent.EXPORT_WORKPLAN_TO_DOC);
+				workPlanEvt.workPlan = workPlan;
+				workPlanEvt.successCallback = onExportWorkPlanSuccess;
+				workPlanEvt.failureCallback = onExportWorkPlanFailure;	
+				
+				workPlanEvt.dispatch();
+			}		
+			
+			private function onExportWorkPlanSuccess(data:Object, workPlanEvt:PcWorkPlanEvent):void {
+				var filename = data as String;
+				var url = 'tmp/' + filename;
+				var u:URLRequest = new URLRequest(url);
+				u.method = URLRequestMethod.GET;   
+				navigateToURL(u,"_self");
+			}
+			
+			private function onExportWorkPlanFailure(info:Object, workPlanEvt:PcWorkPlanEvent):void {
+				
+			}			
+			
 		]]>
 	</fx:Script>
 	<fx:Declarations>
@@ -506,7 +528,11 @@
 						</mx:HBox>
 					</mx:VBox>
 				</mx:HBox>				
-				
+				<mx:ControlBar width="100%" horizontalAlign="center" verticalAlign="middle">
+					<button:PcButton label="导出WORD" click="onExportToDoc()"
+									 visible="{workPlan &amp;&amp; workPlan.statusId >= 3 }"/>
+				</mx:ControlBar>
+								
 			</mx:VBox>			
 		</mx:ViewStack>
 	</mx:VBox>

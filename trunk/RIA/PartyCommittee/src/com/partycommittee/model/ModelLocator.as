@@ -95,6 +95,17 @@ package com.partycommittee.model
 		{
 			_dutyCodeCollection = value;
 		}
+		private var _bulletinCollection:ArrayCollection;
+
+		public function get bulletinCollection():ArrayCollection
+		{
+			return _bulletinCollection;
+		}
+
+		public function set bulletinCollection(value:ArrayCollection):void
+		{
+			_bulletinCollection = value;
+		}
 
 		
 	}
