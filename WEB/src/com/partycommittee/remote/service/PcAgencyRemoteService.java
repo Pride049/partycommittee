@@ -142,4 +142,9 @@ public class PcAgencyRemoteService {
 	public PcAgencyVo getParentAgency(Integer agencyId) {
 		return pcAgencyService.getParentAgency(agencyId);
 	}
+	
+	@RemotingInclude
+	public String exportToDoc(Integer agencyId, Integer year) {
+		return pcAgencyService.exportToDoc(agencyId, year);
+	}	
 }

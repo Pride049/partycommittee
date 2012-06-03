@@ -95,7 +95,10 @@
 					 channelSet="{channelSet}"/>	
 	<mx:RemoteObject id="pcStat"
 					 destination="PcStatRo"
-					 channelSet="{channelSet}"/>		
+					 channelSet="{channelSet}"/>
+	<mx:RemoteObject id="pcBulletin"
+					 destination="PcBulletinRo"
+					 channelSet="{channelSet}"/>	
 	
     <!-- HTTPService example
 	<mx:HTTPService

@@ -57,7 +57,7 @@
 			}
 			
 			private function onPageChanged(event:IndexChangedEvent):void {
-				scrollCav.updateNavigateBar(event.relatedObject);
+//				scrollCav.updateNavigateBar(event.relatedObject);
 			}
 			
 			private function onMenuItemClick(event:MenuEvent):void {

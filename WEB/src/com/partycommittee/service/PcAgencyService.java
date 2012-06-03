@@ -12,9 +12,11 @@ import com.partycommittee.persistence.daoimpl.PcAgencyDaoImpl;
 import com.partycommittee.persistence.daoimpl.PcAgencyMappingDaoImpl;
 import com.partycommittee.persistence.daoimpl.PcAgencyRelationDaoImpl;
 import com.partycommittee.persistence.daoimpl.PcMemberDaoImpl;
+import com.partycommittee.persistence.daoimpl.PcWorkPlanDaoImpl;
 import com.partycommittee.persistence.po.PcAgency;
 import com.partycommittee.persistence.po.PcAgencyRelation;
 import com.partycommittee.persistence.po.PcMember;
+import com.partycommittee.persistence.po.PcWorkPlan;
 import com.partycommittee.remote.vo.PcAgencyInfoVo;
 import com.partycommittee.remote.vo.PcAgencyVo;
 import com.partycommittee.remote.vo.PcMemberVo;
@@ -46,6 +48,13 @@ public class PcAgencyService {
 	public void setPcMemberDaoImpl(PcMemberDaoImpl pcMemberDaoImpl) {
 		this.pcMemberDaoImpl = pcMemberDaoImpl;
 	}
+	
+	@Resource(name="PcWorkPlanDaoImpl")
+	private PcWorkPlanDaoImpl pcWorkPlanDaoImpl;
+	public void setPcWorkPlanDaoImpl(PcWorkPlanDaoImpl pcWorkPlanDaoImpl) {
+		this.pcWorkPlanDaoImpl = pcWorkPlanDaoImpl;
+	}
+		
 	
 	public List<PcAgencyVo> getAgencyList() {
 		List<PcAgencyVo> list = new ArrayList<PcAgencyVo>();
@@ -206,4 +215,17 @@ public class PcAgencyService {
 		}
 		return PcAgencyVo.fromPcAgency(agency);
 	}
+	
+	public String exportToDoc(Integer agencyId, Integer year) {
+		
+		List<PcWorkPlan> workPlanList = new ArrayList<PcWorkPlan>();
+		workPlanList = pcWorkPlanDaoImpl.getCompleteWorkPlanListByAgencyIds(agencyId, year);
+		for (PcWorkPlan workPlan : workPlanList) {
+			
+		}
+		
+		
+		return "";
+	}	
+	
 }

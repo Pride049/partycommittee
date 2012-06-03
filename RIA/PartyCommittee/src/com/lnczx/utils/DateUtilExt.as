@@ -831,6 +831,21 @@ package com.lnczx.utils {
 			return DateUtilExt.dayOfWeek(dte2);
 		
 		}
+		
+		
+		public static function getNextMonth(currentDate:Date):Date  
+		{  
+			var returnDate:Date=new Date(currentDate.getTime());  
+			returnDate.setMonth(returnDate.getMonth() + 1, returnDate.getDate());  
+			return returnDate;  
+		} 
+		
+		public static function getNextSomeMonth(currentDate:Date, month:int):Date  
+		{  
+			var returnDate:Date=new Date(currentDate.getTime());  
+			returnDate.setMonth(returnDate.getMonth() + month, returnDate.getDate());  
+			return returnDate;  
+		}		
 
 }
 }

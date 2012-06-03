@@ -14,6 +14,8 @@ public interface PcWorkPlanDao {
 	
 	public List<PcWorkPlan> getCommitWorkPlanListByAgencyIds(List<Integer> agencyIds, Integer year);
 	
+	public List<PcWorkPlan> getCompleteWorkPlanListByAgencyIds(Integer agencyId, Integer year);
+	
 	public PcWorkPlan getWorkPlanQuarterByAgencyId(Integer agencyId,
 			Integer year, Integer quarter);
 	

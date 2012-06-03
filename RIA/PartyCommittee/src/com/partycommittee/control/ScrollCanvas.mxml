@@ -8,6 +8,8 @@
 	
 	<fx:Script>
 		<![CDATA[
+			import com.partycommittee.commands.PcBulletinCommand;
+			import com.partycommittee.events.PcBulletinEvent;
 			import com.partycommittee.events.PcUserEvent;
 			import com.partycommittee.manager.navigation.NavigationMgr;
 			import com.partycommittee.manager.popup.PopupMgr;
@@ -17,7 +19,11 @@
 			import com.partycommittee.views.agencymgmt.agencyactivity.BrowseView;
 			import com.partycommittee.views.agencymgmt.agencyactivity.ReportView;
 			import com.partycommittee.views.sysmgmt.systemviews.AccountManageView;
+			import com.partycommittee.views.sysmgmt.systemviews.PcBulletinViewWindow;
 			import com.partycommittee.views.sysmgmt.systemviews.PwEditWindow;
+			import com.partycommittee.vo.PcBulletinVo;
+			import com.partycommittee.vo.page.PageHelperVo;
+			import com.partycommittee.vo.page.PageResultVo;
 			
 			import flash.net.sendToURL;
 			
@@ -49,10 +55,6 @@
 			[Bindable]
 			private var totalHeight:Number;
 			
-			[Bindable]
-			private var secondLvLbl:String = "";
-			[Bindable]
-			private var thirdLvLbl:String = "";
 			
 			private var stopTimer:Timer;
 			
@@ -64,12 +66,13 @@
 			private var _selectedMenuItem:Object;
 			
 			private function onCreationCompleted():void {
-//				var startTimer:Timer = new Timer(10000, 1);
-//				startTimer.addEventListener(TimerEvent.TIMER_COMPLETE, onStartTimerCompleted);
-//				startTimer.start();
+				
+				if (!model.bulletinCollection || model.bulletinCollection.length == 0) {
+					initBulletin();
+				}				
 				
 				this._txt = new Text();
-				this._txt.setStyle("color", 0xffffff);
+//				this._txt.setStyle("color", 0xffffff);
 				this.moveLblCav.addChild(this._txt);
 				this._txt.addEventListener(TextEvent.LINK, onTxtLink);
 				this._txt.addEventListener(MouseEvent.MOUSE_OVER, onTxtMouseOver);
@@ -79,12 +82,12 @@
 				this._moveIn.duration = 1500;
 				this._moveIn.target = this._txt;
 				this._moveIn.xFrom = this.width;
-				this._moveIn.xTo = 10;
+				this._moveIn.xTo = 300;
 				this._moveIn.addEventListener(EffectEvent.EFFECT_END, onMoveInEffectEnd);
 				this._moveOut = new Move();
 				this._moveOut.duration = 1500;
 				this._moveOut.target = this._txt;
-				this._moveOut.xFrom = 10;
+				this._moveOut.xFrom = 300;
 				this._moveOut.xTo = 0 - this.width;
 				this._moveOut.addEventListener(EffectEvent.EFFECT_END, onMoveOutEffectEnd);
 				
@@ -94,46 +97,31 @@
 			private function onPropertyChange(event:PropertyChangeEvent):void {
 				if (event.property == "selectedMenu") {
 					this._selectedMenuItem = model.selectedMenu;
-					updateInfoStr();
 				}
 			}
 			
-			private function updateInfoStr():void {
-				if (this._selectedMenuItem && this._selectedMenuItem.hasOwnProperty("label")) {
-					switch (this._selectedMenuItem.id) {
-						case "orgManage":
-						case "partyMemberManage":
-							secondLvLbl = "组织管理";
-							thirdLvLbl = this._selectedMenuItem.label;
-							break;
-						case "browseReport":
-							secondLvLbl = "组织生活";
-							thirdLvLbl = this._selectedMenuItem.label;
-							break;
-						case "inputReport":
-							secondLvLbl = "组织生活";
-							thirdLvLbl = this._selectedMenuItem.label;
-							break;
-						case "accountManage":
-							secondLvLbl = "系统管理";
-							thirdLvLbl = this._selectedMenuItem.label;
-							break;
-						
-					}
-				}
-			}
+			private function initBulletin():void {
+				var evt:PcBulletinEvent = new PcBulletinEvent(PcBulletinEvent.GET_BULLETIN_LIST);
+				evt.page = new PageHelperVo();
+				evt.successCallback = onGetBulletinSuccess;
+				evt.dispatch();				
+			}			
 			
-			public function updateNavigateBar(item:Object):void {
-				if (item as OrgView) {
-					secondLvLbl = "组织管理";
-				} else if (item as ActivityView) {
-					secondLvLbl = "组织生活";
-				} else if (item as AccountManageView) {
-					secondLvLbl = "账号管理";
-				} else {
-					secondLvLbl = "";
+			private function onGetBulletinSuccess(data:Object, evt:PcBulletinEvent):void {
+				if (!data) return;
+				
+				var pageResult:PageResultVo = data as PageResultVo;
+				if (!pageResult) {
+					return;
 				}
-			}
+				model.bulletinCollection = pageResult.list;				
+				
+				
+				var startTimer:Timer = new Timer(10000, 1);
+				startTimer.addEventListener(TimerEvent.TIMER_COMPLETE, onStartTimerCompleted);
+				startTimer.start();				
+				
+			}			
 			
 			private function onStartTimerCompleted(event:TimerEvent):void {
 				this.includeInLayout = true;
@@ -170,7 +158,7 @@
 			
 			public function onMoveInEffectEnd(event:EffectEvent):void {
 				if (!stopTimer) {
-					stopTimer = new Timer(2000);
+					stopTimer = new Timer(10000);
 					stopTimer.addEventListener(TimerEvent.TIMER, onTimer);
 				}
 				stopTimer.start();
@@ -183,13 +171,14 @@
 			
 			private var currentItemIndex:Number;
 			private function getContent():String {
-				if (!infoList || infoList.length == 0) {
+				if (!model.bulletinCollection || model.bulletinCollection.length == 0) {
 					return "";
 				}
-				if (!currentItemIndex || currentItemIndex == infoList.length) {
+				if (!currentItemIndex || currentItemIndex == model.bulletinCollection.length) {
 					currentItemIndex = 0;
 				}
-				var message:String = infoList[currentItemIndex++].message as String;
+				var vo:PcBulletinVo = model.bulletinCollection.getItemAt(currentItemIndex++) as PcBulletinVo;
+				var message:String = vo.title;
 				return '<a href="event:' + currentItemIndex + '">' + message + '</a>';
 			}
 			
@@ -210,27 +199,22 @@
 			}
 			
 			private function onTxtLink(event:TextEvent):void {
+				var index:int = currentItemIndex-1;
+				var vo:PcBulletinVo = model.bulletinCollection.getItemAt(index) as PcBulletinVo;
+				var win:PcBulletinViewWindow = new PcBulletinViewWindow();
+				win.bulletinVo = vo;
+				PopupMgr.instance.popupWindow(win);
 			}
 			
-			private var infoList:ArrayCollection = new ArrayCollection([
+//			private var infoList:ArrayCollection = new ArrayCollection([
 //				{id:1, message:"2011年-年度计划未填写！"},
 //				{id:2, message:"2011年-第一季度度计划未填写！"},
-			]);
+//			]);
 			
 			override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void {
 				super.updateDisplayList(unscaledWidth, unscaledHeight);
 			}
 			
-			private function returnToMainPage():void {
-				NavigationMgr.getInstance().navigateToView("mainView");
-//				this._selectedMenuItem = mainPageMenuItem;
-//				updateInfoStr();
-				this.secondLvLbl = this.thirdLvLbl = "";
-			}
-			
-			private function onSecondLinkBtnClick():void {
-				this.thirdLvLbl = "";
-			}
 			
 			private function onLogout(event:TextEvent):void {
 				var userEvt:PcUserEvent = new PcUserEvent(PcUserEvent.LOGOUT);
@@ -258,27 +242,7 @@
 			<mx:HBox width="100%" height="100%" borderStyle="solid"  
 					 horizontalAlign="center" verticalAlign="middle"
 					 horizontalScrollPolicy="off" verticalScrollPolicy="off">
-				<mx:HBox horizontalScrollPolicy="off" verticalScrollPolicy="off"
-						 horizontalAlign="center" verticalAlign="middle"
-						 includeInLayout="false" visible="false">
-					<mx:LinkButton label="首页" click="returnToMainPage()"
-								   color="0x0000ff" fontWeight="bold"/>
-					<mx:Label text=">"
-							  visible="{secondLvLbl != ''}"
-							  includeInLayout="{secondLvLbl != ''}"/>
-					<mx:LinkButton label="{secondLvLbl}"
-								   color="0x0000ff" fontWeight="bold"
-								   visible="{secondLvLbl != ''}"
-								   includeInLayout="{secondLvLbl != ''}"
-								   click="onSecondLinkBtnClick()"/>
-					<mx:Label text=">"
-							  visible="{thirdLvLbl != ''}"
-							  includeInLayout="{thirdLvLbl != ''}"/>
-					<mx:LinkButton id="thirdLinkBtn" label="{thirdLvLbl}"
-								   color="0x0000ff" fontWeight="bold"
-								   visible="{thirdLvLbl != ''}"
-								   includeInLayout="{thirdLvLbl != ''}"/>
-				</mx:HBox>
+				
 				<mx:ToggleButtonBar id="mainMenu" fontWeight="bold" height="100%"/>
 				<mx:VRule height="80%"/>
 				<mx:Canvas id="moveLblCav" width="100%" height="100%" borderStyle="none"

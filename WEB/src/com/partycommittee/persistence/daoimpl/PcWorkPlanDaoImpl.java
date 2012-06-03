@@ -161,7 +161,20 @@ public class PcWorkPlanDaoImpl extends JpaDaoBase implements PcWorkPlanDao {
 		return null;
 	}
 	
-	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<PcWorkPlan> getCompleteWorkPlanListByAgencyIds(Integer agencyId, Integer year) {
+		try {
+			if (agencyId == null) {
+				return null;
+			}
+
+			return super.find("from PcWorkPlan where agency_id = " + agencyId + " AND year = " + year + " AND status_id = 5 Order by type_id ASC ");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}	
 	
 
 	@SuppressWarnings("unchecked")

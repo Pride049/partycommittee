@@ -740,7 +740,7 @@
 				
 				<mx:ControlBar width="100%" horizontalAlign="center" verticalAlign="middle">
 					<button:PcButton label="导出WORD" click="onExportToDoc()"
-									 visible="{!meeting || meeting.statusId == 5}"/>
+									 visible="{meeting &amp;&amp; meeting.statusId >= 3 }"/>
 					<button:PcButton label="关闭" click="close()"/>
 				</mx:ControlBar>
 			</mx:VBox>			

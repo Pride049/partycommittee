@@ -20,8 +20,10 @@
 			import com.partycommittee.control.mainmenu.Menu;
 			import com.partycommittee.control.mainmenu.MenuItem;
 			import com.partycommittee.control.tree.classes.Node;
+			import com.partycommittee.controller.Controller;
 			import com.partycommittee.events.AccordionItemClickEvent;
 			import com.partycommittee.events.PcAgencyEvent;
+			import com.partycommittee.events.PcBulletinEvent;
 			import com.partycommittee.events.PcMemberEvent;
 			import com.partycommittee.events.PcRemindConfigEvent;
 			import com.partycommittee.events.PcUserEvent;
@@ -32,6 +34,7 @@
 			import com.partycommittee.util.UserUtil;
 			import com.partycommittee.vo.PcAgencyVo;
 			import com.partycommittee.vo.PcUserVo;
+			import com.partycommittee.vo.page.PageHelperVo;
 			
 			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
@@ -82,8 +85,8 @@
 				var evt:PcMemberEvent = new PcMemberEvent(PcMemberEvent.GET_DUTY_CODE);
 				evt.successCallback = onGetDutyCodeSuccess;
 				evt.dispatch();
-			}					
-			
+			}	
+	
 			private function onGetSessionSuccess(data:Object, evt:PcUserEvent):void {
 				if (!data) return;
 				var user:PcUserVo = data as PcUserVo;
@@ -125,7 +128,7 @@
 			private function onGetDutyCodeSuccess(data:Object, evt:PcMemberEvent):void {
 				if (!data) return;
 				model.dutyCodeCollection = data as ArrayCollection;
-			}			
+			}
 
 			private function onPropertyChanged(event:PropertyChangeEvent):void {
 				if (event.property == "isLeafUser") {
@@ -233,6 +236,7 @@
 					 horizontalScrollPolicy="off" verticalScrollPolicy="off">
 				<tree:LoadingTree id="tree" width="100%" height="100%" 
 								  dataProvider="{model.treeCollection}"
+								  doubleClickEnabled="true"
 								  itemClick="onItemClick()"/>
 				<tree:TreeControlBar id="treeControlBar" width="100%"/>
 			</mx:VBox>

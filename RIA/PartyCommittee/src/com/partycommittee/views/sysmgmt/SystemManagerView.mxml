@@ -49,5 +49,7 @@
 									  label="提醒设定" tab="{this.tab}"/>
 		<systemviews:RemindLockView id="remindLockView" width="100%" height="100%" 
 									label="解锁" tab="{this.tab}"/>
+		<systemviews:BulletinView id="bulletinView" width="100%" height="100%" 
+									label="公告管理" tab="{this.tab}"/>
 	</mx:TabNavigator>
 </navigation:NavigationView>
