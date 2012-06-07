@@ -98,6 +98,9 @@
 					 channelSet="{channelSet}"/>
 	<mx:RemoteObject id="pcBulletin"
 					 destination="PcBulletinRo"
+					 channelSet="{channelSet}"/>
+	<mx:RemoteObject id="pcBackup"
+					 destination="PcBackupRo"
 					 channelSet="{channelSet}"/>	
 	
     <!-- HTTPService example

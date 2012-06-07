@@ -12,12 +12,12 @@
 	
 	<fx:Script>
 		<![CDATA[
-			import com.partycommittee.events.PcBulletinEvent;
+			import com.partycommittee.events.PcBackupEvent;
 			import com.partycommittee.manager.popup.PopupMgr;
 			import com.partycommittee.model.ModelLocator;
 			import com.partycommittee.util.CRUDEventType;
 			import com.partycommittee.util.LblFunctionHelper;
-			import com.partycommittee.vo.PcBulletinVo;
+			import com.partycommittee.vo.PcBackupVo;
 			import com.partycommittee.vo.page.PageHelperVo;
 			import com.partycommittee.vo.page.PageResultVo;
 			
@@ -31,13 +31,6 @@
 			import mx.managers.PopUpManager;
 			
 			private var _editEnable:Boolean = true;
-			[Bindable]
-			public function get editEnable():Boolean {
-				return this._editEnable;
-			}
-			public function set editEnable(value:Boolean):void {
-				this._editEnable = value;
-			}
 			
 			public var tab:TabNavigator;
 			
@@ -47,14 +40,18 @@
 			[Bindable]
 			private var dp:ArrayCollection = new ArrayCollection();
 			
-			private var _bulletin:PcBulletinVo
-			public function set bulletin(value:PcBulletinVo):void {
-				this._bulletin = value;
+			private var _backup:PcBackupVo;
+			
+			public function get backup():PcBackupVo
+			{
+				return _backup;
 			}
-			[Bindable]
-			public function get bulletin():PcBulletinVo {
-				return this._bulletin;
+			
+			public function set backup(value:PcBackupVo):void
+			{
+				_backup = value;
 			}
+			
 			
 			private var _page:PageHelperVo;
 			[Bindable]
@@ -70,7 +67,6 @@
 			
 			private function onCreationCompleted():void {
 				if (this.tab && this.tab.selectedChild == this) {
-					
 					refreshData();
 				}	
 			}			
@@ -80,13 +76,13 @@
 			}
 			
 			private function refreshData():void {
-				var bulletinEvent:PcBulletinEvent = new PcBulletinEvent(PcBulletinEvent.GET_BULLETIN_LIST);
-				bulletinEvent.page = page;
-				bulletinEvent.successCallback = onRefresh;
-				bulletinEvent.dispatch();
+				var evt:PcBackupEvent = new PcBackupEvent(PcBackupEvent.GET_BACKUP_LIST);
+				evt.page = page;
+				evt.successCallback = onRefresh;
+				evt.dispatch();
 			}
 			
-			private function onRefresh(data:Object, event:PcBulletinEvent):void {
+			private function onRefresh(data:Object, event:PcBackupEvent):void {
 				var pageResult:PageResultVo = data as PageResultVo;
 				if (!pageResult) {
 					return;
@@ -95,33 +91,29 @@
 				dp = pageResult.list;	
 			}
 			
-			private function addBulletin():void {
-				
-				var window:PcBulletinWindow = new PcBulletinWindow();
-				window.parentView = this;
-				PopupMgr.instance.popupWindow(window);
+			private function addBackup():void {
+				Alert.show("确定要备份当前数据吗？", "提示", 
+					Alert.YES | Alert.NO, FlexGlobals.topLevelApplication.root, onAddAlertClose);
 			}
 			
-			private function updateBulletin():void {
-				
-				var window:PcBulletinWindow = new PcBulletinWindow();
-				window.type = CRUDEventType.UPDATE;
-				window.parentView = this;
-				window.title = "修改公告";
-				window.bulletinVo = datagrid.selectedItem as PcBulletinVo;
-				window.editEnable = editEnable;
-				PopupMgr.instance.popupWindow(window);
-				
+			private function onAddAlertClose(event:CloseEvent):void {
+				if (event.detail == Alert.YES) {
+					doAdd();
+				}
 			}
 			
-			private function onItemDoubleClick():void {
-				updateBulletin();
+			private function doAdd():void {
+				var evt:PcBackupEvent = new PcBackupEvent(CRUDEventType.CREATE);
+				evt.successCallback = onSuccess;
+				evt.failureCallback = onFailure;
+				this.enabled = false;
+				evt.dispatch();
 			}
 			
 			
-			private function deleteBulletin():void {
-				var deleteBulletin:PcBulletinVo = datagrid.selectedItem as PcBulletinVo;
-				Alert.show("确定删除【" + deleteBulletin.title + "】？", "提示", 
+			private function deleteBackup():void {
+				var vo:PcBackupVo = datagrid.selectedItem as PcBackupVo;
+				Alert.show("确定删除备份数据【" + vo.filename + "】？", "提示", 
 					Alert.YES | Alert.NO, FlexGlobals.topLevelApplication.root, onDeleteAlertClose);
 			}
 			
@@ -132,19 +124,20 @@
 			}
 			
 			private function doDelete():void {
-				var evt:PcBulletinEvent = new PcBulletinEvent(CRUDEventType.DELETE, datagrid.selectedItem as PcBulletinVo);
-				evt.successCallback = onDeleteSuccess;
-				evt.failureCallback = onDeleteFailure;
+				var evt:PcBackupEvent = new PcBackupEvent(CRUDEventType.DELETE, datagrid.selectedItem as PcBackupVo);
+				evt.successCallback = onSuccess;
+				evt.failureCallback = onFailure;
 				this.enabled = false;
 				evt.dispatch();
 			}
 			
-			private function onDeleteSuccess(data:Object, evt:PcBulletinEvent):void {
+			private function onSuccess(data:Object, evt:PcBackupEvent):void {
 				this.enabled = true;
+				Alert.show("操作成功");
 				updateData();
 			}
 			
-			private function onDeleteFailure(info:Object, evt:PcBulletinEvent):void {
+			private function onFailure(info:Object, evt:PcBackupEvent):void {
 				this.enabled = true;
 				Alert.show(info.toString());
 			}
@@ -158,11 +151,9 @@
 	
 	<mx:VBox width="100%" height="100%"
 			 horizontalScrollPolicy="off" verticalScrollPolicy="off">
-		<mx:ControlBar width="100%" horizontalAlign="right"
-					   visible="{editEnable}" includeInLayout="{editEnable}">
-			<button:PcButton label="增加" click="addBulletin()"/>
-			<button:PcButton label="修改" click="updateBulletin()" enabled="{datagrid.selectedItem}"/>
-			<button:PcButton label="删除" click="deleteBulletin()" enabled="{datagrid.selectedItem}"/>
+		<mx:ControlBar width="100%" horizontalAlign="right">
+			<button:PcButton label="开始备份" click="addBackup()"/>
+			<button:PcButton label="删除" click="deleteBackup()" enabled="{datagrid.selectedItem}"/>
 		</mx:ControlBar>
 		
 		<mx:AdvancedDataGrid id="datagrid" designViewDataType="flat" 
@@ -173,17 +164,13 @@
 							 variableRowHeight="true"
 							 doubleClickEnabled="true"
 							 dataProvider="{dp}"
-							 doubleClick="onItemDoubleClick()"
 							 >  
 			
 			<mx:columns>
 				<mx:AdvancedDataGridColumn headerText="序号" dataField="id"  />
-				<mx:AdvancedDataGridColumn headerText="标题" dataField="title" width="300"/>
-				
-				<mx:AdvancedDataGridColumn headerText="发布时间" dataField="pubTime" 
-										   labelFunction="{LblFunctionHelper.dateLblFunc}"/>
-				<mx:AdvancedDataGridColumn headerText="过期时间" dataField="expireTime"  
-										   labelFunction="{LblFunctionHelper.dateLblFunc}"/>				
+				<mx:AdvancedDataGridColumn headerText="文件名" dataField="filename" width="300"/>
+				<mx:AdvancedDataGridColumn headerText="备份时间" dataField="backupTime" 
+										   labelFunction="{LblFunctionHelper.dateTimeLblFunc}"/>			
 			</mx:columns>
 		</mx:AdvancedDataGrid>
 		

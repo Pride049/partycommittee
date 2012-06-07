@@ -51,5 +51,7 @@
 									label="解锁" tab="{this.tab}"/>
 		<systemviews:BulletinView id="bulletinView" width="100%" height="100%" 
 									label="公告管理" tab="{this.tab}"/>
+		<systemviews:BackupView id="backupView" width="100%" height="100%" 
+								  label="数据备份" tab="{this.tab}"/>		
 	</mx:TabNavigator>
 </navigation:NavigationView>
