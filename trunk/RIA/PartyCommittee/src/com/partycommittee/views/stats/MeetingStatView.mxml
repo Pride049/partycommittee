@@ -304,7 +304,7 @@
 			<mx:ComboBox id="startMonthCmb" />
 			<mx:Label text="结束月份:"/>
 			<mx:ComboBox id="endMonthCmb" />
-			<mx:Button label="统计" click="updateData()"/>
+			<mx:Button label="查看统计" click="updateData()"/>
 			<mx:Button label="导出到Excel" click="exportToExcel()"/>
 		</mx:HBox>
 

@@ -112,7 +112,7 @@
 	<mx:VBox width="100%" height="100%"
 			 horizontalScrollPolicy="auto" verticalScrollPolicy="auto">
 		<mx:HBox >
-			<mx:Button label="统计" click="updateData()"/>
+			<mx:Button label="查看统计" click="updateData()"/>
 			<mx:Button label="导出到Excel" click="exportToExcel()"/>
 		</mx:HBox>		
 

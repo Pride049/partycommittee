@@ -22,6 +22,15 @@ package com.partycommittee.util
 			return "";
 		}
 		
+		public static function dateTimeLblFunc(item:Object, col:*):String {
+			var date:Date = item[col.dataField] as Date;
+			if (date) {
+				return DateUtil.toISOString(date, true);
+			}
+			return "";
+		}
+				
+		
 		public static function agencyCodeLblFunc(item:Object, col:*):String {
 			if (item as PcAgencyVo) {
 				return AgencyCodeUtil.getAgencyCodeDes((item as PcAgencyVo).codeId);

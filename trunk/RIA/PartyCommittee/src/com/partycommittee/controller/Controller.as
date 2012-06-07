@@ -2,6 +2,7 @@ package com.partycommittee.controller
 {
 	import com.adobe.cairngorm.control.FrontController;
 	import com.partycommittee.commands.PcAgencyCommand;
+	import com.partycommittee.commands.PcBackupCommand;
 	import com.partycommittee.commands.PcBulletinCommand;
 	import com.partycommittee.commands.PcMeetingCommand;
 	import com.partycommittee.commands.PcMemberCommand;
@@ -13,6 +14,7 @@ package com.partycommittee.controller
 	import com.partycommittee.commands.PcUserCommand;
 	import com.partycommittee.commands.PcWorkPlanCommand;
 	import com.partycommittee.events.PcAgencyEvent;
+	import com.partycommittee.events.PcBackupEvent;
 	import com.partycommittee.events.PcBulletinEvent;
 	import com.partycommittee.events.PcMeetingEvent;
 	import com.partycommittee.events.PcMemberEvent;
@@ -41,6 +43,7 @@ package com.partycommittee.controller
 			addCommand(PcParentStatEvent.PCPARENT_EVENT, PcParentStatCommand);
 			addCommand(PcStatEvent.PCSTAT_EVENT, PcStatCommand);
 			addCommand(PcBulletinEvent.PCBULLETIN_EVENT, PcBulletinCommand);
+			addCommand(PcBackupEvent.PCBACKUP_EVENT, PcBackupCommand);
 		}
 	}
    

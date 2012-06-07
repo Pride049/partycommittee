@@ -60,7 +60,7 @@
 			private function initToolbar():void {
 				TreeContextMenuMgr.getInstance().editEnable = true;
 				treeControlBar.visible = treeControlBar.includeInLayout = true;
-				unExpandTree();	
+//				unExpandTree();	
 			}
 			
 			private function initUserData():void {
@@ -218,13 +218,14 @@
 			}
 			
 			private function viewStackChange(event:Event) {
-				if (mainViewStack.selectedChild == mainView || 
-					mainViewStack.selectedChild == statView
-					) {
-					unExpandTree();
-				} else {
-					expandTree();
-				}
+//				expandTree();
+//				if (mainViewStack.selectedChild == mainView || 
+//					mainViewStack.selectedChild == statView
+//					) {
+//					unExpandTree();
+//				} else {
+//					expandTree();
+//				}
 			}
 
 		]]>

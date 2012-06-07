@@ -72,6 +72,8 @@
 				}				
 				
 				this._txt = new Text();
+				this._txt.setStyle("fontsize", 18);
+				this._txt.setStyle("fontWeight", "bold");
 //				this._txt.setStyle("color", 0xffffff);
 				this.moveLblCav.addChild(this._txt);
 				this._txt.addEventListener(TextEvent.LINK, onTxtLink);
